@@ -17,7 +17,7 @@ Vertex;
  * The type of the graph we use.
  *
  * Property edge_weight is the distance, while property edge_weight2
- * is the number of wavelengths.
+ * is vector of used subcarriers.
  */
 typedef
 adjacency_list <vecS, vecS, undirectedS,
@@ -25,7 +25,7 @@ adjacency_list <vecS, vecS, undirectedS,
                 property<vertex_distance_t, vector<int>,
 		property<vertex_predecessor_t, vector<Vertex> > > >,
                 property<edge_weight_t, int,
-                property<edge_weight2_t, int> > >
+                property<edge_weight2_t, vector<int> > > >
 Graph;
 
 typedef graph_traits<Graph>::edge_descriptor Edge;
