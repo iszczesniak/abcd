@@ -1,25 +1,17 @@
 TARGETS = test
 TARGET_OBJS = $(addsuffix .o, $(TARGETS))
 
-OBJS = graph.o
+OBJS = graph.o test.o
 
 #CXXFLAGS = -g -Wno-deprecated
 CXXFLAGS = -O3 -Wno-deprecated
 
 # Boost
-#BOOSTPATH := /usr/local/boost-1.43
-#CXXFLAGS := $(CXXFLAGS) -I $(BOOSTPATH)/include
-#LDFLAGS := $(LDFLAGS) -L $(BOOSTPATH)/lib
-LDFLAGS := $(LDFLAGS) -l boost_filesystem-mt
 LDFLAGS := $(LDFLAGS) -l boost_graph-mt
-LDFLAGS := $(LDFLAGS) -l boost_program_options-mt
-LDFLAGS := $(LDFLAGS) -l boost_regex-mt
-LDFLAGS := $(LDFLAGS) -l boost_serialization-mt
-
-# GNU Scientific Library
-LDFLAGS := $(LDFLAGS) -l gslcblas -l gsl
 
 all: $(TARGETS)
+
+test: $(OBJS)
 
 .PHONY: clean count depend test
 
