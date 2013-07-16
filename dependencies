@@ -1,3 +1,3 @@
+first.o: first.cc graph.hpp utils_netgen.hpp utils.hpp
 graph.o: graph.cc graph.hpp
-test.o: test.cc graph.hpp
-utils_netgen.o: utils_netgen.cc utils_netgen.hpp graph.hpp
+utils_netgen.o: utils_netgen.cc utils_netgen.hpp graph.hpp utils.hpp
