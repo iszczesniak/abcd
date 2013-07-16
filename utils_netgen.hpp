@@ -8,9 +8,6 @@
 
 #include <boost/graph/random.hpp>
 #include <boost/graph/iteration_macros.hpp>
-#include <boost/random/linear_congruential.hpp>
-#include <boost/random/uniform_int.hpp>
-#include <boost/random/variate_generator.hpp>
 
 /**
  * Names the vertices.

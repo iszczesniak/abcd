@@ -1,11 +1,7 @@
 #include "utils_netgen.hpp"
 
-#include <iomanip>
 #include <iostream>
-#include <sstream>
-
-#include <boost/graph/random.hpp>
-#include <boost/graph/iteration_macros.hpp>
+#include <iomanip>
 
 using namespace std;
 using namespace boost;
