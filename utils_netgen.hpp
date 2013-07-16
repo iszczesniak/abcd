@@ -2,6 +2,7 @@
 #define UTILS_NETGEN_HPP
 
 #include "graph.hpp"
+#include "utils.hpp"
 
 #include <iterator>
 
@@ -10,22 +11,6 @@
 #include <boost/random/linear_congruential.hpp>
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
-
-/**
- * Return a container with vertexes of a graph.
- */
-template<typename C>
-C
-get_vertexes(const Graph &g)
-{
-  C c;
-
-  // Copy the vertex descriptors.
-  std::copy(vertices(g).first, vertices(g).second,
-            inserter(c, c.begin()));
-
-  return c;
-}
 
 /**
  * Names the vertices.
