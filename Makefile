@@ -1,7 +1,7 @@
-TARGETS = test
+TARGETS = first
 TARGET_OBJS = $(addsuffix .o, $(TARGETS))
 
-OBJS = graph.o test.o
+OBJS = graph.o utils_netgen.o
 
 #CXXFLAGS = -g -Wno-deprecated
 CXXFLAGS = -O3 -Wno-deprecated
@@ -11,7 +11,7 @@ LDFLAGS := $(LDFLAGS) -l boost_graph-mt
 
 all: $(TARGETS)
 
-test: $(OBJS)
+first: $(OBJS)
 
 .PHONY: clean count depend test
 
