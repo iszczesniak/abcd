@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include <boost/random/linear_congruential.hpp>
+#include <boost/graph/graph_utility.hpp>
 
 using namespace std;
 
@@ -12,12 +13,13 @@ main (int argc, char* argv[])
   minstd_rand gen;
   Graph g;
 
-  // Random graph: 100 nodes, 1000 edges.
-  generate_graph(g, 100, 1000, gen);
+  generate_graph(g, 10, 20, gen);
   name_vertices(g);
 
   // The number of subcarriers for each edge.
   set_subcarriers(g, 800);
+
+  print_graph(g);
 
   return 0;
 }
