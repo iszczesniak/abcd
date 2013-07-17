@@ -5,6 +5,7 @@
 #include "utils.hpp"
 
 #include <iterator>
+#include <vector>
 
 #include <boost/graph/random.hpp>
 #include <boost/graph/iteration_macros.hpp>
@@ -28,15 +29,19 @@ set_distances(Graph &g, int min, int max, T &gen)
 }
 
 /**
- * Sets the lambdas property on edges.
+ * Sets the subcarriers property on edges.
  */
-template<typename T>
+template<typename G>
 void
-set_lambdas(Graph &g, int min, int max, T &gen)
+set_subcarriers(G &g, int subcarriers)
 {
-  boost::uniform_int<> range(min, max);
-  boost::variate_generator<T &, boost::uniform_int<> > rgen(gen, range);
-  boost::randomize_property<edge_weight2_t>(g, rgen);
+  std::vector<int> v(subcarriers);
+  
+  typename property_map<G, edge_weight2_t>::type pm = get(edge_weight2_t(), g);
+  typename graph_traits<G>::edge_iterator ei, ee;
+  for (tie(ei, ee) = edges(g); ei != ee; ++ei) {
+    pm[*ei] = v;
+  }
 }
 
 /**
