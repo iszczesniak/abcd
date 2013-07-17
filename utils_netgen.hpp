@@ -6,6 +6,7 @@
 
 #include <iterator>
 #include <vector>
+#include <iostream>
 
 #include <boost/graph/random.hpp>
 #include <boost/graph/iteration_macros.hpp>
@@ -37,11 +38,26 @@ set_subcarriers(G &g, int subcarriers)
 {
   std::vector<int> v(subcarriers);
   
-  typename property_map<G, edge_weight2_t>::type pm = get(edge_weight2_t(), g);
+  typename property_map<G, edge_subcarriers_t>::type
+    pm = get(edge_subcarriers_t(), g);
   typename graph_traits<G>::edge_iterator ei, ee;
   for (tie(ei, ee) = edges(g); ei != ee; ++ei) {
     pm[*ei] = v;
   }
+}
+
+/**
+ * Prints the subcarriers property of edges.
+ */
+template<typename G>
+void
+print_subcarriers(G &g)
+{
+  typename property_map<G, edge_subcarriers_t>::type
+    pm = get(edge_subcarriers_t(), g);
+  typename graph_traits<G>::edge_iterator ei, ee;
+  for (tie(ei, ee) = edges(g); ei != ee; ++ei)
+    std::cout << pm[*ei] << "\n";
 }
 
 /**

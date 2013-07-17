@@ -17,9 +17,10 @@ main (int argc, char* argv[])
   name_vertices(g);
 
   // The number of subcarriers for each edge.
-  set_subcarriers(g, 800);
+  set_subcarriers(g, 2);
 
   print_graph(g);
+  print_subcarriers(g);
 
   return 0;
 }
