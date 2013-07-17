@@ -15,6 +15,7 @@ main (int argc, char* argv[])
 
   generate_graph(g, 10, 20, gen);
   name_vertices(g);
+  complete_graph(g);
 
   // The number of subcarriers for each edge.
   set_subcarriers(g, 2);

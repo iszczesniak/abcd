@@ -41,9 +41,8 @@ set_subcarriers(G &g, int subcarriers)
   typename property_map<G, edge_subcarriers_t>::type
     pm = get(edge_subcarriers_t(), g);
   typename graph_traits<G>::edge_iterator ei, ee;
-  for (tie(ei, ee) = edges(g); ei != ee; ++ei) {
+  for (tie(ei, ee) = edges(g); ei != ee; ++ei)
     pm[*ei] = v;
-  }
 }
 
 /**
