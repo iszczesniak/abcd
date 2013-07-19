@@ -45,6 +45,75 @@ void complete_graph(G &g)
 }
 
 /**
+ * Returns the distance.
+ */
+template<typename V, typename G>
+int
+get_distance(V i, V j, const G &g)
+{
+  return get(vertex_distance, g, i)[j];
+}
+
+/**
+ * Prints a path from node i to node j in graph g.
+ */
+
+template<typename V, typename G>
+std::string
+path_to_string(V i, V j, const G &g)
+{
+  std::ostringstream str;
+
+  str << "From " << get(vertex_name, g, i)
+      << " to " << get(vertex_name, g, j);
+
+  // Check if the shortest path from node i to node j exists.
+  if (i == j || get(vertex_predecessor, g, j)[i] != i)
+    {
+      int hops = 0;
+      V curr = i;
+
+      str << ": " << get(vertex_name, g, i);
+
+      while(curr != j)
+        {
+          curr = get(vertex_predecessor, g, j)[curr];
+         str << " -> " << get(vertex_name, g, curr);
+          ++hops;
+        }
+
+      str << ", hops = " << hops;
+      str << ", distance = " << get_distance(i, j, g);
+    }
+  else
+    str << "doesn't exist";
+
+  return str.str();
+}
+
+/**
+ * Prints the information on the shortest paths.
+ */
+
+template<typename G>
+void
+print_sp(const G &g, std::ostream &os)
+{
+  os << "******************************************************\n";
+  os << "SHORTEST PATHS\n";
+  os << "******************************************************\n";
+
+  // Lists the path from i to j.
+
+  typename graph_traits<G>::vertex_iterator i, ie;
+  typename graph_traits<G>::vertex_iterator j, je;
+  
+  for (tie(i, ie) = vertices(g); i != ie; ++i)
+    for (tie(j, je) = vertices(g); j != je; ++j)
+      os << path_to_string(*i, *j, g) << std::endl;
+}
+
+/**
  * Return a container with vertexes of a graph.
  */
 template<typename C>

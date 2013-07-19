@@ -22,6 +22,7 @@ main (int argc, char* argv[])
 
   print_graph(g);
   print_subcarriers(g);
+  print_sp(g, cout);
 
   return 0;
 }
