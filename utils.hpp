@@ -47,9 +47,11 @@ void complete_graph(G &g)
 /**
  * Returns the distance.
  */
-template<typename V, typename G>
+template<typename G>
 int
-get_distance(V i, V j, const G &g)
+get_distance(typename graph_traits<Graph>::vertex_descriptor i,
+             typename graph_traits<Graph>::vertex_descriptor j,
+             const G &g)
 {
   return get(vertex_distance, g, i)[j];
 }
@@ -58,9 +60,11 @@ get_distance(V i, V j, const G &g)
  * Prints a path from node i to node j in graph g.
  */
 
-template<typename V, typename G>
+template<typename G>
 std::string
-path_to_string(V i, V j, const G &g)
+path_to_string(typename graph_traits<Graph>::vertex_descriptor i,
+               typename graph_traits<Graph>::vertex_descriptor j,
+               const G &g)
 {
   std::ostringstream str;
 
@@ -71,7 +75,7 @@ path_to_string(V i, V j, const G &g)
   if (i == j || get(vertex_predecessor, g, j)[i] != i)
     {
       int hops = 0;
-      V curr = i;
+      typename graph_traits<Graph>::vertex_descriptor curr = i;
 
       str << ": " << get(vertex_name, g, i);
 
