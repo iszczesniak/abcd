@@ -14,6 +14,10 @@
 #include <string>
 #include <vector>
 
+/**
+ * Calculates the shortests paths in the graph.
+ */
+
 template<typename G>
 void complete_graph(G &g)
 {
