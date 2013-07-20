@@ -49,8 +49,8 @@ void complete_graph(G &g)
  */
 template<typename G>
 int
-get_distance(typename graph_traits<Graph>::vertex_descriptor i,
-             typename graph_traits<Graph>::vertex_descriptor j,
+get_distance(typename graph_traits<G>::vertex_descriptor i,
+             typename graph_traits<G>::vertex_descriptor j,
              const G &g)
 {
   return get(vertex_distance, g, i)[j];
@@ -62,8 +62,8 @@ get_distance(typename graph_traits<Graph>::vertex_descriptor i,
 
 template<typename G>
 std::string
-path_to_string(typename graph_traits<Graph>::vertex_descriptor i,
-               typename graph_traits<Graph>::vertex_descriptor j,
+path_to_string(typename graph_traits<G>::vertex_descriptor i,
+               typename graph_traits<G>::vertex_descriptor j,
                const G &g)
 {
   std::ostringstream str;
