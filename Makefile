@@ -1,7 +1,7 @@
 TARGETS = first
 TARGET_OBJS = $(addsuffix .o, $(TARGETS))
 
-OBJS = graph.o utils_netgen.o
+OBJS = graph.o utils.o utils_netgen.o
 
 #CXXFLAGS = -g -Wno-deprecated
 CXXFLAGS = -O3 -Wno-deprecated

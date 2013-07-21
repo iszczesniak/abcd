@@ -1,6 +1,7 @@
 #include "graph.hpp"
 #include "utils_netgen.hpp"
 #include <iostream>
+#include <utility>
 
 #include <boost/random/linear_congruential.hpp>
 #include <boost/graph/graph_utility.hpp>
@@ -23,6 +24,8 @@ main (int argc, char* argv[])
   print_graph(g);
   print_subcarriers(g);
   print_sp(g, cout);
+
+  pair<Vertex, Vertex> p = random_node_pair(g, gen);
 
   return 0;
 }

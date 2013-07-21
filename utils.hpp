@@ -10,9 +10,11 @@
 
 #include <cassert>
 #include <iostream>
+#include <list>
 #include <map>
 #include <string>
 #include <vector>
+#include <set>
 
 /**
  * Calculates the shortests paths in the graph.
@@ -34,7 +36,7 @@ void complete_graph(G &g)
   typename graph_traits<G>::vertex_iterator vi, ve;
   for (tie(vi, ve) = vertices(g); vi != ve; ++vi)
     {
-      Vertex v = *vi;
+      typename graph_traits<G>::vertex_descriptor v = *vi;
 
       dijkstra_shortest_paths
         (g, v, predecessor_map(&pred[0]).distance_map(&dist[0]));
@@ -167,6 +169,60 @@ ostream &operator << (ostream &os, const vector<T> &v)
     }
 
   return os;
+}
+
+/**
+ * Make sure that the graph has only one connected component, and that
+ * perhaps there are some lonely vertexes.  Sort the list in the
+ * decreasing order of the number of elements in the sets.
+ */
+std::list<std::set<Vertex> >
+get_components(const Graph &g);
+
+/**
+ * There must be only one connected component.  There could be other
+ * components, but they can't be connected (i.e. they are lone
+ * vertexes).
+ *
+ * @return: true if only one component is connected, false otherwise.
+ */
+template<typename G>
+bool
+check_components(const G &g)
+{
+  typedef typename graph_traits<G>::vertex_descriptor Vertex;
+  typedef typename std::list<std::set<Vertex> > lsv;
+
+  lsv l = get_components(g);
+
+  int connected = 0;
+  // Count the number of connected components.
+  for (typename lsv::iterator i = l.begin(); i != l.end(); ++i)
+    connected += (i->size() >= 2);
+
+  return connected == 1;
+}
+
+/**
+ * Generate a random node pair.
+ */
+
+template<typename G, typename R>
+std::pair<typename graph_traits<G>::vertex_descriptor,
+          typename graph_traits<G>::vertex_descriptor>
+random_node_pair(const G &g, R &gen)
+{
+  assert(check_components(g));
+  /*  set<Vertex> s = *get_components(g).begin();
+
+  assert(s.size());
+  Vertex src = get_random_element(s, gen);
+  s.erase(src);
+  assert(s.size());
+  Vertex dst = get_random_element(s, gen);
+
+  return std::make_pair(src, dst);
+  */
 }
 
 #endif /* UTILS_HPP */
