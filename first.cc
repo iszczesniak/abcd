@@ -25,7 +25,14 @@ main (int argc, char* argv[])
   print_subcarriers(g);
   print_sp(g, cout);
 
-  pair<Vertex, Vertex> p = random_node_pair(g, gen);
+  for(int i = 0; i < 100; ++i)
+    {
+      pair<Vertex, Vertex> p = random_node_pair(g, gen);
+      cout << get(vertex_name, g, p.first)
+           << " "
+           << get(vertex_name, g, p.second)
+           << endl;
+    }
 
   return 0;
 }

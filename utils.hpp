@@ -212,8 +212,10 @@ std::pair<typename graph_traits<G>::vertex_descriptor,
           typename graph_traits<G>::vertex_descriptor>
 random_node_pair(const G &g, R &gen)
 {
+  typedef typename graph_traits<G>::vertex_descriptor Vertex;
+
   assert(check_components(g));
-  /*  set<Vertex> s = *get_components(g).begin();
+  std::set<Vertex> s = *get_components(g).begin();
 
   assert(s.size());
   Vertex src = get_random_element(s, gen);
@@ -222,7 +224,6 @@ random_node_pair(const G &g, R &gen)
   Vertex dst = get_random_element(s, gen);
 
   return std::make_pair(src, dst);
-  */
 }
 
 #endif /* UTILS_HPP */
