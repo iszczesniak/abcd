@@ -47,18 +47,6 @@ void complete_graph(G &g)
 }
 
 /**
- * Returns the distance.
- */
-template<typename G>
-int
-get_distance(typename graph_traits<G>::vertex_descriptor i,
-             typename graph_traits<G>::vertex_descriptor j,
-             const G &g)
-{
-  return get(vertex_distance, g, i)[j];
-}
-
-/**
  * Prints a path from node i to node j in graph g.
  */
 
@@ -89,7 +77,7 @@ path_to_string(typename graph_traits<G>::vertex_descriptor i,
         }
 
       str << ", hops = " << hops;
-      str << ", distance = " << get_distance(i, j, g);
+      str << ", distance = " << get(vertex_distance, g, i)[j];
     }
   else
     str << "doesn't exist";
