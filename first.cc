@@ -1,4 +1,5 @@
 #include "graph.hpp"
+#include "dijkstra.hpp"
 #include "utils_netgen.hpp"
 #include <iostream>
 
@@ -22,6 +23,8 @@ main (int argc, char* argv[])
 
   print_graph(g);
   print_subcarriers(g);
+
+  dijkstra(g, 0, 5, 2);
 
   return 0;
 }
