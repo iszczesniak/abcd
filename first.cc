@@ -2,6 +2,7 @@
 #include "dijkstra.hpp"
 #include "utils_netgen.hpp"
 #include <iostream>
+#include <utility>
 
 #include <boost/random/linear_congruential.hpp>
 #include <boost/graph/graph_utility.hpp>
@@ -23,6 +24,16 @@ main (int argc, char* argv[])
 
   print_graph(g);
   print_subcarriers(g);
+  print_sp(g, cout);
+
+  for(int i = 0; i < 100; ++i)
+    {
+      pair<Vertex, Vertex> p = random_node_pair(g, gen);
+      cout << get(vertex_name, g, p.first)
+           << " "
+           << get(vertex_name, g, p.second)
+           << endl;
+    }
 
   dijkstra(g, 0, 5, 2);
 

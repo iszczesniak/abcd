@@ -26,8 +26,8 @@ typedef
 adjacency_list <vecS, vecS, undirectedS,
                 property<vertex_name_t, string,
                 property<vertex_distance_t, vector<int>,
-		        property<vertex_predecessor_t, vector<Vertex> > > >,
-		        property<edge_weight_t, int, 
+                property<vertex_predecessor_t, vector<Vertex> > > >,
+                property<edge_weight_t, int, 
                 property<edge_subcarriers_t, vector<int> > > >
 Graph;
 
