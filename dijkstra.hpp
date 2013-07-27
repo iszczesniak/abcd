@@ -4,11 +4,11 @@
 // number, the second the number of contguous subcarriers used.
 typedef pair<int, int> BD;
 
-// 
-typedef map<BD, Edge> VPM;
+// Predecessor map.
+typedef map<BD, Edge> PM;
 
-// This is the result of the Dijkstra search.
-typedef map<Vertex, VPM> DSPR;
+// Vertex predecessor map, i.e. a map of vertexes to predecessor maps.
+typedef map<Vertex, PM> VPM;
 
-DSPR
+VPM
 dijkstra(const Graph &g, Vertex src, Vertex dst, int p);
