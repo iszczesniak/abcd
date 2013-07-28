@@ -14,6 +14,7 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p)
 
   while(!q.empty())
     {
+      // Here we process vertex v.  
       pair<int, Vertex> e = q.top();
       q.pop();
       int c = e.first;
@@ -24,7 +25,7 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p)
       for(tie(ei, eei) = out_edges(v, g); ei != eei; ++ei)
 	{
 	}
-    };
+    }
 
   return r;
 }

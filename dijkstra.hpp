@@ -4,6 +4,9 @@
 // number, the second the number of contguous subcarriers used.
 typedef pair<int, int> BD;
 
+// The set of band descriptions.
+typedef set<BD> BDS;
+
 // Predecessor map.
 typedef map<BD, Edge> PM;
 
