@@ -7,7 +7,7 @@ using namespace boost;
 using namespace std;
 
 MSCPI
-dijkstra(const Graph &g, Vertex src, Vertex dst, int p)
+dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &ssc)
 {
   MSCPI r;
 
@@ -18,7 +18,7 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p)
     set<int> all(counting_iterator<int>(0),
                  counting_iterator<int>(10));
 
-    r[src].insert(CPI(0, PI(*nei, all)));
+    r[src].insert(CPI(0, PI(*nei, ssc)));
   }
 
   // The priority queue of the pairs, where the first element in the
@@ -38,6 +38,15 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p)
       Vertex v = pqe.second.first;
       Edge e = pqe.second.second;
 
+      // The SCPI for node v in r.
+      SCPI &scpi = r[v];
+
+      // Security check: make sure there is the info in r on reaching
+      // vertex v along edge e with cost c.  Is there a chance that
+      // this info is missing?  For instance, a better result was
+      // found before and was introduced there?
+      //assert(includes(scpi, cost, edge));
+      
       // We reached vertex v with cost c.  Now we should know with
       // what subcarriers we reached this node.
 

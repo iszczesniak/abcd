@@ -20,4 +20,4 @@ typedef set<CPI> SCPI;
 typedef map<Vertex, SCPI> MSCPI;
 
 MSCPI
-dijkstra(const Graph &g, Vertex src, Vertex dst, int p);
+dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &ssc);

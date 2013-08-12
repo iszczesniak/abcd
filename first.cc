@@ -35,7 +35,9 @@ main (int argc, char* argv[])
            << endl;
     }
 
-  dijkstra(g, 0, 5, 2);
+  SSC all(counting_iterator<int>(0),
+          counting_iterator<int>(10));
+  dijkstra(g, 0, 5, 2, all);
 
   return 0;
 }
