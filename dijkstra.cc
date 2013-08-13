@@ -11,23 +11,29 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &ssc)
 {
   MSCPI r;
 
-  // The null edge iterator.
-  graph_traits<const Graph>::edge_iterator nei = edges(g).second;
+  // The null edge.
+  Edge ne = *(edges(g).second);
 
   // We put here the information that allows us to process the source
   // node in the loop below.  We say that we reach the source node
   // with cost 0 on the subcarriers passed in the ssc argument along
   // the null edge.  The null edge signals the beginning of the path.
-  r[src].insert(CPI(0, PI(*nei, ssc)));
+  r[src].insert(CPI(0, PI(ne, ssc)));
 
-  // The priority queue of the pairs, where the first element in the
-  // pair tells the cost of reaching vertex that is the second element
-  // in the pair.  We need not only the vertex, but also the edge to
-  // know what subcarriers we exactly need.
+  // The priority queue of the pairs.  In pair pqe the first element
+  // (pqe.first) tells the cost of reaching the vertex
+  // (pqe.second.first) along the edge (pqe.second.second).
+  //
+  // We need to know not only the vertex, but the edge too, because we
+  // allow for multigraphs (i.e. with parallel edges), and so we need
+  // to know what edge was used to reach the vertex.  We could pass
+  // only the edge and figure our the vertex from the edge, but there
+  // is one special case that prevents us from doing that: the
+  // processing of the source node, where the edge is the null edge.
   priority_queue<pair<int, pair<Vertex, Edge> > > q;
 
   // We reach the source vertex with cost 0 along the null edge.
-  q.push(make_pair(0, make_pair(src, *nei)));
+  q.push(make_pair(0, make_pair(src, ne)));
 
   while(!q.empty())
     {
