@@ -32,7 +32,7 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &ssc)
   // node, for which the edge the null edge is used.
   priority_queue<pair<int, pair<Vertex, Edge> > > q;
 
-  // We reach the source vertex with cost 0 along the null edge.
+  // We reach vertex src with cost 0 along the null edge.
   q.push(make_pair(0, make_pair(src, ne)));
 
   while(!q.empty())
