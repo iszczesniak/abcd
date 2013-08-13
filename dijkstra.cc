@@ -28,8 +28,8 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &ssc)
   // allow for multigraphs (i.e. with parallel edges), and so we need
   // to know what edge was used to reach the vertex.  We could pass
   // only the edge and figure our the vertex from the edge, but there
-  // is one special case that prevents us from doing that: the
-  // processing of the source node, where the edge is the null edge.
+  // is one special case that prevents us from doing that: the source
+  // node, for which the edge the null edge is used.
   priority_queue<pair<int, pair<Vertex, Edge> > > q;
 
   // We reach the source vertex with cost 0 along the null edge.
