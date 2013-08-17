@@ -26,11 +26,14 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &ssc)
   //
   // We need to know not only the vertex, but the edge too, because we
   // allow for multigraphs (i.e. with parallel edges), and so we need
-  // to know what edge was used to reach the vertex.  We could pass
-  // only the edge and figure our the vertex from the edge, but there
-  // is one special case that prevents us from doing that: the source
-  // node, for which the edge the null edge is used.
-  priority_queue<pair<int, pair<Vertex, Edge> > > q;
+  // to know what edge was used to reach the vertex.
+  // 
+  // We could pass only the edge and figure out the vertex from the
+  // edge, but there is one special case that prevents us from doing
+  // that: the source node, for which the null edge is used.
+  // Furthermore, figuring out the end node might be problematic for
+  // undirected graphs.
+  priority_queue<pair<pair<int, Edge>, Vertex> > q;
 
   // We reach vertex src with cost 0 along the null edge.
   q.push(make_pair(0, make_pair(src, ne)));
@@ -38,11 +41,11 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &ssc)
   while(!q.empty())
     {
       // Here we process vertex v.  
-      pair<int, pair<Vertex, Edge> > pqe = q.top();
+      pair<pair<int, Edge>, Vertex> pqe = q.top();
       q.pop();
-      int c = pqe.first;
-      Vertex v = pqe.second.first;
-      Edge e = pqe.second.second;
+      int c = pqe.first.first;
+      Edge e = pqe.first.second;
+      Vertex v = pqe.second;
 
       // The SCPI for node v in r.
       SCPI &scpi = r[v];
