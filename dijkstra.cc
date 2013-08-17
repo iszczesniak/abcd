@@ -43,12 +43,16 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &ssc)
       // Here we process vertex v.  
       pair<CEP, Vertex> pqe = q.top();
       q.pop();
+      CEP &cep = pqe.first;
       int c = pqe.first.first;
       Edge e = pqe.first.second;
       Vertex v = pqe.second;
 
       // The C2S for node v.
-      C2S &scpi = r[v];
+      C2S &c2s = r[v];
+
+      // The CEP that we process in this loop can be in the C2S for
+      // node v or it can be missing.
 
       // Security check: make sure there is the info in r on reaching
       // vertex v along edge e with cost c.  Is there a chance that
