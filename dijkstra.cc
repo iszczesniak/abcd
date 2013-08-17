@@ -6,10 +6,10 @@
 using namespace boost;
 using namespace std;
 
-MSCPI
+V2C2S
 dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &ssc)
 {
-  MSCPI r;
+  V2C2S r;
 
   // The null edge.
   Edge ne = *(edges(g).second);
@@ -18,7 +18,7 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &ssc)
   // node in the loop below.  We say that we reach the source node
   // with cost 0 on the subcarriers passed in the ssc argument along
   // the null edge.  The null edge signals the beginning of the path.
-  r[src].insert(CPI(0, PI(ne, ssc)));
+  r[src][CEP(0, ne)] = ssc;
 
   // The priority queue of the pairs.  In pair pqe the first element
   // (pqe.first) tells the cost of reaching the vertex
@@ -33,22 +33,22 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &ssc)
   // that: the source node, for which the null edge is used.
   // Furthermore, figuring out the end node might be problematic for
   // undirected graphs.
-  priority_queue<pair<pair<int, Edge>, Vertex> > q;
+  priority_queue<pair<CEP, Vertex> > q;
 
   // We reach vertex src with cost 0 along the null edge.
-  q.push(make_pair(0, make_pair(src, ne)));
+  q.push(make_pair(make_pair(0, ne), src));
 
   while(!q.empty())
     {
       // Here we process vertex v.  
-      pair<pair<int, Edge>, Vertex> pqe = q.top();
+      pair<CEP, Vertex> pqe = q.top();
       q.pop();
       int c = pqe.first.first;
       Edge e = pqe.first.second;
       Vertex v = pqe.second;
 
-      // The SCPI for node v in r.
-      SCPI &scpi = r[v];
+      // The C2S for node v.
+      C2S &scpi = r[v];
 
       // Security check: make sure there is the info in r on reaching
       // vertex v along edge e with cost c.  Is there a chance that

@@ -4,20 +4,20 @@
 #include <set>
 #include <utility>
 
+// The cost and edge pair.  It is used to store the cost of reaching a
+// node along the given edge.
+typedef pair<int, Edge> CEP;
+
 // The set of subcarriers.
 typedef set<int> SSC;
 
-// The predecessor info.
-typedef pair<Edge, SSC> PI;
+// The mapping from CEP to SSC.  This mapping tells what SSC is
+// available at a node provided a given CEP was used.
+typedef map<CEP, SSC> C2S;
 
-// The cost associated with the predecessor info.
-typedef pair<int, PI> CPI;
+// A map of vertexes to C2S.  It's used to store the complete
+// information on the
+typedef map<Vertex, C2S> V2C2S;
 
-// The set of the CPIs.
-typedef set<CPI> SCPI;
-
-// Vertex predecessor map, i.e. a map of vertexes to predecessor maps.
-typedef map<Vertex, SCPI> MSCPI;
-
-MSCPI
+V2C2S
 dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &ssc);
