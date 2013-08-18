@@ -1,12 +1,23 @@
 #include "dijkstra.hpp"
+#include "graph.hpp"
+
+#include <iterator>
 #include <queue>
 #include <utility>
 
 using namespace boost;
 using namespace std;
 
+SSC
+exclude(const SSC &ssc, int p)
+{
+  SSC result;
+
+  return result;
+}
+
 V2C2S
-dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &ssc)
+dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
 {
   V2C2S r;
 
@@ -17,7 +28,9 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &ssc)
   // node in the loop below.  We say that we reach the source node
   // with cost 0 on the subcarriers passed in the ssc argument along
   // the null edge.  The null edge signals the beginning of the path.
-  r[src][CEP(0, ne)] = ssc;
+  // We have to filter ssc to exclude subcarriers that can't support
+  // the signal with p subcarriers.
+  r[src][CEP(0, ne)] = exclude(src_ssc, p);
 
   // The following map implements the priority queue.  The key is a
   // CEP, and the value is the vertex we are reaching.  The maps works
@@ -45,6 +58,7 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &ssc)
     {
       map<CEP, Vertex>::iterator i = q.begin();
       CEP cep = i->first;
+      // We have them at cost c and after crossing edge e.
       Vertex v = i->second;
       int c = cep.first;
       Edge e = cep.second;
@@ -55,16 +69,28 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &ssc)
 
       // The CEP that we process in this loop has to be in the C2S for
       // node v.
-      C2S::iterator j = c2s.find(cep);
+      C2S::const_iterator j = c2s.find(cep);
       assert(j != c2s.end());
 
-      // We reached vertex v with cost c.  Now we should know with
-      // what subcarriers we reached this node.
+      // These subcarriers are now available at node v for further
+      // search.  There might be other subcarriers available in the
+      // c2s, but we care only about the one that we got with edge e
+      // at cost c.
+      const SSC &v_ssc = j->second;
 
       // Itereate over the out edges of the vertex.
       graph_traits<Graph>::out_edge_iterator ei, eei;
       for(tie(ei, eei) = out_edges(v, g); ei != eei; ++ei)
       	{
+	  Edge e = *ei;
+	  
+	  const SSC &l_ssc = get(edge_subcarriers, g, e);
+
+	  // Candidate SSC.
+	  SSC c_ssc;
+	  // SSC set_intersection(v_ssc.begin(), v_ssc.end(),
+	  // l_ssc.begin(), l_ssc.end(),
+	  // inserter(c_ssc, c_ssc.begin()));
       	}
     }
 
