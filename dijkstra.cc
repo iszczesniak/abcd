@@ -88,9 +88,9 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
 
 	  // Candidate SSC.
 	  SSC c_ssc;
-	  // SSC set_intersection(v_ssc.begin(), v_ssc.end(),
-	  // l_ssc.begin(), l_ssc.end(),
-	  // inserter(c_ssc, c_ssc.begin()));
+	  set_intersection(v_ssc.begin(), v_ssc.end(),
+			   l_ssc.begin(), l_ssc.end(),
+			   inserter(c_ssc, c_ssc.begin()));
       	}
     }
 
