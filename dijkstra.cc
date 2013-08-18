@@ -1,7 +1,6 @@
 #include "dijkstra.hpp"
 #include <queue>
 #include <utility>
-#include <boost/iterator/counting_iterator.hpp>
 
 using namespace boost;
 using namespace std;
@@ -54,23 +53,19 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &ssc)
       // The C2S for node v.
       C2S &c2s = r[v];
 
-      // The CEP that we process in this loop can be in the C2S for
-      // node v or it can be missing.
+      // The CEP that we process in this loop has to be in the C2S for
+      // node v.
+      C2S::iterator j = c2s.find(cep);
+      assert(j != c2s.end());
 
-      // Security check: make sure there is the info in r on reaching
-      // vertex v along edge e with cost c.  Is there a chance that
-      // this info is missing?  For instance, a better result was
-      // found before and was introduced there?
-      //assert(includes(scpi, cost, edge));
-      
       // We reached vertex v with cost c.  Now we should know with
       // what subcarriers we reached this node.
 
       // Itereate over the out edges of the vertex.
-      //      graph_traits<Graph>::out_edge_iterator ei, eei;
-      //      for(tie(ei, eei) = out_edges(v, g); ei != eei; ++ei)
-      //	{
-      //	}
+      graph_traits<Graph>::out_edge_iterator ei, eei;
+      for(tie(ei, eei) = out_edges(v, g); ei != eei; ++ei)
+      	{
+      	}
     }
 
   return r;

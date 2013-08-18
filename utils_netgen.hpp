@@ -10,6 +10,7 @@
 
 #include <boost/graph/random.hpp>
 #include <boost/graph/iteration_macros.hpp>
+#include <boost/iterator/counting_iterator.hpp>
 
 /**
  * Names the vertices.
@@ -36,13 +37,14 @@ template<typename G>
 void
 set_subcarriers(G &g, int subcarriers)
 {
-  std::vector<int> v(subcarriers);
-  
+  SSC ssc(counting_iterator<int>(0),
+          counting_iterator<int>(subcarriers));
+
   typename property_map<G, edge_subcarriers_t>::type
     pm = get(edge_subcarriers_t(), g);
   typename graph_traits<G>::edge_iterator ei, ee;
   for (tie(ei, ee) = edges(g); ei != ee; ++ei)
-    pm[*ei] = v;
+    pm[*ei] = ssc;
 }
 
 /**

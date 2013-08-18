@@ -11,7 +11,7 @@
 #include <cassert>
 #include <iostream>
 #include <list>
-#include <map>
+#include <set>
 #include <string>
 #include <vector>
 #include <set>
@@ -148,6 +148,24 @@ template <typename T>
 ostream &operator << (ostream &os, const vector<T> &v)
 {
   typename vector<T>::const_iterator i = v.begin();
+
+  while(i != v.end())
+    {
+      os << *i;
+      if (++i != v.end())
+        os << ", ";
+    }
+
+  return os;
+}
+
+/**
+ * This is the << operator for a set.
+ */
+template <typename T>
+ostream &operator << (ostream &os, const set<T> &v)
+{
+  typename set<T>::const_iterator i = v.begin();
 
   while(i != v.end())
     {
