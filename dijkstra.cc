@@ -20,9 +20,13 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &ssc)
   // the null edge.  The null edge signals the beginning of the path.
   r[src][CEP(0, ne)] = ssc;
 
-  // The priority queue of the pairs.  In pair pqe the first element
-  // (pqe.first) tells the cost of reaching the vertex
-  // (pqe.second.first) along the edge (pqe.second.second).
+  // The following map implements the priority queue.  The key is a
+  // CEP, and the value is the vertex we are reaching.  The maps works
+  // as the priority queue since the first element in the key is the
+  // cost, and since the map sorts its elements in the ascending
+  // order.  The value is the vertex.  The value could be null as
+  // well, but we want to use CEP as a key, and need to store the
+  // vertex as well.
   //
   // We need to know not only the vertex, but the edge too, because we
   // allow for multigraphs (i.e. with parallel edges), and so we need
@@ -33,20 +37,19 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &ssc)
   // that: the source node, for which the null edge is used.
   // Furthermore, figuring out the end node might be problematic for
   // undirected graphs.
-  priority_queue<pair<CEP, Vertex> > q;
+  map<CEP, Vertex> q;
 
   // We reach vertex src with cost 0 along the null edge.
-  q.push(make_pair(make_pair(0, ne), src));
+  q[make_pair(0, ne)] = src;
 
   while(!q.empty())
     {
-      // Here we process vertex v.  
-      pair<CEP, Vertex> pqe = q.top();
-      q.pop();
-      CEP &cep = pqe.first;
-      int c = pqe.first.first;
-      Edge e = pqe.first.second;
-      Vertex v = pqe.second;
+      map<CEP, Vertex>::iterator i = q.begin();
+      CEP cep = i->first;
+      Vertex v = i->second;
+      int c = cep.first;
+      Edge e = cep.second;
+      q.erase(i);
 
       // The C2S for node v.
       C2S &c2s = r[v];
