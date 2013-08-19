@@ -1,5 +1,6 @@
 #include "dijkstra.hpp"
 #include "graph.hpp"
+#include "utils.hpp"
 
 #include <iterator>
 #include <queue>
@@ -7,14 +8,6 @@
 
 using namespace boost;
 using namespace std;
-
-SSC
-exclude(const SSC &ssc, int p)
-{
-  SSC result;
-
-  return result;
-}
 
 V2C2S
 dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)

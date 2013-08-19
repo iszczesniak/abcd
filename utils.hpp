@@ -17,6 +17,14 @@
 #include <set>
 
 /**
+ * Exclude those subcarriers that won't be able to support a signal
+ * with p subcarriers.
+ */
+
+SSC
+exclude(const SSC &ssc, int p);
+
+/**
  * Calculates the shortests paths in the graph.
  */
 

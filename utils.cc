@@ -8,6 +8,14 @@
 
 using namespace std;
 
+SSC
+exclude(const SSC &ssc, int p)
+{
+  SSC result;
+
+  return result;
+}
+
 // The function for sorting the list of sets.
 static bool stlos(const set<Vertex> &s1, const set<Vertex> &s2)
 {
