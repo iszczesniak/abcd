@@ -13,6 +13,35 @@ exclude(const SSC &ssc, int p)
 {
   SSC result;
 
+  SSC::const_iterator i = ssc.begin();
+
+  while(i != ssc.end())
+    {
+      SSC partial;
+
+      // This loop builds the "partial" set with contiguous
+      // subcarriers.  In an interation we examine a single
+      // subcarrier.
+      while(i != ssc.end())
+        {
+          int sc = *i;
+
+          // The break condition for this loop, i.e. the condition to
+          // stop building the partial set.  If we break the loop, we
+          // don't add the sc element and don't increment i.
+          if (!partial.empty() && ((*partial.rbegin() + 1) != sc))
+            break;
+
+          partial.insert(sc);
+          ++i;
+        }
+
+      // Add the partial set only if has at least p subcarriers.
+      // Otherwise just ignore it.
+      if (partial.size() >= p)
+        result.insert(partial.begin(), partial.end());
+    }
+
   return result;
 }
 
