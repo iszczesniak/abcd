@@ -1,4 +1,4 @@
-TESTS = main
+TESTS = utils
 
 #CXXFLAGS = -g -Wno-deprecated
 CXXFLAGS = -O3 -Wno-deprecated
@@ -9,14 +9,15 @@ CXXFLAGS := $(CXXFLAGS) -I ../
 #BOOSTPATH = /usr/local/boost-1.43
 #CXXFLAGS := $(CXXFLAGS) -I $(BOOSTPATH)/include
 #LDFLAGS := $(LDFLAGS) -L $(BOOSTPATH)/lib
-LDFLAGS := $(LDFLAGS) -l boost_unit_test_framework-mt
 LDFLAGS := $(LDFLAGS) -l boost_test_exec_monitor-mt
+LDFLAGS := $(LDFLAGS) -l boost_unit_test_framework-mt
 
 .PHONY: clean depend run
 
 all: $(TESTS)
 
-main: ../utils.o utils.o
+utils: utils.o ../utils.o
+	g++ $(CXXFLAGS) $< $(LDFLAGS) -o $@
 
 # run the tests
 run:
