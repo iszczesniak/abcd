@@ -17,7 +17,7 @@ LDFLAGS := $(LDFLAGS) -l boost_unit_test_framework-mt
 all: $(TESTS)
 
 utils: utils.o ../utils.o
-	g++ $(CXXFLAGS) $< $(LDFLAGS) -o $@
+	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 # run the tests
 run:

@@ -6,7 +6,12 @@
 
 BOOST_AUTO_TEST_CASE(exclude_test_1)
 {
-  BOOST_CHECK(true);
+  SSC ssc;
+  ssc.insert(0);
+  ssc.insert(1);
+
+  SSC r = exclude(ssc, 3);
+  BOOST_CHECK(r.empty());
 }
 
 BOOST_AUTO_TEST_CASE(exclude_test_2)
