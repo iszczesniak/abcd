@@ -4,10 +4,26 @@
 
 #include <iterator>
 #include <queue>
+#include <map>
 #include <utility>
 
 using namespace boost;
 using namespace std;
+
+void
+relax(map<CEP, Vertex> &p, C2S &c2s, const CEP &cep, const SSC &ssc)
+{
+  // These are the situations that may happen:
+
+  // 1. If there is already a better result in r[t], then ignore this
+  // c_cep: don't modify r[t] and don't add a new element into p.
+
+  // 2. If this c_cep is new to r[t], then add c_cep to r[t], and add
+  // the event to p.
+
+  // 3. If this c_cep is better then the results in r[t], then modify
+  // r[t], remove the old entry in p, and add a new one.
+}
 
 V2C2S
 dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
@@ -51,19 +67,15 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
     {
       map<CEP, Vertex>::iterator i = q.begin();
       CEP cep = i->first;
-      // We have them at cost c and after crossing edge e.
       Vertex v = i->second;
       int c = cep.first;
       Edge e = cep.second;
       q.erase(i);
 
-      // The C2S for node v.
-      C2S &c2s = r[v];
-
       // The CEP that we process in this loop has to be in the C2S for
       // node v.
-      C2S::const_iterator j = c2s.find(cep);
-      assert(j != c2s.end());
+      C2S::const_iterator j = r[v].find(cep);
+      assert(j != r[v].end());
 
       // These subcarriers are now available at node v for further
       // search.  There might be other subcarriers available in the
@@ -75,12 +87,23 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
       graph_traits<Graph>::out_edge_iterator ei, eei;
       for(tie(ei, eei) = out_edges(v, g); ei != eei; ++ei)
       	{
+          // The Edge the we examine in this iteration.
 	  Edge e = *ei;
-	  
+          // The target vertex of the edge.
+          Vertex t = target(e, g);
+          // The cost of the edge.
+          int ec = get(edge_weight, g, e);
+          // The subcarriers available on the edge.
 	  const SSC &l_ssc = get(edge_subcarriers, g, e);
 
+          // Candidate cost.
+          int new_cost = c + ec;
 	  // Candidate SSC.
-	  SSC c_ssc = intersection(v_ssc, l_ssc);
+	  SSC c_ssc = exclude(intersection(v_ssc, l_ssc), p);
+          // Candidate CEP.
+          CEP c_cep = make_pair(new_cost, e);
+
+          relax(q, r[t], c_cep, c_ssc);
       	}
     }
 
