@@ -17,6 +17,12 @@
 #include <set>
 
 /**
+ * SSC intersection.
+ */
+SSC
+intersection(const SSC &s1, const SSC &s2);
+
+/**
  * Exclude those subcarriers that won't be able to support a signal
  * with p subcarriers.
  */

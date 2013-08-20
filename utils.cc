@@ -9,6 +9,18 @@
 using namespace std;
 
 SSC
+intersection(const SSC &s1, const SSC &s2)
+{
+  SSC r;
+
+  set_intersection(s1.begin(), s1.end(),
+                   s2.begin(), s2.end(),
+                   inserter(r, r.begin()));
+
+  return r;
+}
+
+SSC
 exclude(const SSC &ssc, int p)
 {
   SSC result;

@@ -80,10 +80,7 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
 	  const SSC &l_ssc = get(edge_subcarriers, g, e);
 
 	  // Candidate SSC.
-	  SSC c_ssc;
-	  set_intersection(v_ssc.begin(), v_ssc.end(),
-			   l_ssc.begin(), l_ssc.end(),
-			   inserter(c_ssc, c_ssc.begin()));
+	  SSC c_ssc = intersection(v_ssc, l_ssc);
       	}
     }
 
