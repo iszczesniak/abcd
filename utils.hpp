@@ -17,6 +17,12 @@
 #include <set>
 
 /**
+ * Check whether b is a subset of a.
+ */
+bool
+includes(const SSC &a, const SSC &b);
+
+/**
  * SSC intersection.
  */
 SSC

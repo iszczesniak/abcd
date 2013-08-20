@@ -8,13 +8,19 @@
 
 using namespace std;
 
+bool
+includes(const SSC &a, const SSC &b)
+{
+  includes(a.begin(), a.end(), b.begin(), b.end());
+}
+
 SSC
-intersection(const SSC &s1, const SSC &s2)
+intersection(const SSC &a, const SSC &b)
 {
   SSC r;
 
-  set_intersection(s1.begin(), s1.end(),
-                   s2.begin(), s2.end(),
+  set_intersection(a.begin(), a.end(),
+                   b.begin(), b.end(),
                    inserter(r, r.begin()));
 
   return r;
