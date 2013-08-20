@@ -6,15 +6,33 @@
 
 BOOST_AUTO_TEST_CASE(exclude_test_1)
 {
-  SSC ssc;
+  SSC ssc, r;
+
+  r = exclude(ssc, 2);
+  BOOST_CHECK(r.empty());
+
   ssc.insert(0);
+
+  r = exclude(ssc, 2);
+  BOOST_CHECK(r.empty());
+
   ssc.insert(1);
 
-  SSC r = exclude(ssc, 3);
-  BOOST_CHECK(r.empty());
-}
+  r = exclude(ssc, 2);
+  BOOST_CHECK(r.size() == 2);
 
-BOOST_AUTO_TEST_CASE(exclude_test_2)
-{
-  BOOST_CHECK(true);
+  ssc.insert(3);
+
+  r = exclude(ssc, 2);
+  BOOST_CHECK(r.size() == 2);
+
+  ssc.insert(4);
+
+  r = exclude(ssc, 2);
+  BOOST_CHECK(r.size() == 4);
+
+  ssc.insert(5);
+
+  r = exclude(ssc, 2);
+  BOOST_CHECK(r.size() == 5);
 }
