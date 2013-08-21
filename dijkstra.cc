@@ -10,19 +10,56 @@
 using namespace boost;
 using namespace std;
 
-void
-relax(map<CEP, Vertex> &p, C2S &c2s, const CEP &cep, const SSC &ssc)
+/**
+ * Check whether there is a better or equal result in c2s, i.e. of a
+ * lower or equal cost and with a SSC that includes "ssc".
+ */
+bool
+has_better_or_equal(const C2S &c2s, int cost, const SSC &ssc)
 {
-  // These are the situations that may happen:
+  // We examine the results with the cost lower or equal to "cost".
+  for (C2S::const_iterator i = c2s.begin();
+       i->first.first <= cost && i != c2s.end();
+       ++i)
+    // Check whether the result includes "ssc".
+    if (includes(i->second, ssc))
+      return true;
 
-  // 1. If there is already a better result in r[t], then ignore this
-  // c_cep: don't modify r[t] and don't add a new element into p.
+  return false;
+}
 
-  // 2. If this c_cep is new to r[t], then add c_cep to r[t], and add
-  // the event to p.
+/**
+ * Check whether there is a worse or equal result in c2s, i.e. of a
+ * larger or equal cost and with a SSC that is included in "ssc".
+ */
+bool
+purge_worse(map<CEP, Vertex> &q, C2S &c2s, int cost, const SSC &ssc)
+{
+  // We examine the results with the cost larger or equal to "cost".
+  for(C2S::reverse_iterator i = c2s.rbegin();
+      i->first.first >= cost && i != c2s.rend();
+      ++i)
+    // Check whether "ssc" includes the result.
+    if (includes(ssc, i->second))
+      {
+        q.erase(i->first);
+        c2s.erase(i->first);
+      }
+}
 
-  // 3. If this c_cep is better then the results in r[t], then modify
-  // r[t], remove the old entry in p, and add a new one.
+void
+relaks(map<CEP, Vertex> &q, C2S &c2s, const CEP &cep, Vertex v, const SSC &ssc)
+{
+  // Check whether there is an SSC in c2s that includes c_ssc at the
+  // same or lower cost then c_cep.  If yes, then just return.
+  if (!has_better_or_equal(c2s, cep.first, ssc))
+    {
+      purge_worse(q, c2s, cep.first, ssc);
+
+      // Since there was no better result, we use the candidate one.
+      q[cep] = v;
+      c2s[cep] = ssc;
+    }
 }
 
 V2C2S
@@ -87,7 +124,7 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
       graph_traits<Graph>::out_edge_iterator ei, eei;
       for(tie(ei, eei) = out_edges(v, g); ei != eei; ++ei)
       	{
-          // The Edge the we examine in this iteration.
+          // The Edge that we examine in this iteration.
 	  Edge e = *ei;
           // The target vertex of the edge.
           Vertex t = target(e, g);
@@ -103,7 +140,7 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
           // Candidate CEP.
           CEP c_cep = make_pair(new_cost, e);
 
-          relax(q, r[t], c_cep, c_ssc);
+          relaks(q, r[t], c_cep, t, c_ssc);
       	}
     }
 
