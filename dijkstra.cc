@@ -19,7 +19,7 @@ has_better_or_equal(const C2S &c2s, int cost, const SSC &ssc)
 {
   // We examine the results with the cost lower or equal to "cost".
   for (C2S::const_iterator i = c2s.begin();
-       i->first.first <= cost && i != c2s.end();
+       i != c2s.end() && i->first.first <= cost;
        ++i)
     // Check whether the result includes "ssc".
     if (includes(i->second, ssc))
@@ -36,15 +36,20 @@ bool
 purge_worse(map<CEP, Vertex> &q, C2S &c2s, int cost, const SSC &ssc)
 {
   // We examine the results with the cost larger or equal to "cost".
-  for(C2S::reverse_iterator i = c2s.rbegin();
-      i->first.first >= cost && i != c2s.rend();
-      ++i)
+  C2S::iterator i = c2s.lower_bound(make_pair(cost, Edge()));
+  
+  while(i != c2s.end())
     // Check whether "ssc" includes the result.
     if (includes(ssc, i->second))
       {
+        C2S::iterator j = i;
+        ++j;
         q.erase(i->first);
-        c2s.erase(i->first);
+        c2s.erase(i);
+        i = j;
       }
+    else
+      ++i;
 }
 
 void
