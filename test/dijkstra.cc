@@ -1,55 +1,29 @@
 #include "utils.hpp"
+#include "utils_netgen.hpp"
+#include "dijkstra.hpp"
+
+#include <iostream>
 
 #define BOOST_TEST_MODULE Utils
 
 #include <boost/test/unit_test.hpp>
 
-BOOST_AUTO_TEST_CASE(exclude_test)
+BOOST_AUTO_TEST_CASE(dijkstra_test_1)
 {
-  SSC ssc, r;
+  Graph g(2);
+  Vertex src = *(vertices(g).first);
+  Vertex dst = *(vertices(g).first + 1);
+  add_edge(src, dst, g);
+  set_subcarriers(g, 2);
 
-  r = exclude(ssc, 2);
-  BOOST_CHECK(r.empty());
+  SSC ssc(counting_iterator<int>(0),
+          counting_iterator<int>(3));
 
-  ssc.insert(0);
+  V2C2S result = dijkstra(g, src, dst, 3, ssc);
 
-  r = exclude(ssc, 2);
-  BOOST_CHECK(r.empty());
+  cout << "size = "<< result[dst].size() << endl;
+  cout << "cost = " << result[dst].begin()->first.first << endl;
+  cout << "SSC = " << result[dst].begin()->second << endl;
 
-  ssc.insert(1);
-
-  r = exclude(ssc, 2);
-  BOOST_CHECK(r.size() == 2);
-
-  ssc.insert(3);
-
-  r = exclude(ssc, 2);
-  BOOST_CHECK(r.size() == 2);
-
-  ssc.insert(4);
-
-  r = exclude(ssc, 2);
-  BOOST_CHECK(r.size() == 4);
-
-  ssc.insert(5);
-
-  r = exclude(ssc, 2);
-  BOOST_CHECK(r.size() == 5);
-}
-
-BOOST_AUTO_TEST_CASE(includes_test)
-{
-  SSC a, b;
-
-  a.insert(0);
-
-  BOOST_CHECK(includes(a, b));
-
-  b.insert(1);
-
-  BOOST_CHECK(!includes(a, b));
-
-  a.insert(1);
-
-  BOOST_CHECK(includes(a, b));
+  BOOST_CHECK(result[dst].empty());
 }

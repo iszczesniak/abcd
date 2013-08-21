@@ -134,21 +134,25 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
       	{
           // The Edge that we examine in this iteration.
 	  Edge e = *ei;
-          // The target vertex of the edge.
-          Vertex t = target(e, g);
-          // The cost of the edge.
-          int ec = get(edge_weight, g, e);
           // The subcarriers available on the edge.
 	  const SSC &l_ssc = get(edge_subcarriers, g, e);
 
-          // Candidate cost.
-          int new_cost = c + ec;
 	  // Candidate SSC.
 	  SSC c_ssc = exclude(intersection(v_ssc, l_ssc), p);
-          // Candidate CEP.
-          CEP c_cep = make_pair(new_cost, e);
 
-          relaks(q, r[t], c_cep, t, c_ssc);
+          if (!c_ssc.empty())
+            {
+              // The cost of the edge.
+              int ec = get(edge_weight, g, e);
+              // Candidate cost.
+              int new_cost = c + ec;
+              // Candidate CEP.
+              CEP c_cep = make_pair(new_cost, e);
+              // The target vertex of the edge.
+              Vertex t = target(e, g);
+
+              relaks(q, r[t], c_cep, t, c_ssc);
+            }
       	}
     }
 
