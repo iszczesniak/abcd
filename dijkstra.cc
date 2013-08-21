@@ -118,6 +118,10 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
       C2S::const_iterator j = r[v].find(cep);
       assert(j != r[v].end());
 
+      // Stop searching if we have reached the destination node.
+      if (v == dst)
+        break;
+
       // These subcarriers are now available at node v for further
       // search.  There might be other subcarriers available in the
       // c2s, but we care only about the one that we got with edge e
