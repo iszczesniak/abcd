@@ -1,4 +1,6 @@
-TESTS = utils
+TESTS = dijkstra utils
+
+OBJS = ../dijkstra.o ../graph.o ../utils.o
 
 #CXXFLAGS = -g -Wno-deprecated
 CXXFLAGS = -O3 -Wno-deprecated
@@ -16,7 +18,10 @@ LDFLAGS := $(LDFLAGS) -l boost_unit_test_framework-mt
 
 all: $(TESTS)
 
-utils: utils.o ../utils.o
+utils: utils.o $(OBJS)
+	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
+
+dijkstra: dijkstra.o $(OBJS)
 	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 # run the tests
