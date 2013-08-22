@@ -49,6 +49,9 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_3)
   Edge e2 = add_edge(src, mid, g).first;
   Edge e3 = add_edge(mid, dst, g).first;
 
+  // Make sure we can represent multi-graphs.
+  BOOST_CHECK(e1 != e2);
+
   // Props of edge e1.
   get(edge_weight, g, e1) = 1;
   get(edge_subcarriers, g, e1).insert(0);
@@ -64,12 +67,18 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_3)
   get(edge_subcarriers, g, e3).insert(2);
   get(edge_subcarriers, g, e3).insert(3);
 
-  // Make sure we can represent multi-graphs.
-  BOOST_CHECK(e1 != e2);
-
   SSC ssc(counting_iterator<int>(0), counting_iterator<int>(4));
 
   V2C2S result = dijkstra(g, src, dst, 2, ssc);
 
+  // We found the path.
   BOOST_CHECK(!result[dst].empty());
+  // The cost of the path is 3.
+  BOOST_CHECK(result[dst].begin()->first.first == 3);
+  // We reach the destination by edge e3.
+  BOOST_CHECK(result[dst].begin()->first.second == e3);
+  // There are two subcarriers in the solution.
+  BOOST_CHECK(result[dst].begin()->second.size() == 2);
+  BOOST_CHECK(*(result[dst].begin()->second.begin()) == 2);
+  BOOST_CHECK(*(++(result[dst].begin()->second.begin())) == 3);
 }
