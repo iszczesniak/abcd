@@ -21,9 +21,5 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_1)
 
   V2C2S result = dijkstra(g, src, dst, 3, ssc);
 
-  cout << "size = "<< result[dst].size() << endl;
-  cout << "cost = " << result[dst].begin()->first.first << endl;
-  cout << "SSC = " << result[dst].begin()->second << endl;
-
   BOOST_CHECK(result[dst].empty());
 }
