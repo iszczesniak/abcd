@@ -4,7 +4,7 @@ TARGET_OBJS = $(addsuffix .o, $(TARGETS))
 OBJS = dijkstra.o graph.o utils.o utils_netgen.o
 
 #CXXFLAGS = -g -Wno-deprecated
-CXXFLAGS = -O3 -Wno-deprecated
+CXXFLAGS = -O1 -Wno-deprecated
 
 # Boost
 LDFLAGS := $(LDFLAGS) -l boost_graph-mt
