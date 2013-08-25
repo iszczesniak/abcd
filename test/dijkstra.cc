@@ -135,3 +135,50 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_4)
   // We don't remember the results for edge e1.
   BOOST_CHECK(result[mid].begin()->second.size() == 1);
 }
+
+/*
+ * Make sure we remember at node mid the results for both edge e1 and
+ * e2.  e2 offers the shortest path with subcarrier 0, and e1 offers
+ * the two subcarriers: 0 and 1 albeit at a higher cost.
+ */
+BOOST_AUTO_TEST_CASE(dijkstra_test_5)
+{
+  Graph g(3);
+  Vertex src = *(vertices(g).first);
+  Vertex mid = *(vertices(g).first + 1);
+  Vertex dst = *(vertices(g).first + 2);
+  Edge e1 = add_edge(src, mid, g).first;
+  Edge e2 = add_edge(src, mid, g).first;
+  Edge e3 = add_edge(mid, dst, g).first;
+
+  // Props of edge e1.
+  get(edge_weight, g, e1) = 2;
+  get(edge_subcarriers, g, e1).insert(0);
+  get(edge_subcarriers, g, e1).insert(1);
+
+  // Props of edge e2.
+  get(edge_weight, g, e2) = 1;
+  get(edge_subcarriers, g, e2).insert(0);
+
+  // Props of edge e3.
+  get(edge_weight, g, e3) = 2;
+  get(edge_subcarriers, g, e3).insert(0);
+
+  SSC ssc(counting_iterator<int>(0), counting_iterator<int>(1));
+
+  V2C2S result = dijkstra(g, src, dst, 1, ssc);
+
+  // We found the path.
+  BOOST_CHECK(!result[dst].empty());
+  // The cost of the path is 3.
+  BOOST_CHECK(result[dst].begin()->first.first == 3);
+
+  // We remember at node mid the results for edges e1 and e2.
+  BOOST_CHECK(result[mid].begin()->second.size() == 2);
+  // We reach node mid by edge e2 with cost 1.
+  BOOST_CHECK(result[mid].begin()->first.first == 1);
+  BOOST_CHECK(result[mid].begin()->first.second == e2);
+  // The second way of reaching node mid is by edge e1 with cost 2.
+  BOOST_CHECK((++result[mid].begin())->first.first == 2);
+  BOOST_CHECK((++result[mid].begin())->first.second == e1);
+}
