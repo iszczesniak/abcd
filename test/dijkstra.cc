@@ -164,8 +164,8 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_5)
   get(edge_weight, g, e3) = 2;
   get(edge_subcarriers, g, e3).insert(0);
 
-  SSC ssc(counting_iterator<int>(0), counting_iterator<int>(1));
-
+  // These are the subcarriers that we can start with at src.
+  SSC ssc(counting_iterator<int>(0), counting_iterator<int>(2));
   V2C2S result = dijkstra(g, src, dst, 1, ssc);
 
   // We found the path.
@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_5)
   BOOST_CHECK(result[dst].begin()->first.first == 3);
 
   // We remember at node mid the results for edges e1 and e2.
-  BOOST_CHECK(result[mid].begin()->second.size() == 2);
+  BOOST_CHECK(result[mid].size() == 2);
   // We reach node mid by edge e2 with cost 1.
   BOOST_CHECK(result[mid].begin()->first.first == 1);
   BOOST_CHECK(result[mid].begin()->first.second == e2);
