@@ -182,3 +182,68 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_5)
   BOOST_CHECK((++result[mid].begin())->first.first == 2);
   BOOST_CHECK((++result[mid].begin())->first.second == e1);
 }
+
+/*
+ * Make sure that we don't remember the results for edge e2, because
+ * it offers a worse path then edge e1.  This tests for the existance
+ * of better old results.
+ */
+BOOST_AUTO_TEST_CASE(dijkstra_test_6)
+{
+  Graph g(2);
+  Vertex src = *(vertices(g).first);
+  Vertex dst = *(vertices(g).first + 1);
+
+  Edge e1 = add_edge(src, dst, g).first;
+  Edge e2 = add_edge(src, dst, g).first;
+
+  // Props of edge e1.
+  get(edge_weight, g, e1) = 1;
+  get(edge_subcarriers, g, e1).insert(0);
+
+  // Props of edge e2.  During the Dijkstra search, the result for
+  // this edge won't be even added, because already the better result
+  // for edge e1 will be in place.
+  get(edge_weight, g, e2) = 2;
+  get(edge_subcarriers, g, e2).insert(0);
+
+  SSC ssc(counting_iterator<int>(0), counting_iterator<int>(1));
+
+  V2C2S result = dijkstra(g, src, dst, 1, ssc);
+
+  BOOST_CHECK(result[dst].size() == 1);
+  BOOST_CHECK(result[dst].begin()->first.first == 1);
+  BOOST_CHECK(result[dst].begin()->first.second == e1);
+}
+
+/*
+ * Make sure that we don't remember the results for edge e1, because
+ * it offers a worse path then edge e2.  This tests the purging of the
+ * old results.
+ */
+BOOST_AUTO_TEST_CASE(dijkstra_test_7)
+{
+  Graph g(2);
+  Vertex src = *(vertices(g).first);
+  Vertex dst = *(vertices(g).first + 1);
+
+  Edge e1 = add_edge(src, dst, g).first;
+  Edge e2 = add_edge(src, dst, g).first;
+
+  // Props of edge e1.
+  get(edge_weight, g, e1) = 2;
+  get(edge_subcarriers, g, e1).insert(0);
+
+  // Props of edge e2.  During the Dijkstra search, the result for
+  // edge e1 will be removed, because edge e2 offers a better result.
+  get(edge_weight, g, e2) = 1;
+  get(edge_subcarriers, g, e2).insert(0);
+
+  SSC ssc(counting_iterator<int>(0), counting_iterator<int>(1));
+
+  V2C2S result = dijkstra(g, src, dst, 1, ssc);
+
+  BOOST_CHECK(result[dst].size() == 1);
+  BOOST_CHECK(result[dst].begin()->first.first == 1);
+  BOOST_CHECK(result[dst].begin()->first.second == e2);
+}
