@@ -158,3 +158,8 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
 
   return r;
 }
+
+pair<list<Edge>, SSC>
+shortest_path(const Graph &g, const V2C2S &r, Vertex src, Vertex dst)
+{
+}
