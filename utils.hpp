@@ -17,6 +17,18 @@
 #include <set>
 
 /**
+ * Generate a random number in [min, max].
+ */
+template<typename T>
+int
+get_random_int(int min, int max, T &gen)
+{
+  boost::uniform_int<> range(min, max);
+  boost::variate_generator<T &, boost::uniform_int<> > rgen(gen, range);
+  return rgen();
+}
+
+/**
  * Check whether b is a subset of a.
  */
 bool

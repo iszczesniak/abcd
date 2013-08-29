@@ -3,6 +3,7 @@
 #define BOOST_TEST_MODULE Utils
 
 #include <boost/test/unit_test.hpp>
+#include <boost/random/linear_congruential.hpp>
 
 BOOST_AUTO_TEST_CASE(exclude_test)
 {
@@ -52,4 +53,15 @@ BOOST_AUTO_TEST_CASE(includes_test)
   a.insert(1);
 
   BOOST_CHECK(includes(a, b));
+}
+
+BOOST_AUTO_TEST_CASE(get_random_int_test)
+{
+  minstd_rand gen;
+  for(int i = 0; i < 10; ++i)
+    for(int j = 0; j < 10; ++j)
+      {
+	int n = get_random_int(0, j, gen);
+	BOOST_CHECK(0 <= n && n <= j);
+      }
 }
