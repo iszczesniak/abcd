@@ -15,16 +15,15 @@ main (int argc, char* argv[])
   minstd_rand gen;
   Graph g;
 
-  generate_graph(g, 10, 20, gen);
+  // 1000 nodes, 3000 links.
+  generate_graph(g, 1000, 3000, gen);
   name_vertices(g);
-  complete_graph(g);
 
   // The number of subcarriers for each edge.
-  set_subcarriers(g, 2);
+  set_subcarriers(g, 800);
 
   print_graph(g);
   print_subcarriers(g);
-  print_sp(g, cout);
 
   for(int i = 0; i < 100; ++i)
     {
