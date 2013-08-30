@@ -162,4 +162,53 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
 pair<list<Edge>, SSC>
 shortest_path(const Graph &g, const V2C2S &r, Vertex src, Vertex dst)
 {
+  pair<list<Edge>, SSC> p;
+
+  // Find the path from the back.
+  Vertex crt = dst;
+  V2C2S::const_iterator i = r.find(crt);
+
+  // Make sure there is a shortest path.
+  if (i != r.end())
+    {
+      const C2S &c2s = i->second;
+
+      // There should be a single entry in C2S for node dst.
+      assert(c2s.size() == 1);
+
+      int c = c2s.begin()->first.first;
+
+      // This is the SSC that we want to use.
+      const SSC &ssc = c2s.begin()->second;
+      p.second = ssc;
+
+      while(crt != src)
+	{
+	  V2C2S::const_iterator i = r.find(crt);
+	  const C2S &c2s = i->second;
+
+	  // We look for the solution that costs c and that contains
+	  // SSC.
+	  C2S::const_iterator j = c2s.lower_bound(make_pair(c, Edge()));
+	  assert(j != c2s.end());
+
+	  // Search over the solutions to find an SSC that includes
+	  // ssc.
+	  while(!includes(j->second, ssc))
+	    ++j;
+
+	  // The found solution must be of cost c.
+	  assert(j->first.first == c);
+
+	  const Edge &e = j->first.second;
+	  p.first.push_back(e);
+	  c -= get(edge_weight, g, e);
+
+	  crt = source(e, g);
+	}
+
+      assert(c == 0);
+    }
+
+  return p;
 }
