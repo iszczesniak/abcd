@@ -164,7 +164,7 @@ shortest_path(const Graph &g, const V2C2S &r, Vertex src, Vertex dst)
 {
   pair<list<Edge>, SSC> p;
 
-  // Find the path from the back.
+  // Find the path from the back.  This is the current node.
   Vertex crt = dst;
   V2C2S::const_iterator i = r.find(crt);
 
@@ -176,9 +176,10 @@ shortest_path(const Graph &g, const V2C2S &r, Vertex src, Vertex dst)
       // There should be a single entry in C2S for node dst.
       assert(c2s.size() == 1);
 
+      // This is the cost of the whole path.
       int c = c2s.begin()->first.first;
 
-      // This is the SSC that we want to use.
+      // This is the path SSC.
       const SSC &ssc = c2s.begin()->second;
       p.second = ssc;
 
