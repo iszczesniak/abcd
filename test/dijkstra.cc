@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-#define BOOST_TEST_MODULE Utils
+#define BOOST_TEST_MODULE Dijkstra
 
 #include <boost/test/unit_test.hpp>
 
