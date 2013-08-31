@@ -1,4 +1,4 @@
-TESTS = dijkstra utils
+TESTS = dijkstra graph utils
 
 OBJS = ../dijkstra.o ../graph.o ../utils.o
 
@@ -18,10 +18,13 @@ LDFLAGS := $(LDFLAGS) -l boost_unit_test_framework-mt
 
 all: $(TESTS)
 
-utils: utils.o $(OBJS)
+dijkstra: dijkstra.o $(OBJS)
 	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
-dijkstra: dijkstra.o $(OBJS)
+graph: graph.o $(OBJS)
+	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
+
+utils: utils.o $(OBJS)
 	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 # run the tests

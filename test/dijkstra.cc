@@ -61,9 +61,6 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_3)
   Edge e2 = add_edge(src, mid, g).first;
   Edge e3 = add_edge(mid, dst, g).first;
 
-  // Make sure we can represent multi-graphs.
-  BOOST_CHECK(e1 != e2);
-
   // Props of edge e1.
   get(edge_weight, g, e1) = 1;
   get(edge_subcarriers, g, e1).insert(0);
