@@ -190,13 +190,10 @@ shortest_path(const Graph &g, const V2C2S &r, Vertex src, Vertex dst)
 
 	  // We look for the solution that costs c and that contains
 	  // SSC.
-	  C2S::const_iterator j = c2s.lower_bound(make_pair(c, Edge()));
-	  assert(j != c2s.end());
-
-	  // Search over the solutions to find an SSC that includes
-	  // ssc.
-	  while(!includes(j->second, ssc))
-	    ++j;
+	  C2S::const_iterator j = c2s.begin();
+	  for(; j->first.first <= c; ++j)
+	    if (j->first.first == c && includes(j->second, ssc))
+	      break;
 
 	  // The found solution must be of cost c.
 	  assert(j->first.first == c);
@@ -205,6 +202,7 @@ shortest_path(const Graph &g, const V2C2S &r, Vertex src, Vertex dst)
 	  p.first.push_back(e);
 	  c -= get(edge_weight, g, e);
 
+	  assert(crt == target(e, g));
 	  crt = source(e, g);
 	}
 
