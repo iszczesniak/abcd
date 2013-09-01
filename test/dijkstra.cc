@@ -23,8 +23,15 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_1)
   SSC ssc(counting_iterator<int>(0), counting_iterator<int>(3));
 
   V2C2S result = dijkstra(g, src, dst, 3, ssc);
+  // There are no results for dst.
+  BOOST_CHECK(result.find(dst) == result.end());
 
-  BOOST_CHECK(result[dst].empty());
+  pair<list<Edge>, SSC> p;
+  p = shortest_path(g, result, src, dst);
+  // The path is empty: no edges.
+  BOOST_CHECK(p.first.size() == 0);
+  // The path is empty: no ssc.
+  BOOST_CHECK(p.second.size() == 0);
 }
 
 /*
@@ -36,15 +43,24 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_2)
   Graph g(2);
   Vertex src = *(vertices(g).first);
   Vertex dst = *(vertices(g).first + 1);
-  add_edge(src, dst, g);
+  Edge e = add_edge(src, dst, g).first;
   set_subcarriers(g, 3);
 
   SSC ssc(counting_iterator<int>(0), counting_iterator<int>(3));
 
   V2C2S result = dijkstra(g, src, dst, 3, ssc);
 
-  BOOST_CHECK(!result[dst].empty());
+  BOOST_CHECK(result.find(dst) != result.end());
   BOOST_CHECK(result[dst].begin()->second.size() == 3);
+
+  pair<list<Edge>, SSC> p;
+  p = shortest_path(g, result, src, dst);
+  // The path has one edge.
+  BOOST_CHECK(p.first.size() == 1);
+  // That one edge is e.
+  BOOST_CHECK(*(p.first.begin()) == e);
+  // The path uses SSC with three subcarriers.
+  BOOST_CHECK(p.second.size() == 3);
 }
 
 /*
@@ -90,6 +106,19 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_3)
   BOOST_CHECK(result[dst].begin()->second.size() == 2);
   BOOST_CHECK(*(result[dst].begin()->second.begin()) == 2);
   BOOST_CHECK(*(++(result[dst].begin()->second.begin())) == 3);
+
+  pair<list<Edge>, SSC> p;
+  p = shortest_path(g, result, src, dst);
+  // The path has two edges.
+  BOOST_CHECK(p.first.size() == 2);
+  // The first edge is e2, the second e3.
+  BOOST_CHECK(*(p.first.begin()) == e2);
+  BOOST_CHECK(*(++p.first.begin()) == e3);
+  // The path uses SSC with three subcarriers.
+  BOOST_CHECK(p.second.size() == 2);
+  // The subcarriers used are 2 and 3.
+  BOOST_CHECK(p.second.find(2) != p.second.end());
+  BOOST_CHECK(p.second.find(3) != p.second.end());
 }
 
 /*

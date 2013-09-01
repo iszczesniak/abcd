@@ -167,48 +167,55 @@ shortest_path(const Graph &g, const V2C2S &r, Vertex src, Vertex dst)
   pair<list<Edge>, SSC> p;
 
   // Find the path from the back.  This is the current node.
-  Vertex crt = dst;
-  V2C2S::const_iterator i = r.find(crt);
-
-  // Make sure there is a shortest path.
-  if (i != r.end())
+  V2C2S::const_iterator dst_i = r.find(dst);
+      
+  // Make sure there is some data for node dst in r.
+  if (dst_i != r.end())
     {
-      const C2S &c2s = i->second;
+      // The C2S of the destination node.
+      const C2S &dst_c2s = dst_i->second;
 
-      // There should be a single entry in C2S for node dst.
-      assert(c2s.size() == 1);
-
-      // This is the cost of the whole path.
-      int c = c2s.begin()->first.first;
-
-      // This is the path SSC.
-      const SSC &ssc = c2s.begin()->second;
-      p.second = ssc;
-
-      while(crt != src)
+      if (!dst_c2s.empty())
 	{
-	  V2C2S::const_iterator i = r.find(crt);
-	  const C2S &c2s = i->second;
+	  // For dst, the first element in C2S is the best result.
+	  C2S::const_iterator bri = dst_c2s.begin();
 
-	  // We look for the solution that costs c and that contains
-	  // SSC.
-	  C2S::const_iterator j = c2s.begin();
-	  for(; j->first.first <= c; ++j)
-	    if (j->first.first == c && includes(j->second, ssc))
-	      break;
+	  // This is the cost of the whole path.
+	  int c = bri->first.first;
 
-	  // The found solution must be of cost c.
-	  assert(j->first.first == c);
+	  // This is the path SSC.
+	  const SSC &ssc = bri->second;
+	  // And we remember this as the final result.
+	  p.second = ssc;
 
-	  const Edge &e = j->first.second;
-	  p.first.push_back(e);
-	  c -= get(edge_weight, g, e);
+	  // We start with the destination node.
+	  Vertex crt = dst;
+	  while(crt != src)
+	    {
+	      V2C2S::const_iterator i = r.find(crt);
+	      const C2S &c2s = i->second;
 
-	  assert(crt == target(e, g));
-	  crt = source(e, g);
+	      // We look for the solution that costs c and that
+	      // contains SSC.
+	      C2S::const_iterator j = c2s.begin();
+	      for(; j->first.first <= c; ++j)
+		if (j->first.first == c && includes(j->second, ssc))
+		  break;
+
+	      // The found solution must be of cost c.
+	      assert(j->first.first == c);
+
+	      const Edge &e = j->first.second;
+	      p.first.push_front(e);
+	      c -= get(edge_weight, g, e);
+	      assert(crt == target(e, g));
+
+	      // This is the new node to examine.
+	      crt = source(e, g);
+	    }
+
+	  assert(c == 0);
 	}
-
-      assert(c == 0);
     }
 
   return p;
