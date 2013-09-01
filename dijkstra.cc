@@ -161,10 +161,10 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
   return r;
 }
 
-pair<list<Edge>, SSC>
+Path
 shortest_path(const Graph &g, const V2C2S &r, Vertex src, Vertex dst)
 {
-  pair<list<Edge>, SSC> p;
+  Path p;
 
   // Find the path from the back.  This is the current node.
   V2C2S::const_iterator dst_i = r.find(dst);

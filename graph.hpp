@@ -60,4 +60,7 @@ typedef map<CEP, SSC> C2S;
 // information on the
 typedef map<Vertex, C2S> V2C2S;
 
+// The path definition.
+typedef pair<list<Edge>, SSC> Path;
+
 #endif /* GRAPH_HPP */

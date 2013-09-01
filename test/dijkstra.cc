@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_1)
   // There are no results for dst.
   BOOST_CHECK(result.find(dst) == result.end());
 
-  pair<list<Edge>, SSC> p;
+  Path p;
   p = shortest_path(g, result, src, dst);
   // The path is empty: no edges.
   BOOST_CHECK(p.first.size() == 0);
@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_2)
   BOOST_CHECK(result.find(dst) != result.end());
   BOOST_CHECK(result[dst].begin()->second.size() == 3);
 
-  pair<list<Edge>, SSC> p;
+  Path p;
   p = shortest_path(g, result, src, dst);
   // The path has one edge.
   BOOST_CHECK(p.first.size() == 1);
@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_3)
   BOOST_CHECK(*(result[dst].begin()->second.begin()) == 2);
   BOOST_CHECK(*(++(result[dst].begin()->second.begin())) == 3);
 
-  pair<list<Edge>, SSC> p;
+  Path p;
   p = shortest_path(g, result, src, dst);
   // The path has two edges.
   BOOST_CHECK(p.first.size() == 2);
