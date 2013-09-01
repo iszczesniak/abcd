@@ -11,6 +11,9 @@
 using namespace std;
 using namespace boost;
 
+// The set of subcarriers.
+typedef set<int> SSC;
+
 enum edge_subcarriers_t {edge_subcarriers};
 
 namespace boost {
@@ -28,7 +31,7 @@ typedef
 adjacency_list <vecS, vecS, undirectedS,
                 property<vertex_name_t, string>,
                 property<edge_weight_t, int, 
-		property<edge_subcarriers_t, set<int> > > >
+                property<edge_subcarriers_t, SSC> > >
 Graph;
 
 typedef graph_traits<Graph>::edge_descriptor Edge;
@@ -48,9 +51,6 @@ namespace std {
 // The cost and edge pair.  It is used to store the cost of reaching a
 // node along the given edge.
 typedef pair<int, Edge> CEP;
-
-// The set of subcarriers.
-typedef set<int> SSC;
 
 // The mapping from CEP to SSC.  This mapping tells what SSC is
 // available at a node provided a given CEP was used.
