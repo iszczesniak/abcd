@@ -113,10 +113,12 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
       Edge e = cep.second;
       q.erase(i);
 
-      // The CEP that we process in this loop has to be in the C2S for
-      // node v.
-      C2S::const_iterator j = r[v].find(cep);
-      assert(j != r[v].end());
+      // C2S for node v.
+      const C2S &c2s = r[v];
+
+      // The CEP that we process in this loop has to be in the C2S.
+      C2S::const_iterator j = c2s.find(cep);
+      assert(j != c2s.end());
 
       // Stop searching if we have reached the destination node.
       if (v == dst)
