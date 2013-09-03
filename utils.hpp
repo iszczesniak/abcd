@@ -49,6 +49,12 @@ SSC
 exclude(const SSC &ssc, int p);
 
 /**
+ * Exclude e from ssc.
+ */
+void
+exclude(SSC &ssc, const SSC &e);
+
+/**
  * Calculates the shortests paths in the graph.
  */
 

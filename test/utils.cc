@@ -38,6 +38,25 @@ BOOST_AUTO_TEST_CASE(exclude_test)
   BOOST_CHECK(r.size() == 5);
 }
 
+BOOST_AUTO_TEST_CASE(exclude2_test)
+{
+  SSC ssc, e;
+
+  ssc.insert(0);
+  ssc.insert(1);
+  ssc.insert(2);
+  ssc.insert(3);
+
+  e.insert(0);
+  e.insert(3);
+
+  exclude(ssc, e);
+
+  BOOST_CHECK(ssc.size() == 2);
+  BOOST_CHECK(ssc.find(1) != ssc.end());
+  BOOST_CHECK(ssc.find(2) != ssc.end());
+}
+
 BOOST_AUTO_TEST_CASE(includes_test)
 {
   SSC a, b;

@@ -63,6 +63,16 @@ exclude(const SSC &ssc, int p)
   return result;
 }
 
+/**
+ * Exclude e from ssc.
+ */
+void
+exclude(SSC &ssc, const SSC &e)
+{
+  for(SSC::const_iterator i = e.begin(); i != e.end(); ++i)
+    ssc.erase(*i);
+}
+
 // The function for sorting the list of sets.
 static bool stlos(const set<Vertex> &s1, const set<Vertex> &s2)
 {
