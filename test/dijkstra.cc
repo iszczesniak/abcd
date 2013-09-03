@@ -61,6 +61,9 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_2)
   BOOST_CHECK(*(p.first.begin()) == e);
   // The path uses SSC with three subcarriers.
   BOOST_CHECK(p.second.size() == 3);
+
+  set_up_path(g, p);
+  BOOST_CHECK(get(edge_subcarriers, g, e).empty());
 }
 
 /*
@@ -119,6 +122,11 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_3)
   // The subcarriers used are 2 and 3.
   BOOST_CHECK(p.second.find(2) != p.second.end());
   BOOST_CHECK(p.second.find(3) != p.second.end());
+
+  set_up_path(g, p);
+  BOOST_CHECK(get(edge_subcarriers, g, e1).size() == 2);
+  BOOST_CHECK(get(edge_subcarriers, g, e2).size() == 0);
+  BOOST_CHECK(get(edge_subcarriers, g, e3).size() == 0);
 }
 
 /*

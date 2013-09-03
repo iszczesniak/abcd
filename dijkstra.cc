@@ -72,7 +72,7 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
   V2C2S r;
 
   // The null edge.
-  Edge ne = *(edges(g).second);
+  const Edge &ne = *(edges(g).second);
 
   // We put here the information that allows us to process the source
   // node in the loop below.  We say that we reach the source node
@@ -135,7 +135,7 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
       for(tie(ei, eei) = out_edges(v, g); ei != eei; ++ei)
       	{
           // The Edge that we examine in this iteration.
-	  Edge e = *ei;
+	  const Edge &e = *ei;
           // The subcarriers available on the edge.
 	  const SSC &l_ssc = get(edge_subcarriers, g, e);
 
@@ -219,4 +219,23 @@ shortest_path(const Graph &g, const V2C2S &r, Vertex src, Vertex dst)
     }
 
   return p;
+}
+
+void
+set_up_path(Graph &g, const Path &p)
+{
+  const list<Edge> &l = p.first;
+  const SSC &p_ssc = p.second;
+
+  // Iterate over the edges of the path.
+  for(list<Edge>::const_iterator i = l.begin(); i != l.end(); ++i)
+    {
+      const Edge &e = *i;
+      SSC &e_ssc = get(edge_subcarriers, g, e);
+      // Make sure that the edge has the required subcarriers.
+      assert(includes(e_ssc, p_ssc));
+
+      // Remove the p_ssc subcarriers from e_ssc.
+      exclude(e_ssc, p_ssc);
+    }
 }
