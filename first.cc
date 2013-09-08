@@ -27,15 +27,15 @@ main (int argc, char* argv[])
   name_vertices(g);
 
   // The number of subcarriers for each edge.
-  set_subcarriers(g, 800);
+  set_subcarriers(g, sc);
 
-  // Load the network.
-  for(int i = 0; i < 100; ++i)
+  // Load the network until the network cannot service a new demand.
+  while(true)
     {
       cout << "Allocating..." << endl;
 
       // Get a pair of different nodes.
-      pair<Vertex, Vertex> p = random_node_pair(g, gen);
+      pair<Vertex, Vertex> pn = random_node_pair(g, gen);
 
       // The number of subcarriers the signal requires.
       int n = get_random_int(1, 10, gen);
@@ -44,8 +44,17 @@ main (int argc, char* argv[])
 
       // We allow to allocate the signal on any of the subcarriers.
       SSC all(counting_iterator<int>(0), counting_iterator<int>(sc));
-      V2C2S r = dijkstra(g, p.first, p.second, n, all);
-    }
+      V2C2S r = dijkstra(g, pn.first, pn.second, n, all);
+      Path p = shortest_path(g, r, pn.first, pn.second);
+      set_up_path(g, p);
+
+      if (p.first.empty())
+	{
+	  cout << "Unable to service a new request." << endl;
+	  break;
+	}
+
+    };
 
   return 0;
 }
