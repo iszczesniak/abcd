@@ -8,6 +8,10 @@
 
 #include <boost/graph/dijkstra_shortest_paths.hpp>
 
+#include <boost/accumulators/accumulators.hpp>
+#include <boost/accumulators/statistics/stats.hpp>
+#include <boost/accumulators/statistics/mean.hpp>
+
 #include <cassert>
 #include <iostream>
 #include <list>
@@ -15,6 +19,8 @@
 #include <string>
 #include <vector>
 #include <set>
+
+namespace acc = boost::accumulators;
 
 /**
  * Generate a random number in [min, max].
@@ -268,6 +274,19 @@ random_node_pair(const G &g, R &gen)
   Vertex dst = get_random_element(s, gen);
 
   return std::make_pair(src, dst);
+}
+
+template<typename G>
+double
+calculate_load(const G &g, int sc)
+{
+  acc::accumulator_set<double, acc::stats<acc::tag::mean> > load_acc;
+
+  typename graph_traits<G>::edge_iterator ei, ee;
+  for (tie(ei, ee) = edges(g); ei != ee; ++ei)
+    load_acc(double((sc - get(edge_subcarriers, g, *ei).size())) / sc);
+
+  return acc::mean(load_acc);
 }
 
 #endif /* UTILS_HPP */
