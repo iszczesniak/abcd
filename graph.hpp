@@ -14,6 +14,7 @@ using namespace boost;
 // The set of subcarriers.
 typedef set<int> SSC;
 
+// Describes the set of available subcarriers on an edge.
 enum edge_subcarriers_t {edge_subcarriers};
 
 namespace boost {
