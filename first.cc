@@ -49,11 +49,9 @@ main (int argc, char* argv[])
       set_up_path(g, p);
 
       if (p.first.empty())
-	{
-	  cout << "Unable to service a new request." << endl;
-	  break;
-	}
+	cout << "Unable to service a new request." << endl;
 
+      cout << "Load = " << calculate_load(g, sc) << endl;
     };
 
   return 0;
