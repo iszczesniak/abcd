@@ -222,10 +222,19 @@ shortest_path(const Graph &g, const V2C2S &r, Vertex src, Vertex dst)
 }
 
 void
-set_up_path(Graph &g, const Path &p)
+set_up_path(Graph &g, const Path &p, int sc)
 {
   const list<Edge> &l = p.first;
-  const SSC &p_ssc = p.second;
+  // This is the largest set that can support at least sc subcarriers.
+  SSC p_ssc = p.second;
+
+  // We select the first sc subcarriers from sc.
+  assert(p_ssc.size() >= sc);
+  SSC::iterator ssc_i = p_ssc.begin();
+  advance(ssc_i, sc);
+  p_ssc.erase(ssc_i, p_ssc.end());
+  p_ssc = exclude(p_ssc, sc);
+  assert(!p_ssc.empty());
 
   // Iterate over the edges of the path.
   for(list<Edge>::const_iterator i = l.begin(); i != l.end(); ++i)
