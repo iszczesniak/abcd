@@ -11,7 +11,7 @@ using namespace std;
 bool
 includes(const SSC &a, const SSC &b)
 {
-  includes(a.begin(), a.end(), b.begin(), b.end());
+  return includes(a.begin(), a.end(), b.begin(), b.end());
 }
 
 SSC
