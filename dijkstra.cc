@@ -36,16 +36,15 @@ bool
 purge_worse(map<CEP, Vertex> &q, C2S &c2s, int cost, const SSC &ssc)
 {
   // We examine the results with the cost larger or equal to "cost".
-  C2S::reverse_iterator i = c2s.rbegin();
-  while(i != c2s.rend() && i->first.first >= cost)
+  C2S::iterator i = c2s.begin();
+  while(i != c2s.end() && i->first.first >= cost)
     // Check whether "ssc" includes the result.
     if (includes(ssc, i->second))
       {
-        C2S::reverse_iterator j = i;
-        ++j;
-        q.erase(i->first);
-        c2s.erase(i->first);
-        i = j;
+        C2S::iterator j = i;
+        ++i;
+        q.erase(j->first);
+        c2s.erase(j->first);
       }
     else
       ++i;
