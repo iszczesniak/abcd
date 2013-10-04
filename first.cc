@@ -19,9 +19,9 @@ main (int argc, char* argv[])
   Graph g;
 
   // 1000 nodes, 3000 links.
-  int res = generate_graph(g, 100, 300, gen);
+  int res = generate_graph(g, 1000, 3000, gen);
   // We expect there to be exactly 3000 edges.
-  assert(res == 300);
+  assert(res == 3000);
   // Make sure there is only one component.
   assert(check_components(g));
   name_vertices(g);
