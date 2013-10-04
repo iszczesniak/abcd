@@ -60,12 +60,12 @@ main (int argc, char* argv[])
       SSC all(counting_iterator<int>(0), counting_iterator<int>(sc));
       V2C2S r = dijkstra(g, pn.first, pn.second, n, all);
       Path p = shortest_path(g, r, pn.first, pn.second);
-      set_up_path(g, p, n);
 
       if (p.first.empty())
 	cout << "Unable to service a new request." << endl;
       else
         {
+	  set_up_path(g, p, n);
           ++connections;
           sc_allocated += n * p.first.size();
         }
