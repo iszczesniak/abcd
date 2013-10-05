@@ -15,7 +15,7 @@ main (int argc, char* argv[])
   // The number of subcarriers.
   int sc = 800;
 
-  minstd_rand gen;
+  boost::minstd_rand gen;
   Graph g;
 
   // 1000 nodes, 3000 links.
