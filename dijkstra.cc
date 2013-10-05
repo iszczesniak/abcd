@@ -236,9 +236,8 @@ set_up_path(Graph &g, const Path &p, int sc)
   assert(!p_ssc.empty());
 
   // Iterate over the edges of the path.
-  for(list<Edge>::const_iterator i = l.begin(); i != l.end(); ++i)
+  for(const Edge &e: l)
     {
-      const Edge &e = *i;
       SSC &e_ssc = get(edge_subcarriers, g, e);
       // Make sure that the edge has the required subcarriers.
       assert(includes(e_ssc, p_ssc));
