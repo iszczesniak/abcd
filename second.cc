@@ -1,4 +1,5 @@
 #include <iostream>
+#include <list>
 #include <queue>
 #include <utility>
 #include <boost/tuple/tuple.hpp>
@@ -14,30 +15,36 @@ class Source
 {
   pqueue &q;
   int counter;
+  int id;
 
 public:
-  Source(pqueue &_q) : q(_q), counter(0)
+  Source(pqueue &_q, int _id) : q(_q), counter(0), id(_id)
   {
+    cout << "Constructor id = " << id << endl;
     schedule(0);
   }
 
   // Handles the event.
   void operator()(double t)
   {
-    cout << "Event: t = " << t << endl;
+    cout << "Event: t = " << t << ", id = " << id
+	 << ", this = " << this << endl;
 
-    if (counter < 10)
-      {
-	// Schedule the next event.
-	schedule(t);
-	++counter;
-      }
+    //    if (counter < 10)
+    //      {
+    // Schedule the next event.
+    //	schedule(t);
+    //	++counter;
+    //      }
   }
 
   // Schedule the next event based on the current time 0.
   void schedule(double t)
   {
     t += 1;
+    cout << "Push t = " << t
+	 << ", id = " << id
+	 << ", this = " << this << endl;
     q.push(make_pair(t, this));
   }
 };
@@ -47,8 +54,12 @@ main()
 {
   pqueue q;
 
-  Source s1(q);
+  list<Source> ls;
 
+  for(int i = 1; i <= 10; ++i)
+    ls.push_back(Source(q, i));
+
+  // The event loop.
   while(!q.empty())
     {
       double t;
