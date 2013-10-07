@@ -24,14 +24,14 @@ public:
   // Handles the event.
   void operator()(double t)
   {
+    cout << "Event: t = " << t << endl;
+
     if (counter < 10)
       {
 	// Schedule the next event.
 	schedule(t);
 	++counter;
       }
-
-    cout << "Event: t = " << t << endl;
   }
 
   // Schedule the next event based on the current time 0.
