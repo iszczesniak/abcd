@@ -1,4 +1,4 @@
-TARGETS = first
+TARGETS = first second
 TARGET_OBJS = $(addsuffix .o, $(TARGETS))
 
 OBJS = dijkstra.o graph.o utils.o utils_netgen.o
