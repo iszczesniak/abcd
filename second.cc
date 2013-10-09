@@ -1,3 +1,4 @@
+#include <functional>
 #include <iostream>
 #include <list>
 #include <queue>
@@ -7,35 +8,44 @@
 using namespace std;
 using namespace boost;
 
-class Source;
+typedef std::function<void(double)> cback;
 
-typedef priority_queue<pair<double, Source *> > pqueue;
+class Event
+{
+  double t;
+  cback cb;
+
+public:
+  Event(double t, cback cb): t(t), cb(cb)
+  {
+  }
+
+  void process() const
+  {
+    cb(t);
+  }
+
+  bool operator<(const Event &e)
+  {
+    return t > e.t;
+  }
+};
+
+typedef priority_queue<Event> pqueue;
 
 class Source
 {
+public:
   pqueue &q;
-  int counter;
   int id;
 
-public:
-  Source(pqueue &_q, int _id) : q(_q), counter(0), id(_id)
+  Source(pqueue &q, int id) : q(q), id(id)
   {
-    cout << "Constructor id = " << id << endl;
-    schedule(0);
   }
 
-  // Handles the event.
   void operator()(double t)
   {
-    cout << "Event: t = " << t << ", id = " << id
-	 << ", this = " << this << endl;
-
-    //    if (counter < 10)
-    //      {
-    // Schedule the next event.
-    //	schedule(t);
-    //	++counter;
-    //      }
+    schedule(t);
   }
 
   // Schedule the next event based on the current time 0.
@@ -45,7 +55,7 @@ public:
     cout << "Push t = " << t
 	 << ", id = " << id
 	 << ", this = " << this << endl;
-    q.push(make_pair(t, this));
+    q.push(Event(t, this));
   }
 };
 
@@ -56,16 +66,16 @@ main()
 
   list<Source> ls;
 
-  for(int i = 1; i <= 10; ++i)
-    ls.push_back(Source(q, i));
+  for(int i = 1; i <= 2; ++i)
+    {
+      ls.push_back(Source(q, i));
+      ls.back().schedule(0);
+    }
 
   // The event loop.
   while(!q.empty())
     {
-      double t;
-      Source *s;
-      tie(t, s) = q.top();
-      q.pop();
-      (*s)(t);
+      q.top().process();
+      q.top();
     }
 }
