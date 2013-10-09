@@ -7,11 +7,9 @@ class Source
 {
   pqueue &q;
   int id;
-  int count;
 
 public:
   Source(pqueue &q, int id);
-  Source(const Source &s);
   void operator()(double t);
   void schedule(double t);
 };
