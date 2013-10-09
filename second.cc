@@ -25,7 +25,7 @@ public:
     cb(t);
   }
 
-  bool operator<(const Event &e)
+  bool operator<(const Event &e) const
   {
     return t > e.t;
   }
@@ -55,7 +55,7 @@ public:
     cout << "Push t = " << t
 	 << ", id = " << id
 	 << ", this = " << this << endl;
-    q.push(Event(t, this));
+    q.push(Event(t, *this));
   }
 };
 
@@ -76,6 +76,6 @@ main()
   while(!q.empty())
     {
       q.top().process();
-      q.top();
+      q.pop();
     }
 }
