@@ -1,7 +1,7 @@
 TARGETS = first second
 TARGET_OBJS = $(addsuffix .o, $(TARGETS))
 
-OBJS = dijkstra.o graph.o utils.o utils_netgen.o
+OBJS = dijkstra.o Event.o graph.o Source.o utils.o utils_netgen.o
 
 #CXXFLAGS = -g -Wno-deprecated
 CXXFLAGS = -O1 -Wno-deprecated -std=c++11
@@ -12,6 +12,8 @@ LDFLAGS := $(LDFLAGS) -l boost_graph-mt
 all: $(TARGETS)
 
 first: $(OBJS)
+
+second: $(OBJS)
 
 .PHONY: clean count depend test
 
