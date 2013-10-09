@@ -1,15 +1,15 @@
 #ifndef IJS_SOURCE
 #define IJS_SOURCE
 
-#include "Event.hpp"
+#include "event.hpp"
 
-class Source
+class source
 {
   pqueue &q;
   int id;
 
 public:
-  Source(pqueue &q, int id);
+  source(pqueue &q, int id);
   void operator()(double t);
   void schedule(double t);
 };

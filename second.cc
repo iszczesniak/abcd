@@ -1,25 +1,22 @@
 #include <iostream>
 #include <list>
 #include <queue>
-#include <utility>
-#include <boost/tuple/tuple.hpp>
 
-#include "Event.hpp"
-#include "Source.hpp"
+#include "event.hpp"
+#include "source.hpp"
 
 using namespace std;
-using namespace boost;
 
 int
 main()
 {
   pqueue q;
 
-  list<Source> ls;
+  list<source> ls;
 
   for(int i = 1; i <= 2; ++i)
     {
-      ls.push_back(Source(q, i));
+      ls.push_back(source(q, i));
       ls.back().schedule(0);
     }
 
