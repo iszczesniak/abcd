@@ -14,3 +14,8 @@ bool event::operator<(const event &e) const
 {
   return t > e.t;
 }
+
+double event::get_time() const
+{
+  return t;
+}

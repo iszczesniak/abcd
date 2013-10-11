@@ -14,6 +14,7 @@ public:
   event(double t, source *s);
   void process() const;
   bool operator<(const event &e) const;
+  double get_time() const;
 };
 
 typedef std::priority_queue<event> pqueue;
