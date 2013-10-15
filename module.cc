@@ -10,8 +10,6 @@ module::module(pqueue &q, int id, boost::mt19937 &r, double lambda):
 
 module::~module()
 {
-  cout << "id = " << id << ", mean = "
-       << ba::mean(acc) << endl;
 }
 
 void module::operator()(double t)

@@ -13,19 +13,29 @@ int
 main()
 {
   // The number of subcarriers.
-  int sc = 800;
+  const int sc = 800;
 
   // Simulation time.
   const double sim_limit = 1000000;
+
+  // The number of nodes.
+  const int nn = 100;
+
+  // The number of edges.
+  const int ne = 300;
+
+  // The lambda for each module.
+  const double lambda = 2;
 
   // Random number generator
   boost::mt19937 gen(1);
   Graph g;
 
   // 100 nodes, 300 links.
-  int res = generate_graph(g, 100, 300, gen);
+  int res = generate_graph(g, nn, ne, gen);
   // We expect there to be exactly 3000 edges.
-  assert(res == 300);
+  assert(res == ne);
+
   // Make sure there is only one component.
   assert(check_components(g));
   name_vertices(g);
@@ -34,12 +44,14 @@ main()
   pqueue q;
 
   // The list of nodes.
-  std::list<module> ls;
+  std::vector<module> vs;
+  vs.reserve(nn);
 
-  for(int i = 1; i <= 2; ++i)
+  // Create the modules for the simulation.
+  for(int i = 0; i < nn; ++i)
     {
-      ls.push_back(module(q, i, gen, 2));
-      ls.back().schedule(0);
+      vs.push_back(module(q, i, gen, 2));
+      vs.back().schedule(0);
     }
 
   // The event loop.

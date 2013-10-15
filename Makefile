@@ -3,7 +3,7 @@ TARGET_OBJS = $(addsuffix .o, $(TARGETS))
 
 OBJS = dijkstra.o event.o graph.o module.o utils.o utils_netgen.o
 
-#CXXFLAGS = -g -Wno-deprecated
+#CXXFLAGS = -g -Wno-deprecated -std=c++11
 CXXFLAGS = -O1 -Wno-deprecated -std=c++11
 
 # Boost
