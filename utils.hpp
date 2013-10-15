@@ -74,19 +74,19 @@ void complete_graph(G &g)
   // nodes, and the Dijksta algorithm does the opposite: it returns
   // the shortest paths from a source node to other nodes.  For us it
   // doesn't matter, because links are undirected.
-  vector<int> dist(num_vertices(g));
-  vector<Vertex> pred(num_vertices(g));
+  std::vector<int> dist(num_vertices(g));
+  std::vector<Vertex> pred(num_vertices(g));
 
-  typename graph_traits<G>::vertex_iterator vi, ve;
+  typename boost::graph_traits<G>::vertex_iterator vi, ve;
   for (tie(vi, ve) = vertices(g); vi != ve; ++vi)
     {
-      typename graph_traits<G>::vertex_descriptor v = *vi;
+      typename boost::graph_traits<G>::vertex_descriptor v = *vi;
 
-      dijkstra_shortest_paths
-        (g, v, predecessor_map(&pred[0]).distance_map(&dist[0]));
+      boost::dijkstra_shortest_paths
+        (g, v, boost::predecessor_map(&pred[0]).distance_map(&dist[0]));
 
-      put(vertex_distance, g, v, dist);
-      put(vertex_predecessor, g, v, pred);
+      put(boost::vertex_distance, g, v, dist);
+      put(boost::vertex_predecessor, g, v, pred);
     }
 }
 
@@ -96,32 +96,33 @@ void complete_graph(G &g)
 
 template<typename G>
 std::string
-path_to_string(typename graph_traits<G>::vertex_descriptor i,
-               typename graph_traits<G>::vertex_descriptor j,
+path_to_string(typename boost::graph_traits<G>::vertex_descriptor i,
+               typename boost::graph_traits<G>::vertex_descriptor j,
                const G &g)
 {
   std::ostringstream str;
 
-  str << "From " << get(vertex_name, g, i)
-      << " to " << get(vertex_name, g, j);
+  str << "From " << boost::get(boost::vertex_name, g, i)
+      << " to " << boost::get(boost::vertex_name, g, j);
 
   // Check if the shortest path from node i to node j exists.
-  if (i == j || get(vertex_predecessor, g, j)[i] != i)
+  if (i == j || boost::get(boost::vertex_predecessor, g, j)[i] != i)
     {
       int hops = 0;
-      typename graph_traits<Graph>::vertex_descriptor curr = i;
+      typename boost::graph_traits<Graph>::vertex_descriptor curr = i;
 
-      str << ": " << get(vertex_name, g, i);
+      str << ": " << boost::get(boost::vertex_name, g, i);
 
       while(curr != j)
         {
-          curr = get(vertex_predecessor, g, j)[curr];
-         str << " -> " << get(vertex_name, g, curr);
+          curr = boost::get(boost::vertex_predecessor, g, j)[curr];
+	  str << " -> " << get(boost::vertex_name, g, curr);
           ++hops;
         }
 
       str << ", hops = " << hops;
-      str << ", distance = " << get(vertex_distance, g, i)[j];
+      str << ", distance = "
+	  << boost::get(boost::vertex_distance, g, i)[j];
     }
   else
     str << "doesn't exist";
@@ -143,8 +144,8 @@ print_sp(const G &g, std::ostream &os)
 
   // Lists the path from i to j.
 
-  typename graph_traits<G>::vertex_iterator i, ie;
-  typename graph_traits<G>::vertex_iterator j, je;
+  typename boost::graph_traits<G>::vertex_iterator i, ie;
+  typename boost::graph_traits<G>::vertex_iterator j, je;
   
   for (tie(i, ie) = vertices(g); i != ie; ++i)
     for (tie(j, je) = vertices(g); j != je; ++j)
@@ -176,8 +177,9 @@ get_random_element(const C &c, T &gen)
 {
   assert(!c.empty());
 
-  uniform_int<> dist(0, c.size() - 1);
-  variate_generator<T &, uniform_int<> > rand_gen(gen, dist);
+  boost::uniform_int<> dist(0, c.size() - 1);
+  boost::variate_generator<T &, boost::uniform_int<> >
+    rand_gen(gen, dist);
 
   typename C::const_iterator i = c.begin();
   std::advance(i, rand_gen());
@@ -189,9 +191,9 @@ get_random_element(const C &c, T &gen)
  * This is the << operator for a vector.
  */
 template <typename T>
-ostream &operator << (ostream &os, const vector<T> &v)
+std::ostream &operator << (std::ostream &os, const std::vector<T> &v)
 {
-  typename vector<T>::const_iterator i = v.begin();
+  typename std::vector<T>::const_iterator i = v.begin();
 
   while(i != v.end())
     {
@@ -207,9 +209,9 @@ ostream &operator << (ostream &os, const vector<T> &v)
  * This is the << operator for a set.
  */
 template <typename T>
-ostream &operator << (ostream &os, const set<T> &v)
+std::ostream &operator << (std::ostream &os, const std::set<T> &v)
 {
-  typename set<T>::const_iterator i = v.begin();
+  typename std::set<T>::const_iterator i = v.begin();
 
   while(i != v.end())
     {
@@ -240,7 +242,7 @@ template<typename G>
 bool
 check_components(const G &g)
 {
-  typedef typename graph_traits<G>::vertex_descriptor Vertex;
+  typedef typename boost::graph_traits<G>::vertex_descriptor Vertex;
   typedef typename std::list<std::set<Vertex> > lsv;
 
   lsv l = get_components(g);
@@ -258,11 +260,11 @@ check_components(const G &g)
  */
 
 template<typename G, typename R>
-std::pair<typename graph_traits<G>::vertex_descriptor,
-          typename graph_traits<G>::vertex_descriptor>
+std::pair<typename boost::graph_traits<G>::vertex_descriptor,
+	  typename boost::graph_traits<G>::vertex_descriptor>
 random_node_pair(const G &g, R &gen)
 {
-  typedef typename graph_traits<G>::vertex_descriptor Vertex;
+  typedef typename boost::graph_traits<G>::vertex_descriptor Vertex;
 
   assert(check_components(g));
   std::set<Vertex> s = *get_components(g).begin();
@@ -282,9 +284,9 @@ calculate_load(const G &g, int sc)
 {
   acc::accumulator_set<double, acc::stats<acc::tag::mean> > load_acc;
 
-  typename graph_traits<G>::edge_iterator ei, ee;
+  typename boost::graph_traits<G>::edge_iterator ei, ee;
   for (tie(ei, ee) = edges(g); ei != ee; ++ei)
-    load_acc(double((sc - get(edge_subcarriers, g, *ei).size())) / sc);
+    load_acc(double((sc - boost::get(boost::edge_subcarriers, g, *ei).size())) / sc);
 
   return acc::mean(load_acc);
 }

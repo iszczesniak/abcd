@@ -1,5 +1,5 @@
-#ifndef IJS_SOURCE
-#define IJS_SOURCE
+#ifndef IJS_MODULE
+#define IJS_MODULE
 
 #include "event.hpp"
 #include <boost/random.hpp>
@@ -9,7 +9,7 @@
 
 namespace ba = boost::accumulators;
 
-class source
+class module
 {
   boost::mt19937 &r;
   boost::exponential_distribution<> ed;
@@ -22,8 +22,8 @@ class source
   int id;
 
 public:
-  source(pqueue &, int, boost::mt19937 &, double);
-  ~source();
+  module(pqueue &, int, boost::mt19937 &, double);
+  ~module();
   void operator()(double);
   void schedule(double);
 };

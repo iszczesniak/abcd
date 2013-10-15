@@ -3,15 +3,15 @@
 
 #include <queue>
 
-class source;
+class module;
 
 class event
 {
   double t;
-  source *s;
+  module *s;
 
 public:
-  event(double t, source *s);
+  event(double t, module *s);
   void process() const;
   bool operator<(const event &e) const;
   double get_time() const;

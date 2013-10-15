@@ -27,7 +27,7 @@ set_distances(Graph &g, int min, int max, T &gen)
 {
   boost::uniform_int<> range(min, max);
   boost::variate_generator<T &, boost::uniform_int<> > rgen(gen, range);
-  boost::randomize_property<edge_weight_t>(g, rgen);
+  boost::randomize_property<boost::edge_weight_t>(g, rgen);
 }
 
 /**
@@ -37,12 +37,12 @@ template<typename G>
 void
 set_subcarriers(G &g, int subcarriers)
 {
-  SSC ssc(counting_iterator<int>(0),
-          counting_iterator<int>(subcarriers));
+  SSC ssc(boost::counting_iterator<int>(0),
+          boost::counting_iterator<int>(subcarriers));
 
-  typename property_map<G, edge_subcarriers_t>::type
-    pm = get(edge_subcarriers_t(), g);
-  typename graph_traits<G>::edge_iterator ei, ee;
+  typename boost::property_map<G, boost::edge_subcarriers_t>::type
+    pm = get(boost::edge_subcarriers_t(), g);
+  typename boost::graph_traits<G>::edge_iterator ei, ee;
   for (tie(ei, ee) = edges(g); ei != ee; ++ei)
     pm[*ei] = ssc;
 }
@@ -54,10 +54,10 @@ template<typename G>
 void
 print_subcarriers(G &g)
 {
-  typename property_map<G, edge_subcarriers_t>::type
-    pm = get(edge_subcarriers_t(), g);
-  typename graph_traits<G>::edge_iterator ei, ee;
-  for (tie(ei, ee) = edges(g); ei != ee; ++ei)
+  typename boost::property_map<G, boost::edge_subcarriers_t>::type
+    pm = boost::get(boost::edge_subcarriers_t(), g);
+  typename boost::graph_traits<G>::edge_iterator ei, ee;
+  for (boost::tie(ei, ee) = boost::edges(g); ei != ee; ++ei)
     std::cout << pm[*ei] << "\n";
 }
 
@@ -123,13 +123,13 @@ add_random_edge(Graph &g, std::set<Vertex> &lonely,
       // not to create a parallel edge.
       Vertex src = get_random_element(connected, gen);
       // These are the vertexes that can be destination nodes.
-      set<Vertex> sifted = connected;
+      std::set<Vertex> sifted = connected;
       sifted.erase(src);
       BGL_FORALL_OUTEDGES_T(src, e, g, Graph)
         sifted.erase(target(e, g));
       // Now pick from the sifted set.
       Vertex dst = get_random_element(sifted, gen);
-      bool status = add_edge(src, dst, g).second;
+      bool status = boost::add_edge(src, dst, g).second;
       assert(status);
       move_if_needed(src, g, connected, saturated);
       move_if_needed(dst, g, connected, saturated);

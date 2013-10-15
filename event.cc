@@ -1,7 +1,7 @@
 #include "event.hpp"
-#include "source.hpp"
+#include "module.hpp"
 
-event::event(double t, source *s): t(t), s(s)
+event::event(double t, module *s): t(t), s(s)
 {
 }
 

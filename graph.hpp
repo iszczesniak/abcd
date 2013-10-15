@@ -8,34 +8,28 @@
 
 #include <boost/graph/adjacency_list.hpp>
 
-using namespace std;
-using namespace boost;
-
 // The set of subcarriers.
-typedef set<int> SSC;
-
-// Describes the set of available subcarriers on an edge.
-enum edge_subcarriers_t {edge_subcarriers};
+typedef std::set<int> SSC;
 
 namespace boost {
+  // Describes the set of available subcarriers on an edge.
+  enum edge_subcarriers_t {edge_subcarriers};
+
   BOOST_INSTALL_PROPERTY(edge, subcarriers);
 }
-
-typedef
-adjacency_list_traits<vecS, vecS, undirectedS>::vertex_descriptor
-Vertex;
 
 /**
  * The type of the graph we use.
  */
 typedef
-adjacency_list <vecS, vecS, undirectedS,
-                property<vertex_name_t, string>,
-                property<edge_weight_t, int, 
-                property<edge_subcarriers_t, SSC> > >
+boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS,
+		      boost::property<boost::vertex_name_t, std::string>,
+		      boost::property<boost::edge_weight_t, int, 
+		      boost::property<boost::edge_subcarriers_t, SSC> > >
 Graph;
 
-typedef graph_traits<Graph>::edge_descriptor Edge;
+typedef boost::graph_traits<Graph>::edge_descriptor Edge;
+typedef boost::graph_traits<Graph>::vertex_descriptor Vertex;
 
 namespace std {
 
@@ -51,17 +45,17 @@ namespace std {
 
 // The cost and edge pair.  It is used to store the cost of reaching a
 // node along the given edge.
-typedef pair<int, Edge> CEP;
+typedef std::pair<int, Edge> CEP;
 
 // The mapping from CEP to SSC.  This mapping tells what SSC is
 // available at a node provided a given CEP was used.
-typedef map<CEP, SSC> C2S;
+typedef std::map<CEP, SSC> C2S;
 
 // A map of vertexes to C2S.  It's used to store the complete
 // information on the
-typedef map<Vertex, C2S> V2C2S;
+typedef std::map<Vertex, C2S> V2C2S;
 
 // The path definition.
-typedef pair<list<Edge>, SSC> Path;
+typedef std::pair<std::list<Edge>, SSC> Path;
 
 #endif /* GRAPH_HPP */

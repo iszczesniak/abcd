@@ -1,7 +1,7 @@
 TARGETS = first second
 TARGET_OBJS = $(addsuffix .o, $(TARGETS))
 
-OBJS = dijkstra.o event.o graph.o source.o utils.o utils_netgen.o
+OBJS = dijkstra.o event.o graph.o module.o utils.o utils_netgen.o
 
 #CXXFLAGS = -g -Wno-deprecated
 CXXFLAGS = -O1 -Wno-deprecated -std=c++11

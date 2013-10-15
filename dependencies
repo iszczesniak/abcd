@@ -1,8 +1,9 @@
 dijkstra.o: dijkstra.cc dijkstra.hpp graph.hpp utils.hpp
-event.o: event.cc event.hpp source.hpp
+event.o: event.cc event.hpp module.hpp
 first.o: first.cc graph.hpp dijkstra.hpp utils_netgen.hpp utils.hpp
 graph.o: graph.cc graph.hpp
-second.o: second.cc event.hpp source.hpp
-source.o: source.cc source.hpp event.hpp
+module.o: module.cc module.hpp event.hpp
+second.o: second.cc event.hpp graph.hpp module.hpp utils_netgen.hpp \
+ utils.hpp
 utils.o: utils.cc utils.hpp graph.hpp
 utils_netgen.o: utils_netgen.cc utils_netgen.hpp graph.hpp utils.hpp
