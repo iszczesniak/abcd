@@ -2,10 +2,12 @@
 #include <list>
 #include <queue>
 
+#include "client.hpp"
 #include "event.hpp"
 #include "graph.hpp"
-#include "module.hpp"
 #include "utils_netgen.hpp"
+
+#include <boost/random.hpp>
 
 using namespace std;
 
@@ -44,14 +46,13 @@ main()
   pqueue q;
 
   // The list of nodes.
-  std::vector<module> vs;
-  vs.reserve(nn);
+  std::vector<module *> vc;
 
   // Create the modules for the simulation.
   for(int i = 0; i < nn; ++i)
     {
-      vs.push_back(module(q, i, gen, 2));
-      vs.back().schedule(0);
+      client *c = new client(q, i, gen, 2);
+      vc.push_back(c);
     }
 
   // The event loop.
@@ -63,4 +64,8 @@ main()
       q.top().process();
       q.pop();
     }
+
+  // Delete the clients.
+  for(module *c: vc)
+    delete c;
 }
