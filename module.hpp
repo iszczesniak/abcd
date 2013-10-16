@@ -9,6 +9,7 @@ class module
 
 public:
   module(pqueue &);
+  virtual ~module();
   virtual void operator()(double) = 0;
   void schedule(double);
 };

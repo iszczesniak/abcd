@@ -5,6 +5,10 @@ module::module(pqueue &q) : q(q)
 {
 }
 
+module::~module()
+{
+}
+
 void
 module::schedule(double t)
 {

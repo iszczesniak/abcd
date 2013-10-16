@@ -18,7 +18,7 @@ main()
   const int sc = 800;
 
   // Simulation time.
-  const double sim_limit = 1000000;
+  const double sim_limit = 100;
 
   // The number of nodes.
   const int nn = 100;
@@ -52,6 +52,7 @@ main()
   for(int i = 0; i < nn; ++i)
     {
       client *c = new client(q, i, gen, 2);
+      c->schedule(0);
       vc.push_back(c);
     }
 
