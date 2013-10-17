@@ -51,7 +51,7 @@ main()
   // Create the modules for the simulation.
   for(int i = 0; i < nn; ++i)
     {
-      client *c = new client(q, i, gen, 2);
+      client *c = new client(q, i, gen, 2, 2, 2);
       c->schedule(0);
       vc.push_back(c);
     }
