@@ -36,8 +36,11 @@ class client: public module
   boost::variate_generator<boost::mt19937 &,
                            boost::exponential_distribution<> > cdg;
 
-  // The distribution for the nubmer of changes.
+  // The distribution for the number of changes.
   double mnc;
+  boost::poisson_distribution<> nd;
+  boost::variate_generator<boost::mt19937 &,
+                           boost::poisson_distribution<> > ndg;
 
   // ba::accumulator_set<double, ba::stats<ba::tag::mean> > acc;
 
@@ -53,7 +56,12 @@ public:
   client(pqueue &q, int id, boost::mt19937 &r,
          double l_sleep, double mnc, double l_change);
   ~client();
+
+  // Schedule the new event based on the current state of the client.
+  // This function doesn't change the state of the client.
   void schedule(double t);
+
+  // Processes the event and changes the state of the client.
   void operator()(double t);
 };
 
