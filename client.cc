@@ -19,27 +19,35 @@ client::~client()
 
 void client::operator()(double t)
 {
+  cout << "Event t = " << t << ", id = " << id << ": ";
+
   if (idle)
     {
       // Now the client gets busy.
       idle = false;
       nc_left = ndg();
 
-      // Establish a new connection
+      // Establish a new connection.
+      cout << "establishing";
     }
   else
     if (nc_left)
       {
-        // Reconfigure the connection or
         --nc_left;
+
+        // Reconfigure the connection.
+        cout << "reconfiguring";
       }
     else
       {
         // Take the connection down.
+        cout << "taking down";
 
         // Now the client gets idle.
         idle = true;
       }
+
+  cout << endl;
 
   schedule(t);
 }
