@@ -52,7 +52,7 @@ typedef std::pair<int, Edge> CEP;
 typedef std::map<CEP, SSC> C2S;
 
 // A map of vertexes to C2S.  It's used to store the complete
-// information on the
+// information for a given vertex.
 typedef std::map<Vertex, C2S> V2C2S;
 
 // The path definition.
