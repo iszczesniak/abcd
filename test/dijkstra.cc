@@ -15,8 +15,8 @@
 BOOST_AUTO_TEST_CASE(dijkstra_test_1)
 {
   graph g(2);
-  Vertex src = *(boost::vertices(g).first);
-  Vertex dst = *(boost::vertices(g).first + 1);
+  vertex src = *(boost::vertices(g).first);
+  vertex dst = *(boost::vertices(g).first + 1);
   boost::add_edge(src, dst, g);
   set_subcarriers(g, 2);
 
@@ -42,9 +42,9 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_1)
 BOOST_AUTO_TEST_CASE(dijkstra_test_2)
 {
   graph g(2);
-  Vertex src = *(boost::vertices(g).first);
-  Vertex dst = *(boost::vertices(g).first + 1);
-  Edge e = boost::add_edge(src, dst, g).first;
+  vertex src = *(boost::vertices(g).first);
+  vertex dst = *(boost::vertices(g).first + 1);
+  edge e = boost::add_edge(src, dst, g).first;
   set_subcarriers(g, 3);
 
   SSC ssc(boost::counting_iterator<int>(0),
@@ -75,12 +75,12 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_2)
 BOOST_AUTO_TEST_CASE(dijkstra_test_3)
 {
   graph g(3);
-  Vertex src = *(boost::vertices(g).first);
-  Vertex mid = *(boost::vertices(g).first + 1);
-  Vertex dst = *(boost::vertices(g).first + 2);
-  Edge e1 = boost::add_edge(src, mid, g).first;
-  Edge e2 = boost::add_edge(src, mid, g).first;
-  Edge e3 = boost::add_edge(mid, dst, g).first;
+  vertex src = *(boost::vertices(g).first);
+  vertex mid = *(boost::vertices(g).first + 1);
+  vertex dst = *(boost::vertices(g).first + 2);
+  edge e1 = boost::add_edge(src, mid, g).first;
+  edge e2 = boost::add_edge(src, mid, g).first;
+  edge e3 = boost::add_edge(mid, dst, g).first;
 
   // Props of edge e1.
   boost::get(boost::edge_weight, g, e1) = 1;
@@ -140,12 +140,12 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_3)
 BOOST_AUTO_TEST_CASE(dijkstra_test_4)
 {
   graph g(3);
-  Vertex src = *(vertices(g).first);
-  Vertex mid = *(vertices(g).first + 1);
-  Vertex dst = *(vertices(g).first + 2);
-  Edge e1 = add_edge(src, mid, g).first;
-  Edge e2 = add_edge(src, mid, g).first;
-  Edge e3 = add_edge(mid, dst, g).first;
+  vertex src = *(vertices(g).first);
+  vertex mid = *(vertices(g).first + 1);
+  vertex dst = *(vertices(g).first + 2);
+  edge e1 = add_edge(src, mid, g).first;
+  edge e2 = add_edge(src, mid, g).first;
+  edge e3 = add_edge(mid, dst, g).first;
 
   // Props of edge e1.
   boost::get(boost::edge_weight, g, e1) = 2;
@@ -182,12 +182,12 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_4)
 BOOST_AUTO_TEST_CASE(dijkstra_test_5)
 {
   graph g(3);
-  Vertex src = *(vertices(g).first);
-  Vertex mid = *(vertices(g).first + 1);
-  Vertex dst = *(vertices(g).first + 2);
-  Edge e1 = add_edge(src, mid, g).first;
-  Edge e2 = add_edge(src, mid, g).first;
-  Edge e3 = add_edge(mid, dst, g).first;
+  vertex src = *(vertices(g).first);
+  vertex mid = *(vertices(g).first + 1);
+  vertex dst = *(vertices(g).first + 2);
+  edge e1 = add_edge(src, mid, g).first;
+  edge e2 = add_edge(src, mid, g).first;
+  edge e3 = add_edge(mid, dst, g).first;
 
   // Props of edge e1.
   boost::get(boost::edge_weight, g, e1) = 2;
@@ -230,11 +230,11 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_5)
 BOOST_AUTO_TEST_CASE(dijkstra_test_6)
 {
   graph g(2);
-  Vertex src = *(vertices(g).first);
-  Vertex dst = *(vertices(g).first + 1);
+  vertex src = *(vertices(g).first);
+  vertex dst = *(vertices(g).first + 1);
 
-  Edge e1 = boost::add_edge(src, dst, g).first;
-  Edge e2 = boost::add_edge(src, dst, g).first;
+  edge e1 = boost::add_edge(src, dst, g).first;
+  edge e2 = boost::add_edge(src, dst, g).first;
 
   // Props of edge e1.
   boost::get(boost::edge_weight, g, e1) = 1;
@@ -264,11 +264,11 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_6)
 BOOST_AUTO_TEST_CASE(dijkstra_test_7)
 {
   graph g(2);
-  Vertex src = *(vertices(g).first);
-  Vertex dst = *(vertices(g).first + 1);
+  vertex src = *(vertices(g).first);
+  vertex dst = *(vertices(g).first + 1);
 
-  Edge e1 = boost::add_edge(src, dst, g).first;
-  Edge e2 = boost::add_edge(src, dst, g).first;
+  edge e1 = boost::add_edge(src, dst, g).first;
+  edge e2 = boost::add_edge(src, dst, g).first;
 
   // Props of edge e1.
   boost::get(boost::edge_weight, g, e1) = 2;

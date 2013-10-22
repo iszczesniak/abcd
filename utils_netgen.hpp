@@ -66,16 +66,16 @@ print_subcarriers(G &g)
  * connected or saturated vertexes.
  */
 void
-move(Vertex v, const graph &g, std::set<Vertex> &lonely,
-     std::set<Vertex> &connected, std::set<Vertex> &saturated);
+move(vertex v, const graph &g, std::set<vertex> &lonely,
+     std::set<vertex> &connected, std::set<vertex> &saturated);
 
 /**
  * Check whether to move the vertex from the set of connected vertexes
  * to the set of saturated vertexes.
  */
 void
-move_if_needed(Vertex v, const graph &g, std::set<Vertex> &connected,
-               std::set<Vertex> &saturated);
+move_if_needed(vertex v, const graph &g, std::set<vertex> &connected,
+               std::set<vertex> &saturated);
 
 /**
  * Add a random edge.
@@ -83,9 +83,9 @@ move_if_needed(Vertex v, const graph &g, std::set<Vertex> &connected,
  */
 template<typename T>
 bool
-add_random_edge(graph &g, std::set<Vertex> &lonely,
-                std::set<Vertex> &connected,
-                std::set<Vertex> &saturated,
+add_random_edge(graph &g, std::set<vertex> &lonely,
+                std::set<vertex> &connected,
+                std::set<vertex> &saturated,
                 T &gen)
 {
   // The condition for the first edge.
@@ -93,10 +93,10 @@ add_random_edge(graph &g, std::set<Vertex> &lonely,
     {
       // Select two lone vertexes, which will be the end nodes of the
       // first edge created.
-      Vertex src = get_random_element(lonely, gen);
+      vertex src = get_random_element(lonely, gen);
       // Move the src node from lonely before we pick the dst node.
       move(src, g, lonely, connected, saturated);
-      Vertex dst = get_random_element(lonely, gen);
+      vertex dst = get_random_element(lonely, gen);
       move(dst, g, lonely, connected, saturated);
       bool status = add_edge(src, dst, g).second;
       assert(status);
@@ -107,8 +107,8 @@ add_random_edge(graph &g, std::set<Vertex> &lonely,
     {
       // Add a new edge where one vertex belongs to the connected
       // component, while the other is a lone one.
-      Vertex src = get_random_element(lonely, gen);
-      Vertex dst = get_random_element(connected, gen);
+      vertex src = get_random_element(lonely, gen);
+      vertex dst = get_random_element(connected, gen);
       bool status = add_edge(src, dst, g).second;
       assert(status);
       move(src, g, lonely, connected, saturated);
@@ -121,14 +121,14 @@ add_random_edge(graph &g, std::set<Vertex> &lonely,
       // Now we have to create an edge where both vertexes of the edge
       // belong to the connected component.  We have to be carefull
       // not to create a parallel edge.
-      Vertex src = get_random_element(connected, gen);
+      vertex src = get_random_element(connected, gen);
       // These are the vertexes that can be destination nodes.
-      std::set<Vertex> sifted = connected;
+      std::set<vertex> sifted = connected;
       sifted.erase(src);
       BGL_FORALL_OUTEDGES_T(src, e, g, graph)
         sifted.erase(target(e, g));
       // Now pick from the sifted set.
-      Vertex dst = get_random_element(sifted, gen);
+      vertex dst = get_random_element(sifted, gen);
       bool status = boost::add_edge(src, dst, g).second;
       assert(status);
       move_if_needed(src, g, connected, saturated);
@@ -158,13 +158,13 @@ generate_graph(graph &g, int nodes, int edges, T &gen)
   g = graph(nodes);
 
   // The set of lone vertexes.
-  std::set<Vertex> lonely = get_vertexes<std::set<Vertex> >(g);
+  std::set<vertex> lonely = get_vertexes<std::set<vertex> >(g);
   // The set of vertexes in the connected component that have not been
   // saturated yet.
-  std::set<Vertex> connected;
+  std::set<vertex> connected;
   // The set of saturated vertexes.  A saturated edge is connected to
   // every other node with a single edge.
-  std::set<Vertex> saturated;
+  std::set<vertex> saturated;
 
   // In every iteration we add a new random edge.
   for (int created = 0; created < edges; ++created)

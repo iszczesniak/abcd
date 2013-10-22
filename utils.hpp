@@ -75,7 +75,7 @@ void complete_graph(G &g)
   // the shortest paths from a source node to other nodes.  For us it
   // doesn't matter, because links are undirected.
   std::vector<int> dist(num_vertices(g));
-  std::vector<Vertex> pred(num_vertices(g));
+  std::vector<vertex> pred(num_vertices(g));
 
   typename boost::graph_traits<G>::vertex_iterator vi, ve;
   for (tie(vi, ve) = vertices(g); vi != ve; ++vi)
@@ -228,7 +228,7 @@ std::ostream &operator << (std::ostream &os, const std::set<T> &v)
  * perhaps there are some lonely vertexes.  Sort the list in the
  * decreasing order of the number of elements in the sets.
  */
-std::list<std::set<Vertex> >
+std::list<std::set<vertex> >
 get_components(const graph &g);
 
 /**
@@ -242,8 +242,8 @@ template<typename G>
 bool
 check_components(const G &g)
 {
-  typedef typename boost::graph_traits<G>::vertex_descriptor Vertex;
-  typedef typename std::list<std::set<Vertex> > lsv;
+  typedef typename boost::graph_traits<G>::vertex_descriptor vertex;
+  typedef typename std::list<std::set<vertex> > lsv;
 
   lsv l = get_components(g);
 
@@ -264,16 +264,16 @@ std::pair<typename boost::graph_traits<G>::vertex_descriptor,
 	  typename boost::graph_traits<G>::vertex_descriptor>
 random_node_pair(const G &g, R &gen)
 {
-  typedef typename boost::graph_traits<G>::vertex_descriptor Vertex;
+  typedef typename boost::graph_traits<G>::vertex_descriptor vertex;
 
   assert(check_components(g));
-  std::set<Vertex> s = *get_components(g).begin();
+  std::set<vertex> s = *get_components(g).begin();
 
   assert(s.size());
-  Vertex src = get_random_element(s, gen);
+  vertex src = get_random_element(s, gen);
   s.erase(src);
   assert(s.size());
-  Vertex dst = get_random_element(s, gen);
+  vertex dst = get_random_element(s, gen);
 
   return std::make_pair(src, dst);
 }

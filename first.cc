@@ -49,7 +49,7 @@ main (int argc, char* argv[])
       cout << "Allocating..." << endl;
 
       // Get a pair of different nodes.
-      pair<Vertex, Vertex> pn = random_node_pair(g, gen);
+      pair<vertex, vertex> pn = random_node_pair(g, gen);
 
       // The number of subcarriers the signal requires.
       int n = get_random_int(1, 10, gen);

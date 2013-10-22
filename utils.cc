@@ -74,12 +74,12 @@ exclude(SSC &ssc, const SSC &e)
 }
 
 // The function for sorting the list of sets.
-static bool stlos(const set<Vertex> &s1, const set<Vertex> &s2)
+static bool stlos(const set<vertex> &s1, const set<vertex> &s2)
 {
   return s1.size() > s2.size();
 }
 
-list<set<Vertex> >
+list<set<vertex> >
 get_components(const graph &g)
 {
   // An element of this vector corresponds to a vertex, i.e. c[v] is
@@ -90,15 +90,15 @@ get_components(const graph &g)
 
   // Each element of the list is a set that contains vertexes
   // belonging to a component.
-  list<set<Vertex> > l(num);
+  list<set<vertex> > l(num);
   // In every iteration add one vertex to the appropriate set.
   for (std::vector<int>::iterator i = c.begin(); i != c.end(); ++i)
     {
-      list<set<Vertex> >::iterator li = l.begin();
+      list<set<vertex> >::iterator li = l.begin();
       advance(li, *i);
 
       // Iterator i refers to the element for vertex v.
-      Vertex v = distance(c.begin(), i);
+      vertex v = distance(c.begin(), i);
       li->insert(v);
     }
 

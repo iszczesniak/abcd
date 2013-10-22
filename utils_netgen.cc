@@ -22,8 +22,8 @@ name_vertices(graph &g)
 }
 
 void
-move(Vertex v, const graph &g, std::set<Vertex> &lonely,
-     std::set<Vertex> &connected, std::set<Vertex> &saturated)
+move(vertex v, const graph &g, std::set<vertex> &lonely,
+     std::set<vertex> &connected, std::set<vertex> &saturated)
 {
   lonely.erase(v);
 
@@ -34,8 +34,8 @@ move(Vertex v, const graph &g, std::set<Vertex> &lonely,
 }
 
 void
-move_if_needed(Vertex v, const graph &g, std::set<Vertex> &connected,
-               std::set<Vertex> &saturated)
+move_if_needed(vertex v, const graph &g, std::set<vertex> &connected,
+               std::set<vertex> &saturated)
 {
   int n = boost::num_vertices(g);
   int od = boost::out_degree(v, g);

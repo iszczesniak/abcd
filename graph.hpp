@@ -28,24 +28,24 @@ boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS,
 		      boost::property<boost::edge_subcarriers_t, SSC> > >
 graph;
 
-typedef boost::graph_traits<graph>::edge_descriptor Edge;
-typedef boost::graph_traits<graph>::vertex_descriptor Vertex;
+typedef boost::graph_traits<graph>::edge_descriptor edge;
+typedef boost::graph_traits<graph>::vertex_descriptor vertex;
 
 namespace std {
 
   /**
-   * This is the operator needed by std::map when its key is the Edge
+   * This is the operator needed by std::map when its key is the edge
    * type.
    */
-  bool operator <(const Edge &, const Edge &);
+  bool operator <(const edge &, const edge &);
 
-  bool operator == (const Edge &, const Edge &);
+  bool operator == (const edge &, const edge &);
 
 }
 
 // The cost and edge pair.  It is used to store the cost of reaching a
 // node along the given edge.
-typedef std::pair<int, Edge> CEP;
+typedef std::pair<int, edge> CEP;
 
 // The mapping from CEP to SSC.  This mapping tells what SSC is
 // available at a node provided a given CEP was used.
@@ -53,9 +53,9 @@ typedef std::map<CEP, SSC> C2S;
 
 // A map of vertexes to C2S.  It's used to store the complete
 // information for a given vertex.
-typedef std::map<Vertex, C2S> V2C2S;
+typedef std::map<vertex, C2S> V2C2S;
 
 // The path definition.
-typedef std::pair<std::list<Edge>, SSC> Path;
+typedef std::pair<std::list<edge>, SSC> Path;
 
 #endif /* GRAPH_HPP */

@@ -8,9 +8,9 @@
 BOOST_AUTO_TEST_CASE(parallel_edge_test)
 {
   graph g(2);
-  Vertex a = *(vertices(g).first);
-  Vertex b = *(vertices(g).first + 1);
-  Edge e1, e2;
+  vertex a = *(vertices(g).first);
+  vertex b = *(vertices(g).first + 1);
+  edge e1, e2;
   bool r1, r2;
   tie(e1, r1) = add_edge(a, b, g);
   tie(e2, r2) = add_edge(a, b, g);

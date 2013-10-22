@@ -32,7 +32,7 @@ has_better_or_equal(const C2S &c2s, int cost, const SSC &ssc)
  * larger or equal cost and with a SSC that is included in "ssc".
  */
 bool
-purge_worse(map<CEP, Vertex> &q, C2S &c2s, int cost, const SSC &ssc)
+purge_worse(map<CEP, vertex> &q, C2S &c2s, int cost, const SSC &ssc)
 {
   // We examine the results with the cost larger or equal to "cost".
   C2S::iterator i = c2s.begin();
@@ -50,7 +50,7 @@ purge_worse(map<CEP, Vertex> &q, C2S &c2s, int cost, const SSC &ssc)
 }
 
 void
-relaks(map<CEP, Vertex> &q, C2S &c2s, const CEP &cep, Vertex v, const SSC &ssc)
+relaks(map<CEP, vertex> &q, C2S &c2s, const CEP &cep, vertex v, const SSC &ssc)
 {
   // Check whether there is an SSC in c2s that includes c_ssc at the
   // same or lower cost then c_cep.  If yes, then just return.
@@ -65,12 +65,12 @@ relaks(map<CEP, Vertex> &q, C2S &c2s, const CEP &cep, Vertex v, const SSC &ssc)
 }
 
 V2C2S
-dijkstra(const graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
+dijkstra(const graph &g, vertex src, vertex dst, int p, const SSC &src_ssc)
 {
   V2C2S r;
 
   // The null edge.
-  const Edge &ne = *(boost::edges(g).second);
+  const edge &ne = *(boost::edges(g).second);
 
   // We put here the information that allows us to process the source
   // node in the loop below.  We say that we reach the source node
@@ -97,18 +97,18 @@ dijkstra(const graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
   // that: the source node, for which the null edge is used.
   // Furthermore, figuring out the end node might be problematic for
   // undirected graphs.
-  map<CEP, Vertex> q;
+  map<CEP, vertex> q;
 
   // We reach vertex src with cost 0 along the null edge.
   q[make_pair(0, ne)] = src;
 
   while(!q.empty())
     {
-      map<CEP, Vertex>::iterator i = q.begin();
+      map<CEP, vertex>::iterator i = q.begin();
       CEP cep = i->first;
-      Vertex v = i->second;
+      vertex v = i->second;
       int c = cep.first;
-      Edge e = cep.second;
+      edge e = cep.second;
       q.erase(i);
 
       // C2S for node v.
@@ -132,8 +132,8 @@ dijkstra(const graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
       boost::graph_traits<graph>::out_edge_iterator ei, eei;
       for(boost::tie(ei, eei) = boost::out_edges(v, g); ei != eei; ++ei)
       	{
-          // The Edge that we examine in this iteration.
-	  const Edge &e = *ei;
+          // The edge that we examine in this iteration.
+	  const edge &e = *ei;
           // The subcarriers available on the edge.
 	  const SSC &l_ssc = boost::get(boost::edge_subcarriers, g, e);
 
@@ -149,7 +149,7 @@ dijkstra(const graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
               // Candidate CEP.
               CEP c_cep = make_pair(new_cost, e);
               // The target vertex of the edge.
-              Vertex t = boost::target(e, g);
+              vertex t = boost::target(e, g);
 
               relaks(q, r[t], c_cep, t, c_ssc);
             }
@@ -160,7 +160,7 @@ dijkstra(const graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
 }
 
 Path
-shortest_path(const graph &g, const V2C2S &r, Vertex src, Vertex dst)
+shortest_path(const graph &g, const V2C2S &r, vertex src, vertex dst)
 {
   Path p;
 
@@ -187,7 +187,7 @@ shortest_path(const graph &g, const V2C2S &r, Vertex src, Vertex dst)
 	  p.second = ssc;
 
 	  // We start with the destination node.
-	  Vertex crt = dst;
+	  vertex crt = dst;
 	  while(crt != src)
 	    {
 	      V2C2S::const_iterator i = r.find(crt);
@@ -203,7 +203,7 @@ shortest_path(const graph &g, const V2C2S &r, Vertex src, Vertex dst)
 	      // The found solution must be of cost c.
 	      assert(j->first.first == c);
 
-	      const Edge &e = j->first.second;
+	      const edge &e = j->first.second;
 	      p.first.push_front(e);
 	      c -= boost::get(boost::edge_weight, g, e);
 	      assert(crt == boost::target(e, g));
@@ -222,7 +222,7 @@ shortest_path(const graph &g, const V2C2S &r, Vertex src, Vertex dst)
 void
 set_up_path(graph &g, const Path &p, int sc)
 {
-  const list<Edge> &l = p.first;
+  const list<edge> &l = p.first;
   // This is the largest set that can support at least sc subcarriers.
   SSC p_ssc = p.second;
 
@@ -235,7 +235,7 @@ set_up_path(graph &g, const Path &p, int sc)
   assert(!p_ssc.empty());
 
   // Iterate over the edges of the path.
-  for(const Edge &e: l)
+  for(const edge &e: l)
     {
       SSC &e_ssc = boost::get(boost::edge_subcarriers, g, e);
       // Make sure that the edge has the required subcarriers.
