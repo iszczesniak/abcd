@@ -3,12 +3,12 @@
 
 /**
  * Find the shortest path in graph g from source node src to
- * destination node dst for a signal that requires p contiguous
+ * destination node dst for a signal that requires sc contiguous
  * subcarriers.  We start the search at node src with the set of
  * subcarriers ssc.
  */
 V2C2S
-dijkstra(const graph &g, vertex src, vertex dst, int p, const SSC &ssc);
+dijkstra(const graph &g, vertex src, vertex dst, int sc, const SSC &ssc);
 
 /**
  * Returns the shortest path as a pair of the list of edges and an

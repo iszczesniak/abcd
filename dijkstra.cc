@@ -65,7 +65,7 @@ relaks(map<CEP, vertex> &q, C2S &c2s, const CEP &cep, vertex v, const SSC &ssc)
 }
 
 V2C2S
-dijkstra(const graph &g, vertex src, vertex dst, int p, const SSC &src_ssc)
+dijkstra(const graph &g, vertex src, vertex dst, int sc, const SSC &src_ssc)
 {
   V2C2S r;
 
@@ -78,7 +78,7 @@ dijkstra(const graph &g, vertex src, vertex dst, int p, const SSC &src_ssc)
   // the null edge.  The null edge signals the beginning of the path.
   // We have to filter ssc to exclude subcarriers that can't support
   // the signal with p subcarriers.
-  r[src][CEP(0, ne)] = exclude(src_ssc, p);
+  r[src][CEP(0, ne)] = exclude(src_ssc, sc);
 
   // The following map implements the priority queue.  The key is a
   // CEP, and the value is the vertex we are reaching.  The maps works
@@ -138,7 +138,7 @@ dijkstra(const graph &g, vertex src, vertex dst, int p, const SSC &src_ssc)
 	  const SSC &l_ssc = boost::get(boost::edge_subcarriers, g, e);
 
 	  // Candidate SSC.
-	  SSC c_ssc = exclude(intersection(v_ssc, l_ssc), p);
+	  SSC c_ssc = exclude(intersection(v_ssc, l_ssc), sc);
 
           if (!c_ssc.empty())
             {
