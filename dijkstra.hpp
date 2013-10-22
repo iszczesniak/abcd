@@ -22,4 +22,4 @@ shortest_path(const graph &g, const V2C2S &r, vertex src, vertex dst);
  * subcarriers on the edges that are used by the path.
  */
 void
-set_up_path(graph &g, const path &p, int sc);
+set_up_path(graph &g, const cpath &p, int sc);

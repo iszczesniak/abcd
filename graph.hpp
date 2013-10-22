@@ -56,6 +56,9 @@ typedef std::map<CEP, SSC> C2S;
 typedef std::map<vertex, C2S> V2C2S;
 
 // The path definition.
-typedef std::pair<std::list<edge>, SSC> path;
+typedef std::list<edge> path;
+
+// The candidate path.
+typedef std::pair<path, SSC> cpath;
 
 #endif /* GRAPH_HPP */
