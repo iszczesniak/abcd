@@ -60,7 +60,7 @@ main (int argc, char* argv[])
       SSC all(boost::counting_iterator<int>(0),
               boost::counting_iterator<int>(sc));
       V2C2S r = dijkstra(g, pn.first, pn.second, n, all);
-      Path p = shortest_path(g, r, pn.first, pn.second);
+      path p = shortest_path(g, r, pn.first, pn.second);
 
       if (p.first.empty())
 	cout << "Unable to service a new request." << endl;

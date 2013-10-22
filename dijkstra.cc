@@ -159,10 +159,10 @@ dijkstra(const graph &g, vertex src, vertex dst, int p, const SSC &src_ssc)
   return r;
 }
 
-Path
+path
 shortest_path(const graph &g, const V2C2S &r, vertex src, vertex dst)
 {
-  Path p;
+  path p;
 
   // Find the path from the back.  This is the current node.
   V2C2S::const_iterator dst_i = r.find(dst);
@@ -220,7 +220,7 @@ shortest_path(const graph &g, const V2C2S &r, vertex src, vertex dst)
 }
 
 void
-set_up_path(graph &g, const Path &p, int sc)
+set_up_path(graph &g, const path &p, int sc)
 {
   const list<edge> &l = p.first;
   // This is the largest set that can support at least sc subcarriers.
