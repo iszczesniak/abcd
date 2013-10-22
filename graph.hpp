@@ -26,10 +26,10 @@ boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS,
 		      boost::property<boost::vertex_name_t, std::string>,
 		      boost::property<boost::edge_weight_t, int, 
 		      boost::property<boost::edge_subcarriers_t, SSC> > >
-Graph;
+graph;
 
-typedef boost::graph_traits<Graph>::edge_descriptor Edge;
-typedef boost::graph_traits<Graph>::vertex_descriptor Vertex;
+typedef boost::graph_traits<graph>::edge_descriptor Edge;
+typedef boost::graph_traits<graph>::vertex_descriptor Vertex;
 
 namespace std {
 

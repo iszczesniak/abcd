@@ -1,13 +1,13 @@
 #include "utils.hpp"
 
-#define BOOST_TEST_MODULE Graph
+#define BOOST_TEST_MODULE graph
 
 #include <boost/test/unit_test.hpp>
 #include <boost/random/linear_congruential.hpp>
 
 BOOST_AUTO_TEST_CASE(parallel_edge_test)
 {
-  Graph g(2);
+  graph g(2);
   Vertex a = *(vertices(g).first);
   Vertex b = *(vertices(g).first + 1);
   Edge e1, e2;

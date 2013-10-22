@@ -109,7 +109,7 @@ path_to_string(typename boost::graph_traits<G>::vertex_descriptor i,
   if (i == j || boost::get(boost::vertex_predecessor, g, j)[i] != i)
     {
       int hops = 0;
-      typename boost::graph_traits<Graph>::vertex_descriptor curr = i;
+      typename boost::graph_traits<graph>::vertex_descriptor curr = i;
 
       str << ": " << boost::get(boost::vertex_name, g, i);
 
@@ -157,7 +157,7 @@ print_sp(const G &g, std::ostream &os)
  */
 template<typename C>
 C
-get_vertexes(const Graph &g)
+get_vertexes(const graph &g)
 {
   C c;
 
@@ -229,7 +229,7 @@ std::ostream &operator << (std::ostream &os, const std::set<T> &v)
  * decreasing order of the number of elements in the sets.
  */
 std::list<std::set<Vertex> >
-get_components(const Graph &g);
+get_components(const graph &g);
 
 /**
  * There must be only one connected component.  There could be other

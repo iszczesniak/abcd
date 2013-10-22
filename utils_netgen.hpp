@@ -16,14 +16,14 @@
  * Names the vertices.
  */
 void
-name_vertices(Graph &g);
+name_vertices(graph &g);
 
 /**
  * Sets the distance property on edges.
  */
 template<typename T>
 void
-set_distances(Graph &g, int min, int max, T &gen)
+set_distances(graph &g, int min, int max, T &gen)
 {
   boost::uniform_int<> range(min, max);
   boost::variate_generator<T &, boost::uniform_int<> > rgen(gen, range);
@@ -66,7 +66,7 @@ print_subcarriers(G &g)
  * connected or saturated vertexes.
  */
 void
-move(Vertex v, const Graph &g, std::set<Vertex> &lonely,
+move(Vertex v, const graph &g, std::set<Vertex> &lonely,
      std::set<Vertex> &connected, std::set<Vertex> &saturated);
 
 /**
@@ -74,7 +74,7 @@ move(Vertex v, const Graph &g, std::set<Vertex> &lonely,
  * to the set of saturated vertexes.
  */
 void
-move_if_needed(Vertex v, const Graph &g, std::set<Vertex> &connected,
+move_if_needed(Vertex v, const graph &g, std::set<Vertex> &connected,
                std::set<Vertex> &saturated);
 
 /**
@@ -83,7 +83,7 @@ move_if_needed(Vertex v, const Graph &g, std::set<Vertex> &connected,
  */
 template<typename T>
 bool
-add_random_edge(Graph &g, std::set<Vertex> &lonely,
+add_random_edge(graph &g, std::set<Vertex> &lonely,
                 std::set<Vertex> &connected,
                 std::set<Vertex> &saturated,
                 T &gen)
@@ -125,7 +125,7 @@ add_random_edge(Graph &g, std::set<Vertex> &lonely,
       // These are the vertexes that can be destination nodes.
       std::set<Vertex> sifted = connected;
       sifted.erase(src);
-      BGL_FORALL_OUTEDGES_T(src, e, g, Graph)
+      BGL_FORALL_OUTEDGES_T(src, e, g, graph)
         sifted.erase(target(e, g));
       // Now pick from the sifted set.
       Vertex dst = get_random_element(sifted, gen);
@@ -149,13 +149,13 @@ add_random_edge(Graph &g, std::set<Vertex> &lonely,
  */
 template<typename T>
 int
-generate_graph(Graph &g, int nodes, int edges, T &gen)
+generate_graph(graph &g, int nodes, int edges, T &gen)
 {
   assert(nodes >= 2);
   assert(edges >= 0);
 
   // Create a graph with the following number of nodes.
-  g = Graph(nodes);
+  g = graph(nodes);
 
   // The set of lone vertexes.
   std::set<Vertex> lonely = get_vertexes<std::set<Vertex> >(g);

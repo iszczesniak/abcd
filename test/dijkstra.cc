@@ -14,13 +14,14 @@
  */
 BOOST_AUTO_TEST_CASE(dijkstra_test_1)
 {
-  Graph g(2);
-  Vertex src = *(vertices(g).first);
-  Vertex dst = *(vertices(g).first + 1);
-  add_edge(src, dst, g);
+  graph g(2);
+  Vertex src = *(boost::vertices(g).first);
+  Vertex dst = *(boost::vertices(g).first + 1);
+  boost::add_edge(src, dst, g);
   set_subcarriers(g, 2);
 
-  SSC ssc(counting_iterator<int>(0), counting_iterator<int>(3));
+  SSC ssc(boost::counting_iterator<int>(0),
+          boost::counting_iterator<int>(3));
 
   V2C2S result = dijkstra(g, src, dst, 3, ssc);
   // There are no results for dst.
@@ -40,13 +41,14 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_1)
  */
 BOOST_AUTO_TEST_CASE(dijkstra_test_2)
 {
-  Graph g(2);
-  Vertex src = *(vertices(g).first);
-  Vertex dst = *(vertices(g).first + 1);
-  Edge e = add_edge(src, dst, g).first;
+  graph g(2);
+  Vertex src = *(boost::vertices(g).first);
+  Vertex dst = *(boost::vertices(g).first + 1);
+  Edge e = boost::add_edge(src, dst, g).first;
   set_subcarriers(g, 3);
 
-  SSC ssc(counting_iterator<int>(0), counting_iterator<int>(3));
+  SSC ssc(boost::counting_iterator<int>(0),
+          boost::counting_iterator<int>(3));
 
   V2C2S result = dijkstra(g, src, dst, 3, ssc);
 
@@ -62,8 +64,8 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_2)
   // The path uses SSC with three subcarriers.
   BOOST_CHECK(p.second.size() == 3);
 
-  set_up_path(g, p);
-  BOOST_CHECK(get(edge_subcarriers, g, e).empty());
+  set_up_path(g, p, 3);
+  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e).empty());
 }
 
 /*
@@ -72,30 +74,31 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_2)
  */
 BOOST_AUTO_TEST_CASE(dijkstra_test_3)
 {
-  Graph g(3);
-  Vertex src = *(vertices(g).first);
-  Vertex mid = *(vertices(g).first + 1);
-  Vertex dst = *(vertices(g).first + 2);
-  Edge e1 = add_edge(src, mid, g).first;
-  Edge e2 = add_edge(src, mid, g).first;
-  Edge e3 = add_edge(mid, dst, g).first;
+  graph g(3);
+  Vertex src = *(boost::vertices(g).first);
+  Vertex mid = *(boost::vertices(g).first + 1);
+  Vertex dst = *(boost::vertices(g).first + 2);
+  Edge e1 = boost::add_edge(src, mid, g).first;
+  Edge e2 = boost::add_edge(src, mid, g).first;
+  Edge e3 = boost::add_edge(mid, dst, g).first;
 
   // Props of edge e1.
-  get(edge_weight, g, e1) = 1;
-  get(edge_subcarriers, g, e1).insert(0);
-  get(edge_subcarriers, g, e1).insert(1);
+  boost::get(boost::edge_weight, g, e1) = 1;
+  boost::get(boost::edge_subcarriers, g, e1).insert(0);
+  boost::get(boost::edge_subcarriers, g, e1).insert(1);
 
   // Props of edge e2.
-  get(edge_weight, g, e2) = 2;
-  get(edge_subcarriers, g, e2).insert(2);
-  get(edge_subcarriers, g, e2).insert(3);
+  boost::get(boost::edge_weight, g, e2) = 2;
+  boost::get(boost::edge_subcarriers, g, e2).insert(2);
+  boost::get(boost::edge_subcarriers, g, e2).insert(3);
 
   // Props of edge e3.
-  get(edge_weight, g, e3) = 1;
-  get(edge_subcarriers, g, e3).insert(2);
-  get(edge_subcarriers, g, e3).insert(3);
+  boost::get(boost::edge_weight, g, e3) = 1;
+  boost::get(boost::edge_subcarriers, g, e3).insert(2);
+  boost::get(boost::edge_subcarriers, g, e3).insert(3);
 
-  SSC ssc(counting_iterator<int>(0), counting_iterator<int>(4));
+  SSC ssc(boost::counting_iterator<int>(0),
+          boost::counting_iterator<int>(4));
 
   V2C2S result = dijkstra(g, src, dst, 2, ssc);
 
@@ -123,10 +126,10 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_3)
   BOOST_CHECK(p.second.find(2) != p.second.end());
   BOOST_CHECK(p.second.find(3) != p.second.end());
 
-  set_up_path(g, p);
-  BOOST_CHECK(get(edge_subcarriers, g, e1).size() == 2);
-  BOOST_CHECK(get(edge_subcarriers, g, e2).size() == 0);
-  BOOST_CHECK(get(edge_subcarriers, g, e3).size() == 0);
+  set_up_path(g, p, 2);
+  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e1).size() == 2);
+  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e2).size() == 0);
+  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e3).size() == 0);
 }
 
 /*
@@ -136,7 +139,7 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_3)
  */
 BOOST_AUTO_TEST_CASE(dijkstra_test_4)
 {
-  Graph g(3);
+  graph g(3);
   Vertex src = *(vertices(g).first);
   Vertex mid = *(vertices(g).first + 1);
   Vertex dst = *(vertices(g).first + 2);
@@ -145,18 +148,19 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_4)
   Edge e3 = add_edge(mid, dst, g).first;
 
   // Props of edge e1.
-  get(edge_weight, g, e1) = 2;
-  get(edge_subcarriers, g, e1).insert(0);
+  boost::get(boost::edge_weight, g, e1) = 2;
+  boost::get(boost::edge_subcarriers, g, e1).insert(0);
 
   // Props of edge e2.
-  get(edge_weight, g, e2) = 1;
-  get(edge_subcarriers, g, e2).insert(0);
+  boost::get(boost::edge_weight, g, e2) = 1;
+  boost::get(boost::edge_subcarriers, g, e2).insert(0);
 
   // Props of edge e3.
-  get(edge_weight, g, e3) = 2;
-  get(edge_subcarriers, g, e3).insert(0);
+  boost::get(boost::edge_weight, g, e3) = 2;
+  boost::get(boost::edge_subcarriers, g, e3).insert(0);
 
-  SSC ssc(counting_iterator<int>(0), counting_iterator<int>(1));
+  SSC ssc(boost::counting_iterator<int>(0),
+          boost::counting_iterator<int>(1));
 
   V2C2S result = dijkstra(g, src, dst, 1, ssc);
 
@@ -177,7 +181,7 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_4)
  */
 BOOST_AUTO_TEST_CASE(dijkstra_test_5)
 {
-  Graph g(3);
+  graph g(3);
   Vertex src = *(vertices(g).first);
   Vertex mid = *(vertices(g).first + 1);
   Vertex dst = *(vertices(g).first + 2);
@@ -186,20 +190,21 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_5)
   Edge e3 = add_edge(mid, dst, g).first;
 
   // Props of edge e1.
-  get(edge_weight, g, e1) = 2;
-  get(edge_subcarriers, g, e1).insert(0);
-  get(edge_subcarriers, g, e1).insert(1);
+  boost::get(boost::edge_weight, g, e1) = 2;
+  boost::get(boost::edge_subcarriers, g, e1).insert(0);
+  boost::get(boost::edge_subcarriers, g, e1).insert(1);
 
   // Props of edge e2.
-  get(edge_weight, g, e2) = 1;
-  get(edge_subcarriers, g, e2).insert(0);
+  boost::get(boost::edge_weight, g, e2) = 1;
+  boost::get(boost::edge_subcarriers, g, e2).insert(0);
 
   // Props of edge e3.
-  get(edge_weight, g, e3) = 2;
-  get(edge_subcarriers, g, e3).insert(0);
+  boost::get(boost::edge_weight, g, e3) = 2;
+  boost::get(boost::edge_subcarriers, g, e3).insert(0);
 
   // These are the subcarriers that we can start with at src.
-  SSC ssc(counting_iterator<int>(0), counting_iterator<int>(2));
+  SSC ssc(boost::counting_iterator<int>(0),
+          boost::counting_iterator<int>(2));
   V2C2S result = dijkstra(g, src, dst, 1, ssc);
 
   // We found the path.
@@ -224,24 +229,25 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_5)
  */
 BOOST_AUTO_TEST_CASE(dijkstra_test_6)
 {
-  Graph g(2);
+  graph g(2);
   Vertex src = *(vertices(g).first);
   Vertex dst = *(vertices(g).first + 1);
 
-  Edge e1 = add_edge(src, dst, g).first;
-  Edge e2 = add_edge(src, dst, g).first;
+  Edge e1 = boost::add_edge(src, dst, g).first;
+  Edge e2 = boost::add_edge(src, dst, g).first;
 
   // Props of edge e1.
-  get(edge_weight, g, e1) = 1;
-  get(edge_subcarriers, g, e1).insert(0);
+  boost::get(boost::edge_weight, g, e1) = 1;
+  boost::get(boost::edge_subcarriers, g, e1).insert(0);
 
   // Props of edge e2.  During the Dijkstra search, the result for
   // this edge won't be even added, because already the better result
   // for edge e1 will be in place.
-  get(edge_weight, g, e2) = 2;
-  get(edge_subcarriers, g, e2).insert(0);
+  boost::get(boost::edge_weight, g, e2) = 2;
+  boost::get(boost::edge_subcarriers, g, e2).insert(0);
 
-  SSC ssc(counting_iterator<int>(0), counting_iterator<int>(1));
+  SSC ssc(boost::counting_iterator<int>(0),
+          boost::counting_iterator<int>(1));
 
   V2C2S result = dijkstra(g, src, dst, 1, ssc);
 
@@ -257,23 +263,24 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_6)
  */
 BOOST_AUTO_TEST_CASE(dijkstra_test_7)
 {
-  Graph g(2);
+  graph g(2);
   Vertex src = *(vertices(g).first);
   Vertex dst = *(vertices(g).first + 1);
 
-  Edge e1 = add_edge(src, dst, g).first;
-  Edge e2 = add_edge(src, dst, g).first;
+  Edge e1 = boost::add_edge(src, dst, g).first;
+  Edge e2 = boost::add_edge(src, dst, g).first;
 
   // Props of edge e1.
-  get(edge_weight, g, e1) = 2;
-  get(edge_subcarriers, g, e1).insert(0);
+  boost::get(boost::edge_weight, g, e1) = 2;
+  boost::get(boost::edge_subcarriers, g, e1).insert(0);
 
   // Props of edge e2.  During the Dijkstra search, the result for
   // edge e1 will be removed, because edge e2 offers a better result.
-  get(edge_weight, g, e2) = 1;
-  get(edge_subcarriers, g, e2).insert(0);
+  boost::get(boost::edge_weight, g, e2) = 1;
+  boost::get(boost::edge_subcarriers, g, e2).insert(0);
 
-  SSC ssc(counting_iterator<int>(0), counting_iterator<int>(1));
+  SSC ssc(boost::counting_iterator<int>(0),
+          boost::counting_iterator<int>(1));
 
   V2C2S result = dijkstra(g, src, dst, 1, ssc);
 

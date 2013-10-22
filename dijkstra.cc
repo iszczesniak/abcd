@@ -7,7 +7,6 @@
 #include <map>
 #include <utility>
 
-using namespace boost;
 using namespace std;
 
 /**
@@ -66,12 +65,12 @@ relaks(map<CEP, Vertex> &q, C2S &c2s, const CEP &cep, Vertex v, const SSC &ssc)
 }
 
 V2C2S
-dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
+dijkstra(const graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
 {
   V2C2S r;
 
   // The null edge.
-  const Edge &ne = *(edges(g).second);
+  const Edge &ne = *(boost::edges(g).second);
 
   // We put here the information that allows us to process the source
   // node in the loop below.  We say that we reach the source node
@@ -130,13 +129,13 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
       const SSC &v_ssc = j->second;
 
       // Itereate over the out edges of the vertex.
-      graph_traits<Graph>::out_edge_iterator ei, eei;
-      for(tie(ei, eei) = out_edges(v, g); ei != eei; ++ei)
+      boost::graph_traits<graph>::out_edge_iterator ei, eei;
+      for(boost::tie(ei, eei) = boost::out_edges(v, g); ei != eei; ++ei)
       	{
           // The Edge that we examine in this iteration.
 	  const Edge &e = *ei;
           // The subcarriers available on the edge.
-	  const SSC &l_ssc = get(edge_subcarriers, g, e);
+	  const SSC &l_ssc = boost::get(boost::edge_subcarriers, g, e);
 
 	  // Candidate SSC.
 	  SSC c_ssc = exclude(intersection(v_ssc, l_ssc), p);
@@ -144,13 +143,13 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
           if (!c_ssc.empty())
             {
               // The cost of the edge.
-              int ec = get(edge_weight, g, e);
+              int ec = boost::get(boost::edge_weight, g, e);
               // Candidate cost.
               int new_cost = c + ec;
               // Candidate CEP.
               CEP c_cep = make_pair(new_cost, e);
               // The target vertex of the edge.
-              Vertex t = target(e, g);
+              Vertex t = boost::target(e, g);
 
               relaks(q, r[t], c_cep, t, c_ssc);
             }
@@ -161,7 +160,7 @@ dijkstra(const Graph &g, Vertex src, Vertex dst, int p, const SSC &src_ssc)
 }
 
 Path
-shortest_path(const Graph &g, const V2C2S &r, Vertex src, Vertex dst)
+shortest_path(const graph &g, const V2C2S &r, Vertex src, Vertex dst)
 {
   Path p;
 
@@ -206,8 +205,8 @@ shortest_path(const Graph &g, const V2C2S &r, Vertex src, Vertex dst)
 
 	      const Edge &e = j->first.second;
 	      p.first.push_front(e);
-	      c -= get(edge_weight, g, e);
-	      assert(crt == target(e, g));
+	      c -= boost::get(boost::edge_weight, g, e);
+	      assert(crt == boost::target(e, g));
 
 	      // This is the new node to examine.
 	      crt = source(e, g);
@@ -221,7 +220,7 @@ shortest_path(const Graph &g, const V2C2S &r, Vertex src, Vertex dst)
 }
 
 void
-set_up_path(Graph &g, const Path &p, int sc)
+set_up_path(graph &g, const Path &p, int sc)
 {
   const list<Edge> &l = p.first;
   // This is the largest set that can support at least sc subcarriers.
@@ -238,7 +237,7 @@ set_up_path(Graph &g, const Path &p, int sc)
   // Iterate over the edges of the path.
   for(const Edge &e: l)
     {
-      SSC &e_ssc = get(edge_subcarriers, g, e);
+      SSC &e_ssc = boost::get(boost::edge_subcarriers, g, e);
       // Make sure that the edge has the required subcarriers.
       assert(includes(e_ssc, p_ssc));
 

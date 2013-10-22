@@ -80,7 +80,7 @@ static bool stlos(const set<Vertex> &s1, const set<Vertex> &s2)
 }
 
 list<set<Vertex> >
-get_components(const Graph &g)
+get_components(const graph &g)
 {
   // An element of this vector corresponds to a vertex, i.e. c[v] is
   // the component number that vertex v belongs to.

@@ -8,7 +8,6 @@
 #include <boost/graph/graph_utility.hpp>
 
 using namespace std;
-using namespace boost;
 
 int
 main (int argc, char* argv[])
@@ -17,7 +16,7 @@ main (int argc, char* argv[])
   int sc = 800;
 
   boost::minstd_rand gen;
-  Graph g;
+  graph g;
 
   // 1000 nodes, 3000 links.
   int res = generate_graph(g, 1000, 3000, gen);
@@ -41,9 +40,9 @@ main (int argc, char* argv[])
     {
       int sc_free = 0;
 
-      graph_traits<Graph>::edge_iterator ei, ee;
-      for (tie(ei, ee) = edges(g); ei != ee; ++ei)
-        sc_free += get(edge_subcarriers, g, *ei).size();
+      boost::graph_traits<graph>::edge_iterator ei, ee;
+      for (boost::tie(ei, ee) = boost::edges(g); ei != ee; ++ei)
+        sc_free += boost::get(boost::edge_subcarriers, g, *ei).size();
 
       cout << "Available subcarriers = " << sc_free << endl;
 
@@ -58,7 +57,8 @@ main (int argc, char* argv[])
       cout << "Subcarriers requested = " << n << endl;
 
       // We allow to allocate the signal on any of the subcarriers.
-      SSC all(counting_iterator<int>(0), counting_iterator<int>(sc));
+      SSC all(boost::counting_iterator<int>(0),
+              boost::counting_iterator<int>(sc));
       V2C2S r = dijkstra(g, pn.first, pn.second, n, all);
       Path p = shortest_path(g, r, pn.first, pn.second);
 

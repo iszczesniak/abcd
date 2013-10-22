@@ -4,28 +4,25 @@
 #include <iomanip>
 
 using namespace std;
-using namespace boost;
-using namespace boost::graph;
-using namespace boost::random;
 
 void
-name_vertices(Graph &g)
+name_vertices(graph &g)
 {
   int count = 1;
 
   int number = num_vertices(g);
   int width = int(log10(number)) + 1;
 
-  BGL_FORALL_VERTICES(v, g, Graph)
+  BGL_FORALL_VERTICES(v, g, graph)
     {
       ostringstream out;
       out << "v" << setw(width) << setfill('0') << count++;
-      get(vertex_name, g, v) = out.str();
+      boost::get(boost::vertex_name, g, v) = out.str();
     }
 }
 
 void
-move(Vertex v, const Graph &g, std::set<Vertex> &lonely,
+move(Vertex v, const graph &g, std::set<Vertex> &lonely,
      std::set<Vertex> &connected, std::set<Vertex> &saturated)
 {
   lonely.erase(v);
@@ -37,11 +34,11 @@ move(Vertex v, const Graph &g, std::set<Vertex> &lonely,
 }
 
 void
-move_if_needed(Vertex v, const Graph &g, std::set<Vertex> &connected,
+move_if_needed(Vertex v, const graph &g, std::set<Vertex> &connected,
                std::set<Vertex> &saturated)
 {
-  int n = num_vertices(g);
-  int od = out_degree(v, g);
+  int n = boost::num_vertices(g);
+  int od = boost::out_degree(v, g);
 
   // A node can have the out degree of at most (n - 1).
   assert(od < n);

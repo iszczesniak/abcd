@@ -31,7 +31,7 @@ main()
 
   // Random number generator
   boost::mt19937 gen(1);
-  Graph g;
+  graph g;
 
   // 100 nodes, 300 links.
   int res = generate_graph(g, nn, ne, gen);
