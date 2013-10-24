@@ -27,7 +27,7 @@ intersection(const SSC &a, const SSC &b)
 }
 
 SSC
-exclude(const SSC &ssc, int p)
+exclude(const SSC &ssc, int nsc)
 {
   SSC result;
 
@@ -56,7 +56,7 @@ exclude(const SSC &ssc, int p)
 
       // Add the partial set only if has at least p subcarriers.
       // Otherwise just ignore it.
-      if (partial.size() >= p)
+      if (partial.size() >= nsc)
         result.insert(partial.begin(), partial.end());
     }
 
