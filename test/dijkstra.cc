@@ -23,15 +23,10 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_1)
   SSC ssc(boost::counting_iterator<int>(0),
           boost::counting_iterator<int>(3));
 
-  V2C2S result = dijkstra(g, src, dst, 3, ssc);
+  demand d = demand(npair(src, dst), 3);
+  V2C2S result = dijkstra(g, d, ssc);
   // There are no results for dst.
   BOOST_CHECK(result.find(dst) == result.end());
-
-  cpath p = shortest_path(g, result, src, dst);
-  // The path is empty: no edges.
-  BOOST_CHECK(p.first.size() == 0);
-  // The path is empty: no ssc.
-  BOOST_CHECK(p.second.size() == 0);
 }
 
 /*
@@ -49,12 +44,13 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_2)
   SSC ssc(boost::counting_iterator<int>(0),
           boost::counting_iterator<int>(3));
 
-  V2C2S result = dijkstra(g, src, dst, 3, ssc);
+  demand d = demand(npair(src, dst), 3);
+  V2C2S result = dijkstra(g, d, ssc);
 
   BOOST_CHECK(result.find(dst) != result.end());
   BOOST_CHECK(result[dst].begin()->second.size() == 3);
 
-  cpath p = shortest_path(g, result, src, dst);
+  cpath p = shortest_path(g, result, d);
   // The path has one edge.
   BOOST_CHECK(p.first.size() == 1);
   // That one edge is e.
@@ -62,7 +58,7 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_2)
   // The path uses SSC with three subcarriers.
   BOOST_CHECK(p.second.size() == 3);
 
-  set_up_path(g, p, 3);
+  set_up_path(g, p);
   BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e).empty());
 }
 
@@ -98,7 +94,8 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_3)
   SSC ssc(boost::counting_iterator<int>(0),
           boost::counting_iterator<int>(4));
 
-  V2C2S result = dijkstra(g, src, dst, 2, ssc);
+  demand d = demand(npair(src, dst), 2);
+  V2C2S result = dijkstra(g, d, ssc);
 
   // We found the path.
   BOOST_CHECK(!result[dst].empty());
@@ -111,7 +108,7 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_3)
   BOOST_CHECK(*(result[dst].begin()->second.begin()) == 2);
   BOOST_CHECK(*(++(result[dst].begin()->second.begin())) == 3);
 
-  cpath p = shortest_path(g, result, src, dst);
+  cpath p = shortest_path(g, result, d);
   // The path has two edges.
   BOOST_CHECK(p.first.size() == 2);
   // The first edge is e2, the second e3.
@@ -123,7 +120,7 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_3)
   BOOST_CHECK(p.second.find(2) != p.second.end());
   BOOST_CHECK(p.second.find(3) != p.second.end());
 
-  set_up_path(g, p, 2);
+  set_up_path(g, p);
   BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e1).size() == 2);
   BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e2).size() == 0);
   BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e3).size() == 0);
@@ -159,7 +156,8 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_4)
   SSC ssc(boost::counting_iterator<int>(0),
           boost::counting_iterator<int>(1));
 
-  V2C2S result = dijkstra(g, src, dst, 1, ssc);
+  demand d = demand(npair(src, dst), 1);
+  V2C2S result = dijkstra(g, d, ssc);
 
   // We found the path.
   BOOST_CHECK(!result[dst].empty());
@@ -202,7 +200,8 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_5)
   // These are the subcarriers that we can start with at src.
   SSC ssc(boost::counting_iterator<int>(0),
           boost::counting_iterator<int>(2));
-  V2C2S result = dijkstra(g, src, dst, 1, ssc);
+  demand d = demand(npair(src, dst), 1);
+  V2C2S result = dijkstra(g, d, ssc);
 
   // We found the path.
   BOOST_CHECK(!result[dst].empty());
@@ -245,8 +244,8 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_6)
 
   SSC ssc(boost::counting_iterator<int>(0),
           boost::counting_iterator<int>(1));
-
-  V2C2S result = dijkstra(g, src, dst, 1, ssc);
+  demand d = demand(npair(src, dst), 1);
+  V2C2S result = dijkstra(g, d, ssc);
 
   BOOST_CHECK(result[dst].size() == 1);
   BOOST_CHECK(result[dst].begin()->first.first == 1);
@@ -278,8 +277,8 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_7)
 
   SSC ssc(boost::counting_iterator<int>(0),
           boost::counting_iterator<int>(1));
-
-  V2C2S result = dijkstra(g, src, dst, 1, ssc);
+  demand d = demand(npair(src, dst), 1);
+  V2C2S result = dijkstra(g, d, ssc);
 
   BOOST_CHECK(result[dst].size() == 1);
   BOOST_CHECK(result[dst].begin()->first.first == 1);

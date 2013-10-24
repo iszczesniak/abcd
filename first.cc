@@ -44,36 +44,41 @@ main (int argc, char* argv[])
       for (boost::tie(ei, ee) = boost::edges(g); ei != ee; ++ei)
         sc_free += boost::get(boost::edge_subcarriers, g, *ei).size();
 
-      cout << "Available subcarriers = " << sc_free << endl;
+      cout << "Total subcarriers available = " << sc_free << endl;
 
-      cout << "Allocating..." << endl;
+      // Demand
+      demand d;
 
       // Get a pair of different nodes.
-      pair<vertex, vertex> pn = random_node_pair(g, gen);
+      d.first = random_node_pair(g, gen);
 
       // The number of subcarriers the signal requires.
-      int n = get_random_int(1, 10, gen);
+      d.second = get_random_int(1, 10, gen);
 
-      cout << "Subcarriers requested = " << n << endl;
+      cout << "Demand subcarriers = " << d.second << endl;
+
+      cout << "Allocating... ";
 
       // We allow to allocate the signal on any of the subcarriers.
       SSC all(boost::counting_iterator<int>(0),
               boost::counting_iterator<int>(sc));
-      V2C2S r = dijkstra(g, pn.first, pn.second, n, all);
-      cpath p = shortest_path(g, r, pn.first, pn.second);
+      V2C2S r = dijkstra(g, d, all);
+      cpath p = shortest_path(g, r, d);
 
       if (p.first.empty())
-	cout << "Unable to service a new request." << endl;
+	cout << "unable to service a new demand." << endl;
       else
         {
-	  set_up_path(g, p, n);
+	  set_up_path(g, p);
+          cout << "done." << endl;
           ++connections;
-          sc_allocated += n * p.first.size();
+          sc_allocated += d.second * p.first.size();
         }
 
       cout << "Load = " << calculate_load(g, sc) << endl;
       cout << "Connections = " << connections << endl;
-      cout << "Subcarriers allocated = " << sc_allocated << endl;
+      cout << "Total subcarriers allocated = " << sc_allocated << endl;
+      cout << "----------------------------------------------" << endl;
     };
 
   return 0;

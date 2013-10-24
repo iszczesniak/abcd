@@ -65,9 +65,13 @@ relaks(map<CEP, vertex> &q, C2S &c2s, const CEP &cep, vertex v, const SSC &ssc)
 }
 
 V2C2S
-dijkstra(const graph &g, vertex src, vertex dst, int sc, const SSC &src_ssc)
+dijkstra(const graph &g, const demand &d, const SSC &src_ssc)
 {
   V2C2S r;
+
+  vertex src = d.first.first;
+  vertex dst = d.first.second;
+  int nsc = d.second;
 
   // The null edge.
   const edge &ne = *(boost::edges(g).second);
@@ -78,7 +82,7 @@ dijkstra(const graph &g, vertex src, vertex dst, int sc, const SSC &src_ssc)
   // the null edge.  The null edge signals the beginning of the path.
   // We have to filter ssc to exclude subcarriers that can't support
   // the signal with p subcarriers.
-  r[src][CEP(0, ne)] = exclude(src_ssc, sc);
+  r[src][CEP(0, ne)] = exclude(src_ssc, nsc);
 
   // The following map implements the priority queue.  The key is a
   // CEP, and the value is the vertex we are reaching.  The maps works
@@ -138,7 +142,7 @@ dijkstra(const graph &g, vertex src, vertex dst, int sc, const SSC &src_ssc)
 	  const SSC &l_ssc = boost::get(boost::edge_subcarriers, g, e);
 
 	  // Candidate SSC.
-	  SSC c_ssc = exclude(intersection(v_ssc, l_ssc), sc);
+	  SSC c_ssc = exclude(intersection(v_ssc, l_ssc), nsc);
 
           if (!c_ssc.empty())
             {
@@ -160,9 +164,13 @@ dijkstra(const graph &g, vertex src, vertex dst, int sc, const SSC &src_ssc)
 }
 
 cpath
-shortest_path(const graph &g, const V2C2S &r, vertex src, vertex dst)
+shortest_path(const graph &g, const V2C2S &r, const demand &d)
 {
   cpath p;
+
+  vertex src = d.first.first;
+  vertex dst = d.first.second;
+  int nsc = d.second;
 
   // Find the path from the back.  This is the current node.
   V2C2S::const_iterator dst_i = r.find(dst);
@@ -216,23 +224,25 @@ shortest_path(const graph &g, const V2C2S &r, vertex src, vertex dst)
 	}
     }
 
+  // This is the largest set that can support the demand.
+  SSC &ssc = p.second;
+
+  // We select the first sc subcarriers from ssc.
+  assert(ssc.size() >= nsc);
+  SSC::iterator ssc_i = ssc.begin();
+  advance(ssc_i, nsc);
+  ssc.erase(ssc_i, ssc.end());
+  ssc = exclude(ssc, nsc);
+  assert(!ssc.empty());
+
   return p;
 }
 
 void
-set_up_path(graph &g, const cpath &p, int sc)
+set_up_path(graph &g, const cpath &p)
 {
   const list<edge> &l = p.first;
-  // This is the largest set that can support at least sc subcarriers.
-  SSC p_ssc = p.second;
-
-  // We select the first sc subcarriers from sc.
-  assert(p_ssc.size() >= sc);
-  SSC::iterator ssc_i = p_ssc.begin();
-  advance(ssc_i, sc);
-  p_ssc.erase(ssc_i, p_ssc.end());
-  p_ssc = exclude(p_ssc, sc);
-  assert(!p_ssc.empty());
+  const SSC &p_ssc = p.second;
 
   // Iterate over the edges of the path.
   for(const edge &e: l)

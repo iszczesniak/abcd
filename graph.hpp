@@ -1,6 +1,8 @@
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
 
+#include <list>
+#include <map>
 #include <set>
 #include <string>
 #include <utility>
@@ -60,5 +62,11 @@ typedef std::list<edge> path;
 
 // The candidate path.
 typedef std::pair<path, SSC> cpath;
+
+// Node pair.
+typedef std::pair<vertex, vertex> npair;
+
+// The demand type: npair and the number of subcarriers (nsc).
+typedef std::pair<npair, int> demand;
 
 #endif /* GRAPH_HPP */
