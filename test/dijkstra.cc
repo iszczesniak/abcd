@@ -58,8 +58,16 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_2)
   // The path uses SSC with three subcarriers.
   BOOST_CHECK(p.second.size() == 3);
 
+  // There are three subcarriers available.
+  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e).size() == 3);
+  // Set up the path.
   set_up_path(g, p);
+  // The subcarriers have been taken.
   BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e).empty());
+  // Release the subcarriers taken by the path.
+  tear_down_path(g, p);
+  // There are three subcarriers available.
+  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e).size() == 3);
 }
 
 /*
@@ -120,10 +128,26 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_3)
   BOOST_CHECK(p.second.find(2) != p.second.end());
   BOOST_CHECK(p.second.find(3) != p.second.end());
 
+  // The number of subcarriers befor the path is set up.
+  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e1).size() == 2);
+  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e2).size() == 2);
+  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e3).size() == 2);
+
+  // Set up the path.
   set_up_path(g, p);
+
+  // The number of subcarriers after the path is set up.
   BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e1).size() == 2);
   BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e2).size() == 0);
   BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e3).size() == 0);
+
+  // Tear down the path.
+  tear_down_path(g, p);
+
+  // The number of subcarriers befor the path is set up.
+  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e1).size() == 2);
+  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e2).size() == 2);
+  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e3).size() == 2);
 }
 
 /*

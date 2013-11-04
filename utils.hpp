@@ -41,6 +41,12 @@ bool
 includes(const SSC &a, const SSC &b);
 
 /**
+ * Check whether b is not a subset of a.
+ */
+bool
+excludes(const SSC &a, const SSC &b);
+
+/**
  * SSC intersection.
  */
 SSC
@@ -59,6 +65,12 @@ exclude(const SSC &ssc, int p);
  */
 void
 exclude(SSC &ssc, const SSC &e);
+
+/**
+ * Include e to ssc.
+ */
+void
+include(SSC &ssc, const SSC &e);
 
 /**
  * Calculates the shortests paths in the graph.
@@ -286,7 +298,13 @@ calculate_load(const G &g, int sc)
 
   typename boost::graph_traits<G>::edge_iterator ei, ee;
   for (tie(ei, ee) = edges(g); ei != ee; ++ei)
-    load_acc(double((sc - boost::get(boost::edge_subcarriers, g, *ei).size())) / sc);
+    {
+      // Available subcarriers.
+      int asc = boost::get(boost::edge_subcarriers, g, *ei).size();
+      // The link load.
+      double load = double(sc - asc) / sc;
+      load_acc(load);
+    }
 
   return acc::mean(load_acc);
 }

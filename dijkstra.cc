@@ -255,3 +255,22 @@ set_up_path(graph &g, const cpath &p)
       exclude(e_ssc, p_ssc);
     }
 }
+
+void
+tear_down_path(graph &g, const cpath &p)
+{
+  const list<edge> &l = p.first;
+  const SSC &p_ssc = p.second;
+
+  // Iterate over the edges of the path.
+  for(const edge &e: l)
+    {
+      SSC &e_ssc = boost::get(boost::edge_subcarriers, g, e);
+
+      // Make sure that the edge has these subcarriers taken.
+      assert(excludes(e_ssc, p_ssc));
+
+      // Put back the p_ssc subcarriers to e_ssc.
+      include(e_ssc, p_ssc);
+    }
+}

@@ -19,3 +19,10 @@ shortest_path(const graph &g, const V2C2S &r, const demand &d);
  */
 void
 set_up_path(graph &g, const cpath &p);
+
+/**
+ * Tear down the path in the graph.  This process puts back the
+ * subcarriers on the edges that are used by the path.
+ */
+void
+tear_down_path(graph &g, const cpath &p);

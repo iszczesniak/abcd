@@ -1,6 +1,7 @@
 #include "utils.hpp"
 #include "graph.hpp"
 
+#include <algorithm>
 #include <list>
 #include <set>
 
@@ -12,6 +13,12 @@ bool
 includes(const SSC &a, const SSC &b)
 {
   return includes(a.begin(), a.end(), b.begin(), b.end());
+}
+
+bool
+excludes(const SSC &a, const SSC &b)
+{
+  return intersection(a, b).empty();
 }
 
 SSC
@@ -63,14 +70,18 @@ exclude(const SSC &ssc, int nsc)
   return result;
 }
 
-/**
- * Exclude e from ssc.
- */
 void
 exclude(SSC &ssc, const SSC &e)
 {
   for(SSC::const_iterator i = e.begin(); i != e.end(); ++i)
     ssc.erase(*i);
+}
+
+void
+include(SSC &ssc, const SSC &e)
+{
+  for(SSC::const_iterator i = e.begin(); i != e.end(); ++i)
+    ssc.insert(*i);
 }
 
 // The function for sorting the list of sets.
