@@ -60,7 +60,7 @@ typedef std::map<vertex, C2S> V2C2S;
 // The path definition.
 typedef std::list<edge> path;
 
-// The candidate path.
+// The capacitated path.
 typedef std::pair<path, SSC> cpath;
 
 // Node pair.
