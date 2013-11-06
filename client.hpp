@@ -65,6 +65,11 @@ public:
 
   // Processes the event and changes the state of the client.
   void operator()(double t);
+
+private:
+  void set_up();
+  void reconfigure();
+  void tear_down();
 };
 
 #endif

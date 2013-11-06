@@ -26,25 +26,19 @@ void client::operator()(double t)
       // Now the client gets busy.
       idle = false;
       nc_left = ndg();
-
-      // Establish a new connection.
-      cout << "establishing";
+      set_up();
     }
   else
     if (nc_left)
       {
         --nc_left;
-
-        // Reconfigure the connection.
-        cout << "reconfiguring";
+        reconfigure();
       }
     else
       {
-        // Take the connection down.
-        cout << "taking down";
-
         // Now the client gets idle.
         idle = true;
+        tear_down();
       }
 
   cout << endl;
@@ -61,4 +55,22 @@ void client::schedule(double t)
   dt = idle ? sdg() : cdg();
 
   module::schedule(t + dt);
+}
+
+void client::set_up()
+{
+  // Establish a new connection.
+  cout << "establishing";
+}
+
+void client::reconfigure()
+{
+  // Reconfigure the connection.
+  cout << "reconfiguring";
+}
+
+void client::tear_down()
+{
+  // Take the connection down.
+  cout << "tear down";
 }
