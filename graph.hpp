@@ -69,4 +69,7 @@ typedef std::pair<vertex, vertex> npair;
 // The demand type: npair and the number of subcarriers (nsc).
 typedef std::pair<npair, int> demand;
 
+// The type of the connection.
+typedef std::pair<demand, cpath> connection;
+
 #endif /* GRAPH_HPP */

@@ -2,6 +2,7 @@
 #define IJS_CLIENT
 
 #include "event.hpp"
+#include "graph.hpp"
 #include "module.hpp"
 
 #include <boost/random.hpp>
@@ -42,7 +43,8 @@ class client: public module
   boost::variate_generator<boost::mt19937 &,
                            boost::poisson_distribution<> > ndg;
 
-  // ba::accumulator_set<double, ba::stats<ba::tag::mean> > acc;
+  // The connection.
+  connection conn;
 
 public:
   /**
