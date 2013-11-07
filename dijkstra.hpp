@@ -2,6 +2,14 @@
 
 /**
  * Find the shortest path in graph g for demand d.  We start the
+ * search at node src.  In this version of the function we try to find
+ * a path without any constraints on the ssc.
+ */
+V2C2S
+dijkstra(const graph &g, const demand &d);
+
+/**
+ * Find the shortest path in graph g for demand d.  We start the
  * search at node src with the set of subcarriers ssc.
  */
 V2C2S

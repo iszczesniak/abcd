@@ -59,10 +59,7 @@ main (int argc, char* argv[])
 
       cout << "Allocating... ";
 
-      // We allow to allocate the signal on any of the subcarriers.
-      SSC all(boost::counting_iterator<int>(0),
-              boost::counting_iterator<int>(sc));
-      V2C2S r = dijkstra(g, d, all);
+      V2C2S r = dijkstra(g, d);
       cpath p = shortest_path(g, r, d);
 
       if (p.first.empty())

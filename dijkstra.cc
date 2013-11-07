@@ -65,6 +65,28 @@ relaks(map<CEP, vertex> &q, C2S &c2s, const CEP &cep, vertex v, const SSC &ssc)
 }
 
 V2C2S
+dijkstra(const graph &g, const demand &d)
+{
+  SSC ssc;
+  vertex src = d.first.first;
+
+  // Itereate over the out edges of the vertex.
+  boost::graph_traits<graph>::out_edge_iterator ei, eei;
+  for(boost::tie(ei, eei) = boost::out_edges(src, g); ei != eei; ++ei)
+    {
+      // The edge that we examine in this iteration.
+      const edge &e = *ei;
+      // The subcarriers available on the edge.
+      const SSC &e_ssc = boost::get(boost::edge_subcarriers, g, e);
+
+      // Add e_ssc to ssc.
+      include(ssc, e_ssc);
+    }
+    
+  return dijkstra(g, d, ssc);
+}
+
+V2C2S
 dijkstra(const graph &g, const demand &d, const SSC &src_ssc)
 {
   V2C2S r;
@@ -139,10 +161,10 @@ dijkstra(const graph &g, const demand &d, const SSC &src_ssc)
           // The edge that we examine in this iteration.
 	  const edge &e = *ei;
           // The subcarriers available on the edge.
-	  const SSC &l_ssc = boost::get(boost::edge_subcarriers, g, e);
+	  const SSC &e_ssc = boost::get(boost::edge_subcarriers, g, e);
 
 	  // Candidate SSC.
-	  SSC c_ssc = exclude(intersection(v_ssc, l_ssc), nsc);
+	  SSC c_ssc = exclude(intersection(v_ssc, e_ssc), nsc);
 
           if (!c_ssc.empty())
             {
