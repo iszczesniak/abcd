@@ -3,13 +3,13 @@
 
 using namespace std;
 
-client::client(pqueue &q, int id, boost::mt19937 &r,
+client::client(pqueue &q, int id, boost::mt19937 &rng,
                double l_sleep, double mnc, double l_change):
-  module(q), id(id), r(r),
+  module(q), id(id), rng(rng),
   idle(true), nc_left(0),
-  l_sleep(l_sleep), sd(l_sleep), sdg(r, sd),
-  l_change(l_change), cd(l_change), cdg(r, cd),
-  mnc(mnc), nd(mnc), ndg(r, nd)
+  l_sleep(l_sleep), sd(l_sleep), sdg(rng, sd),
+  l_change(l_change), cd(l_change), cdg(rng, cd),
+  mnc(mnc), nd(mnc), ndg(rng, nd)
 {
 }
 
