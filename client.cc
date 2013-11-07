@@ -1,4 +1,7 @@
 #include "client.hpp"
+#include "dijkstra.hpp"
+#include "utils_netgen.hpp"
+
 #include <iostream>
 
 using namespace std;
@@ -23,10 +26,14 @@ void client::operator()(double t)
 
   if (idle)
     {
-      // Now the client gets busy.
-      idle = false;
-      nc_left = ndg();
-      set_up();
+      idle = !set_up();
+      if (!idle)
+        {
+          nc_left = ndg();
+          cout << "established";
+        }
+      else
+        cout << "failed to establish";
     }
   else
     if (nc_left)
@@ -39,6 +46,7 @@ void client::operator()(double t)
         // Now the client gets idle.
         idle = true;
         tear_down();
+        cout << "torn down";
       }
 
   cout << endl;
@@ -57,20 +65,39 @@ void client::schedule(double t)
   module::schedule(t + dt);
 }
 
-void client::set_up()
+bool client::set_up()
 {
   // Make sure the connection is not established.
   assert(conn.second.first.empty());
+
+  // The demand end nodes.
+  conn.first.first = random_node_pair(g, rng);
+  // The number of subcarriers the signal requires.
+  conn.first.second = get_random_int(1, 10, rng);
+
+  // We allow to allocate the signal on any of the subcarriers.
+  V2C2S r = dijkstra(g, conn.first);
+  conn.second = shortest_path(g, r, conn.first);
+  bool success = conn.second.first.size();
+
+  if (success)
+    set_up_path(g, conn.second);
+
+  return success;
 }
 
-void client::reconfigure()
+bool client::reconfigure()
 {
   // Make sure the connection is established.
   assert(!conn.second.first.empty());
+
+  return true;
 }
 
 void client::tear_down()
 {
   // Make sure the connection is established.
   assert(!conn.second.first.empty());
+  tear_down_path(g, conn.second);
+  conn.second = cpath();
 }

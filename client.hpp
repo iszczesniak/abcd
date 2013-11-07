@@ -70,8 +70,8 @@ public:
   void operator()(double t);
 
 private:
-  void set_up();
-  void reconfigure();
+  bool set_up();
+  bool reconfigure();
   void tear_down();
 };
 
