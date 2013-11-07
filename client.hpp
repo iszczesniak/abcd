@@ -17,7 +17,7 @@ class client: public module
   int id;
 
   // The client random number generator.
-  boost::mt19937 &r;
+  boost::mt19937 &rng;
 
   // Is the client idle?
   bool idle;
