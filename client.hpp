@@ -13,6 +13,9 @@ namespace ba = boost::accumulators;
 
 class client: public module
 {
+  // The graph the client operates on.
+  graph &g;
+
   // The client ID.
   int id;
 
@@ -55,7 +58,7 @@ public:
    * l_change is the lambda of the exponential distribution of time
    * between changes.
    */
-  client(pqueue &q, int id, boost::mt19937 &r,
+  client(graph &g, pqueue &q, int id, boost::mt19937 &r,
          double l_sleep, double mnc, double l_change);
   ~client();
 

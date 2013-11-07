@@ -3,9 +3,9 @@
 
 using namespace std;
 
-client::client(pqueue &q, int id, boost::mt19937 &rng,
+client::client(graph &g, pqueue &q, int id, boost::mt19937 &rng,
                double l_sleep, double mnc, double l_change):
-  module(q), id(id), rng(rng),
+  g(g), module(q), id(id), rng(rng),
   idle(true), nc_left(0),
   l_sleep(l_sleep), sd(l_sleep), sdg(rng, sd),
   l_change(l_change), cd(l_change), cdg(rng, cd),
@@ -59,18 +59,18 @@ void client::schedule(double t)
 
 void client::set_up()
 {
-  // Establish a new connection.
-  cout << "establishing";
+  // Make sure the connection is not established.
+  assert(conn.second.first.empty());
 }
 
 void client::reconfigure()
 {
-  // Reconfigure the connection.
-  cout << "reconfiguring";
+  // Make sure the connection is established.
+  assert(!conn.second.first.empty());
 }
 
 void client::tear_down()
 {
-  // Take the connection down.
-  cout << "tear down";
+  // Make sure the connection is established.
+  assert(!conn.second.first.empty());
 }
