@@ -38,6 +38,9 @@ main()
   // We expect there to be exactly 3000 edges.
   assert(res == ne);
 
+  // The number of subcarriers for each edge.
+  set_subcarriers(g, sc);
+
   // Make sure there is only one component.
   assert(check_components(g));
   name_vertices(g);
