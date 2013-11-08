@@ -26,9 +26,11 @@ void client::operator()(double t)
 
   if (idle)
     {
-      idle = !set_up();
-      if (!idle)
+      // The client is now idle, and should get busy now.
+      bool success = set_up();
+      if (success)
         {
+          idle = false;
           nc_left = ndg();
           cout << "established";
         }
@@ -36,18 +38,23 @@ void client::operator()(double t)
         cout << "failed to establish";
     }
   else
-    if (nc_left)
-      {
-        --nc_left;
-        reconfigure();
-      }
-    else
-      {
-        // Now the client gets idle.
-        idle = true;
-        tear_down();
-        cout << "torn down";
-      }
+    {
+      // The device is busy now.
+      if (nc_left)
+        {
+          // It's time now to reconfigure.
+          bool status = reconfigure();
+          --nc_left;
+          cout << "reconfigured";
+        }
+      else
+        {
+          // It's time now to turn the connection down.
+          idle = true;
+          tear_down();
+          cout << "torn down";
+        }
+    }
 
   cout << endl;
 
@@ -59,7 +66,8 @@ void client::schedule(double t)
 {
   double dt;
 
-  // The time to sleep.
+  // The time to sleep.  The time to next event depends on the current
+  // state of the client.
   dt = idle ? sdg() : cdg();
 
   module::schedule(t + dt);
