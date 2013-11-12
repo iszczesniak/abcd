@@ -221,6 +221,7 @@ shortest_path(const graph &g, const V2C2S &r, const demand &d)
 	  while(crt != src)
 	    {
 	      V2C2S::const_iterator i = r.find(crt);
+          assert(i != r.end());
 	      const C2S &c2s = i->second;
 
 	      // We look for the solution that costs c and that
