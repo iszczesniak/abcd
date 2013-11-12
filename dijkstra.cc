@@ -212,9 +212,9 @@ shortest_path(const graph &g, const V2C2S &r, const demand &d)
 	  int c = bri->first.first;
 
 	  // This is the path SSC.
-	  const SSC &ssc = bri->second;
+	  const SSC &p_ssc = bri->second;
 	  // And we remember this as the final result.
-	  p.second = ssc;
+	  p.second = p_ssc;
 
 	  // We start with the destination node.
 	  vertex crt = dst;
@@ -227,7 +227,7 @@ shortest_path(const graph &g, const V2C2S &r, const demand &d)
 	      // contains SSC.
               bool found = false;
               for(const C2S::value_type &i: c2s)
-                if (i.first.first == c && includes(i.second, ssc))
+                if (i.first.first == c && includes(i.second, p_ssc))
                   {
                     const edge &e = i.first.second;
                     p.first.push_front(e);
