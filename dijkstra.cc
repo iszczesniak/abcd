@@ -31,7 +31,7 @@ has_better_or_equal(const C2S &c2s, int cost, const SSC &ssc)
  * Check whether there is a worse or equal result in c2s, i.e. of a
  * larger or equal cost and with a SSC that is included in "ssc".
  */
-bool
+void
 purge_worse(map<CEP, vertex> &q, C2S &c2s, int cost, const SSC &ssc)
 {
   // We examine the results with the cost larger or equal to "cost".
