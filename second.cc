@@ -14,17 +14,20 @@ using namespace std;
 int
 main()
 {
-  // The number of subcarriers.
-  const int sc = 800;
-
   // Simulation time.
   const double sim_limit = 100;
 
+  // The number of clients.
+  const int nc = 100;
+
   // The number of nodes.
-  const int nn = 100;
+  const int nn = 10;
 
   // The number of edges.
-  const int ne = 300;
+  const int ne = 30;
+
+  // The number of subcarriers.
+  const int sc = 10;
 
   // The lambda for each module.
   const double lambda = 2;
@@ -52,9 +55,9 @@ main()
   std::vector<module *> vc;
 
   // Create the modules for the simulation.
-  for(int i = 0; i < nn; ++i)
+  for(int i = 0; i < nc; ++i)
     {
-      client *c = new client(g, q, i, gen, 2, 2, 2);
+      client *c = new client(g, q, i, gen, 100, 1, 10);
       c->schedule(0);
       vc.push_back(c);
     }
