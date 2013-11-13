@@ -228,24 +228,23 @@ shortest_path(const graph &g, const V2C2S &r, const demand &d)
 
 	      // We look for the solution that costs c and that
 	      // contains SSC.
-              bool found = false;
-              for(const C2S::value_type &i: c2s)
-                if (i.first.first == c && includes(i.second, p_ssc))
-                  {
-                    const edge &e = i.first.second;
-                    p.first.push_front(e);
-                    c -= boost::get(boost::edge_weight, g, e);
-                    assert(crt == boost::target(e, g));
+              C2S::const_iterator j;
+              for(j = c2s.begin(); j != c2s.end(); ++j)
+                if (j->first.first == c && includes(j->second, p_ssc))
+                  break;
 
-                    // This is the new node to examine.
-                    crt = source(e, g);
-                    found = true;
-                    break;
-                  }
+              // Make sure we found the right CEP.
+              assert(j != c2s.end());
 
-              assert(found);
+              const edge &e = j->first.second;
+              p.first.push_front(e);
+              c -= boost::get(boost::edge_weight, g, e);
+              assert(crt == boost::target(e, g));
+
+              // This is the new node to examine.
+              assert(target(e, g) == crt);
+              crt = source(e, g);
 	    }
-
           // The cost at the source node, that we should have reached
           // by now, should be 0.
           assert(c == 0);
