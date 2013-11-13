@@ -81,7 +81,7 @@ bool client::set_up()
   // The demand end nodes.
   conn.first.first = random_node_pair(g, rng);
   // The number of subcarriers the signal requires.
-  conn.first.second = get_random_int(1, 10, rng);
+  conn.first.second = get_random_int(1, 3, rng);
 
   // We allow to allocate the signal on any of the subcarriers.
   V2C2S r = dijkstra(g, conn.first);
