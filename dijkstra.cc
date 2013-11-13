@@ -221,7 +221,7 @@ shortest_path(const graph &g, const V2C2S &r, const demand &d)
 	  while(crt != src)
 	    {
 	      V2C2S::const_iterator i = r.find(crt);
-          assert(i != r.end());
+              assert(i != r.end());
 	      const C2S &c2s = i->second;
 
 	      // We look for the solution that costs c and that
@@ -244,20 +244,22 @@ shortest_path(const graph &g, const V2C2S &r, const demand &d)
               assert(found);
 	    }
 
-	  assert(c == 0);
-	}
+          // The cost at the source node, that we should have reached
+          // by now, should be 0.
+          assert(c == 0);
+
+          // This is the largest set that can support the demand.
+          SSC &ssc = p.second;
+
+          // We select the first sc subcarriers from ssc.
+          assert(ssc.size() >= nsc);
+          SSC::iterator ssc_i = ssc.begin();
+          advance(ssc_i, nsc);
+          ssc.erase(ssc_i, ssc.end());
+          ssc = exclude(ssc, nsc);
+          assert(!ssc.empty());
+        }
     }
-
-  // This is the largest set that can support the demand.
-  SSC &ssc = p.second;
-
-  // We select the first sc subcarriers from ssc.
-  assert(ssc.size() >= nsc);
-  SSC::iterator ssc_i = ssc.begin();
-  advance(ssc_i, nsc);
-  ssc.erase(ssc_i, ssc.end());
-  ssc = exclude(ssc, nsc);
-  assert(!ssc.empty());
 
   return p;
 }
