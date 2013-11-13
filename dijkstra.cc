@@ -123,14 +123,15 @@ dijkstra(const graph &g, const demand &d, const SSC &src_ssc)
   // that: the source node, for which the null edge is used.
   // Furthermore, figuring out the end node might be problematic for
   // undirected graphs.
-  map<CEP, vertex> q;
+  typedef map<CEP, vertex> pqueue;
+  pqueue q;
 
   // We reach vertex src with cost 0 along the null edge.
   q[make_pair(0, ne)] = src;
 
   while(!q.empty())
     {
-      map<CEP, vertex>::iterator i = q.begin();
+      pqueue::iterator i = q.begin();
       CEP cep = i->first;
       vertex v = i->second;
       int c = cep.first;
@@ -205,7 +206,8 @@ shortest_path(const graph &g, const V2C2S &r, const demand &d)
 
       if (!dst_c2s.empty())
 	{
-	  // For dst, the first element in C2S is the best result.
+	  // For dst, the first element in C2S is the best result,
+	  // i.e. of the lowest cost.
 	  C2S::const_iterator bri = dst_c2s.begin();
 
 	  // This is the cost of the whole path.
