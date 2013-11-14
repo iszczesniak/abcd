@@ -60,11 +60,11 @@ intersection(const SSC &s1, const SSC &s2);
 
 /**
  * Exclude those subcarriers that won't be able to support a signal
- * with p subcarriers.
+ * with nsc subcarriers.
  */
 
 SSC
-exclude(const SSC &ssc, int p);
+exclude(const SSC &ssc, int nsc);
 
 /**
  * Exclude e from ssc.
