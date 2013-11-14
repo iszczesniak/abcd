@@ -41,6 +41,12 @@ bool
 includes(const SSC &a, const SSC &b);
 
 /**
+ * Check whether b is somewhere in a.
+ */
+bool
+includes(const SSSC &a, const SSC &b);
+
+/**
  * Check whether b is not a subset of a.
  */
 bool

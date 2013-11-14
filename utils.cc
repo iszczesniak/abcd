@@ -16,6 +16,16 @@ includes(const SSC &a, const SSC &b)
 }
 
 bool
+includes(const SSSC &a, const SSC &b)
+{
+  for(const SSSC::value_type &ssc: a)
+    if (includes(ssc, b))
+      return true;
+
+  return false;
+}
+
+bool
 excludes(const SSC &a, const SSC &b)
 {
   return intersection(a, b).empty();
