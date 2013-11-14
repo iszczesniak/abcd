@@ -82,7 +82,7 @@ dijkstra(const graph &g, const demand &d)
       // Add e_ssc to ssc.
       include(ssc, e_ssc);
     }
-    
+
   return dijkstra(g, d, ssc);
 }
 
@@ -158,14 +158,14 @@ dijkstra(const graph &g, const demand &d, const SSC &src_ssc)
       // Itereate over the out edges of the vertex.
       boost::graph_traits<graph>::out_edge_iterator ei, eei;
       for(boost::tie(ei, eei) = boost::out_edges(v, g); ei != eei; ++ei)
-      	{
+        {
           // The edge that we examine in this iteration.
-	  const edge &e = *ei;
+          const edge &e = *ei;
           // The subcarriers available on the edge.
-	  const SSC &e_ssc = boost::get(boost::edge_subcarriers, g, e);
+          const SSC &e_ssc = boost::get(boost::edge_subcarriers, g, e);
 
-	  // Candidate SSC.
-	  SSC c_ssc = exclude(intersection(v_ssc, e_ssc), nsc);
+          // Candidate SSC.
+          SSC c_ssc = exclude(intersection(v_ssc, e_ssc), nsc);
 
           if (!c_ssc.empty())
             {
@@ -180,7 +180,7 @@ dijkstra(const graph &g, const demand &d, const SSC &src_ssc)
 
               relaks(q, r[t], c_cep, t, c_ssc);
             }
-      	}
+        }
     }
 
   return r;
@@ -197,7 +197,7 @@ shortest_path(const graph &g, const V2C2S &r, const demand &d)
 
   // Find the path from the back.  This is the current node.
   V2C2S::const_iterator dst_i = r.find(dst);
-      
+
   // Make sure there is some data for node dst in r.
   if (dst_i != r.end())
     {
@@ -205,29 +205,29 @@ shortest_path(const graph &g, const V2C2S &r, const demand &d)
       const C2S &dst_c2s = dst_i->second;
 
       if (!dst_c2s.empty())
-	{
-	  // For dst, the first element in C2S is the best result,
-	  // i.e. of the lowest cost.
-	  C2S::const_iterator bri = dst_c2s.begin();
+        {
+          // For dst, the first element in C2S is the best result,
+          // i.e. of the lowest cost.
+          C2S::const_iterator bri = dst_c2s.begin();
 
-	  // This is the cost of the whole path.
-	  int c = bri->first.first;
+          // This is the cost of the whole path.
+          int c = bri->first.first;
 
-	  // This is the path SSC.
-	  const SSC &p_ssc = bri->second;
-	  // And we remember this as the final result.
-	  p.second = p_ssc;
+          // This is the path SSC.
+          const SSC &p_ssc = bri->second;
+          // And we remember this as the final result.
+          p.second = p_ssc;
 
-	  // We start with the destination node.
-	  vertex crt = dst;
-	  while(crt != src)
-	    {
-	      V2C2S::const_iterator i = r.find(crt);
+          // We start with the destination node.
+          vertex crt = dst;
+          while(crt != src)
+            {
+              V2C2S::const_iterator i = r.find(crt);
               assert(i != r.end());
-	      const C2S &c2s = i->second;
+              const C2S &c2s = i->second;
 
-	      // We look for the solution that costs c and that
-	      // contains SSC.
+              // We look for the solution that costs c and that
+              // contains SSC.
               C2S::const_iterator j;
               for(j = c2s.begin(); j != c2s.end(); ++j)
                 if (j->first.first == c && includes(j->second, p_ssc))
@@ -244,7 +244,8 @@ shortest_path(const graph &g, const V2C2S &r, const demand &d)
               // This is the new node to examine.
               assert(target(e, g) == crt);
               crt = source(e, g);
-	    }
+            }
+
           // The cost at the source node, that we should have reached
           // by now, should be 0.
           assert(c == 0);
