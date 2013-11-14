@@ -163,8 +163,9 @@ dijkstra(const graph &g, const demand &d, const SSC &src_ssc)
           const edge &e = *ei;
           // The subcarriers available on the edge.
           const SSC &e_ssc = boost::get(boost::edge_subcarriers, g, e);
-
-          // Candidate SSC.
+          // Candidate SSC: the ssc available at node v that can be
+          // carried by edge e, and that has at least nsc contiguous
+          // subcarriers.
           SSC c_ssc = exclude(intersection(v_ssc, e_ssc), nsc);
 
           if (!c_ssc.empty())
