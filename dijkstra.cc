@@ -12,19 +12,24 @@ using namespace std;
 typedef map<CEP, vertex> pqueue;
 
 /**
- * Check whether there is a better or equal result in c2s, i.e. of a
- * lower or equal cost and with a SSC that includes "ssc".
+ * Check whether there is a better or equal result in c2s than the new
+ * result, i.e. of a lower or equal cost and with a SSC that includes
+ * "ssc".
  */
 bool
 has_better_or_equal(const C2S &c2s, int cost, const SSC &ssc)
 {
-  // We examine the results with the cost lower or equal to "cost".
-  for (C2S::const_iterator i = c2s.begin();
-       i != c2s.end() && i->first.first <= cost;
-       ++i)
-    // Check whether the result includes "ssc".
-    if (includes(i->second, ssc))
-      return true;
+  // We examine the existing results with the cost lower or equal to
+  // "cost".
+  for (const C2S::value_type &e: c2s)
+    // Stop searching after when we reach the results with the cost
+    // higher than cost.
+    if (e.first.first > cost)
+      break;
+    else
+      // Check whether the existing result includes "ssc".
+      if (includes(e.second, ssc))
+        return true;
 
   return false;
 }
@@ -55,7 +60,8 @@ void
 relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v, const SSC &ssc)
 {
   // Check whether there is an SSC in c2s that includes c_ssc at the
-  // same or lower cost then c_cep.  If yes, then just return.
+  // same or lower cost then c_cep.  If yes, then we can ignore this
+  // new result.
   if (!has_better_or_equal(c2s, cep.first, ssc))
     {
       purge_worse(q, c2s, cep.first, ssc);
