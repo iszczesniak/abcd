@@ -9,6 +9,8 @@
 
 using namespace std;
 
+typedef map<CEP, vertex> pqueue;
+
 /**
  * Check whether there is a better or equal result in c2s, i.e. of a
  * lower or equal cost and with a SSC that includes "ssc".
@@ -32,7 +34,7 @@ has_better_or_equal(const C2S &c2s, int cost, const SSC &ssc)
  * larger or equal cost and with a SSC that is included in "ssc".
  */
 void
-purge_worse(map<CEP, vertex> &q, C2S &c2s, int cost, const SSC &ssc)
+purge_worse(pqueue &q, C2S &c2s, int cost, const SSC &ssc)
 {
   // We examine the results with the cost larger or equal to "cost".
   C2S::iterator i = c2s.begin();
@@ -50,7 +52,7 @@ purge_worse(map<CEP, vertex> &q, C2S &c2s, int cost, const SSC &ssc)
 }
 
 void
-relaks(map<CEP, vertex> &q, C2S &c2s, const CEP &cep, vertex v, const SSC &ssc)
+relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v, const SSC &ssc)
 {
   // Check whether there is an SSC in c2s that includes c_ssc at the
   // same or lower cost then c_cep.  If yes, then just return.
@@ -123,7 +125,6 @@ dijkstra(const graph &g, const demand &d, const SSC &src_ssc)
   // that: the source node, for which the null edge is used.
   // Furthermore, figuring out the end node might be problematic for
   // undirected graphs.
-  typedef map<CEP, vertex> pqueue;
   pqueue q;
 
   // We reach vertex src with cost 0 along the null edge.
@@ -138,16 +139,16 @@ dijkstra(const graph &g, const demand &d, const SSC &src_ssc)
       edge e = cep.second;
       q.erase(i);
 
+      // Stop searching when we reach the destination node.
+      if (v == dst)
+        break;
+
       // C2S for node v.
       const C2S &c2s = r[v];
 
       // The CEP that we process in this loop has to be in the C2S.
       C2S::const_iterator j = c2s.find(cep);
       assert(j != c2s.end());
-
-      // Stop searching if we have reached the destination node.
-      if (v == dst)
-        break;
 
       // These subcarriers are now available at node v for further
       // search.  There might be other subcarriers available in the
