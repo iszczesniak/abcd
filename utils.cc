@@ -43,6 +43,21 @@ intersection(const SSC &a, const SSC &b)
   return r;
 }
 
+SSSC
+intersection(const SSSC &sssc, const SSC &ssc)
+{
+  SSSC r;
+
+  for(const SSSC::value_type &ssce: sssc)
+    {
+      SSC ssci = intersection(ssce, ssc);
+      if (!ssci.empty())
+        r.insert(ssci);
+    }
+
+  return r;
+}
+
 SSC
 exclude(const SSC &ssc, int nsc)
 {

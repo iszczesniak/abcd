@@ -59,6 +59,12 @@ SSC
 intersection(const SSC &s1, const SSC &s2);
 
 /**
+ * SSSC and SSC intersection.
+ */
+SSSC
+intersection(const SSSC &sssc, const SSC &ssc);
+
+/**
  * Exclude those subcarriers that won't be able to support a signal
  * with nsc subcarriers.
  */
