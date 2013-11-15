@@ -55,9 +55,9 @@ namespace std {
 // node along the given edge.
 typedef std::pair<int, edge> CEP;
 
-// The mapping from CEP to SSC.  This mapping tells what SSC is
+// The mapping from CEP to SSSC.  This mapping tells what SSSC is
 // available at a node provided a given CEP was used.
-typedef std::map<CEP, SSC> C2S;
+typedef std::map<CEP, SSSC> C2S;
 
 // A map of vertexes to C2S.  It's used to store the complete
 // information for a given vertex.
@@ -66,7 +66,7 @@ typedef std::map<vertex, C2S> V2C2S;
 // The path definition.
 typedef std::list<edge> path;
 
-// The capacitated path.
+// The SSC path.
 typedef std::pair<path, SSC> sscpath;
 
 // Node pair.
