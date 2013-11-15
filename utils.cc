@@ -95,6 +95,21 @@ exclude(const SSC &ssc, int nsc)
   return result;
 }
 
+SSSC
+exclude(const SSSC &sssc, int nsc)
+{
+  SSSC r;
+
+  for(auto &ssc: sssc)
+    {
+      SSC c_ssc = exclude(ssc, nsc);
+      if (!c_ssc.empty())
+        r.insert(c_ssc);
+    }
+
+  return r;
+}
+
 void
 exclude(SSC &ssc, const SSC &e)
 {

@@ -73,6 +73,14 @@ SSC
 exclude(const SSC &ssc, int nsc);
 
 /**
+ * Exclude those subcarriers from SSSC that won't be able to support a
+ * signal with nsc subcarriers.
+ */
+
+SSSC
+exclude(const SSSC &sssc, int nsc);
+
+/**
  * Exclude e from ssc.
  */
 void
