@@ -107,5 +107,5 @@ void client::tear_down()
   // Make sure the connection is established.
   assert(!conn.second.first.empty());
   tear_down_path(g, conn.second);
-  conn.second = cpath();
+  conn.second = sscpath();
 }

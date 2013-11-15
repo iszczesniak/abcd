@@ -10,8 +10,14 @@
 
 #include <boost/graph/adjacency_list.hpp>
 
-// The set of subcarriers.
+// The set of subcarriers.  It's used to describe the subcarriers that
+// are all avaiable along a single path.
 typedef std::set<int> SSC;
+
+// The set of SSC.  It's used to describe the subcarriers that are
+// available but along different paths.  Each SSC corresponds to a
+// different path.
+typedef std::set<SSC> SSSC;
 
 namespace boost {
   // Describes the set of available subcarriers on an edge.
@@ -61,7 +67,7 @@ typedef std::map<vertex, C2S> V2C2S;
 typedef std::list<edge> path;
 
 // The capacitated path.
-typedef std::pair<path, SSC> cpath;
+typedef std::pair<path, SSC> sscpath;
 
 // Node pair.
 typedef std::pair<vertex, vertex> npair;
@@ -70,6 +76,6 @@ typedef std::pair<vertex, vertex> npair;
 typedef std::pair<npair, int> demand;
 
 // The type of the connection.
-typedef std::pair<demand, cpath> connection;
+typedef std::pair<demand, sscpath> connection;
 
 #endif /* GRAPH_HPP */

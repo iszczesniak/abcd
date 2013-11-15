@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_2)
   BOOST_CHECK(result.find(dst) != result.end());
   BOOST_CHECK(result[dst].begin()->second.size() == 3);
 
-  cpath p = shortest_path(g, result, d);
+  sscpath p = shortest_path(g, result, d);
   // The path has one edge.
   BOOST_CHECK(p.first.size() == 1);
   // That one edge is e.
@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_3)
   BOOST_CHECK(*(result[dst].begin()->second.begin()) == 2);
   BOOST_CHECK(*(++(result[dst].begin()->second.begin())) == 3);
 
-  cpath p = shortest_path(g, result, d);
+  sscpath p = shortest_path(g, result, d);
   // The path has two edges.
   BOOST_CHECK(p.first.size() == 2);
   // The first edge is e2, the second e3.

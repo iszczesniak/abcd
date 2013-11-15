@@ -60,7 +60,7 @@ main (int argc, char* argv[])
       cout << "Allocating... ";
 
       V2C2S r = dijkstra(g, d);
-      cpath p = shortest_path(g, r, d);
+      sscpath p = shortest_path(g, r, d);
 
       if (p.first.empty())
 	cout << "unable to service a new demand." << endl;

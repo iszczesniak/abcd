@@ -194,10 +194,10 @@ dijkstra(const graph &g, const demand &d, const SSC &src_ssc)
   return r;
 }
 
-cpath
+sscpath
 shortest_path(const graph &g, const V2C2S &r, const demand &d)
 {
-  cpath p;
+  sscpath p;
 
   vertex src = d.first.first;
   vertex dst = d.first.second;
@@ -275,7 +275,7 @@ shortest_path(const graph &g, const V2C2S &r, const demand &d)
 }
 
 void
-set_up_path(graph &g, const cpath &p)
+set_up_path(graph &g, const sscpath &p)
 {
   const list<edge> &l = p.first;
   const SSC &p_ssc = p.second;
@@ -293,7 +293,7 @@ set_up_path(graph &g, const cpath &p)
 }
 
 void
-tear_down_path(graph &g, const cpath &p)
+tear_down_path(graph &g, const sscpath &p)
 {
   const list<edge> &l = p.first;
   const SSC &p_ssc = p.second;
