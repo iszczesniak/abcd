@@ -138,87 +138,80 @@ dijkstra(const graph &g, const demand &d, const SSC &src_ssc)
   // the null edge.  The null edge signals the beginning of the path.
   // We have to filter ssc to exclude subcarriers that can't support
   // the signal with p subcarriers.
-  SSC src_ssc_nsc = exclude(src_ssc, nsc);
-  if (!src_ssc_nsc.empty())
+  r[src][CEP(0, ne)].insert(exclude(src_ssc, nsc));
+
+  // The following map implements the priority queue.  The key is a
+  // CEP, and the value is the vertex we are reaching.  The maps works
+  // as the priority queue since the first element in the key is the
+  // cost, and since the map sorts its elements in the ascending
+  // order.  The value is the vertex.  The value could be null as
+  // well, but we want to use CEP as a key, and need to store the
+  // vertex as well.
+  //
+  // We need to know not only the vertex, but the edge too, because we
+  // allow for multigraphs (i.e. with parallel edges), and so we need
+  // to know what edge was used to reach the vertex.
+  // 
+  // We could pass only the edge and figure out the vertex from the
+  // edge, but there is one special case that prevents us from doing
+  // that: the source node, for which the null edge is used.
+  // Furthermore, figuring out the end node might be problematic for
+  // undirected graphs.
+  pqueue q;
+
+  // We reach vertex src with cost 0 along the null edge.
+  q[make_pair(0, ne)] = src;
+
+  while(!q.empty())
     {
-      r[src][CEP(0, ne)].insert(src_ssc_nsc);
+      pqueue::iterator i = q.begin();
+      CEP cep = i->first;
+      vertex v = i->second;
+      int c = cep.first;
+      edge e = cep.second;
+      q.erase(i);
 
-      // The following map implements the priority queue.  The key is
-      // a CEP, and the value is the vertex we are reaching.  The maps
-      // works as the priority queue since the first element in the
-      // key is the cost, and since the map sorts its elements in the
-      // ascending order.  The value is the vertex.  The value could
-      // be null as well, but we want to use CEP as a key, and need to
-      // store the vertex as well.
-      //
-      // We need to know not only the vertex, but the edge too,
-      // because we allow for multigraphs (i.e. with parallel edges),
-      // and so we need to know what edge was used to reach the
-      // vertex.
-      // 
-      // We could pass only the edge and figure out the vertex from
-      // the edge, but there is one special case that prevents us from
-      // doing that: the source node, for which the null edge is used.
-      // Furthermore, figuring out the end node might be problematic
-      // for undirected graphs.
-      pqueue q;
+      // Stop searching when we reach the destination node.
+      if (v == dst)
+        break;
 
-      // We reach vertex src with cost 0 along the null edge.
-      q[make_pair(0, ne)] = src;
+      // C2S for node v.
+      const C2S &c2s = r[v];
 
-      while(!q.empty())
+      // The CEP that we process in this loop has to be in the C2S.
+      C2S::const_iterator j = c2s.find(cep);
+      assert(j != c2s.end());
+
+      // This SSSC is now available at node v for further search.
+      // There might be other subcarriers available in the c2s, but we
+      // care only about the one that we got with edge e at cost c.
+      const SSSC &v_sssc = j->second;
+
+      // Itereate over the out edges of the vertex.
+      boost::graph_traits<graph>::out_edge_iterator ei, eei;
+      for(boost::tie(ei, eei) = boost::out_edges(v, g); ei != eei; ++ei)
         {
-          pqueue::iterator i = q.begin();
-          CEP cep = i->first;
-          vertex v = i->second;
-          int c = cep.first;
-          edge e = cep.second;
-          q.erase(i);
+          // The edge that we examine in this iteration.
+          const edge &e = *ei;
+          // The subcarriers available on the edge.
+          const SSC &e_ssc = boost::get(boost::edge_subcarriers, g, e);
+          // Candidate SSC: the ssc available at node v that can be
+          // carried by edge e, and that has at least nsc contiguous
+          // subcarriers.
+          SSSC c_sssc = exclude(intersection(v_sssc, e_ssc), nsc);
 
-          // Stop searching when we reach the destination node.
-          if (v == dst)
-            break;
-
-          // C2S for node v.
-          const C2S &c2s = r[v];
-
-          // The CEP that we process in this loop has to be in the
-          // C2S.
-          C2S::const_iterator j = c2s.find(cep);
-          assert(j != c2s.end());
-
-          // This SSSC is now available at node v for further search.
-          // There might be other subcarriers available in the c2s,
-          // but we care only about the one that we got with edge e at
-          // cost c.
-          const SSSC &v_sssc = j->second;
-
-          // Itereate over the out edges of the vertex.
-          boost::graph_traits<graph>::out_edge_iterator ei, eei;
-          for(boost::tie(ei, eei) = boost::out_edges(v, g); ei != eei; ++ei)
+          if (!c_sssc.empty())
             {
-              // The edge that we examine in this iteration.
-              const edge &e = *ei;
-              // The subcarriers available on the edge.
-              const SSC &e_ssc = boost::get(boost::edge_subcarriers, g, e);
-              // Candidate SSC: the ssc available at node v that can
-              // be carried by edge e, and that has at least nsc
-              // contiguous subcarriers.
-              SSSC c_sssc = exclude(intersection(v_sssc, e_ssc), nsc);
+              // The cost of the edge.
+              int ec = boost::get(boost::edge_weight, g, e);
+              // Candidate cost.
+              int new_cost = c + ec;
+              // Candidate CEP.
+              CEP c_cep = make_pair(new_cost, e);
+              // The target vertex of the edge.
+              vertex t = boost::target(e, g);
 
-              if (!c_sssc.empty())
-                {
-                  // The cost of the edge.
-                  int ec = boost::get(boost::edge_weight, g, e);
-                  // Candidate cost.
-                  int new_cost = c + ec;
-                  // Candidate CEP.
-                  CEP c_cep = make_pair(new_cost, e);
-                  // The target vertex of the edge.
-                  vertex t = boost::target(e, g);
-
-                  relaks(q, r[t], c_cep, t, c_sssc);
-                }
+              relaks(q, r[t], c_cep, t, c_sssc);
             }
         }
     }
