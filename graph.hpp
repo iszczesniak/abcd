@@ -51,9 +51,15 @@ namespace std {
 
 }
 
+// The cost of reaching a vertex.  The first argument is the cost of a
+// path, say the length, and the other is the number of hops to reach
+// the vertex from the source.  We need the number of hops to choose
+// the path with the least number of hops, otherwise we risk looping.
+typedef std::pair<int, int> COST;
+
 // The cost and edge pair.  It is used to store the cost of reaching a
 // node along the given edge.
-typedef std::pair<int, edge> CEP;
+typedef std::pair<COST, edge> CEP;
 
 // The mapping from CEP to SSSC.  This mapping tells what SSSC is
 // available at a node provided a given CEP was used.

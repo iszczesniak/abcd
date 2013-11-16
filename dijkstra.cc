@@ -17,7 +17,7 @@ typedef map<CEP, vertex> pqueue;
  * "ssc".
  */
 bool
-has_better_or_equal(const C2S &c2s, int cost, const SSC &ssc)
+has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
 {
   // We examine the existing results with the cost lower or equal to
   // "cost".
@@ -39,7 +39,7 @@ has_better_or_equal(const C2S &c2s, int cost, const SSC &ssc)
  * larger or equal cost and with a SSC that is included in "ssc".
  */
 void
-purge_worse(pqueue &q, C2S &c2s, int cost, const SSC &ssc)
+purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc)
 {
   // We examine existing results with the cost larger or equal to "cost".
   C2S::iterator i = c2s.begin();
@@ -143,7 +143,7 @@ dijkstra(const graph &g, const demand &d, const SSC &src_ssc)
       // source node with cost 0 on the subcarriers passed in the ssc
       // argument along the null edge.  The null edge signals the
       // beginning of the path.
-      r[src][CEP(0, ne)].insert(src_ssc_nsc);
+      r[src][CEP(COST(0, 0), ne)].insert(src_ssc_nsc);
 
       // The following map implements the priority queue.  The key is
       // a CEP, and the value is the vertex we are reaching.  The maps
@@ -165,15 +165,16 @@ dijkstra(const graph &g, const demand &d, const SSC &src_ssc)
       // for undirected graphs.
       pqueue q;
 
-      // We reach vertex src with cost 0 along the null edge.
-      q[make_pair(0, ne)] = src;
+      // We reach vertex src with null cost along the null edge.
+      q[make_pair(COST(0, 0), ne)] = src;
 
       while(!q.empty())
         {
           pqueue::iterator i = q.begin();
           CEP cep = i->first;
           vertex v = i->second;
-          int c = cep.first;
+          int c = cep.first.first;
+          int h = cep.first.second;
           edge e = cep.second;
           q.erase(i);
 
@@ -213,7 +214,11 @@ dijkstra(const graph &g, const demand &d, const SSC &src_ssc)
                   // The cost of the edge.
                   int ec = boost::get(boost::edge_weight, g, e);
                   // Candidate cost.
-                  int new_cost = c + ec;
+                  int new_c = c + ec;
+                  // Candidate number of hops.
+                  int new_h = h + 1;
+                  // Candidate COST.
+                  COST new_cost = COST(new_c, new_h);
                   // Candidate CEP.
                   CEP c_cep = make_pair(new_cost, e);
                   // The target vertex of the edge.
@@ -253,7 +258,7 @@ shortest_path(const graph &g, const V2C2S &r, const demand &d)
           C2S::const_iterator bri = dst_c2s.begin();
 
           // This is the cost of the whole path.
-          int c = bri->first.first;
+          COST c = bri->first.first;
 
           // This is the path SSC.
           assert(!(bri->second.empty()));
@@ -281,7 +286,8 @@ shortest_path(const graph &g, const V2C2S &r, const demand &d)
 
               const edge &e = j->first.second;
               p.first.push_front(e);
-              c -= boost::get(boost::edge_weight, g, e);
+              c.first -= boost::get(boost::edge_weight, g, e);
+              --c.second;
               assert(crt == boost::target(e, g));
 
               crt = boost::source(e, g);
@@ -289,7 +295,8 @@ shortest_path(const graph &g, const V2C2S &r, const demand &d)
 
           // The cost at the source node, that we should have reached
           // by now, should be 0.
-          assert(c == 0);
+          assert(c.first == 0);
+          assert(c.second == 0);
 
           // This is the largest set that can support the demand.
           SSC &ssc = p.second;
