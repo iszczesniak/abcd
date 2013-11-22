@@ -132,8 +132,17 @@ bool client::reconfigure()
   
   V2C2S r = dijkstra(g, nd, conn.second.second);
   sscpath np = shortest_path(g, r, nd);
+  bool status = !np.first.empty();
 
-  return !np.first.empty();
+  // Set up the extra part and modify the list.
+  if (status)
+    {
+      set_up_path(g, np);
+      conn.second.first.insert(conn.second.first.begin(),
+                               np.first.begin(), np.first.end());
+    }
+
+  return status;
 }
 
 void client::tear_down()
