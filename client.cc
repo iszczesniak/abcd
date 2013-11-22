@@ -44,8 +44,18 @@ void client::operator()(double t)
         {
           // It's time now to reconfigure.
           bool status = reconfigure();
-          --nc_left;
-          cout << "reconfigured";
+          if (status)
+            {
+              --nc_left;
+              cout << "reconfigured";
+            }
+          else
+            {
+              cout << "connection lost";
+              nc_left = 0;
+              idle = true;
+              tear_down();
+            }
         }
       else
         {
@@ -99,7 +109,31 @@ bool client::reconfigure()
   // Make sure the connection is established.
   assert(!conn.second.first.empty());
 
-  return true;
+  // We change the source node, and the destination node stays
+  // unchanged.  We chose the new source node from one of the
+  // neighbours of the current source node.
+  vertex old_src = conn.first.first.first;
+
+  // From these vertexes we can reach the current source node.
+  set<vertex> sov;
+  boost::graph_traits<graph>::in_edge_iterator ei, eei;
+  for(boost::tie(ei, eei) = boost::in_edges(old_src, g); ei != eei; ++ei)
+    sov.insert(source(*ei, g));
+
+  // Now we chose at random from one of the found nodes.
+  vertex new_src = get_random_element(sov, rng);
+
+  // We search for the shortest path from new_src to src.  And we ask
+  // for exactly the very same subcarriers that are already used at by
+  // the existing connection.
+  
+  // This is the new demand.
+  demand nd(npair(new_src, old_src), conn.first.second);
+  
+  V2C2S r = dijkstra(g, nd, conn.second.second);
+  sscpath np = shortest_path(g, r, nd);
+
+  return !np.first.empty();
 }
 
 void client::tear_down()
