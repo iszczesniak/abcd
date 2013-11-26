@@ -12,7 +12,8 @@ client::client(graph &g, pqueue &q, int id, boost::mt19937 &rng,
   idle(true), nc_left(0),
   l_sleep(l_sleep), sd(l_sleep), sdg(rng, sd),
   l_change(l_change), cd(l_change), cdg(rng, cd),
-  mnc(mnc), nd(mnc), ndg(rng, nd)
+  mnc(mnc), nd(mnc), ndg(rng, nd),
+  conn(g)
 {
 }
 
@@ -22,14 +23,13 @@ client::~client()
 
   if (!idle)
     {
-      assert(!conn.second.first.empty());
-      tear_down_path(g, conn.second);
+      conn.tear_down();
       cout << "connection torn down.";
     }
   else
     cout << "no connection to tear down.";
 
-      cout << endl;
+  cout << endl;
 }
 
 void client::operator()(double t)
@@ -66,14 +66,14 @@ void client::operator()(double t)
               cout << "connection lost";
               nc_left = 0;
               idle = true;
-              tear_down();
+              conn.tear_down();
             }
         }
       else
         {
           // It's time now to turn the connection down.
           idle = true;
-          tear_down();
+          conn.tear_down();
           cout << "torn down";
         }
     }
@@ -97,34 +97,22 @@ void client::schedule(double t)
 
 bool client::set_up()
 {
-  // Make sure the connection is not established.
-  assert(conn.second.first.empty());
-
+  // The new demand.
+  demand d;
   // The demand end nodes.
-  conn.first.first = random_node_pair(g, rng);
+  d.first = random_node_pair(g, rng);
   // The number of subcarriers the signal requires.
-  conn.first.second = get_random_int(1, 3, rng);
+  d.second = get_random_int(1, 3, rng);
 
-  // We allow to allocate the signal on any of the subcarriers.
-  V2C2S r = dijkstra(g, conn.first);
-  conn.second = shortest_path(g, r, conn.first);
-  bool success = conn.second.first.size();
-
-  if (success)
-    set_up_path(g, conn.second);
-
-  return success;
+  return conn.set_up(d);
 }
 
 bool client::reconfigure()
 {
-  // Make sure the connection is established.
-  assert(!conn.second.first.empty());
-
   // We change the source node, and the destination node stays
   // unchanged.  We chose the new source node from one of the
   // neighbours of the current source node.
-  vertex old_src = conn.first.first.first;
+  vertex old_src = conn.get_demand().first.first;
 
   // From these vertexes we can reach the current source node.
   set<vertex> sov;
@@ -135,41 +123,5 @@ bool client::reconfigure()
   // Now we chose at random from one of the found nodes.
   vertex new_src = get_random_element(sov, rng);
 
-  // We search for the shortest path from new_src to old_src.  And we
-  // ask for exactly the very same subcarriers that are already used
-  // at by the existing connection.
-  
-  // This is the new demand.  Here we state only the number of
-  // subcarriers required.
-  demand nd(npair(new_src, old_src), conn.first.second);
-
-  // When searching a path for a new demand, we also state exactly
-  // what SSC is available at the start, which is the SSC of an
-  // existing path.  Together with the number of required subcarriers,
-  // we search the path that has exactly the required SSC.
-  V2C2S r = dijkstra(g, nd, conn.second.second);
-  // Additional path.
-  sscpath ap = shortest_path(g, r, nd);
-  bool status = !ap.first.empty();
-
-  // Set up the extra part and modify the list.
-  if (status)
-    {
-      // We want the SSC in the additional path to be the same as in
-      // the existing path.
-      assert(conn.second.second == ap.second);
-      set_up_path(g, ap);
-      conn.second.first.insert(conn.second.first.begin(),
-                               ap.first.begin(), ap.first.end());
-    }
-
-  return status;
-}
-
-void client::tear_down()
-{
-  // Make sure the connection is established.
-  assert(!conn.second.first.empty());
-  tear_down_path(g, conn.second);
-  conn.second = sscpath();
+  return conn.reconfigure(new_src);
 }
