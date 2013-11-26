@@ -123,23 +123,27 @@ bool client::reconfigure()
   // Now we chose at random from one of the found nodes.
   vertex new_src = get_random_element(sov, rng);
 
-  // We search for the shortest path from new_src to src.  And we ask
-  // for exactly the very same subcarriers that are already used at by
-  // the existing connection.
+  // We search for the shortest path from new_src to old_src.  And we
+  // ask for exactly the very same subcarriers that are already used
+  // at by the existing connection.
   
   // This is the new demand.
   demand nd(npair(new_src, old_src), conn.first.second);
-  
+
   V2C2S r = dijkstra(g, nd, conn.second.second);
-  sscpath np = shortest_path(g, r, nd);
-  bool status = !np.first.empty();
+  // Additional path.
+  sscpath ap = shortest_path(g, r, nd);
+  bool status = !ap.first.empty();
 
   // Set up the extra part and modify the list.
   if (status)
     {
-      set_up_path(g, np);
+      // We want the SSC in the additional path to be the same as in
+      // the existing path.
+      assert(conn.second.second == ap.second);
+      set_up_path(g, ap);
       conn.second.first.insert(conn.second.first.begin(),
-                               np.first.begin(), np.first.end());
+                               ap.first.begin(), ap.first.end());
     }
 
   return status;
