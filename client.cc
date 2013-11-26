@@ -127,9 +127,14 @@ bool client::reconfigure()
   // ask for exactly the very same subcarriers that are already used
   // at by the existing connection.
   
-  // This is the new demand.
+  // This is the new demand.  Here we state only the number of
+  // subcarriers required.
   demand nd(npair(new_src, old_src), conn.first.second);
 
+  // When searching a path for a new demand, we also state exactly
+  // what SSC is available at the start, which is the SSC of an
+  // existing path.  Together with the number of required subcarriers,
+  // we search the path that has exactly the required SSC.
   V2C2S r = dijkstra(g, nd, conn.second.second);
   // Additional path.
   sscpath ap = shortest_path(g, r, nd);
