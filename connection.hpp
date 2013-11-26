@@ -4,6 +4,10 @@
 #include "graph.hpp"
 
 // The type of the connection.
-typedef std::pair<demand, sscpath> connection;
+struct connection
+{
+  demand first;
+  sscpath second;
+};
 
 #endif /* CONNECTION_HPP */
