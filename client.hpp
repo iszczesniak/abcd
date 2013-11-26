@@ -2,6 +2,7 @@
 #define IJS_CLIENT
 
 #include "event.hpp"
+#include "connection.hpp"
 #include "graph.hpp"
 #include "module.hpp"
 
