@@ -18,6 +18,18 @@ client::client(graph &g, pqueue &q, int id, boost::mt19937 &rng,
 
 client::~client()
 {
+  cout << "Client #" << id << ": ";
+
+  if (!idle)
+    {
+      assert(!conn.second.first.empty());
+      tear_down_path(g, conn.second);
+      cout << "connection torn down.";
+    }
+  else
+    cout << "no connection to tear down.";
+
+      cout << endl;
 }
 
 void client::operator()(double t)

@@ -75,4 +75,6 @@ main()
   // Delete the clients.
   for(module *c: vc)
     delete c;
+
+  cout << "Final load = " << calculate_load(g, sc) << endl;
 }
