@@ -42,7 +42,10 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_2)
   V2C2S result = dijkstra(g, d);
 
   BOOST_CHECK(result.find(dst) != result.end());
-  BOOST_CHECK(result[dst].begin()->second.size() == 3);
+  // There is one set in SSSC.
+  BOOST_CHECK(result[dst].begin()->second.size() == 1);
+  // And that one set has three subcarriers.
+  BOOST_CHECK(result[dst].begin()->second.begin()->size() == 3);
 
   sscpath p = shortest_path(g, result, d);
   // The path has one edge.
@@ -96,16 +99,20 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_3)
   demand d = demand(npair(src, dst), 2);
   V2C2S result = dijkstra(g, d);
 
+  V2C2S::const_iterator i = result.find(dst);
+  assert(i != result.end());
+  const C2S &c2s = i->second;
+
   // We found the path.
-  BOOST_CHECK(!result[dst].empty());
+  BOOST_CHECK(!c2s.empty());
   // The cost of the path is 3.
-  BOOST_CHECK(result[dst].begin()->first.first == 3);
+  BOOST_CHECK(c2s.begin()->first.first.first == 3);
   // We reach the destination by edge e3.
-  BOOST_CHECK(result[dst].begin()->first.second == e3);
-  // There are two subcarriers in the solution.
-  BOOST_CHECK(result[dst].begin()->second.size() == 2);
-  BOOST_CHECK(*(result[dst].begin()->second.begin()) == 2);
-  BOOST_CHECK(*(++(result[dst].begin()->second.begin())) == 3);
+  BOOST_CHECK(c2s.begin()->first.second == e3);
+  // There are two subcarriers in the solution: 2 and 3.
+  BOOST_CHECK(c2s.begin()->second.size() == 1);
+  BOOST_CHECK(*(c2s.begin()->second.begin()->begin()) == 2);
+  BOOST_CHECK(*(++(c2s.begin()->second.begin()->begin())) == 3);
 
   sscpath p = shortest_path(g, result, d);
   // The path has two edges.
@@ -174,7 +181,7 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_4)
   // We found the path.
   BOOST_CHECK(!result[dst].empty());
   // The cost of the path is 3.
-  BOOST_CHECK(result[dst].begin()->first.first == 3);
+  BOOST_CHECK(result[dst].begin()->first.first.first == 3);
   // We reach node mid by edge e2.
   BOOST_CHECK(result[mid].begin()->first.second == e2);
   // We don't remember the results for edge e1.
@@ -215,15 +222,15 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_5)
   // We found the path.
   BOOST_CHECK(!result[dst].empty());
   // The cost of the path is 3.
-  BOOST_CHECK(result[dst].begin()->first.first == 3);
+  BOOST_CHECK(result[dst].begin()->first.first.first == 3);
 
   // We remember at node mid the results for edges e1 and e2.
   BOOST_CHECK(result[mid].size() == 2);
   // We reach node mid by edge e2 with cost 1.
-  BOOST_CHECK(result[mid].begin()->first.first == 1);
+  BOOST_CHECK(result[mid].begin()->first.first.first == 1);
   BOOST_CHECK(result[mid].begin()->first.second == e2);
   // The second way of reaching node mid is by edge e1 with cost 2.
-  BOOST_CHECK((++result[mid].begin())->first.first == 2);
+  BOOST_CHECK((++result[mid].begin())->first.first.first == 2);
   BOOST_CHECK((++result[mid].begin())->first.second == e1);
 }
 
@@ -255,7 +262,7 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_6)
   V2C2S result = dijkstra(g, d);
 
   BOOST_CHECK(result[dst].size() == 1);
-  BOOST_CHECK(result[dst].begin()->first.first == 1);
+  BOOST_CHECK(result[dst].begin()->first.first.first == 1);
   BOOST_CHECK(result[dst].begin()->first.second == e1);
 }
 
@@ -286,6 +293,6 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_7)
   V2C2S result = dijkstra(g, d);
 
   BOOST_CHECK(result[dst].size() == 1);
-  BOOST_CHECK(result[dst].begin()->first.first == 1);
+  BOOST_CHECK(result[dst].begin()->first.first.first == 1);
   BOOST_CHECK(result[dst].begin()->first.second == e2);
 }
