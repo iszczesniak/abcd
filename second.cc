@@ -5,6 +5,7 @@
 #include "client.hpp"
 #include "event.hpp"
 #include "graph.hpp"
+#include "stats.hpp"
 #include "utils_netgen.hpp"
 
 #include <boost/random.hpp>
@@ -51,7 +52,10 @@ main()
   // The DES priority queue.
   pqueue q;
 
-  // The list of nodes.
+  // The stats module.
+  stats s(g, q);
+
+  // The list of clients.
   std::vector<module *> vc;
 
   // Create the modules for the simulation.
