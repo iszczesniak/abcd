@@ -13,7 +13,7 @@ stats::stats(graph &g, pqueue &q):
 
 void stats::operator()(double t)
 {
-  cout << "Stats at t = " << t << ": ";
+  cout << "stats at t = " << t << ": ";
 
   cout << "load = " << calculate_load(g, 10);
 
