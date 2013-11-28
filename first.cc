@@ -72,7 +72,7 @@ main (int argc, char* argv[])
           sc_allocated += d.second * p.first.size();
         }
 
-      cout << "Load = " << calculate_load(g, sc) << endl;
+      cout << "Load = " << calculate_load(g) << endl;
       cout << "Connections = " << connections << endl;
       cout << "Total subcarriers allocated = " << sc_allocated << endl;
       cout << "----------------------------------------------" << endl;

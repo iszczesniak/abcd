@@ -15,7 +15,7 @@ void stats::operator()(double t)
 {
   cout << "stats at t = " << t << ": ";
 
-  cout << "load = " << calculate_load(g, 10);
+  cout << "load = " << calculate_load(g);
 
   cout << endl;
 

@@ -40,11 +40,19 @@ set_subcarriers(G &g, int subcarriers)
   SSC ssc(boost::counting_iterator<int>(0),
           boost::counting_iterator<int>(subcarriers));
 
+  // Total subcarriers property map.
+  typename boost::property_map<G, boost::edge_nosc_t>::type
+    tpm = get(boost::edge_nosc_t(), g);
+  // Available subcarriers property map.
   typename boost::property_map<G, boost::edge_subcarriers_t>::type
-    pm = get(boost::edge_subcarriers_t(), g);
+    apm = get(boost::edge_subcarriers_t(), g);
+
   typename boost::graph_traits<G>::edge_iterator ei, ee;
   for (tie(ei, ee) = edges(g); ei != ee; ++ei)
-    pm[*ei] = ssc;
+    {
+      tpm[*ei] = subcarriers;
+      apm[*ei] = ssc;
+    }
 }
 
 /**

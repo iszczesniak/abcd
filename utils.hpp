@@ -312,7 +312,7 @@ random_node_pair(const G &g, R &gen)
 
 template<typename G>
 double
-calculate_load(const G &g, int sc)
+calculate_load(const G &g)
 {
   acc::accumulator_set<double, acc::stats<acc::tag::mean> > load_acc;
 
@@ -320,9 +320,11 @@ calculate_load(const G &g, int sc)
   for (tie(ei, ee) = edges(g); ei != ee; ++ei)
     {
       // Available subcarriers.
+      int tsc = boost::get(boost::edge_nosc, g, *ei);
+      // Available subcarriers.
       int asc = boost::get(boost::edge_subcarriers, g, *ei).size();
       // The link load.
-      double load = double(sc - asc) / sc;
+      double load = double(tsc - asc) / tsc;
       load_acc(load);
     }
 

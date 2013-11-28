@@ -24,6 +24,11 @@ namespace boost {
   enum edge_subcarriers_t {edge_subcarriers};
 
   BOOST_INSTALL_PROPERTY(edge, subcarriers);
+
+  // Describes the number of subcarriers on an edge.
+  enum edge_nosc_t {edge_nosc};
+
+  BOOST_INSTALL_PROPERTY(edge, nosc);
 }
 
 /**
@@ -32,8 +37,9 @@ namespace boost {
 typedef
 boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS,
 		      boost::property<boost::vertex_name_t, std::string>,
-		      boost::property<boost::edge_weight_t, int, 
-		      boost::property<boost::edge_subcarriers_t, SSC> > >
+		      boost::property<boost::edge_weight_t, int,
+		      boost::property<boost::edge_nosc_t, int,
+		      boost::property<boost::edge_subcarriers_t, SSC> > > >
 graph;
 
 typedef boost::graph_traits<graph>::edge_descriptor edge;

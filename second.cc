@@ -80,5 +80,5 @@ main()
   for(module *c: vc)
     delete c;
 
-  cout << "Final load = " << calculate_load(g, sc) << endl;
+  cout << "Final load = " << calculate_load(g) << endl;
 }
