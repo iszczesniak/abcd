@@ -13,11 +13,15 @@ namespace ba = boost::accumulators;
 
 class stats: public module
 {
+  static stats *singleton;
+  
   // The graph the stats operates on.
   graph &g;
 
 public:
   stats(graph &g, pqueue &q);
+  ~stats();
+  static stats *get();
   void schedule(double t);
   void operator()(double t);
 };

@@ -5,10 +5,24 @@
 
 using namespace std;
 
+stats *stats::singleton;
+
 stats::stats(graph &g, pqueue &q):
   g(g), module(q)
 {
+  assert(!singleton);
+  singleton = this;
   schedule(0);
+}
+
+stats::~stats()
+{
+}
+
+stats *
+stats::get()
+{
+  return singleton;
 }
 
 void stats::operator()(double t)
@@ -28,3 +42,4 @@ void stats::schedule(double t)
   // We call the stats every second.
   module::schedule(t + 1);
 }
+
