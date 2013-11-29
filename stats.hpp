@@ -13,10 +13,14 @@ namespace ba = boost::accumulators;
 
 class stats: public module
 {
+  // The singleton of the class.
   static stats *singleton;
   
   // The graph the stats operates on.
   graph &g;
+
+  // The network load accumulator.
+  ba::accumulator_set<double, ba::stats<ba::tag::mean> > nla;
 
 public:
   stats(graph &g, pqueue &q);
@@ -24,6 +28,9 @@ public:
   static stats *get();
   void schedule(double t);
   void operator()(double t);
+
+  // Reporting functions.
+  
 };
 
 #endif

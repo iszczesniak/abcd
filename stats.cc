@@ -17,6 +17,8 @@ stats::stats(graph &g, pqueue &q):
 
 stats::~stats()
 {
+  cout << "stats at exit: " << endl;
+  cout << "mean network load = " << ba::mean(nla) << endl;
 }
 
 stats *
@@ -29,7 +31,9 @@ void stats::operator()(double t)
 {
   cout << "stats at t = " << t << ": ";
 
-  cout << "load = " << calculate_load(g);
+  double nl = calculate_load(g);
+  nla(nl);
+  cout << "load = " << nl;
 
   cout << endl;
 
