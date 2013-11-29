@@ -20,7 +20,7 @@
 #include <vector>
 #include <set>
 
-namespace acc = boost::accumulators;
+namespace ba = boost::accumulators;
 
 /**
  * Generate a random number in [min, max].
@@ -314,7 +314,7 @@ template<typename G>
 double
 calculate_load(const G &g)
 {
-  acc::accumulator_set<double, acc::stats<acc::tag::mean> > load_acc;
+  ba::accumulator_set<double, ba::stats<ba::tag::mean> > load_acc;
 
   typename boost::graph_traits<G>::edge_iterator ei, ee;
   for (tie(ei, ee) = edges(g); ei != ee; ++ei)
@@ -328,7 +328,7 @@ calculate_load(const G &g)
       load_acc(load);
     }
 
-  return acc::mean(load_acc);
+  return ba::mean(load_acc);
 }
 
 #endif /* UTILS_HPP */
