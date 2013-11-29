@@ -5,6 +5,7 @@
 #include "connection.hpp"
 #include "graph.hpp"
 #include "module.hpp"
+#include "stats.hpp"
 
 #include <boost/random.hpp>
 #include <boost/accumulators/accumulators.hpp>
@@ -49,6 +50,9 @@ class client: public module
 
   // The connection.
   connection conn;
+
+  // The statistics object.
+  stats *st;
 
 public:
   /**

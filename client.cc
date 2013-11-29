@@ -13,7 +13,7 @@ client::client(graph &g, pqueue &q, int id, boost::mt19937 &rng,
   l_sleep(l_sleep), sd(l_sleep), sdg(rng, sd),
   l_change(l_change), cd(l_change), cdg(rng, cd),
   mnc(mnc), nd(mnc), ndg(rng, nd),
-  conn(g)
+  conn(g), st(stats::get())
 {
 }
 
