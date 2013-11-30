@@ -19,8 +19,10 @@ stats::~stats()
 {
   cout << "stats at exit: " << endl;
   cout << "mean network load = " << ba::mean(nla) << endl;
-  cout << "mean probability of establishing connection = "
+  cout << "mean probability of establishing a connection = "
        << ba::mean(tcea) << endl;
+  cout << "mean probability of completing a connection = "
+       << ba::mean(tcca) << endl;
 }
 
 stats *
@@ -40,9 +42,14 @@ void stats::operator()(double t)
   cout << endl;
 
   // The probability of establishing a connection.
-  double p = ba::mean(cea);
+  double cep = ba::mean(cea);
   cea = dbl_acc();
-  cout << "probability of connection establishment = " << p << endl;
+  cout << "probability of connection establishment = " << cep << endl;
+
+  // The probability of completing a connection.
+  double ccp = ba::mean(cca);
+  cca = dbl_acc();
+  cout << "probability of connection completion = " << ccp << endl;
 
   schedule(t);
 }
@@ -58,4 +65,10 @@ void stats::established(bool status)
 {
   cea(status);
   tcea(status);
+}
+
+void stats::completed(bool status)
+{
+  cca(status);
+  tcca(status);
 }

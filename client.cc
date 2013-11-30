@@ -40,7 +40,7 @@ void client::operator()(double t)
     {
       // The client is now idle, and should get busy now.
       bool success = set_up();
-      st->established(true);
+      st->established(success);
 
       if (success)
         {
@@ -69,6 +69,7 @@ void client::operator()(double t)
               nc_left = 0;
               idle = true;
               conn.tear_down();
+              st->completed(false);
             }
         }
       else
@@ -77,6 +78,7 @@ void client::operator()(double t)
           idle = true;
           conn.tear_down();
           cout << "torn down";
+          st->completed(true);
         }
     }
 

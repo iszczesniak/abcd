@@ -25,11 +25,17 @@ class stats: public module
   // The network load accumulator.
   dbl_acc nla;
 
-  // The probability of establishing a connection.
+  // The probability of establishing a connection in the interval.
   dbl_acc cea;
 
-  // The probability of establishing a connection.
+  // The total probability of establishing a connection.
   dbl_acc tcea;
+
+  // The probability of completing a connection in the interval.
+  dbl_acc cca;
+
+  // The total probability of completing a connection.
+  dbl_acc tcca;
 
 public:
   stats(graph &g, pqueue &q);
@@ -39,7 +45,12 @@ public:
   void operator()(double t);
 
   // Reporting functions.
+
+  // True if the connection was established successfully.
   void established(bool status);
+
+  // True if the connection was completed successfully.
+  void completed(bool status);
 };
 
 #endif
