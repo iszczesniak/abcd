@@ -40,6 +40,8 @@ void client::operator()(double t)
     {
       // The client is now idle, and should get busy now.
       bool success = set_up();
+      st->established(true);
+
       if (success)
         {
           idle = false;

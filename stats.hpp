@@ -19,8 +19,17 @@ class stats: public module
   // The graph the stats operates on.
   graph &g;
 
+  // The accumulator with double values.
+  typedef ba::accumulator_set<double, ba::stats<ba::tag::mean> > dbl_acc;
+
   // The network load accumulator.
-  ba::accumulator_set<double, ba::stats<ba::tag::mean> > nla;
+  dbl_acc nla;
+
+  // The probability of establishing a connection.
+  dbl_acc cea;
+
+  // The probability of establishing a connection.
+  dbl_acc tcea;
 
 public:
   stats(graph &g, pqueue &q);
@@ -30,7 +39,7 @@ public:
   void operator()(double t);
 
   // Reporting functions.
-  
+  void established(bool status);
 };
 
 #endif
