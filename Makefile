@@ -1,4 +1,4 @@
-TARGETS = first second
+TARGETS = sdi
 TARGET_OBJS = $(addsuffix .o, $(TARGETS))
 
 OBJS = client.o connection.o dijkstra.o event.o graph.o module.o	\
