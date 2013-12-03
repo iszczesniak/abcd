@@ -5,6 +5,7 @@
 #include "client.hpp"
 #include "event.hpp"
 #include "graph.hpp"
+#include "sdi_args.hpp"
 #include "stats.hpp"
 #include "utils_netgen.hpp"
 
@@ -13,8 +14,10 @@
 using namespace std;
 
 int
-main()
+main(int argc, char* argv[])
 {
+  sdi_args args = process_sdi_args(argc, argv);
+
   // Simulation time.
   const double sim_limit = 100;
 
@@ -79,6 +82,4 @@ main()
   // Delete the clients.
   for(module *c: vc)
     delete c;
-
-  cout << "Final load = " << calculate_load(g) << endl;
 }
