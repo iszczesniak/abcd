@@ -12,9 +12,7 @@ LDFLAGS := $(LDFLAGS) -l boost_graph-mt
 
 all: $(TARGETS)
 
-first: $(OBJS)
-
-second: $(OBJS)
+sdi: $(OBJS)
 
 .PHONY: clean count depend test
 
