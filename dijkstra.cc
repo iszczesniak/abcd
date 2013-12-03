@@ -111,7 +111,7 @@ dijkstra(const graph &g, const demand &d)
       // The edge that we examine in this iteration.
       const edge &e = *ei;
       // The subcarriers available on the edge.
-      const SSC &e_ssc = boost::get(boost::edge_subcarriers, g, e);
+      const SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
 
       // Add e_ssc to ssc.
       include(ssc, e_ssc);
@@ -203,7 +203,7 @@ dijkstra(const graph &g, const demand &d, const SSC &src_ssc)
               // The edge that we examine in this iteration.
               const edge &e = *ei;
               // The subcarriers available on the edge.
-              const SSC &e_ssc = boost::get(boost::edge_subcarriers, g, e);
+              const SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
               // Candidate SSC: the ssc available at node v that can
               // be carried by edge e, and that has at least nsc
               // contiguous subcarriers.
@@ -323,7 +323,7 @@ set_up_path(graph &g, const sscpath &p)
   // Iterate over the edges of the path.
   for(const edge &e: l)
     {
-      SSC &e_ssc = boost::get(boost::edge_subcarriers, g, e);
+      SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
       // Make sure that the edge has the required subcarriers.
       assert(includes(e_ssc, p_ssc));
 
@@ -341,7 +341,7 @@ tear_down_path(graph &g, const sscpath &p)
   // Iterate over the edges of the path.
   for(const edge &e: l)
     {
-      SSC &e_ssc = boost::get(boost::edge_subcarriers, g, e);
+      SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
 
       // Make sure that the edge has these subcarriers taken.
       assert(excludes(e_ssc, p_ssc));

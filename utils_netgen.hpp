@@ -44,8 +44,8 @@ set_subcarriers(G &g, int subcarriers)
   typename boost::property_map<G, boost::edge_nosc_t>::type
     tpm = get(boost::edge_nosc_t(), g);
   // Available subcarriers property map.
-  typename boost::property_map<G, boost::edge_subcarriers_t>::type
-    apm = get(boost::edge_subcarriers_t(), g);
+  typename boost::property_map<G, boost::edge_ssc_t>::type
+    apm = get(boost::edge_ssc_t(), g);
 
   typename boost::graph_traits<G>::edge_iterator ei, ee;
   for (tie(ei, ee) = edges(g); ei != ee; ++ei)
@@ -62,8 +62,8 @@ template<typename G>
 void
 print_subcarriers(G &g)
 {
-  typename boost::property_map<G, boost::edge_subcarriers_t>::type
-    pm = boost::get(boost::edge_subcarriers_t(), g);
+  typename boost::property_map<G, boost::edge_ssc_t>::type
+    pm = boost::get(boost::edge_ssc_t(), g);
   typename boost::graph_traits<G>::edge_iterator ei, ee;
   for (boost::tie(ei, ee) = boost::edges(g); ei != ee; ++ei)
     std::cout << pm[*ei] << "\n";

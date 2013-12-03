@@ -21,9 +21,9 @@ typedef std::set<SSC> SSSC;
 
 namespace boost {
   // Describes the set of available subcarriers on an edge.
-  enum edge_subcarriers_t {edge_subcarriers};
+  enum edge_ssc_t {edge_ssc};
 
-  BOOST_INSTALL_PROPERTY(edge, subcarriers);
+  BOOST_INSTALL_PROPERTY(edge, ssc);
 
   // Describes the number of subcarriers on an edge.
   enum edge_nosc_t {edge_nosc};
@@ -39,7 +39,7 @@ boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS,
 		      boost::property<boost::vertex_name_t, std::string>,
 		      boost::property<boost::edge_weight_t, int,
 		      boost::property<boost::edge_nosc_t, int,
-		      boost::property<boost::edge_subcarriers_t, SSC> > > >
+		      boost::property<boost::edge_ssc_t, SSC> > > >
 graph;
 
 typedef boost::graph_traits<graph>::edge_descriptor edge;

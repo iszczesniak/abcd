@@ -322,7 +322,7 @@ calculate_load(const G &g)
       // Available subcarriers.
       int tsc = boost::get(boost::edge_nosc, g, *ei);
       // Available subcarriers.
-      int asc = boost::get(boost::edge_subcarriers, g, *ei).size();
+      int asc = boost::get(boost::edge_ssc, g, *ei).size();
       // The link load.
       double load = double(tsc - asc) / tsc;
       load_acc(load);
