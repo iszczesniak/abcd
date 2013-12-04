@@ -5,7 +5,7 @@ OBJS = ../dijkstra.o ../graph.o ../utils.o
 #CXXFLAGS = -g -Wno-deprecated
 CXXFLAGS = -O3 -Wno-deprecated
 
-CXXFLAGS := $(CXXFLAGS) -I ../ -std=c++11
+CXXFLAGS := $(CXXFLAGS) -I ../
 
 # Boost
 #BOOSTPATH = /usr/local/boost-1.43

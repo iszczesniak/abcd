@@ -56,15 +56,15 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_2)
   BOOST_CHECK(p.second.size() == 3);
 
   // There are three subcarriers available.
-  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e).size() == 3);
+  BOOST_CHECK(boost::get(boost::edge_ssc, g, e).size() == 3);
   // Set up the path.
   set_up_path(g, p);
   // The subcarriers have been taken.
-  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e).empty());
+  BOOST_CHECK(boost::get(boost::edge_ssc, g, e).empty());
   // Release the subcarriers taken by the path.
   tear_down_path(g, p);
   // There are three subcarriers available.
-  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e).size() == 3);
+  BOOST_CHECK(boost::get(boost::edge_ssc, g, e).size() == 3);
 }
 
 /*
@@ -83,18 +83,18 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_3)
 
   // Props of edge e1.
   boost::get(boost::edge_weight, g, e1) = 1;
-  boost::get(boost::edge_subcarriers, g, e1).insert(0);
-  boost::get(boost::edge_subcarriers, g, e1).insert(1);
+  boost::get(boost::edge_ssc, g, e1).insert(0);
+  boost::get(boost::edge_ssc, g, e1).insert(1);
 
   // Props of edge e2.
   boost::get(boost::edge_weight, g, e2) = 2;
-  boost::get(boost::edge_subcarriers, g, e2).insert(2);
-  boost::get(boost::edge_subcarriers, g, e2).insert(3);
+  boost::get(boost::edge_ssc, g, e2).insert(2);
+  boost::get(boost::edge_ssc, g, e2).insert(3);
 
   // Props of edge e3.
   boost::get(boost::edge_weight, g, e3) = 1;
-  boost::get(boost::edge_subcarriers, g, e3).insert(2);
-  boost::get(boost::edge_subcarriers, g, e3).insert(3);
+  boost::get(boost::edge_ssc, g, e3).insert(2);
+  boost::get(boost::edge_ssc, g, e3).insert(3);
 
   demand d = demand(npair(src, dst), 2);
   V2C2S result = dijkstra(g, d);
@@ -127,25 +127,25 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_3)
   BOOST_CHECK(p.second.find(3) != p.second.end());
 
   // The number of subcarriers befor the path is set up.
-  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e1).size() == 2);
-  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e2).size() == 2);
-  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e3).size() == 2);
+  BOOST_CHECK(boost::get(boost::edge_ssc, g, e1).size() == 2);
+  BOOST_CHECK(boost::get(boost::edge_ssc, g, e2).size() == 2);
+  BOOST_CHECK(boost::get(boost::edge_ssc, g, e3).size() == 2);
 
   // Set up the path.
   set_up_path(g, p);
 
   // The number of subcarriers after the path is set up.
-  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e1).size() == 2);
-  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e2).size() == 0);
-  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e3).size() == 0);
+  BOOST_CHECK(boost::get(boost::edge_ssc, g, e1).size() == 2);
+  BOOST_CHECK(boost::get(boost::edge_ssc, g, e2).size() == 0);
+  BOOST_CHECK(boost::get(boost::edge_ssc, g, e3).size() == 0);
 
   // Tear down the path.
   tear_down_path(g, p);
 
   // The number of subcarriers befor the path is set up.
-  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e1).size() == 2);
-  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e2).size() == 2);
-  BOOST_CHECK(boost::get(boost::edge_subcarriers, g, e3).size() == 2);
+  BOOST_CHECK(boost::get(boost::edge_ssc, g, e1).size() == 2);
+  BOOST_CHECK(boost::get(boost::edge_ssc, g, e2).size() == 2);
+  BOOST_CHECK(boost::get(boost::edge_ssc, g, e3).size() == 2);
 }
 
 /*
@@ -165,15 +165,15 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_4)
 
   // Props of edge e1.
   boost::get(boost::edge_weight, g, e1) = 2;
-  boost::get(boost::edge_subcarriers, g, e1).insert(0);
+  boost::get(boost::edge_ssc, g, e1).insert(0);
 
   // Props of edge e2.
   boost::get(boost::edge_weight, g, e2) = 1;
-  boost::get(boost::edge_subcarriers, g, e2).insert(0);
+  boost::get(boost::edge_ssc, g, e2).insert(0);
 
   // Props of edge e3.
   boost::get(boost::edge_weight, g, e3) = 2;
-  boost::get(boost::edge_subcarriers, g, e3).insert(0);
+  boost::get(boost::edge_ssc, g, e3).insert(0);
 
   demand d = demand(npair(src, dst), 1);
   V2C2S result = dijkstra(g, d);
@@ -205,16 +205,16 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_5)
 
   // Props of edge e1.
   boost::get(boost::edge_weight, g, e1) = 2;
-  boost::get(boost::edge_subcarriers, g, e1).insert(0);
-  boost::get(boost::edge_subcarriers, g, e1).insert(1);
+  boost::get(boost::edge_ssc, g, e1).insert(0);
+  boost::get(boost::edge_ssc, g, e1).insert(1);
 
   // Props of edge e2.
   boost::get(boost::edge_weight, g, e2) = 1;
-  boost::get(boost::edge_subcarriers, g, e2).insert(0);
+  boost::get(boost::edge_ssc, g, e2).insert(0);
 
   // Props of edge e3.
   boost::get(boost::edge_weight, g, e3) = 2;
-  boost::get(boost::edge_subcarriers, g, e3).insert(0);
+  boost::get(boost::edge_ssc, g, e3).insert(0);
 
   demand d = demand(npair(src, dst), 1);
   V2C2S result = dijkstra(g, d);
@@ -250,13 +250,13 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_6)
 
   // Props of edge e1.
   boost::get(boost::edge_weight, g, e1) = 1;
-  boost::get(boost::edge_subcarriers, g, e1).insert(0);
+  boost::get(boost::edge_ssc, g, e1).insert(0);
 
   // Props of edge e2.  During the Dijkstra search, the result for
   // this edge won't be even added, because already the better result
   // for edge e1 will be in place.
   boost::get(boost::edge_weight, g, e2) = 2;
-  boost::get(boost::edge_subcarriers, g, e2).insert(0);
+  boost::get(boost::edge_ssc, g, e2).insert(0);
 
   demand d = demand(npair(src, dst), 1);
   V2C2S result = dijkstra(g, d);
@@ -282,12 +282,12 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_7)
 
   // Props of edge e1.
   boost::get(boost::edge_weight, g, e1) = 2;
-  boost::get(boost::edge_subcarriers, g, e1).insert(0);
+  boost::get(boost::edge_ssc, g, e1).insert(0);
 
   // Props of edge e2.  During the Dijkstra search, the result for
   // edge e1 will be removed, because edge e2 offers a better result.
   boost::get(boost::edge_weight, g, e2) = 1;
-  boost::get(boost::edge_subcarriers, g, e2).insert(0);
+  boost::get(boost::edge_ssc, g, e2).insert(0);
 
   demand d = demand(npair(src, dst), 1);
   V2C2S result = dijkstra(g, d);
