@@ -18,8 +18,8 @@ includes(const SSC &a, const SSC &b)
 bool
 includes(const SSSC &a, const SSC &b)
 {
-  for(const SSSC::value_type &ssc: a)
-    if (includes(ssc, b))
+  for(SSSC::const_iterator i = a.begin(); i != a.end(); ++i)
+    if (includes(*i, b))
       return true;
 
   return false;
@@ -48,9 +48,9 @@ intersection(const SSSC &sssc, const SSC &ssc)
 {
   SSSC r;
 
-  for(const SSSC::value_type &ssce: sssc)
+  for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
     {
-      SSC ssci = intersection(ssce, ssc);
+      SSC ssci = intersection(*i, ssc);
       if (!ssci.empty())
         r.insert(ssci);
     }
@@ -100,9 +100,9 @@ exclude(const SSSC &sssc, int nsc)
 {
   SSSC r;
 
-  for(auto &ssc: sssc)
+  for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
     {
-      SSC c_ssc = exclude(ssc, nsc);
+      SSC c_ssc = exclude(*i, nsc);
       if (!c_ssc.empty())
         r.insert(c_ssc);
     }

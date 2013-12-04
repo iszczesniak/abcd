@@ -21,15 +21,19 @@ has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
 {
   // We examine the existing results with the cost lower or equal to
   // "cost".
-  for (auto &e: c2s)
-    // Stop searching when we reach a result with the cost higher than
-    // cost.
-    if (e.first.first > cost)
-      break;
-    else
-      // Check whether the existing result includes "ssc".
-      if (includes(e.second, ssc))
-        return true;
+  for (C2S::const_iterator i = c2s.begin(); i != c2s.end(); ++i)
+    {
+      const C2S::value_type &e = *i;
+
+      // Stop searching when we reach a result with the cost higher
+      // than cost.
+      if (e.first.first > cost)
+        break;
+      else
+        // Check whether the existing result includes "ssc".
+        if (includes(e.second, ssc))
+          return true;
+    }
 
   return false;
 }
@@ -94,8 +98,8 @@ relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v, const SSC &ssc)
 void
 relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v, const SSSC &sssc)
 {
-  for(auto &ssc: sssc)
-    relaks(q, c2s, cep, v, ssc);
+  for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
+    relaks(q, c2s, cep, v, *i);
 }
 
 V2C2S
@@ -317,12 +321,14 @@ shortest_path(const graph &g, const V2C2S &r, const demand &d)
 void
 set_up_path(graph &g, const sscpath &p)
 {
-  const list<edge> &l = p.first;
+  const path &l = p.first;
   const SSC &p_ssc = p.second;
 
   // Iterate over the edges of the path.
-  for(const edge &e: l)
+  for(path::const_iterator i = l.begin(); i != l.end(); ++i)
     {
+      const edge &e = *i;
+
       SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
       // Make sure that the edge has the required subcarriers.
       assert(includes(e_ssc, p_ssc));
@@ -335,12 +341,14 @@ set_up_path(graph &g, const sscpath &p)
 void
 tear_down_path(graph &g, const sscpath &p)
 {
-  const list<edge> &l = p.first;
+  const path &l = p.first;
   const SSC &p_ssc = p.second;
 
   // Iterate over the edges of the path.
-  for(const edge &e: l)
+  for(path::const_iterator i = l.begin(); i != l.end(); ++i)
     {
+      const edge &e = *i;
+
       SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
 
       // Make sure that the edge has these subcarriers taken.
