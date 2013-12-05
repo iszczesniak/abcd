@@ -42,7 +42,7 @@ main (int argc, char* argv[])
 
       boost::graph_traits<graph>::edge_iterator ei, ee;
       for (boost::tie(ei, ee) = boost::edges(g); ei != ee; ++ei)
-        sc_free += boost::get(boost::edge_subcarriers, g, *ei).size();
+        sc_free += boost::get(boost::edge_ssc, g, *ei).size();
 
       cout << "Total subcarriers available = " << sc_free << endl;
 

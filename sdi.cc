@@ -63,6 +63,7 @@ main(int argc, char* argv[])
     }
 
   // Delete the clients.
-  for(module *c: vc)
-    delete c;
+  for(std::vector<module *>::const_iterator i = vc.begin();
+      i != vc.end(); ++i)
+    delete *i;
 }
