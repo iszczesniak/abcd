@@ -21,32 +21,15 @@ main(int argc, char* argv[])
   // Simulation time.
   const double sim_limit = 100;
 
-  // The number of clients.
-  const int nc = 100;
-
-  // The number of nodes.
-  const int nn = 10;
-
-  // The number of edges.
-  const int ne = 30;
-
-  // The number of subcarriers.
-  const int sc = 10;
-
-  // The lambda for each module.
-  const double lambda = 2;
-
   // Random number generator
-  boost::mt19937 gen(1);
+  boost::mt19937 gen(args.seed);
   graph g;
 
-  // 100 nodes, 300 links.
-  int res = generate_graph(g, nn, ne, gen);
-  // We expect there to be exactly 3000 edges.
-  assert(res == ne);
+  int res = generate_graph(g, args.nr_nodes, args.nr_edges, gen);
+  assert(res == args.nr_edges);
 
   // The number of subcarriers for each edge.
-  set_subcarriers(g, sc);
+  set_subcarriers(g, args.nr_sc);
 
   // Make sure there is only one component.
   assert(check_components(g));
@@ -62,7 +45,7 @@ main(int argc, char* argv[])
   std::vector<module *> vc;
 
   // Create the modules for the simulation.
-  for(int i = 0; i < nc; ++i)
+  for(int i = 0; i < args.nr_clients; ++i)
     {
       client *c = new client(g, q, i, gen, 100, 1, 10);
       c->schedule(0);

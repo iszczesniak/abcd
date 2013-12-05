@@ -14,24 +14,36 @@ process_sdi_args(int argc, char *argv[])
   try
     {
       po::options_description opts("The options");
+
       opts.add_options()
         ("help,h", "produce help message")
 
-        ("nodes,n", po::value<int>(),
+        ("nodes", po::value<int>()->required(),
          "the number of nodes to generate")
 
-        ("edges,e", po::value<int>(),
+        ("edges", po::value<int>()->required(),
          "the number of edges to generate")
 
-        ("reconf,r", po::value<string>(),
-         "the type of connection reconfiguration")
+        ("subcarriers", po::value<int>()->required(),
+         "the number of subcarriers")
 
-        ("seed,s", po::value<int>()->default_value(1),
+        ("clients", po::value<int>()->required(),
+         "the number of clients")
+
+        ("l_sleep", po::value<double>()->required(),
+         "the lambda for the sleep time")
+
+        ("mnc", po::value<double>()->required(),
+         "the lambda for the sleep time")
+
+        ("l_change", po::value<double>()->required(),
+         "the lambda for the sleep time")
+
+        ("seed", po::value<int>()->default_value(1),
          "the seed of the random number generator");
 
       po::variables_map vm;
       po::store(po::command_line_parser(argc, argv).options(opts).run(), vm);
-      po::notify(vm);
 
       if (vm.count("help"))
         {
@@ -39,38 +51,16 @@ process_sdi_args(int argc, char *argv[])
           exit(0);
         }
 
-      if(vm.count("nodes"))
-        result.nr_nodes = vm["nodes"].as<int>();
-      else
-        {
-          cerr << "You need to give me the number "
-               << "of nodes to generate.\n";
-          exit(1);
-        }
+      po::notify(vm);
 
-      if(vm.count("edges"))
-        result.nr_edges = vm["edges"].as<int>();
-      else
-        {
-          cerr << "You need to give me the number "
-               << "of edges to generate.\n";
-          exit(1);
-        }
-
-      if(vm.count("reconf"))
-        {
-          string reconf = vm["reconf"].as<string>();
-        }
-      else
-        {
-          cerr << "You need to give me the type of the "
-               << "connection reconfiguration.  Choose "
-               << "one of: " << "\n";
-          exit(1);
-        }
-
-      // The seed for the random number generator.
-      result.seed = vm["seed"].as<int>();
+      result.nr_nodes = vm["nodes"].as<int>();
+      result.nr_nodes = vm["edges"].as<int>();
+      result.nr_nodes = vm["subcarriers"].as<int>();
+      result.nr_nodes = vm["clients"].as<int>();
+      result.nr_nodes = vm["l_sleep"].as<double>();
+      result.nr_nodes = vm["mnc"].as<double>();
+      result.nr_nodes = vm["l_change"].as<double>();
+      result.nr_nodes = vm["seed"].as<int>();
     }
   catch(const std::exception& e)
     {

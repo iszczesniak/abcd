@@ -1,6 +1,7 @@
 #ifndef SDI_ARGS_HPP
 #define SDI_ARGS_HPP
 
+#include "connection.hpp"
 #include <string>
 
 using namespace std;
@@ -17,10 +18,22 @@ struct sdi_args
   /// The number of edges in the graph.
   int nr_edges;
 
-  /// The type of the connection reconfiguration.
-  
+  /// The number of subcarriers.
+  int nr_sc;
 
-  /// The seed of the random number generator.
+  /// The number of clients.
+  int nr_clients;
+
+  /// The lambda for the sleep time.
+  double l_sleep;
+
+  /// The mean number of connection changes.
+  double mnc;
+
+  /// The lambda for the change.
+  double l_change;
+
+  /// The seed
   int seed;
 };
 
