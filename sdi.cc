@@ -14,7 +14,7 @@
 using namespace std;
 
 int
-main(int argc, char* argv[])
+main(int argc, const char* argv[])
 {
   sdi_args args = process_sdi_args(argc, argv);
 

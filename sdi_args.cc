@@ -7,7 +7,7 @@ using namespace std;
 namespace po = boost::program_options;
 
 sdi_args
-process_sdi_args(int argc, char *argv[])
+process_sdi_args(int argc, const char *argv[])
 {
   sdi_args result;
 

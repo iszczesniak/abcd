@@ -41,6 +41,6 @@ struct sdi_args
  * This function parses the command-line arguments.
  */
 sdi_args
-process_sdi_args(int argc, char* argv[]);
+process_sdi_args(int argc, const char* argv[]);
 
 #endif /* SDI_ARGS_HPP */
