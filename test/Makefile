@@ -1,6 +1,6 @@
-TESTS = dijkstra graph utils
+TESTS = sdi_args dijkstra graph utils
 
-OBJS = ../dijkstra.o ../graph.o ../utils.o
+OBJS = ../dijkstra.o ../graph.o ../sdi_args.o ../utils.o
 
 #CXXFLAGS = -g -Wno-deprecated
 CXXFLAGS = -O3 -Wno-deprecated
@@ -13,6 +13,7 @@ CXXFLAGS := $(CXXFLAGS) -I ../
 #LDFLAGS := $(LDFLAGS) -L $(BOOSTPATH)/lib
 LDFLAGS := $(LDFLAGS) -l boost_test_exec_monitor-mt
 LDFLAGS := $(LDFLAGS) -l boost_unit_test_framework-mt
+LDFLAGS := $(LDFLAGS) -l boost_program_options-mt
 
 .PHONY: clean depend run
 
@@ -22,6 +23,9 @@ dijkstra: dijkstra.o $(OBJS)
 	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 graph: graph.o $(OBJS)
+	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
+
+sdi_args: sdi_args.o $(OBJS)
 	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 utils: utils.o $(OBJS)
