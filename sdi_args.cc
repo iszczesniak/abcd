@@ -54,13 +54,13 @@ process_sdi_args(int argc, char *argv[])
       po::notify(vm);
 
       result.nr_nodes = vm["nodes"].as<int>();
-      result.nr_nodes = vm["edges"].as<int>();
-      result.nr_nodes = vm["subcarriers"].as<int>();
-      result.nr_nodes = vm["clients"].as<int>();
-      result.nr_nodes = vm["l_sleep"].as<double>();
-      result.nr_nodes = vm["mnc"].as<double>();
-      result.nr_nodes = vm["l_change"].as<double>();
-      result.nr_nodes = vm["seed"].as<int>();
+      result.nr_edges = vm["edges"].as<int>();
+      result.nr_sc = vm["subcarriers"].as<int>();
+      result.nr_clients = vm["clients"].as<int>();
+      result.l_sleep = vm["l_sleep"].as<double>();
+      result.mnc = vm["mnc"].as<double>();
+      result.l_change = vm["l_change"].as<double>();
+      result.seed = vm["seed"].as<int>();
     }
   catch(const std::exception& e)
     {
