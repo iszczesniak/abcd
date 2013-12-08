@@ -5,16 +5,13 @@ OBJS = client.o connection.o dijkstra.o event.o graph.o module.o	\
 sdi_args.o stats.o utils.o utils_netgen.o
 
 #CXXFLAGS = -g -Wno-deprecated
-CXXFLAGS = -O1 -Wno-deprecated
+CXXFLAGS = -O3 -Wno-deprecated
 
 # Boost
-#BOOSTPATH := /usr/local/boost-1.43
-#CXXFLAGS := $(CXXFLAGS) -I $(BOOSTPATH)/include
-#LDFLAGS := $(LDFLAGS) -L $(BOOSTPATH)/lib
-LDFLAGS := $(LDFLAGS) -l boost_program_options-mt
-
-# Boost
-LDFLAGS := $(LDFLAGS) -l boost_graph-mt
+BOOSTPATH := /people/plgijs/boost
+CXXFLAGS := $(CXXFLAGS) -I $(BOOSTPATH)/include
+LDFLAGS := $(LDFLAGS) -L $(BOOSTPATH)/lib
+LDFLAGS := $(LDFLAGS) -l boost_program_options
 
 all: $(TARGETS)
 

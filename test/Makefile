@@ -8,12 +8,12 @@ CXXFLAGS = -O3 -Wno-deprecated
 CXXFLAGS := $(CXXFLAGS) -I ../
 
 # Boost
-#BOOSTPATH = /usr/local/boost-1.43
-#CXXFLAGS := $(CXXFLAGS) -I $(BOOSTPATH)/include
-#LDFLAGS := $(LDFLAGS) -L $(BOOSTPATH)/lib
-LDFLAGS := $(LDFLAGS) -l boost_test_exec_monitor-mt
-LDFLAGS := $(LDFLAGS) -l boost_unit_test_framework-mt
-LDFLAGS := $(LDFLAGS) -l boost_program_options-mt
+BOOSTPATH = /people/plgijs/boost
+CXXFLAGS := $(CXXFLAGS) -I $(BOOSTPATH)/include
+LDFLAGS := $(LDFLAGS) -L $(BOOSTPATH)/lib
+LDFLAGS := $(LDFLAGS) -l boost_test_exec_monitor
+LDFLAGS := $(LDFLAGS) -l boost_unit_test_framework
+LDFLAGS := $(LDFLAGS) -l boost_program_options
 
 .PHONY: clean depend run
 
