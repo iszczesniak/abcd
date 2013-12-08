@@ -1,6 +1,6 @@
 #include "utils_netgen.hpp"
 
-#include <iostream>
+#include <sstream>
 #include <iomanip>
 
 using namespace std;

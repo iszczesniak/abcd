@@ -7,22 +7,24 @@ using namespace std;
 
 stats *stats::singleton;
 
-stats::stats(graph &g, pqueue &q):
-  g(g), module(q)
+stats::stats(const sdi_args &args, const graph &g, pqueue &q):
+  args(args), g(g), module(q)
 {
   assert(!singleton);
   singleton = this;
   schedule(0);
-}
 
-stats::~stats()
-{
-  cout << "stats at exit: " << endl;
-  cout << "mean network load = " << ba::mean(nla) << endl;
-  cout << "mean probability of establishing a connection = "
-       << ba::mean(tcea) << endl;
-  cout << "mean probability of completing a connection = "
-       << ba::mean(tcca) << endl;
+  cout << "time seed "
+    // network parameters
+       << "nodes edges subcarriers clients "
+    // load parameters
+       << "l_sleep mnc l_change "
+    // the network load
+       << "load "
+    // the probability of establishing a connection
+       << "estab "
+    // the probability of completing a connection
+       << "compl" << endl;
 }
 
 stats *
@@ -33,23 +35,19 @@ stats::get()
 
 void stats::operator()(double t)
 {
-  cout << "stats at t = " << t << ": " << endl;
+  cout << t << " " << args.seed << " "
+       << args.nr_nodes << " " << args.nr_edges << " "
+       << args.nr_sc << " " << args.nr_clients << " "
+       << args.l_sleep << " " << args.mnc << " " << args.l_change << " ";
 
   // The network load.
-  double nl = calculate_load(g);
-  nla(nl);
-  cout << "load = " << nl;
-  cout << endl;
+  cout << calculate_load(g) << " ";
 
   // The probability of establishing a connection.
-  double cep = ba::mean(cea);
-  cea = dbl_acc();
-  cout << "probability of connection establishment = " << cep << endl;
+  cout << ba::mean(cea) << " ";
 
   // The probability of completing a connection.
-  double ccp = ba::mean(cca);
-  cca = dbl_acc();
-  cout << "probability of connection completion = " << ccp << endl;
+  cout << ba::mean(cca) << endl;
 
   schedule(t);
 }
@@ -64,11 +62,9 @@ void stats::schedule(double t)
 void stats::established(bool status)
 {
   cea(status);
-  tcea(status);
 }
 
 void stats::completed(bool status)
 {
   cca(status);
-  tcca(status);
 }

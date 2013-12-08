@@ -2,8 +2,6 @@
 #include "dijkstra.hpp"
 #include "utils_netgen.hpp"
 
-#include <iostream>
-
 using namespace std;
 
 client::client(graph &g, pqueue &q, int id, boost::mt19937 &rng,
@@ -19,23 +17,12 @@ client::client(graph &g, pqueue &q, int id, boost::mt19937 &rng,
 
 client::~client()
 {
-  cout << "Client #" << id << ": ";
-
   if (!idle)
-    {
-      conn.tear_down();
-      cout << "connection torn down.";
-    }
-  else
-    cout << "no connection to tear down.";
-
-  cout << endl;
+    conn.tear_down();
 }
 
 void client::operator()(double t)
 {
-  cout << "Event t = " << t << ", id = " << id << ": ";
-
   if (idle)
     {
       // The client is now idle, and should get busy now.
@@ -46,26 +33,18 @@ void client::operator()(double t)
         {
           idle = false;
           nc_left = ndg();
-          cout << "established";
         }
-      else
-        cout << "failed to establish";
     }
   else
     {
-      // The device is busy now.
       if (nc_left)
         {
           // It's time now to reconfigure.
           bool status = reconfigure();
           if (status)
-            {
-              --nc_left;
-              cout << "reconfigured";
-            }
+            --nc_left;
           else
             {
-              cout << "connection lost";
               nc_left = 0;
               idle = true;
               conn.tear_down();
@@ -77,12 +56,9 @@ void client::operator()(double t)
           // It's time now to turn the connection down.
           idle = true;
           conn.tear_down();
-          cout << "torn down";
           st->completed(true);
         }
     }
-
-  cout << endl;
 
   schedule(t);
 }

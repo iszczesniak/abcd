@@ -13,7 +13,6 @@
 #include <boost/accumulators/statistics/mean.hpp>
 
 #include <cassert>
-#include <iostream>
 #include <list>
 #include <set>
 #include <string>

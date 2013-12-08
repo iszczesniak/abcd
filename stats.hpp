@@ -5,6 +5,7 @@
 #include "connection.hpp"
 #include "graph.hpp"
 #include "module.hpp"
+#include "sdi_args.hpp"
 
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
@@ -17,29 +18,22 @@ class stats: public module
   static stats *singleton;
   
   // The graph the stats operates on.
-  graph &g;
+  const graph &g;
 
   // The accumulator with double values.
   typedef ba::accumulator_set<double, ba::stats<ba::tag::mean> > dbl_acc;
 
-  // The network load accumulator.
-  dbl_acc nla;
-
   // The probability of establishing a connection in the interval.
   dbl_acc cea;
-
-  // The total probability of establishing a connection.
-  dbl_acc tcea;
 
   // The probability of completing a connection in the interval.
   dbl_acc cca;
 
-  // The total probability of completing a connection.
-  dbl_acc tcca;
+  // The arguments of the run.
+  sdi_args args;
 
 public:
-  stats(graph &g, pqueue &q);
-  ~stats();
+  stats(const sdi_args &args, const graph &g, pqueue &q);
   static stats *get();
   void schedule(double t);
   void operator()(double t);

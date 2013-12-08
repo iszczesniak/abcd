@@ -1,4 +1,3 @@
-#include <iostream>
 #include <list>
 #include <queue>
 
@@ -42,7 +41,7 @@ main(int argc, const char* argv[])
   pqueue q;
 
   // The stats module.
-  stats s(g, q);
+  stats s(args, g, q);
 
   // The list of clients.
   std::vector<module *> vc;
