@@ -8,7 +8,7 @@ CXXFLAGS = -O3 -Wno-deprecated
 CXXFLAGS := $(CXXFLAGS) -I ../
 
 # Boost
-BOOSTPATH = /people/plgijs/boost
+BOOSTPATH = ~/boost
 CXXFLAGS := $(CXXFLAGS) -I $(BOOSTPATH)/include
 LDFLAGS := $(LDFLAGS) -L $(BOOSTPATH)/lib
 LDFLAGS := $(LDFLAGS) -l boost_test_exec_monitor

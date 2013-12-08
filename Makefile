@@ -8,7 +8,7 @@ sdi_args.o stats.o utils.o utils_netgen.o
 CXXFLAGS = -O3 -Wno-deprecated
 
 # Boost
-BOOSTPATH := /people/plgijs/boost
+BOOSTPATH := ~/boost
 CXXFLAGS := $(CXXFLAGS) -I $(BOOSTPATH)/include
 LDFLAGS := $(LDFLAGS) -L $(BOOSTPATH)/lib
 LDFLAGS := $(LDFLAGS) -l boost_program_options
