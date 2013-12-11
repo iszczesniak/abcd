@@ -34,13 +34,16 @@ process_sdi_args(int argc, const char *argv[])
          "the lambda for the sleep time")
 
         ("mnc", po::value<double>()->required(),
-         "the lambda for the sleep time")
+         "the mean number of changes")
 
         ("l_change", po::value<double>()->required(),
-         "the lambda for the sleep time")
+         "the lambda for the change time")
 
         ("seed", po::value<int>()->default_value(1),
-         "the seed of the random number generator");
+         "the seed of the random number generator")
+
+        ("hash", po::value<string>()->required(),
+         "the hash of all the parameters except the seed");
 
       po::variables_map vm;
       po::store(po::command_line_parser(argc, argv).options(opts).run(), vm);
@@ -61,6 +64,7 @@ process_sdi_args(int argc, const char *argv[])
       result.mnc = vm["mnc"].as<double>();
       result.l_change = vm["l_change"].as<double>();
       result.seed = vm["seed"].as<int>();
+      result.hash = vm["hash"].as<string>();
     }
   catch(const std::exception& e)
     {

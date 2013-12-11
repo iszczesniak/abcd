@@ -1,1 +1,8 @@
+dijkstra.o: dijkstra.cc ../utils.hpp ../graph.hpp ../utils_netgen.hpp \
+ ../utils.hpp ../dijkstra.hpp
+first.o: first.cc ../graph.hpp ../dijkstra.hpp ../graph.hpp \
+ ../utils_netgen.hpp ../utils.hpp
+graph.o: graph.cc ../utils.hpp ../graph.hpp
+sdi_args.o: sdi_args.cc ../sdi_args.hpp ../connection.hpp ../graph.hpp \
+ ../utils.hpp ../utils_netgen.hpp ../utils.hpp ../dijkstra.hpp
 utils.o: utils.cc ../utils.hpp ../graph.hpp

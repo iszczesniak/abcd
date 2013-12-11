@@ -16,7 +16,7 @@
  */
 BOOST_AUTO_TEST_CASE(sdi_args_test_1)
 {
-  int argc = 15;
+  int argc = 17;
   const char *argv[] = {"",
                         "--nodes", "10",
                         "--edges", "30",
@@ -24,7 +24,8 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_1)
                         "--clients", "100",
                         "--l_sleep", "11",
                         "--mnc", "12",
-                        "--l_change", "13"};
+                        "--l_change", "13",
+                        "--hash", "blablabla"};
 
   sdi_args args = process_sdi_args(argc, argv);
 
@@ -32,6 +33,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_1)
   BOOST_CHECK(args.nr_edges == 30);
   BOOST_CHECK(args.nr_sc == 50);
   BOOST_CHECK(args.nr_clients == 100);
+  BOOST_CHECK(args.hash == "blablabla");
 
   BOOST_CHECK_CLOSE(args.l_sleep, 11, 0.0001);
   BOOST_CHECK_CLOSE(args.mnc, 12, 0.0001);
@@ -46,7 +48,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_1)
  */
 BOOST_AUTO_TEST_CASE(sdi_args_test_2)
 {
-  int argc = 17;
+  int argc = 19;
   const char *argv[] = {"",
                         "--nodes", "10",
                         "--edges", "30",
@@ -55,6 +57,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_2)
                         "--l_sleep", "11",
                         "--mnc", "12",
                         "--l_change", "13",
+                        "--hash", "blablabla",
                         "--seed", "2"};
 
   sdi_args args = process_sdi_args(argc, argv);

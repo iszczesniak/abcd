@@ -35,6 +35,10 @@ struct sdi_args
 
   /// The seed
   int seed;
+
+  /// The hash of all the parameters except the seed parameter.  It's
+  /// used to identify the configuration of the simulation.
+  string hash;
 };
 
 /**

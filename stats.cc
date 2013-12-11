@@ -14,11 +14,7 @@ stats::stats(const sdi_args &args, const graph &g, pqueue &q):
   singleton = this;
   schedule(0);
 
-  cout << "time seed "
-    // network parameters
-       << "nodes edges subcarriers clients "
-    // load parameters
-       << "l_sleep mnc l_change "
+  cout << "time seed hash "
     // the network load
        << "load "
     // the probability of establishing a connection
@@ -35,10 +31,7 @@ stats::get()
 
 void stats::operator()(double t)
 {
-  cout << t << " " << args.seed << " "
-       << args.nr_nodes << " " << args.nr_edges << " "
-       << args.nr_sc << " " << args.nr_clients << " "
-       << args.l_sleep << " " << args.mnc << " " << args.l_change << " ";
+  cout << t << " " << args.seed << " " << args.hash << " ";
 
   // The network load.
   cout << calculate_load(g) << " ";
