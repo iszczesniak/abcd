@@ -42,6 +42,10 @@ void stats::operator()(double t)
   // The probability of completing a connection.
   cout << ba::mean(cca) << endl;
 
+  // We reset the accumulators to get new means in the next interval.
+  cea = dbl_acc();
+  cca = dbl_acc();
+
   schedule(t);
 }
 
