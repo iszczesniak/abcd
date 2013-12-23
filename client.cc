@@ -5,12 +5,14 @@
 using namespace std;
 
 client::client(graph &g, pqueue &q, int id, boost::mt19937 &rng,
-               double l_sleep, double mnc, double l_change):
+               double l_sleep, double mnc, double l_change,
+               double mnsc):
   g(g), module(q), id(id), rng(rng),
   idle(true), nc_left(0),
   l_sleep(l_sleep), sd(l_sleep), sdg(rng, sd),
   l_change(l_change), cd(l_change), cdg(rng, cd),
-  mnc(mnc), nd(mnc), ndg(rng, nd),
+  mnc(mnc), ncd(mnc), ncdg(rng, ncd),
+  mnsc(mnsc), nscd(mnsc), nscdg(rng, nscd),
   conn(g), st(stats::get())
 {
 }
@@ -32,7 +34,7 @@ void client::operator()(double t)
       if (success)
         {
           idle = false;
-          nc_left = ndg();
+          nc_left = ncdg();
         }
     }
   else
@@ -82,7 +84,7 @@ bool client::set_up()
   // The demand end nodes.
   d.first = random_node_pair(g, rng);
   // The number of subcarriers the signal requires.
-  d.second = get_random_int(1, 3, rng);
+  d.second = nscdg();
 
   return conn.set_up(d);
 }

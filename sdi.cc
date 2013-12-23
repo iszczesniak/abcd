@@ -50,7 +50,8 @@ main(int argc, const char* argv[])
   for(int i = 0; i < args.nr_clients; ++i)
     {
       client *c = new client(g, q, i, gen,
-                             args.l_sleep, args.mnc, args.l_change);
+                             args.l_sleep, args.mnc, args.l_change,
+                             args.mnsc);
       c->schedule(0);
       vc.push_back(c);
     }

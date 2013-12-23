@@ -44,9 +44,15 @@ class client: public module
 
   // The distribution for the number of changes.
   double mnc;
-  boost::poisson_distribution<> nd;
+  boost::poisson_distribution<> ncd;
   boost::variate_generator<boost::mt19937 &,
-                           boost::poisson_distribution<> > ndg;
+                           boost::poisson_distribution<> > ncdg;
+
+  // The distribution for the number of subcarriers.
+  double mnsc;
+  boost::poisson_distribution<> nscd;
+  boost::variate_generator<boost::mt19937 &,
+                           boost::poisson_distribution<> > nscdg;
 
   // The connection.
   connection conn;
@@ -64,7 +70,7 @@ public:
    * between changes.
    */
   client(graph &g, pqueue &q, int id, boost::mt19937 &r,
-         double l_sleep, double mnc, double l_change);
+         double l_sleep, double mnc, double l_change, double mnsc);
   ~client();
 
   // Schedule the new event based on the current state of the client.
