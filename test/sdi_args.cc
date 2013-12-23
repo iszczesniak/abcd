@@ -24,6 +24,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_1)
                         "--l_sleep", "11",
                         "--mnc", "12",
                         "--l_change", "13",
+                        "--mnsc", "5",
                         "--hash", "blablabla"};
 
   int argc = sizeof(argv) / sizeof(char *);
@@ -39,6 +40,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_1)
   BOOST_CHECK_CLOSE(args.l_sleep, 11, 0.0001);
   BOOST_CHECK_CLOSE(args.mnc, 12, 0.0001);
   BOOST_CHECK_CLOSE(args.l_change, 13, 0.0001);
+  BOOST_CHECK_CLOSE(args.mnsc, 5, 0.0001);
 
   BOOST_CHECK(args.seed == 1);
 }
@@ -57,6 +59,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_2)
                         "--l_sleep", "11",
                         "--mnc", "12",
                         "--l_change", "13",
+                        "--mnsc", "5",
                         "--hash", "blablabla",
                         "--seed", "2"};
 

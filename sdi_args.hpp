@@ -33,6 +33,9 @@ struct sdi_args
   /// The lambda for the change.
   double l_change;
 
+  /// The mean number of the subcarriers
+  double mnsc;
+
   /// The seed
   int seed;
 

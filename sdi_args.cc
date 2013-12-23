@@ -39,6 +39,9 @@ process_sdi_args(int argc, const char *argv[])
         ("l_change", po::value<double>()->required(),
          "the lambda for the change time")
 
+        ("mnsc", po::value<double>()->required(),
+         "the mean number of subcarriers")
+
         ("seed", po::value<int>()->default_value(1),
          "the seed of the random number generator")
 
@@ -63,6 +66,7 @@ process_sdi_args(int argc, const char *argv[])
       result.l_sleep = vm["l_sleep"].as<double>();
       result.mnc = vm["mnc"].as<double>();
       result.l_change = vm["l_change"].as<double>();
+      result.mnsc = vm["mnsc"].as<double>();
       result.seed = vm["seed"].as<int>();
       result.hash = vm["hash"].as<string>();
     }
