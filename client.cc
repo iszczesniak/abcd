@@ -83,8 +83,8 @@ bool client::set_up()
   demand d;
   // The demand end nodes.
   d.first = random_node_pair(g, rng);
-  // The number of subcarriers the signal requires.
-  d.second = nscdg();
+  // The number of subcarriers the signal requires.  It's Poisson + 1.
+  d.second = nscdg() + 1;
 
   return conn.set_up(d);
 }
