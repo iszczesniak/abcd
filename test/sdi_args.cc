@@ -25,6 +25,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_1)
                         "--mnc", "12",
                         "--l_change", "13",
                         "--mnsc", "5",
+                        "--reconf", "part",
                         "--hash", "blablabla"};
 
   int argc = sizeof(argv) / sizeof(char *);
@@ -36,6 +37,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_1)
   BOOST_CHECK(args.nr_sc == 50);
   BOOST_CHECK(args.nr_clients == 100);
   BOOST_CHECK(args.hash == "blablabla");
+  BOOST_CHECK(args.reconf == connection::part);
 
   BOOST_CHECK_CLOSE(args.l_sleep, 11, 0.0001);
   BOOST_CHECK_CLOSE(args.mnc, 12, 0.0001);
@@ -60,6 +62,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_2)
                         "--mnc", "12",
                         "--l_change", "13",
                         "--mnsc", "5",
+                        "--reconf", "anew",
                         "--hash", "blablabla",
                         "--seed", "2"};
 
@@ -68,4 +71,5 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_2)
   sdi_args args = process_sdi_args(argc, argv);
 
   BOOST_CHECK(args.seed == 2);
+  BOOST_CHECK(args.reconf == connection::anew);
 }
