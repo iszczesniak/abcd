@@ -48,11 +48,11 @@ connection::reconfigure(vertex new_src)
 
   switch(reconf)
     {
-    part:
+    case part:
       status = reconfigure_part(new_src);
       break;
 
-    anew:
+    case anew:
       status = reconfigure_anew(new_src);
       break;
 
@@ -103,6 +103,30 @@ connection::reconfigure_part(vertex new_src)
 bool
 connection::reconfigure_anew(vertex new_src)
 {
+  // Store the existing sscpath, because we'll need it in case we fail
+  // to establish a new connection.
+  sscpath tmp = p;
+
+  // First we need to tear down the existing path.
+  tear_down();
+
+  // That's the new demand.
+  vertex dst = d.first.second;
+  demand nd(npair(new_src, dst), d.second);
+
+  // When searching for the new path, we allow all available
+  // subcarriers.
+  V2C2S r = dijkstra(g, nd);
+  p = shortest_path(g, r, nd);
+  bool status = !p.first.empty();
+
+  // If no new path has been found, revert to the old path.
+  if (!status)
+    p = tmp;
+
+  set_up_path(g, p);
+
+  return status;
 }
 
 void
