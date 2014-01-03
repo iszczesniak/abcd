@@ -1,6 +1,8 @@
 #include "connection.hpp"
 #include "dijkstra.hpp"
 
+connection::reconf_t connection::reconf;
+
 connection::connection(graph &g): g(g)
 {
 }
@@ -39,9 +41,31 @@ connection::set_up(const demand &d)
 bool
 connection::reconfigure(vertex new_src)
 {
+  bool status;
+
   // Make sure the connection is established.
   assert(is_established());
 
+  switch(reconf)
+    {
+    part:
+      status = reconfigure_part(new_src);
+      break;
+
+    anew:
+      status = reconfigure_anew(new_src);
+      break;
+
+    default:
+      assert(false);
+    }
+
+  return status;
+}
+
+bool
+connection::reconfigure_part(vertex new_src)
+{
   vertex old_src = d.first.first;
 
   // We search for the shortest path from new_src to old_src.  And we
@@ -76,10 +100,21 @@ connection::reconfigure(vertex new_src)
   return status;
 }
 
+bool
+connection::reconfigure_anew(vertex new_src)
+{
+}
+
 void
 connection::tear_down()
 {
   assert(is_established());
   tear_down_path(g, p);
   p = sscpath();
+}
+
+connection::reconf_t &
+connection::get_reconf()
+{
+  return reconf;
 }

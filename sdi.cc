@@ -40,6 +40,9 @@ main(int argc, const char* argv[])
   // The DES priority queue.
   pqueue q;
 
+  // Set how the connections should be reconfigured.
+  connection::get_reconf() = args.reconf;
+
   // The stats module.
   stats s(args, g, q);
 
