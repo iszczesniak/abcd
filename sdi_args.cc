@@ -1,6 +1,9 @@
 #include "sdi_args.hpp"
 #include "connection.hpp"
+
 #include <iostream>
+#include <map>
+
 #include <boost/program_options.hpp>
 
 using namespace std;
@@ -42,6 +45,9 @@ process_sdi_args(int argc, const char *argv[])
         ("mnsc", po::value<double>()->required(),
          "the mean number of subcarriers")
 
+        ("reconf", po::value<string>()->required(),
+         "the way connections should be reconfigured")
+
         ("seed", po::value<int>()->default_value(1),
          "the seed of the random number generator")
 
@@ -57,6 +63,8 @@ process_sdi_args(int argc, const char *argv[])
           exit(0);
         }
 
+      // If there is something wrong with parameters, we will get
+      // notified automatically and the program will exit.
       po::notify(vm);
 
       result.nr_nodes = vm["nodes"].as<int>();
@@ -69,6 +77,27 @@ process_sdi_args(int argc, const char *argv[])
       result.mnsc = vm["mnsc"].as<double>();
       result.seed = vm["seed"].as<int>();
       result.hash = vm["hash"].as<string>();
+
+      // We need to handle reconfiguration parameter.
+      string reconf = vm["reconf"].as<string>();
+      typedef map<string, connection::reconf_t> reconf_map_t;
+      map<string, connection::reconf_t> reconf_map;
+      reconf_map["part"] = connection::part;
+      reconf_map["anew"] = connection::anew;
+
+      reconf_map_t::iterator i = reconf_map.find(reconf);
+
+      if (i == reconf_map.end())
+        {
+          cerr << "Wrong reconf parameter.  Choose one from:";
+          for(reconf_map_t::iterator i = reconf_map.begin();
+              i != reconf_map.end(); ++i)
+            cerr << " " << i->first;
+          cerr << endl;
+          exit(1);
+        }
+
+      result.reconf = i->second;
     }
   catch(const std::exception& e)
     {

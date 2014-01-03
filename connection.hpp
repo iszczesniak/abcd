@@ -6,8 +6,11 @@
 // The type of the connection.
 class connection
 {
-  graph &g;
+public:
+  enum reconf_t {part, anew};
 
+private:
+  graph &g;
   demand d;
   sscpath p;
 

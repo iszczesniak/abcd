@@ -42,6 +42,9 @@ struct sdi_args
   /// The hash of all the parameters except the seed parameter.  It's
   /// used to identify the configuration of the simulation.
   string hash;
+
+  /// The way connections should be reconfigured.
+  connection::reconf_t reconf;
 };
 
 /**
