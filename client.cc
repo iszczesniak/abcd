@@ -92,7 +92,7 @@ bool client::set_up()
 bool client::reconfigure()
 {
   // We change the source node, and the destination node stays
-  // unchanged.  We chose the new source node from one of the
+  // unchanged.  We choose the new source node from one of the
   // neighbours of the current source node.
   vertex old_src = conn.get_demand().first.first;
 
