@@ -107,7 +107,8 @@ connection::reconfigure_anew(vertex new_src)
   // to establish a new connection.
   sscpath tmp = p;
 
-  // First we need to tear down the existing path.
+  // First we need to tear down the existing path.  We might need its
+  // subcarriers to establish a new connection.
   tear_down();
 
   // That's the new demand.
