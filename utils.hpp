@@ -140,7 +140,7 @@ path_to_string(typename boost::graph_traits<G>::vertex_descriptor i,
   if (i == j || boost::get(boost::vertex_predecessor, g, j)[i] != i)
     {
       int hops = 0;
-      typename boost::graph_traits<graph>::vertex_descriptor curr = i;
+      typename boost::graph_traits<G>::vertex_descriptor curr = i;
 
       str << ": " << boost::get(boost::vertex_name, g, i);
 
