@@ -84,6 +84,7 @@ process_sdi_args(int argc, const char *argv[])
       map<string, connection::reconf_t> reconf_map;
       reconf_map["part"] = connection::part;
       reconf_map["anew"] = connection::anew;
+      reconf_map["retrace"] = connection::retrace;
 
       reconf_map_t::iterator i = reconf_map.find(reconf);
 

@@ -7,7 +7,14 @@
 class connection
 {
 public:
-  enum reconf_t {part, anew};
+  // part - partial reconfiguration: establish a new connection
+  // between base stations
+
+  // anew - search for a completely new connection
+
+  // retrace - try to find the shortest path, first from the last node
+  // on the path, then from the previous to the last node, and so on.
+  enum reconf_t {part, anew, retrace};
 
 private:
   graph &g;

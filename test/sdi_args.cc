@@ -73,3 +73,28 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_2)
   BOOST_CHECK(args.seed == 2);
   BOOST_CHECK(args.reconf == connection::anew);
 }
+
+/*
+ * Test that the reconf argument "retrace" is recognized correctly.
+ */
+BOOST_AUTO_TEST_CASE(sdi_args_test_3)
+{
+  const char *argv[] = {"",
+                        "--nodes", "10",
+                        "--edges", "30",
+                        "--subcarriers", "50",
+                        "--clients", "100",
+                        "--l_sleep", "11",
+                        "--mnc", "12",
+                        "--l_change", "13",
+                        "--mnsc", "5",
+                        "--reconf", "retrace",
+                        "--hash", "blablabla",
+                        "--seed", "2"};
+
+  int argc = sizeof(argv) / sizeof(char *);
+
+  sdi_args args = process_sdi_args(argc, argv);
+
+  BOOST_CHECK(args.reconf == connection::retrace);
+}
