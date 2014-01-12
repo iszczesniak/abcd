@@ -139,7 +139,7 @@ connection::reconfigure_retrace(vertex new_src)
       V2C2S r = dijkstra(g, nd, p.second);
       // Additional path.
       sscpath ap = shortest_path(g, r, nd);
-      bool status = !ap.first.empty();
+      status = !ap.first.empty();
 
       if (status)
         {
