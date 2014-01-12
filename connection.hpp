@@ -33,6 +33,7 @@ public:
 private:
   bool reconfigure_part(vertex new_Src);  
   bool reconfigure_anew(vertex new_Src);
+  bool reconfigure_retrace(vertex new_Src);
 
   // The parameter that tells how to reconfigure connections.
   static reconf_t reconf;
