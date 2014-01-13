@@ -119,7 +119,10 @@ connection::reconfigure_retrace(vertex new_src)
   vertex int_src = d.first.first;
 
   // True if a path has been found.
-  bool status = false;
+  bool success = false;
+
+  // The additional path.
+  sscpath ap;
 
   // In every iteration of the loop we search for the shortest path
   // from new_src to int_src.  And we ask for exactly the very same
@@ -138,20 +141,11 @@ connection::reconfigure_retrace(vertex new_src)
       // SSC.
       V2C2S r = dijkstra(g, nd, p.second);
       // Additional path.
-      sscpath ap = shortest_path(g, r, nd);
-      status = !ap.first.empty();
+      ap = shortest_path(g, r, nd);
+      success = !ap.first.empty();
 
-      if (status)
-        {
-          // We want the SSC in the additional path to be the same as
-          // in the existing path.
-          assert(p.second == ap.second);
-          d.first.first = new_src;
-          p.first.insert(p.first.begin(),
-                         ap.first.begin(), ap.first.end());
-          // Break the look if the path has been found.
-          break;
-        }
+      if (success)
+        break;
 
       // If no success, take down the leading edge in the path, and
       // search again.
@@ -167,13 +161,28 @@ connection::reconfigure_retrace(vertex new_src)
       tear_down_path(g, sscpathttd);
     }
 
-  // If no new path has been found, revert to the old path.
-  if (!status)
+  // Tear down the connection or the rest of it, becasue we'll be
+  // establishing it again.
+  if (is_established())
+    tear_down_path(g, p);      
+
+  if (success)
+    {
+      // We want the SSC in the additional path to be the same as
+      // in the existing path.
+      assert(p.second == ap.second);
+      d.first.first = new_src;
+      p.first.insert(p.first.begin(),
+                     ap.first.begin(), ap.first.end());
+    }
+  else
     p = tmp;
 
   set_up_path(g, p);
 
-  return status;
+  assert(d.first.first == source(p.first.front(), g));
+
+  return success;
 }
 
 bool
@@ -197,8 +206,11 @@ connection::reconfigure_anew(vertex new_src)
   p = shortest_path(g, r, nd);
   bool status = !p.first.empty();
 
-  // If no new path has been found, revert to the old path.
-  if (!status)
+  if (status)
+    // Make it the new source.
+    d.first.first = new_src;
+  else
+    // If no new path has been found, revert to the old path.
     p = tmp;
 
   set_up_path(g, p);
