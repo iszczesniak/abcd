@@ -33,7 +33,8 @@ namespace boost {
 }
 
 /**
- * The type of the graph we use.
+ * The type of the graph we use.  The edge_ssc_t property describes
+ * the subcarriers available, i.e. not already taken.
  */
 typedef
 boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS,
