@@ -1,5 +1,5 @@
-#ifndef IJS_EVENT
-#define IJS_EVENT
+#ifndef EVENT_HPP
+#define EVENT_HPP
 
 #include <queue>
 
@@ -19,4 +19,4 @@ public:
 
 typedef std::priority_queue<event> pqueue;
 
-#endif
+#endif /* EVENT_HPP */

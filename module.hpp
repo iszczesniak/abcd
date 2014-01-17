@@ -1,5 +1,5 @@
-#ifndef IJS_MODULE
-#define IJS_MODULE
+#ifndef MODULE_HPP
+#define MODULE_HPP
 
 #include "event.hpp"
 
@@ -14,4 +14,4 @@ public:
   void schedule(double);
 };
 
-#endif
+#endif /* MODULE_HPP */
