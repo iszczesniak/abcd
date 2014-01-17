@@ -1,5 +1,5 @@
-#ifndef IJS_CLIENT
-#define IJS_CLIENT
+#ifndef CLIENT_HPP
+#define CLIENT_HPP
 
 #include "event.hpp"
 #include "connection.hpp"
@@ -86,4 +86,4 @@ private:
   void tear_down();
 };
 
-#endif
+#endif /* CLIENT_HPP */
