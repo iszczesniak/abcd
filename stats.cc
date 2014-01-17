@@ -1,3 +1,4 @@
+#include "client.hpp"
 #include "stats.hpp"
 #include "utils_netgen.hpp"
 
@@ -7,8 +8,9 @@ using namespace std;
 
 stats *stats::singleton;
 
-stats::stats(const sdi_args &args, const graph &g, pqueue &q):
-  args(args), g(g), module(q)
+stats::stats(const sdi_args &args, const graph &g, pqueue &q,
+             const std::vector<client *> &vc):
+  module(q), args(args), g(g), vc(vc)
 {
   assert(!singleton);
   singleton = this;
@@ -16,11 +18,15 @@ stats::stats(const sdi_args &args, const graph &g, pqueue &q):
 
   cout << "time seed hash "
     // the network load
-       << "load "
+       << "load" << " "
     // the probability of establishing a connection
-       << "estab "
+       << "estab" << " "
     // the probability of completing a connection
-       << "compl" << endl;
+       << "compl" << " "
+    // the number of currently supported connection
+       << "conns"
+    // That's it.  Thank you.
+       << endl;
 }
 
 stats *
@@ -38,13 +44,15 @@ void stats::operator()(double t)
 
   // The probability of establishing a connection.
   cout << ba::mean(cea) << " ";
+  // We reset the accumulator to get new means in the next interval.
+  cea = dbl_acc();
 
   // The probability of completing a connection.
-  cout << ba::mean(cca) << endl;
-
-  // We reset the accumulators to get new means in the next interval.
-  cea = dbl_acc();
+  cout << ba::mean(cca) << " ";
+  // We reset the accumulator to get new means in the next interval.
   cca = dbl_acc();
+
+  cout << calculate_conns() << endl;
 
   schedule(t);
 }
@@ -64,4 +72,19 @@ void stats::established(bool status)
 void stats::completed(bool status)
 {
   cca(status);
+}
+
+int stats::calculate_conns()
+{
+  int count = 0;
+
+  for(std::vector<client *>::const_iterator i = vc.begin();
+      i != vc.end(); ++i)
+    {
+      client *c = *i;
+      if (!c->is_idle())
+        ++count;
+    }
+
+  return count;
 }

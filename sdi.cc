@@ -43,11 +43,11 @@ main(int argc, const char* argv[])
   // Set how the connections should be reconfigured.
   connection::get_reconf() = args.reconf;
 
-  // The stats module.
-  stats s(args, g, q);
-
   // The list of clients.
   std::vector<client *> vc;
+
+  // The stats module.
+  stats s(args, g, q, vc);
 
   // Create the modules for the simulation.
   for(int i = 0; i < args.nr_clients; ++i)

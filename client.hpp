@@ -80,6 +80,9 @@ public:
   // Processes the event and changes the state of the client.
   void operator()(double t);
 
+  // Tell whether the client is idle.
+  bool is_idle();
+
 private:
   bool set_up();
   bool reconfigure();

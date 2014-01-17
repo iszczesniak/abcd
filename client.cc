@@ -107,3 +107,9 @@ bool client::reconfigure()
 
   return conn.reconfigure(new_src);
 }
+
+bool
+client::is_idle()
+{
+  return idle;
+}

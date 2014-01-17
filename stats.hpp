@@ -7,10 +7,14 @@
 #include "module.hpp"
 #include "sdi_args.hpp"
 
+#include <vector>
+
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
 
 namespace ba = boost::accumulators;
+
+class client;
 
 class stats: public module
 {
@@ -19,6 +23,9 @@ class stats: public module
   
   // The graph the stats operates on.
   const graph &g;
+
+  // Vector of clients.
+  const std::vector<client *> &vc;
 
   // The accumulator with double values.
   typedef ba::accumulator_set<double, ba::stats<ba::tag::mean> > dbl_acc;
@@ -33,7 +40,8 @@ class stats: public module
   sdi_args args;
 
 public:
-  stats(const sdi_args &args, const graph &g, pqueue &q);
+  stats(const sdi_args &args, const graph &g, pqueue &q,
+        const std::vector<client *> &vc);
   static stats *get();
   void schedule(double t);
   void operator()(double t);
@@ -45,6 +53,9 @@ public:
 
   // True if the connection was completed successfully.
   void completed(bool status);
+
+private:
+  int calculate_conns();
 };
 
 #endif
