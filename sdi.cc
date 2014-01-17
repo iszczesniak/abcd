@@ -47,7 +47,7 @@ main(int argc, const char* argv[])
   stats s(args, g, q);
 
   // The list of clients.
-  std::vector<module *> vc;
+  std::vector<client *> vc;
 
   // Create the modules for the simulation.
   for(int i = 0; i < args.nr_clients; ++i)
@@ -70,7 +70,7 @@ main(int argc, const char* argv[])
     }
 
   // Delete the clients.
-  for(std::vector<module *>::const_iterator i = vc.begin();
+  for(std::vector<client *>::const_iterator i = vc.begin();
       i != vc.end(); ++i)
     delete *i;
 }
