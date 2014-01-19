@@ -9,15 +9,13 @@
 
 using namespace std;
 
-typedef map<CEP, vertex> pqueue;
-
 /**
  * Check whether there is a better or equal result in c2s than the new
  * result, i.e. of a lower or equal cost and with a SSC that includes
  * "ssc".
  */
 bool
-has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
+dijkstra::has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
 {
   // We examine the existing results with the cost lower or equal to
   // "cost".
