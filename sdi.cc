@@ -37,6 +37,9 @@ main(int argc, const char* argv[])
   // The number of subcarriers for each edge.
   set_subcarriers(g, args.nr_sc);
 
+  // The distance for each edge.
+  set_distances(g, 50, 300, gen);
+
   // The DES priority queue.
   pqueue q;
 
