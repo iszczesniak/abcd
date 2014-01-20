@@ -419,6 +419,17 @@ dijkstra::select_fitest(const SSSC &sssc, int nsc)
 {
   SSC ssc;
 
+  for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
+    {
+      SSC tmp_ssc = select_fitest(*i, nsc);
+
+      if (ssc.empty())
+        ssc = tmp_ssc;
+      else
+        if (tmp_ssc.size() < ssc.size())
+          ssc = tmp_ssc;
+    }
+
   return ssc;
 }
 
@@ -426,6 +437,23 @@ SSC
 dijkstra::select_fitest(const SSC &ssc, int nsc)
 {
   SSC result;
+
+  SSSC sssc = split(ssc);
+
+  for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
+    {
+      const SSC &tmp = *i;
+
+      // We only case about those fragments that can handle nsc.
+      if (tmp.size() >= nsc)
+        {
+          if (result.empty())
+            result = tmp;
+          else
+            if (tmp.size() < result.size())
+              result = tmp;
+        }
+    }
 
   return result;
 }
