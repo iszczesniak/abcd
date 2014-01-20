@@ -358,3 +358,9 @@ dijkstra::tear_down_path(graph &g, const sscpath &p)
       include(e_ssc, p_ssc);
     }
 }
+
+select_t &
+dijkstra::get_select()
+{
+  return select;
+}

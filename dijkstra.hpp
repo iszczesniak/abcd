@@ -53,6 +53,12 @@ public:
   static void
   tear_down_path(graph &g, const sscpath &p);
 
+  /**
+   * Return reference to the select field.
+   */
+  static select_t &
+  get_select();
+
 private:
   /**
    * Check whether there is a better or equal result in c2s than the
