@@ -386,7 +386,7 @@ dijkstra::select_first(const SSSC &sssc, int nsc)
 
   for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
     {
-      tmp_ssc = select_first(*i);
+      SSC tmp_ssc = select_first(*i, nsc);
 
       if (ssc.empty())
         ssc = tmp_ssc;
@@ -401,9 +401,9 @@ dijkstra::select_first(const SSSC &sssc, int nsc)
 SSC
 dijkstra::select_first(const SSC &ssc, int nsc)
 {
-  SSC ssc;
+  SSC result;
 
-  return ssc;
+  return result;
 }
 
 SSC
@@ -417,7 +417,7 @@ dijkstra::select_fitest(const SSSC &sssc, int nsc)
 SSC
 dijkstra::select_fitest(const SSC &ssc, int nsc)
 {
-  SSC ssc;
+  SSC result;
 
-  return ssc;
+  return result;
 }
