@@ -167,7 +167,7 @@ calculate_fragments(const SSC &ssc)
     fragments = ssc.size();
   else
     {  
-      int fragments = 1;
+      fragments = 1;
 
       SSC::const_iterator i = ssc.begin();
       SSC::const_iterator j = ssc.end();
