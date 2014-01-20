@@ -83,6 +83,24 @@ private:
   static void
   relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v,
          const SSSC &sssc);
+
+  // From the given SSSC, select the SSC according to the select
+  // field.
+  static SSC
+  select_ssc(const SSSC &sssc, int nsc);
+
+  // Select the ssc with the lowest subcarrier numbers.
+  static SSC
+  select_first(const SSSC &sssc, int nsc);
+  static SSC
+  select_first(const SSC &ssc, int nsc);
+
+  // Select the fitest subcarriers, i.e. the smallest subcarrier
+  // fragment that fits the required subcarriers.
+  static SSC
+  select_fitest(const SSSC &sssc, int nsc);
+  static SSC
+  select_fitest(const SSC &ssc, int nsc);
 };
 
 #endif /* DIJKSTRA_HPP */
