@@ -9,7 +9,7 @@
 
 using namespace std;
 
-dijkstra::select_t dijkstra::select;
+dijkstra::select_t dijkstra::select = dijkstra::first;
 
 /**
  * Check whether there is a better or equal result in c2s than the new
@@ -267,10 +267,9 @@ dijkstra::trace(const graph &g, const V2C2S &r, const demand &d)
           COST c = bri->first.first;
 
           // This is the path SSC.
-          assert(!(bri->second.empty()));
-          const SSC &p_ssc = *(bri->second.begin());
+          const SSC ssc = select_ssc(bri->second, nsc);
           // And we remember this as the final result.
-          p.second = p_ssc;
+          p.second = ssc;
 
           // We start with the destination node.
           vertex crt = dst;
@@ -284,7 +283,7 @@ dijkstra::trace(const graph &g, const V2C2S &r, const demand &d)
               // contains SSC.
               C2S::const_iterator j;
               for(j = c2s.begin(); j != c2s.end(); ++j)
-                if (j->first.first == c && includes(j->second, p_ssc))
+                if (j->first.first == c && includes(j->second, ssc))
                   break;
 
               // Make sure we found the right CEP.
@@ -303,17 +302,6 @@ dijkstra::trace(const graph &g, const V2C2S &r, const demand &d)
           // by now, should be 0.
           assert(c.first == 0);
           assert(c.second == 0);
-
-          // This is the largest set that can support the demand.
-          SSC &ssc = p.second;
-
-          // We select the first sc subcarriers from ssc.
-          assert(ssc.size() >= nsc);
-          SSC::iterator ssc_i = ssc.begin();
-          advance(ssc_i, nsc);
-          ssc.erase(ssc_i, ssc.end());
-          ssc = exclude(ssc, nsc);
-          assert(!ssc.empty());
         }
     }
 
@@ -365,4 +353,71 @@ dijkstra::select_t &
 dijkstra::get_select()
 {
   return select;
+}
+
+SSC
+dijkstra::select_ssc(const SSSC &sssc, int nsc)
+{
+  // This is the selected set.
+  SSC ssc;
+
+  switch(select)
+      {
+      case first:
+        ssc = select_first(sssc, nsc);
+        break;
+
+      case fitest:
+        ssc = select_fitest(sssc, nsc);
+        break;
+
+      default:
+        assert(false);
+      }
+
+  assert(!ssc.empty());
+  return ssc;
+}
+
+SSC
+dijkstra::select_first(const SSSC &sssc, int nsc)
+{
+  SSC ssc;
+
+  for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
+    {
+      tmp_ssc = select_first(*i);
+
+      if (ssc.empty())
+        ssc = tmp_ssc;
+      else
+        if (*tmp_ssc.begin() < *ssc.begin())
+          ssc = tmp_ssc;
+    }
+
+  return ssc;
+}
+
+SSC
+dijkstra::select_first(const SSC &ssc, int nsc)
+{
+  SSC ssc;
+
+  return ssc;
+}
+
+SSC
+dijkstra::select_fitest(const SSSC &sssc, int nsc)
+{
+  SSC ssc;
+
+  return ssc;
+}
+
+SSC
+dijkstra::select_fitest(const SSC &ssc, int nsc)
+{
+  SSC ssc;
+
+  return ssc;
 }
