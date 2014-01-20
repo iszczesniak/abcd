@@ -403,6 +403,14 @@ dijkstra::select_first(const SSC &ssc, int nsc)
 {
   SSC result;
 
+  assert(ssc.size() >= nsc);
+  // At the beginning there is the smallest number, and we want that.
+  SSC::const_iterator fin = ssc.begin();
+  advance(fin, nsc);
+  result.insert(ssc.begin(), fin);
+  // We want contiguous subcarriers.
+  assert(split(result).size() == 1);
+
   return result;
 }
 
