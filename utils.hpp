@@ -330,6 +330,9 @@ calculate_load(const G &g)
   return ba::mean(load_acc);
 }
 
+SSSC
+split(const SSC &ssc);
+
 int
 calculate_fragments(const SSC &ssc);
 

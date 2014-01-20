@@ -104,4 +104,19 @@ BOOST_AUTO_TEST_CASE(calculate_fragments_test)
 
   ssc.insert(6);
   BOOST_CHECK(calculate_fragments(ssc) == 3);
+
+  SSSC sssc = split(ssc);
+  BOOST_CHECK(sssc.size() == 3);
+  SSSC::iterator i = sssc.begin();
+  BOOST_CHECK(i->size() == 2);
+  BOOST_CHECK(*(i->begin()) == 0);
+  BOOST_CHECK(*(++(i->begin())) == 1);
+  ++i;
+  BOOST_CHECK(i->size() == 1);
+  BOOST_CHECK(*(i->begin()) == 3);
+  BOOST_CHECK(*(++(i->begin())) == 1);
+  ++i;
+  BOOST_CHECK(i->size() == 2);
+  BOOST_CHECK(*(i->begin()) == 5);
+  BOOST_CHECK(*(++(i->begin())) == 6);
 }
