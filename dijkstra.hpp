@@ -7,15 +7,16 @@
 
 class dijkstra
 {
+public:
   // first - the first subcarriers that fit the demand are chosen
 
   // smallest - the smallest set of contiguous subcarriers are chosen
 
   enum select_t {first, smallest};
-
-  typedef std::map<CEP, vertex> pqueue;
-
   static select_t select;
+
+private:
+  typedef std::map<CEP, vertex> pqueue;
 
 public:
   /**

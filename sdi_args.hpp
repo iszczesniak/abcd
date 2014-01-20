@@ -2,6 +2,7 @@
 #define SDI_ARGS_HPP
 
 #include "connection.hpp"
+#include "dijkstra.hpp"
 #include <string>
 
 using namespace std;
@@ -42,6 +43,9 @@ struct sdi_args
   /// The hash of all the parameters except the seed parameter.  It's
   /// used to identify the configuration of the simulation.
   string hash;
+
+  /// The way to select subcarriers.
+  dijkstra::select_t select;
 
   /// The way connections should be reconfigured.
   connection::reconf_t reconf;

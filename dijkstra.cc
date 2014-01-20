@@ -9,6 +9,8 @@
 
 using namespace std;
 
+dijkstra::select_t dijkstra::select;
+
 /**
  * Check whether there is a better or equal result in c2s than the new
  * result, i.e. of a lower or equal cost and with a SSC that includes
@@ -359,7 +361,7 @@ dijkstra::tear_down_path(graph &g, const sscpath &p)
     }
 }
 
-select_t &
+dijkstra::select_t &
 dijkstra::get_select()
 {
   return select;
