@@ -13,6 +13,8 @@ class dijkstra
 
   typedef map<CEP, vertex> pqueue;
 
+  static select_t select;
+
 public:
   /**
    * Find the shortest path in graph g for demand d.  We start the
