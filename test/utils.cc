@@ -84,3 +84,24 @@ BOOST_AUTO_TEST_CASE(get_random_int_test)
 	BOOST_CHECK(0 <= n && n <= j);
       }
 }
+
+BOOST_AUTO_TEST_CASE(calculate_fragments_test)
+{
+  SSC ssc;
+  BOOST_CHECK(calculate_fragments(ssc) == 0);
+
+  ssc.insert(0);
+  BOOST_CHECK(calculate_fragments(ssc) == 1);
+
+  ssc.insert(1);
+  BOOST_CHECK(calculate_fragments(ssc) == 1);
+
+  ssc.insert(3);
+  BOOST_CHECK(calculate_fragments(ssc) == 2);
+
+  ssc.insert(5);
+  BOOST_CHECK(calculate_fragments(ssc) == 3);
+
+  ssc.insert(6);
+  BOOST_CHECK(calculate_fragments(ssc) == 3);
+}

@@ -157,3 +157,31 @@ get_components(const graph &g)
 
   return l;
 }
+
+int
+calculate_fragments(const SSC &ssc)
+{
+  int fragments;
+
+  if (ssc.size() <= 1)
+    fragments = ssc.size();
+  else
+    {  
+      int fragments = 1;
+
+      SSC::const_iterator i = ssc.begin();
+      SSC::const_iterator j = ssc.end();
+      --j;
+
+      do
+        {
+          int v1 = *i;
+          ++i;
+          int v2 = *i;
+          if (v1 + 1 != v2)
+            ++fragments;
+        } while(i != j);
+    }
+
+  return fragments;
+}

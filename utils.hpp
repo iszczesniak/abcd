@@ -330,4 +330,7 @@ calculate_load(const G &g)
   return ba::mean(load_acc);
 }
 
+int
+calculate_fragments(const SSC &ssc);
+
 #endif /* UTILS_HPP */
