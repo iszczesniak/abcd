@@ -28,12 +28,12 @@ connection::set_up(const demand &d)
   this->d = d;
 
   // We allow to allocate the signal on any of the subcarriers.
-  V2C2S r = dijkstra(g, d);
-  p = shortest_path(g, r, d);
+  V2C2S r = dijkstra::search(g, d);
+  p = dijkstra::trace(g, r, d);
   bool success = is_established();
 
   if (success)
-    set_up_path(g, p);
+    dijkstra::set_up_path(g, p);
 
   return success;
 }
@@ -88,9 +88,9 @@ connection::reconfigure_part(vertex new_src)
   // what SSC is available at the start, which is the SSC of an
   // existing path.  Together with the number of required subcarriers,
   // we search the path that has exactly the required SSC.
-  V2C2S r = dijkstra(g, nd, p.second);
+  V2C2S r = dijkstra::search(g, nd, p.second);
   // Additional path.
-  sscpath ap = shortest_path(g, r, nd);
+  sscpath ap = dijkstra::trace(g, r, nd);
   bool status = !ap.first.empty();
 
   // Set up the extra part and modify the list.
@@ -102,7 +102,7 @@ connection::reconfigure_part(vertex new_src)
       d.first.first = new_src;
       p.first.insert(p.first.begin(),
                      ap.first.begin(), ap.first.end());
-      set_up_path(g, ap);
+      dijkstra::set_up_path(g, ap);
     }
 
   return status;
@@ -139,9 +139,9 @@ connection::reconfigure_retrace(vertex new_src)
       // existing path.  Together with the number of required
       // subcarriers, we search the path that has exactly the required
       // SSC.
-      V2C2S r = dijkstra(g, nd, p.second);
+      V2C2S r = dijkstra::search(g, nd, p.second);
       // Additional path.
-      ap = shortest_path(g, r, nd);
+      ap = dijkstra::trace(g, r, nd);
       success = !ap.first.empty();
 
       if (success)
@@ -158,13 +158,13 @@ connection::reconfigure_retrace(vertex new_src)
       sscpath sscpathttd;
       sscpathttd.first.push_back(ettd);
       sscpathttd.second = p.second;
-      tear_down_path(g, sscpathttd);
+      dijkstra::tear_down_path(g, sscpathttd);
     }
 
   // Tear down the connection or the rest of it, becasue we'll be
   // establishing it again.
   if (is_established())
-    tear_down_path(g, p);      
+    dijkstra::tear_down_path(g, p);
 
   if (success)
     {
@@ -178,7 +178,7 @@ connection::reconfigure_retrace(vertex new_src)
   else
     p = tmp;
 
-  set_up_path(g, p);
+  dijkstra::set_up_path(g, p);
 
   assert(d.first.first == source(p.first.front(), g));
 
@@ -202,8 +202,8 @@ connection::reconfigure_anew(vertex new_src)
 
   // When searching for the new path, we allow all available
   // subcarriers.
-  V2C2S r = dijkstra(g, nd);
-  p = shortest_path(g, r, nd);
+  V2C2S r = dijkstra::search(g, nd);
+  p = dijkstra::trace(g, r, nd);
   bool status = !p.first.empty();
 
   if (status)
@@ -213,7 +213,7 @@ connection::reconfigure_anew(vertex new_src)
     // If no new path has been found, revert to the old path.
     p = tmp;
 
-  set_up_path(g, p);
+  dijkstra::set_up_path(g, p);
 
   return status;
 }
@@ -222,7 +222,7 @@ void
 connection::tear_down()
 {
   assert(is_established());
-  tear_down_path(g, p);
+  dijkstra::tear_down_path(g, p);
   p = sscpath();
 }
 

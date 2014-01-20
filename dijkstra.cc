@@ -41,7 +41,7 @@ dijkstra::has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
  * larger or equal cost and with a SSC that is included in "ssc".
  */
 void
-purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc)
+dijkstra::purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc)
 {
   // We examine existing results with the cost larger or equal to "cost".
   C2S::iterator i = c2s.begin();
@@ -75,7 +75,8 @@ purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc)
 }
 
 void
-relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v, const SSC &ssc)
+dijkstra::relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v,
+                 const SSC &ssc)
 {
   // Check whether there is an SSC in c2s that includes c_ssc at the
   // same or lower cost then c_cep.  If yes, then we can ignore this
@@ -94,14 +95,15 @@ relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v, const SSC &ssc)
 }
 
 void
-relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v, const SSSC &sssc)
+dijkstra::relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v,
+                 const SSSC &sssc)
 {
   for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
     relaks(q, c2s, cep, v, *i);
 }
 
 V2C2S
-dijkstra(const graph &g, const demand &d)
+dijkstra::search(const graph &g, const demand &d)
 {
   SSC ssc;
   vertex src = d.first.first;
@@ -119,11 +121,11 @@ dijkstra(const graph &g, const demand &d)
       include(ssc, e_ssc);
     }
 
-  return dijkstra(g, d, ssc);
+  return search(g, d, ssc);
 }
 
 V2C2S
-dijkstra(const graph &g, const demand &d, const SSC &src_ssc)
+dijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
 {
   V2C2S r;
 
@@ -236,7 +238,7 @@ dijkstra(const graph &g, const demand &d, const SSC &src_ssc)
 }
 
 sscpath
-shortest_path(const graph &g, const V2C2S &r, const demand &d)
+dijkstra::trace(const graph &g, const V2C2S &r, const demand &d)
 {
   sscpath p;
 
@@ -317,7 +319,7 @@ shortest_path(const graph &g, const V2C2S &r, const demand &d)
 }
 
 void
-set_up_path(graph &g, const sscpath &p)
+dijkstra::set_up_path(graph &g, const sscpath &p)
 {
   const path &l = p.first;
   const SSC &p_ssc = p.second;
@@ -337,7 +339,7 @@ set_up_path(graph &g, const sscpath &p)
 }
 
 void
-tear_down_path(graph &g, const sscpath &p)
+dijkstra::tear_down_path(graph &g, const sscpath &p)
 {
   const path &l = p.first;
   const SSC &p_ssc = p.second;
