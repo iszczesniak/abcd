@@ -12,7 +12,7 @@ public:
 
   // smallest - the smallest set of contiguous subcarriers are chosen
 
-  enum select_t {first, smallest};
+  enum select_t {first, fitest};
   static select_t select;
 
 private:

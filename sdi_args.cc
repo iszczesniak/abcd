@@ -9,6 +9,55 @@
 using namespace std;
 namespace po = boost::program_options;
 
+// Handles the reconf parameter.
+connection::reconf_t
+reconf_interpret(const string &reconf)
+{
+  typedef map<string, connection::reconf_t> reconf_map_t;
+  reconf_map_t reconf_map;
+  reconf_map["part"] = connection::part;
+  reconf_map["anew"] = connection::anew;
+  reconf_map["retrace"] = connection::retrace;
+
+  reconf_map_t::iterator i = reconf_map.find(reconf);
+
+  if (i == reconf_map.end())
+    {
+      cerr << "Wrong value of reconf.  Choose one from:";
+      for(reconf_map_t::iterator i = reconf_map.begin();
+          i != reconf_map.end(); ++i)
+        cerr << " " << i->first;
+      cerr << endl;
+      exit(1);
+    }
+
+  return i->second;
+}
+
+// Handles the select parameter.
+dijkstra::select_t
+select_interpret(const string &select)
+{
+  typedef map<string, dijkstra::select_t> select_map_t;
+  map<string, dijkstra::select_t> select_map;
+  select_map["first"] = dijkstra::first;
+  select_map["fitest"] = dijkstra::fitest;
+
+  select_map_t::iterator i = select_map.find(select);
+
+  if (i == select_map.end())
+    {
+      cerr << "Wrong value of select.  Choose one from:";
+      for(select_map_t::iterator i = select_map.begin();
+          i != select_map.end(); ++i)
+        cerr << " " << i->first;
+      cerr << endl;
+      exit(1);
+    }
+
+  return i->second;
+}
+
 sdi_args
 process_sdi_args(int argc, const char *argv[])
 {
@@ -48,6 +97,9 @@ process_sdi_args(int argc, const char *argv[])
         ("reconf", po::value<string>()->required(),
          "the way connections should be reconfigured")
 
+        ("select", po::value<string>()->required(),
+         "the way subcarriers should be selected")
+
         ("seed", po::value<int>()->default_value(1),
          "the seed of the random number generator")
 
@@ -77,28 +129,8 @@ process_sdi_args(int argc, const char *argv[])
       result.mnsc = vm["mnsc"].as<double>();
       result.seed = vm["seed"].as<int>();
       result.hash = vm["hash"].as<string>();
-
-      // We need to handle reconfiguration parameter.
-      string reconf = vm["reconf"].as<string>();
-      typedef map<string, connection::reconf_t> reconf_map_t;
-      map<string, connection::reconf_t> reconf_map;
-      reconf_map["part"] = connection::part;
-      reconf_map["anew"] = connection::anew;
-      reconf_map["retrace"] = connection::retrace;
-
-      reconf_map_t::iterator i = reconf_map.find(reconf);
-
-      if (i == reconf_map.end())
-        {
-          cerr << "Wrong reconf parameter.  Choose one from:";
-          for(reconf_map_t::iterator i = reconf_map.begin();
-              i != reconf_map.end(); ++i)
-            cerr << " " << i->first;
-          cerr << endl;
-          exit(1);
-        }
-
-      result.reconf = i->second;
+      result.reconf = reconf_interpret(vm["reconf"].as<string>());
+      result.select = select_interpret(vm["select"].as<string>());
     }
   catch(const std::exception& e)
     {
