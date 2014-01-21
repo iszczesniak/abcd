@@ -55,7 +55,13 @@ public:
   void completed(bool status);
 
 private:
-  int calculate_conns();
+  // Calculate the number of currently active clients.
+  int
+  calculate_conns();
+
+  // Calculate the average number of fragments on a link.
+  double
+  calculate_frags();
 };
 
 #endif
