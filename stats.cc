@@ -103,7 +103,7 @@ stats::calculate_frags()
   dbl_acc frags;
 
   // Iterate over all edges.
-  typename boost::graph_traits<graph>::edge_iterator ei, ee;
+  boost::graph_traits<graph>::edge_iterator ei, ee;
   for (tie(ei, ee) = boost::edges(g); ei != ee; ++ei)
     {
       const edge e = *ei;
