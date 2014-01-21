@@ -60,6 +60,13 @@ public:
   static select_t &
   get_select();
 
+  // From the given SSSC, select the SSC according to the "select"
+  // field of the class.  The returned SSC has exactly nsc
+  // subcarriers, even though the chosen contiguous fragment from SSSC
+  // had more subcarriers.
+  static SSC
+  select_ssc(const SSSC &sssc, int nsc);
+
 private:
   /**
    * Check whether there is a better or equal result in c2s than the
@@ -84,21 +91,29 @@ private:
   relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v,
          const SSSC &sssc);
 
-  // From the given SSSC, select the SSC according to the select
-  // field.
-  static SSC
-  select_ssc(const SSSC &sssc, int nsc);
-
-  // Select the ssc with the lowest subcarrier numbers.
+  // Select a contiguous ssc with the lowest subcarrier numbers from
+  // SSSC.  It returns the whole available fragment, i.e. it can have
+  // more subcarriers than nsc.
   static SSC
   select_first(const SSSC &sssc, int nsc);
+
+  // Select a contiguous ssc with the lowest subcarrier numbers from
+  // SSC.  It returns the whole available fragment, i.e. it can have
+  // more subcarriers than nsc.
   static SSC
   select_first(const SSC &ssc, int nsc);
 
   // Select the fitest subcarriers, i.e. the smallest subcarrier
-  // fragment that fits the required subcarriers.
+  // fragment that fits the required subcarriers from SSSC.  It
+  // returns the whole available fragment, i.e. it can have more
+  // subcarriers than nsc.
   static SSC
   select_fitest(const SSSC &sssc, int nsc);
+
+  // Select the fitest subcarriers, i.e. the smallest subcarrier
+  // fragment from SSC that fits the required number of subcarriers.
+  // It returns the whole available fragment, i.e. it can have more
+  // subcarriers than nsc.
   static SSC
   select_fitest(const SSC &ssc, int nsc);
 };

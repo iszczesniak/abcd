@@ -296,3 +296,37 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_7)
   BOOST_CHECK(result[dst].begin()->first.first.first == 1);
   BOOST_CHECK(result[dst].begin()->first.second == e2);
 }
+
+BOOST_AUTO_TEST_CASE(select_test)
+{
+  SSC ssc1, ssc2;
+
+  ssc1.insert(1);
+  ssc1.insert(2);
+  ssc1.insert(3);
+  ssc1.insert(5);
+  ssc1.insert(6);
+
+  ssc2.insert(1);
+  ssc2.insert(2);
+  ssc2.insert(3);
+  ssc2.insert(7);
+
+  SSSC sssc;
+  sssc.insert(ssc1);
+  sssc.insert(ssc2);
+
+  {
+    dijkstra::get_select() = dijkstra::first;
+    SSC ssc = dijkstra::select_ssc(sssc, 1);
+    BOOST_CHECK(ssc.size() == 1);
+    BOOST_CHECK(*(ssc.begin()) == 1);
+  }
+
+  {
+    dijkstra::get_select() = dijkstra::fitest;
+    SSC ssc = dijkstra::select_ssc(sssc, 1);
+    BOOST_CHECK(ssc.size() == 1);
+    BOOST_CHECK(*(ssc.begin()) == 7);
+  }
+}
