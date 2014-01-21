@@ -17,6 +17,7 @@
 BOOST_AUTO_TEST_CASE(sdi_args_test_1)
 {
   const char *argv[] = {"",
+                        "--network", "random",
                         "--nodes", "10",
                         "--edges", "30",
                         "--subcarriers", "50",
@@ -56,6 +57,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_1)
 BOOST_AUTO_TEST_CASE(sdi_args_test_2)
 {
   const char *argv[] = {"",
+                        "--network", "random",
                         "--nodes", "10",
                         "--edges", "30",
                         "--subcarriers", "50",
@@ -84,6 +86,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_2)
 BOOST_AUTO_TEST_CASE(sdi_args_test_3)
 {
   const char *argv[] = {"",
+                        "--network", "random",
                         "--nodes", "10",
                         "--edges", "30",
                         "--subcarriers", "50",
