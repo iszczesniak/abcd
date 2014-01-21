@@ -70,6 +70,9 @@ process_sdi_args(int argc, const char *argv[])
       opts.add_options()
         ("help,h", "produce help message")
 
+        ("network", po::value<string>()->required(),
+         "the network type")
+
         ("nodes", po::value<int>()->required(),
          "the number of nodes to generate")
 
