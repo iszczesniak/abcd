@@ -304,13 +304,21 @@ BOOST_AUTO_TEST_CASE(select_test)
   ssc1.insert(1);
   ssc1.insert(2);
   ssc1.insert(3);
+  ssc1.insert(4);
+
   ssc1.insert(5);
   ssc1.insert(6);
+  ssc1.insert(7);
+  ssc1.insert(8);
 
+  ssc2.insert(0);
   ssc2.insert(1);
   ssc2.insert(2);
   ssc2.insert(3);
+
   ssc2.insert(7);
+  ssc2.insert(8);
+  ssc2.insert(9);
 
   SSSC sssc;
   sssc.insert(ssc1);
@@ -318,15 +326,17 @@ BOOST_AUTO_TEST_CASE(select_test)
 
   {
     dijkstra::get_select() = dijkstra::first;
-    SSC ssc = dijkstra::select_ssc(sssc, 1);
-    BOOST_CHECK(ssc.size() == 1);
-    BOOST_CHECK(*(ssc.begin()) == 1);
+    SSC ssc = dijkstra::select_ssc(sssc, 2);
+    BOOST_CHECK(ssc.size() == 2);
+    BOOST_CHECK(*(ssc.begin()) == 0);
+    BOOST_CHECK(*(++ssc.begin()) == 1);
   }
 
   {
     dijkstra::get_select() = dijkstra::fitest;
-    SSC ssc = dijkstra::select_ssc(sssc, 1);
-    BOOST_CHECK(ssc.size() == 1);
+    SSC ssc = dijkstra::select_ssc(sssc, 2);
+    BOOST_CHECK(ssc.size() == 2);
     BOOST_CHECK(*(ssc.begin()) == 7);
+    BOOST_CHECK(*(++ssc.begin()) == 8);
   }
 }

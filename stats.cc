@@ -24,7 +24,9 @@ stats::stats(const sdi_args &args, const graph &g, pqueue &q,
     // the probability of completing a connection
        << "compl" << " "
     // the number of currently supported connection
-       << "conns"
+       << "conns" << " "
+    // the mean number of fragments on a link
+       << "frags"
     // That's it.  Thank you.
        << endl;
 }
@@ -35,7 +37,8 @@ stats::get()
   return singleton;
 }
 
-void stats::operator()(double t)
+void
+stats::operator()(double t)
 {
   cout << t << " " << args.seed << " " << args.hash << " ";
 
@@ -52,29 +55,34 @@ void stats::operator()(double t)
   // We reset the accumulator to get new means in the next interval.
   cca = dbl_acc();
 
-  cout << calculate_conns() << endl;
+  cout << calculate_conns() << " ";
+  cout << calculate_frags() << endl;
 
   schedule(t);
 }
 
 // Schedule the next event based on the current time 0.
-void stats::schedule(double t)
+void
+stats::schedule(double t)
 {
   // We call the stats every second.
   module::schedule(t + 1);
 }
 
-void stats::established(bool status)
+void
+stats::established(bool status)
 {
   cea(status);
 }
 
-void stats::completed(bool status)
+void
+stats::completed(bool status)
 {
   cca(status);
 }
 
-int stats::calculate_conns()
+int
+stats::calculate_conns()
 {
   int count = 0;
 
@@ -87,4 +95,22 @@ int stats::calculate_conns()
     }
 
   return count;
+}
+
+double
+stats::calculate_frags()
+{
+  dbl_acc frags;
+
+  // Iterate over all edges.
+  typename boost::graph_traits<graph>::edge_iterator ei, ee;
+  for (tie(ei, ee) = boost::edges(g); ei != ee; ++ei)
+    {
+      const edge e = *ei;
+      const SSC &ssc = boost::get(boost::edge_ssc, g, e);
+      int f = calculate_fragments(ssc);
+      frags(f);
+    }
+
+  return ba::mean(frags);
 }

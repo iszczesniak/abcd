@@ -375,7 +375,13 @@ dijkstra::select_ssc(const SSSC &sssc, int nsc)
         assert(false);
       }
 
-  assert(!ssc.empty());
+  // Now in ssc we have got a fragment that has at least nsc
+  // subcarriers, but most likely it has more.  We need to select
+  // exactly nsc subcarriers.
+  SSC::const_iterator fin = ssc.begin();
+  advance(fin, nsc);
+  ssc.erase(fin, ssc.end());
+
   return ssc;
 }
 
@@ -403,13 +409,19 @@ dijkstra::select_first(const SSC &ssc, int nsc)
 {
   SSC result;
 
-  assert(ssc.size() >= nsc);
-  // At the beginning there is the smallest number, and we want that.
-  SSC::const_iterator fin = ssc.begin();
-  advance(fin, nsc);
-  result.insert(ssc.begin(), fin);
-  // We want contiguous subcarriers.
-  assert(split(result).size() == 1);
+  SSSC sssc = split(ssc);
+
+  for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
+    {
+      const SSC &tmp = *i;
+
+      // We only care about those fragments that can handle nsc.
+      if (tmp.size() >= nsc)
+        {
+          result = tmp;
+          break;
+        }
+    }
 
   return result;
 }
@@ -444,7 +456,7 @@ dijkstra::select_fitest(const SSC &ssc, int nsc)
     {
       const SSC &tmp = *i;
 
-      // We only case about those fragments that can handle nsc.
+      // We only care about those fragments that can handle nsc.
       if (tmp.size() >= nsc)
         {
           if (result.empty())

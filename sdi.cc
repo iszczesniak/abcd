@@ -46,6 +46,9 @@ main(int argc, const char* argv[])
   // Set how the connections should be reconfigured.
   connection::get_reconf() = args.reconf;
 
+  // Set how the ssc should be selected.
+  dijkstra::get_select() = args.select;
+
   // The list of clients.
   std::vector<client *> vc;
 
