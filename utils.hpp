@@ -297,7 +297,6 @@ random_node_pair(const G &g, R &gen)
 {
   typedef typename boost::graph_traits<G>::vertex_descriptor vertex;
 
-  assert(check_components(g));
   std::set<vertex> s = *get_components(g).begin();
 
   assert(s.size());
