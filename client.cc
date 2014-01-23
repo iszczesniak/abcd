@@ -30,13 +30,14 @@ void client::operator()(double t)
   if (idle)
     {
       // The client is now idle, and should get busy now.
-      bool success = set_up();
-      st->established(success);
+      pair<bool, int> result = set_up();
+      st->established(result.first);
 
-      if (success)
+      if (result.first)
         {
           idle = false;
           nc_left = ncdg();
+          st->established_length(result.second);
         }
     }
   else
@@ -82,7 +83,8 @@ void client::schedule(double t)
   module::schedule(t + dt);
 }
 
-bool client::set_up()
+pair<bool, int>
+client::set_up()
 {
   // The new demand.
   demand d;

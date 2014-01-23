@@ -40,6 +40,9 @@ class stats: public module
   // order to reconfigure a connection.
   dbl_acc nla;
 
+  // The accumulator for the length of the established connection.
+  dbl_acc lea;
+
   // The arguments of the run.
   sdi_args args;
 
@@ -56,15 +59,17 @@ public:
   void
   operator()(double t);
 
-  // Reporting functions ---------------------------------------------
-
-  // True if the connection was established successfully.
+  // Report success if the connection was established successfully.
   void
   established(bool status);
 
-  // True if the connection was completed successfully.
+  // Report succes if the connection was completed successfully.
   void
   completed(bool status);
+
+  // Report the length of the established connection.
+  void
+  established_length(int len);
 
   // Report the number of links that have to be reconfigured when a
   // connection is to be reconfigured.

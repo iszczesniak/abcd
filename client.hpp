@@ -86,7 +86,7 @@ public:
   bool is_idle();
 
 private:
-  bool
+  std::pair<bool, int>
   set_up();
 
   std::pair<bool, int>

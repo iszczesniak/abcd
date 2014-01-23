@@ -21,9 +21,11 @@ connection::is_established() const
   return !p.first.empty();
 }
 
-bool
+std::pair<bool, int>
 connection::set_up(const demand &d)
 {
+  std::pair<bool, int> result;
+
   // Make sure the connection is not established.
   assert(!is_established());
 
@@ -32,12 +34,13 @@ connection::set_up(const demand &d)
   // We allow to allocate the signal on any of the subcarriers.
   V2C2S r = dijkstra::search(g, d);
   p = dijkstra::trace(g, r, d);
-  bool success = is_established();
+  result.first = is_established();
+  result.second = p.first.size();
 
-  if (success)
+  if (result.first)
     dijkstra::set_up_path(g, p);
 
-  return success;
+  return result;
 }
 
 std::pair<bool, int>

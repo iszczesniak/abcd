@@ -29,7 +29,9 @@ stats::stats(const sdi_args &args, const graph &g, pqueue &q,
        << "frags" << " "
     // The mean number of links to configure in order to reconfigure a
     // connection
-       << "nltoc"
+       << "nltoc" << " "
+    // The mean length of an established connection.
+       << "lofec"
     // That's it.  Thank you.
        << endl;
 }
@@ -63,9 +65,14 @@ stats::operator()(double t)
 
   // The mean number of links to configure in order to reconfigure a
   // connection.
-  cout << ba::mean(nla);
+  cout << ba::mean(nla) << " ";
   // We reset the accumulator to get new means in the next interval.
   nla = dbl_acc();
+
+  // The mean length of an established connection.
+  cout << ba::mean(lea);
+  // We reset the accumulator to get new means in the next interval.
+  lea = dbl_acc();
 
   cout << endl;
 
@@ -96,6 +103,12 @@ void
 stats::reconfigured_links(int nl)
 {
   nla(nl);
+}
+
+void
+stats::established_length(int len)
+{
+  lea(len);
 }
 
 int

@@ -32,7 +32,7 @@ public:
   bool
   is_established() const;
 
-  bool
+  std::pair<bool, int>
   set_up(const demand &d);
 
   std::pair<bool, int>
