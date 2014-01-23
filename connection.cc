@@ -1,6 +1,8 @@
 #include "connection.hpp"
 #include "dijkstra.hpp"
 
+#include <utility>
+
 connection::reconf_t connection::reconf;
 
 connection::connection(graph &g): g(g)
@@ -38,10 +40,10 @@ connection::set_up(const demand &d)
   return success;
 }
 
-bool
+std::pair<bool, int>
 connection::reconfigure(vertex new_src)
 {
-  bool status;
+  std::pair<bool, int> result;
 
   // Make sure the connection is established.
   assert(is_established());
@@ -49,31 +51,33 @@ connection::reconfigure(vertex new_src)
   switch(reconf)
     {
     case part:
-      status = reconfigure_part(new_src);
+      result = reconfigure_part(new_src);
       break;
 
     case anew:
-      status = reconfigure_anew(new_src);
+      result = reconfigure_anew(new_src);
       break;
 
     case retrace:
       // First we do the retrace.
-      status = reconfigure_retrace(new_src);
-      if (!status)
+      result = reconfigure_retrace(new_src);
+      if (!result.first)
         // And if that fails we do reconfiguration anew.
-        status = reconfigure_anew(new_src);
+        result = reconfigure_anew(new_src);
       break;
 
     default:
       assert(false);
     }
 
-  return status;
+  return result;
 }
 
-bool
+std::pair<bool, int>
 connection::reconfigure_part(vertex new_src)
 {
+  std::pair<bool, int> result;
+
   vertex old_src = d.first.first;
 
   // We search for the shortest path from new_src to old_src.  And we
@@ -91,10 +95,13 @@ connection::reconfigure_part(vertex new_src)
   V2C2S r = dijkstra::search(g, nd, p.second);
   // Additional path.
   sscpath ap = dijkstra::trace(g, r, nd);
-  bool status = !ap.first.empty();
+  // If the path is not empty, then we succeeded in our search.
+  result.first = !ap.first.empty();
+  // The number of links to reconfigure.
+  result.second = ap.first.size();
 
   // Set up the extra part and modify the list.
-  if (status)
+  if (result.first)
     {
       // We want the SSC in the additional path to be the same as in
       // the existing path.
@@ -105,12 +112,14 @@ connection::reconfigure_part(vertex new_src)
       dijkstra::set_up_path(g, ap);
     }
 
-  return status;
+  return result;
 }
 
-bool
+std::pair<bool, int>
 connection::reconfigure_retrace(vertex new_src)
 {
+  std::pair<bool, int> result;
+
   // Store the existing sscpath, because we'll need it in case we fail
   // to establish a new connection.
   sscpath tmp = p;
@@ -119,7 +128,7 @@ connection::reconfigure_retrace(vertex new_src)
   vertex int_src = d.first.first;
 
   // True if a path has been found.
-  bool success = false;
+  result.first = false;
 
   // The additional path.
   sscpath ap;
@@ -142,9 +151,10 @@ connection::reconfigure_retrace(vertex new_src)
       V2C2S r = dijkstra::search(g, nd, p.second);
       // Additional path.
       ap = dijkstra::trace(g, r, nd);
-      success = !ap.first.empty();
+      result.first = !ap.first.empty();
+      result.second = ap.first.size();
 
-      if (success)
+      if (result.first)
         break;
 
       // If no success, take down the leading edge in the path, and
@@ -166,7 +176,7 @@ connection::reconfigure_retrace(vertex new_src)
   if (is_established())
     dijkstra::tear_down_path(g, p);
 
-  if (success)
+  if (result.first)
     {
       // We want the SSC in the additional path to be the same as
       // in the existing path.
@@ -182,12 +192,14 @@ connection::reconfigure_retrace(vertex new_src)
 
   assert(d.first.first == source(p.first.front(), g));
 
-  return success;
+  return result;
 }
 
-bool
+std::pair<bool, int>
 connection::reconfigure_anew(vertex new_src)
 {
+  std::pair<bool, int> result;
+
   // Store the existing sscpath, because we'll need it in case we fail
   // to establish a new connection.
   sscpath tmp = p;
@@ -204,9 +216,10 @@ connection::reconfigure_anew(vertex new_src)
   // subcarriers.
   V2C2S r = dijkstra::search(g, nd);
   p = dijkstra::trace(g, r, nd);
-  bool status = !p.first.empty();
+  result.first = !p.first.empty();
+  result.second = p.first.size();
 
-  if (status)
+  if (result.first)
     // Make it the new source.
     d.first.first = new_src;
   else
@@ -215,7 +228,7 @@ connection::reconfigure_anew(vertex new_src)
 
   dijkstra::set_up_path(g, p);
 
-  return status;
+  return result;
 }
 
 void

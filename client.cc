@@ -2,6 +2,8 @@
 #include "dijkstra.hpp"
 #include "utils_netgen.hpp"
 
+#include <utility>
+
 using namespace std;
 
 client::client(graph &g, pqueue &q, int id, boost::mt19937 &rng,
@@ -42,9 +44,12 @@ void client::operator()(double t)
       if (nc_left)
         {
           // It's time now to reconfigure.
-          bool status = reconfigure();
-          if (status)
-            --nc_left;
+          pair<bool, int> result = reconfigure();
+          if (result.first)
+            {
+              --nc_left;
+              st->reconfigured_links(result.second);
+            }
           else
             {
               nc_left = 0;
@@ -89,7 +94,8 @@ bool client::set_up()
   return conn.set_up(d);
 }
 
-bool client::reconfigure()
+std::pair<bool, int>
+client::reconfigure()
 {
   // We change the source node, and the destination node stays
   // unchanged.  We choose the new source node from one of the

@@ -36,23 +36,40 @@ class stats: public module
   // The probability of completing a connection in the interval.
   dbl_acc cca;
 
+  // The accummulator for the mean number of links to configure in
+  // order to reconfigure a connection.
+  dbl_acc nla;
+
   // The arguments of the run.
   sdi_args args;
 
 public:
   stats(const sdi_args &args, const graph &g, pqueue &q,
         const std::vector<client *> &vc);
-  static stats *get();
-  void schedule(double t);
-  void operator()(double t);
 
-  // Reporting functions.
+  static stats *
+  get();
+
+  void
+  schedule(double t);
+
+  void
+  operator()(double t);
+
+  // Reporting functions ---------------------------------------------
 
   // True if the connection was established successfully.
-  void established(bool status);
+  void
+  established(bool status);
 
   // True if the connection was completed successfully.
-  void completed(bool status);
+  void
+  completed(bool status);
+
+  // Report the number of links that have to be reconfigured when a
+  // connection is to be reconfigured.
+  void
+  reconfigured_links(int nl);
 
 private:
   // Calculate the number of currently active clients.

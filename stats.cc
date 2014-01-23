@@ -17,16 +17,19 @@ stats::stats(const sdi_args &args, const graph &g, pqueue &q,
   schedule(0);
 
   cout << "time seed hash "
-    // the network load
+    // The network load.
        << "load" << " "
-    // the probability of establishing a connection
+    // The probability of establishing a connection.
        << "estab" << " "
-    // the probability of completing a connection
+    // The probability of completing a connection.
        << "compl" << " "
-    // the number of currently supported connection
+    // The number of currently supported connections.
        << "conns" << " "
-    // the mean number of fragments on a link
-       << "frags"
+    // The mean number of fragments on a link.
+       << "frags" << " "
+    // The mean number of links to configure in order to reconfigure a
+    // connection
+       << "nltoc"
     // That's it.  Thank you.
        << endl;
 }
@@ -56,7 +59,15 @@ stats::operator()(double t)
   cca = dbl_acc();
 
   cout << calculate_conns() << " ";
-  cout << calculate_frags() << endl;
+  cout << calculate_frags() << " ";
+
+  // The mean number of links to configure in order to reconfigure a
+  // connection.
+  cout << ba::mean(nla);
+  // We reset the accumulator to get new means in the next interval.
+  nla = dbl_acc();
+
+  cout << endl;
 
   schedule(t);
 }
@@ -79,6 +90,12 @@ void
 stats::completed(bool status)
 {
   cca(status);
+}
+
+void
+stats::reconfigured_links(int nl)
+{
+  nla(nl);
 }
 
 int

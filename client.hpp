@@ -11,6 +11,8 @@
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
 
+#include <utility>
+
 namespace ba = boost::accumulators;
 
 class client: public module
@@ -84,9 +86,14 @@ public:
   bool is_idle();
 
 private:
-  bool set_up();
-  bool reconfigure();
-  void tear_down();
+  bool
+  set_up();
+
+  std::pair<bool, int>
+  reconfigure();
+
+  void
+  tear_down();
 };
 
 #endif /* CLIENT_HPP */
