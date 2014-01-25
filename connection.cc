@@ -1,6 +1,7 @@
 #include "connection.hpp"
 #include "dijkstra.hpp"
 
+#include <algorithm>
 #include <utility>
 
 connection::reconf_t connection::reconf;
@@ -333,11 +334,27 @@ connection::reconfigure_anew(vertex new_src)
   V2C2S r = dijkstra::search(g, nd);
   p = dijkstra::trace(g, r, nd);
   result.first = !p.first.empty();
-  result.second = p.first.size();
 
   if (result.first)
-    // Make it the new source.
-    d.first.first = new_src;
+    {
+      // Make it the new source.
+      d.first.first = new_src;
+ 
+      // Calculate the number of links to configure, i.e. those links
+      // that are in the new path, but are missing in the old path.
+      // Iterate over the new path, and calculate those edges that are
+      // not present in the old path.
+      result.second = 0;
+      for(path::const_iterator i = p.first.begin();
+          i != p.first.end(); ++i)
+        {
+          edge e = *i;
+          path::const_iterator j = std::find(tmp.first.begin(),
+                                             tmp.first.end(), e);
+          if (j == tmp.first.end())
+            ++result.second;
+        }
+   }
   else
     // If no new path has been found, revert to the old path.
     p = tmp;
