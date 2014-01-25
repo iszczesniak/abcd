@@ -69,6 +69,14 @@ connection::reconfigure(vertex new_src)
         result = reconfigure_anew(new_src);
       break;
 
+    case retrace2:
+      // First we do the retrace2.
+      result = reconfigure_retrace2(new_src);
+      if (!result.first)
+        // And if that fails we do reconfiguration anew.
+        result = reconfigure_anew(new_src);
+      break;
+
     default:
       assert(false);
     }
@@ -146,16 +154,28 @@ connection::reconfigure_retrace(vertex new_src)
       // subcarriers required.
       demand nd(npair(new_src, int_src), d.second);
 
-      // When searching a path for a new demand, we also state exactly
-      // what SSC is available at the start, which is the SSC of an
-      // existing path.  Together with the number of required
-      // subcarriers, we search the path that has exactly the required
-      // SSC.
-      V2C2S r = dijkstra::search(g, nd, p.second);
-      // Additional path.
-      ap = dijkstra::trace(g, r, nd);
-      result.first = !ap.first.empty();
-      result.second = ap.first.size();
+      // It can happen that the client got back to some node
+      // previously visited, and so we just cut the path.
+      if (new_src == int_src)
+        {
+          result.first = true;
+          result.second = 0;
+          ap.first = path();
+          ap.second = p.second;
+        }
+      else
+        {
+          // When searching a path for a new demand, we also state
+          // exactly what SSC is available at the start, which is the
+          // SSC of an existing path.  Together with the number of
+          // required subcarriers, we search the path that has exactly
+          // the required SSC.
+          V2C2S r = dijkstra::search(g, nd, p.second);
+          // Additional path.
+          ap = dijkstra::trace(g, r, nd);
+          result.first = !ap.first.empty();
+          result.second = ap.first.size();
+        }
 
       if (result.first)
         break;
@@ -190,6 +210,99 @@ connection::reconfigure_retrace(vertex new_src)
     }
   else
     p = tmp;
+
+  dijkstra::set_up_path(g, p);
+
+  assert(d.first.first == source(p.first.front(), g));
+
+  return result;
+}
+
+std::pair<bool, int>
+connection::reconfigure_retrace2(vertex new_src)
+{
+  // If result.first is true, a path has been found. The number of new
+  // links to configure is result.second.
+  std::pair<bool, int> result;
+
+  // Store the existing sscpath, because we'll need it in case we fail
+  // to establish a new connection.
+  sscpath tmp = p;
+
+  // The new sscpath.
+  sscpath np;
+
+  // That's the intermediate node, from where the old path is reused.
+  vertex int_src = d.first.first;
+
+  // In every iteration of the loop we search for the shortest path
+  // from new_src to int_src.  And we ask for exactly the very same
+  // subcarriers that are already used by the existing connection.  We
+  // retrace the whole path.
+  while(int_src != d.first.second)
+    {
+      // This is the new demand.  Here we state only the number of
+      // subcarriers required.
+      demand nd(npair(new_src, int_src), d.second);
+
+      // The additional path.
+      sscpath ap;
+
+      std::pair<bool, int> int_result;
+
+      // It can happen that the client got back to some node
+      // previously visited, and so we just cut the path.
+      if (new_src == int_src)
+        int_result.first = true;
+      else
+        {
+          // When searching a path for a new demand, we also state
+          // exactly what SSC is available at the start, which is the
+          // SSC of an existing path.  Together with the number of
+          // required subcarriers, we search the path that has exactly
+          // the required SSC.
+          V2C2S r = dijkstra::search(g, nd, p.second);
+          // Additional path.
+          ap = dijkstra::trace(g, r, nd);
+          int_result = std::make_pair(!ap.first.empty(), ap.first.size());
+        }
+
+      // Is this the best result?  First, we must have found the
+      // result, and then it must be the first result ever or it must
+      // be better than a previous best result.
+      if (int_result.first &&
+          (!result.first || int_result.second < result.second))
+        {
+          result = int_result;
+          np = p;
+
+          if (!ap.first.empty())
+            {
+              // We want the SSC in the additional path to be the same as
+              // in the existing path.
+              assert(p.second == ap.second);
+              d.first.first = new_src;
+              np.first.insert(np.first.begin(),
+                              ap.first.begin(), ap.first.end());
+            }
+        }
+
+      // Take down the leading edge in the path.
+      edge ettd = p.first.front();
+      p.first.pop_front();
+      // Retrace one node.
+      assert(source(ettd, g) == int_src);
+      int_src = target(ettd, g);
+      // Take down that edge!
+      sscpath sscpathttd;
+      sscpathttd.first.push_back(ettd);
+      sscpathttd.second = p.second;
+      dijkstra::tear_down_path(g, sscpathttd);
+    }
+
+  assert(p.first.empty());
+
+  p = (result.first ? np : tmp);
 
   dijkstra::set_up_path(g, p);
 
