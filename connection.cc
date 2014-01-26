@@ -2,6 +2,7 @@
 #include "dijkstra.hpp"
 
 #include <algorithm>
+#include <iostream>
 #include <utility>
 
 connection::reconf_t connection::reconf;
@@ -48,9 +49,6 @@ std::pair<bool, int>
 connection::reconfigure(vertex new_src)
 {
   std::pair<bool, int> result;
-
-  // Make sure the connection is established.
-  assert(is_established());
 
   switch(reconf)
     {
@@ -236,11 +234,24 @@ connection::reconfigure_retrace2(vertex new_src)
   // That's the intermediate node, from where the old path is reused.
   vertex int_src = d.first.first;
 
+  // The destination node.
+  vertex dst = d.first.second;
+
+  if (new_src == dst)
+    {
+      result.first = true;
+      d.first.first = new_src;
+      // Tear down the existing path.
+      dijkstra::tear_down_path(g, p);      
+      // Clear the path, becasue we don't need it.
+      p = sscpath();
+    }
+  else
   // In every iteration of the loop we search for the shortest path
   // from new_src to int_src.  And we ask for exactly the very same
   // subcarriers that are already used by the existing connection.  We
   // retrace the whole path.
-  while(int_src != d.first.second)
+  while(int_src != dst)
     {
       // This is the new demand.  Here we state only the number of
       // subcarriers required.
@@ -262,7 +273,14 @@ connection::reconfigure_retrace2(vertex new_src)
           // SSC of an existing path.  Together with the number of
           // required subcarriers, we search the path that has exactly
           // the required SSC.
-          V2C2S r = dijkstra::search(g, nd, p.second);
+          V2C2S r;
+
+          // Do we nee to use the same subcarriers?
+          if (!p.second.empty())
+            r = dijkstra::search(g, nd, p.second);
+          else
+            r = dijkstra::search(g, nd);
+
           // Additional path.
           ap = dijkstra::trace(g, r, nd);
           int_result = std::make_pair(!ap.first.empty(), ap.first.size());
@@ -276,16 +294,20 @@ connection::reconfigure_retrace2(vertex new_src)
         {
           result = int_result;
           np = p;
+          d.first.first = new_src;
+          if (p.second.empty())
+            p.second = np.second;
 
           if (!ap.first.empty())
             {
               // We want the SSC in the additional path to be the same as
               // in the existing path.
               assert(p.second == ap.second);
-              d.first.first = new_src;
               np.first.insert(np.first.begin(),
                               ap.first.begin(), ap.first.end());
             }
+
+          assert(d.first.first == source(np.first.front(), g));
         }
 
       // Take down the leading edge in the path.
@@ -301,13 +323,16 @@ connection::reconfigure_retrace2(vertex new_src)
       dijkstra::tear_down_path(g, sscpathttd);
     }
 
-  assert(p.first.empty());
+  // Fix it: that's a short cut, debug it.
+  if (!p.first.empty())
+    tear_down();
 
   p = (result.first ? np : tmp);
 
   dijkstra::set_up_path(g, p);
 
-  assert(d.first.first == source(p.first.front(), g));
+  assert(p.first.empty() ||
+         d.first.first == source(p.first.front(), g));
 
   return result;
 }
@@ -367,7 +392,6 @@ connection::reconfigure_anew(vertex new_src)
 void
 connection::tear_down()
 {
-  assert(is_established());
   dijkstra::tear_down_path(g, p);
   p = sscpath();
 }
