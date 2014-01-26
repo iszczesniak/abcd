@@ -364,21 +364,28 @@ connection::reconfigure_anew(vertex new_src)
     {
       // Make it the new source.
       d.first.first = new_src;
- 
-      // Calculate the number of links to configure, i.e. those links
-      // that are in the new path, but are missing in the old path.
-      // Iterate over the new path, and calculate those edges that are
-      // not present in the old path.
-      result.second = 0;
-      for(path::const_iterator i = p.first.begin();
-          i != p.first.end(); ++i)
+
+      // The number of links to configure depends on the SSC.
+      if (p.second == tmp.second)
         {
-          edge e = *i;
-          path::const_iterator j = std::find(tmp.first.begin(),
-                                             tmp.first.end(), e);
-          if (j == tmp.first.end())
-            ++result.second;
+          // Calculate the number of links to configure, i.e. those
+          // links that are in the new path, but are missing in the
+          // old path.  Iterate over the new path, and calculate those
+          // edges that are not present in the old path.
+          result.second = 0;
+          for(path::const_iterator i = p.first.begin();
+              i != p.first.end(); ++i)
+            {
+              edge e = *i;
+              path::const_iterator j = std::find(tmp.first.begin(),
+                                                 tmp.first.end(), e);
+              if (j == tmp.first.end())
+                ++result.second;
+            }
         }
+      else
+        // Since it's a different SSC, we have to configure all links.
+        result.second = p.first.size();
    }
   else
     // If no new path has been found, revert to the old path.
