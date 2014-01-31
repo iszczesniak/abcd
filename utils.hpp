@@ -22,7 +22,8 @@
 namespace ba = boost::accumulators;
 
 /**
- * Generate a random number in [min, max].
+ * Generate a random number from min to max, including both min and
+ * max.
  */
 template<typename T>
 int
@@ -296,14 +297,23 @@ std::pair<typename boost::graph_traits<G>::vertex_descriptor,
 random_node_pair(const G &g, R &gen)
 {
   typedef typename boost::graph_traits<G>::vertex_descriptor vertex;
+  typedef typename boost::graph_traits<G>::vertex_iterator vertex_i;
 
-  std::set<vertex> s = *get_components(g).begin();
+  vertex_i begin = vertices(g).first;
+  int n = num_vertices(g);
 
-  assert(s.size());
-  vertex src = get_random_element(s, gen);
-  s.erase(src);
-  assert(s.size());
-  vertex dst = get_random_element(s, gen);
+  int src_n = get_random_int(0, n - 1, gen);
+  vertex_i src_i = begin;
+  std::advance(src_i, src_n);
+  vertex src = *src_i;
+
+  // Choose any number between 0 and n - 1, but not src_n.
+  int dst_n = get_random_int(0, n - 2, gen);
+  if (dst_n == src_n)
+    dst_n = n - 1;
+  vertex_i dst_i = begin;
+  std::advance(dst_i, dst_n);
+  vertex dst = *dst_i;
 
   return std::make_pair(src, dst);
 }

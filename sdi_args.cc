@@ -18,6 +18,7 @@ reconf_interpret(const string &reconf)
   reconf_map["part"] = connection::part;
   reconf_map["anew"] = connection::anew;
   reconf_map["retrace"] = connection::retrace;
+  reconf_map["retrace2"] = connection::retrace2;
 
   reconf_map_t::iterator i = reconf_map.find(reconf);
 

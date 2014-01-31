@@ -107,3 +107,31 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_3)
   BOOST_CHECK(args.reconf == connection::retrace);
   BOOST_CHECK(args.select == dijkstra::first);
 }
+
+/*
+ * Test that the reconf argument "retrace2" is recognized correctly.
+ */
+BOOST_AUTO_TEST_CASE(sdi_args_test_4)
+{
+  const char *argv[] = {"",
+                        "--network", "random",
+                        "--nodes", "10",
+                        "--edges", "30",
+                        "--subcarriers", "50",
+                        "--clients", "100",
+                        "--l_sleep", "11",
+                        "--mnc", "12",
+                        "--l_change", "13",
+                        "--mnsc", "5",
+                        "--reconf", "retrace2",
+                        "--select", "first",
+                        "--hash", "blablabla",
+                        "--seed", "2"};
+
+  int argc = sizeof(argv) / sizeof(char *);
+
+  sdi_args args = process_sdi_args(argc, argv);
+
+  BOOST_CHECK(args.reconf == connection::retrace2);
+  BOOST_CHECK(args.select == dijkstra::first);
+}

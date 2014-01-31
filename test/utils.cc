@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE(includes_test)
 BOOST_AUTO_TEST_CASE(get_random_int_test)
 {
   boost::minstd_rand gen;
-  for(int i = 0; i < 10; ++i)
+  for(int i = 0; i < 100; ++i)
     for(int j = 0; j < 10; ++j)
       {
 	int n = get_random_int(0, j, gen);
