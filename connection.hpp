@@ -48,12 +48,12 @@ public:
   static reconf_t &
   get_reconf();
 
-private:
-  std::pair<bool, int>
-  reconfigure_part(vertex new_Src);
-
+private: 
   std::pair<bool, int>
   reconfigure_anew(vertex new_Src);
+
+  std::pair<bool, int>
+  reconfigure_part(vertex new_Src);
 
   std::pair<bool, int>
   reconfigure_retrace(vertex new_Src);

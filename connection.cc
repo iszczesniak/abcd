@@ -88,6 +88,65 @@ connection::reconfigure(vertex new_src)
 }
 
 std::pair<bool, int>
+connection::reconfigure_anew(vertex new_src)
+{
+  std::pair<bool, int> result;
+
+  // Store the existing sscpath, because we'll need it in case we fail
+  // to establish a new connection.
+  sscpath tmp = p;
+
+  // First we need to tear down the existing path.  We might need its
+  // subcarriers to establish a new connection.
+  tear_down();
+
+  // That's the new demand.
+  vertex dst = d.first.second;
+  demand nd(npair(new_src, dst), d.second);
+
+  // When searching for the new path, we allow all available
+  // subcarriers.
+  V2C2S r = dijkstra::search(g, nd);
+  p = dijkstra::trace(g, r, nd);
+  result.first = !p.first.empty();
+
+  if (result.first)
+    {
+      // Make it the new source.
+      d.first.first = new_src;
+
+      // The number of links to configure depends on the SSC.
+      if (p.second == tmp.second)
+        {
+          // Calculate the number of links to configure, i.e. those
+          // links that are in the new path, but are missing in the
+          // old path.  Iterate over the new path, and calculate those
+          // edges that are not present in the old path.
+          result.second = 0;
+          for(path::const_iterator i = p.first.begin();
+              i != p.first.end(); ++i)
+            {
+              edge e = *i;
+              path::const_iterator j = std::find(tmp.first.begin(),
+                                                 tmp.first.end(), e);
+              if (j == tmp.first.end())
+                ++result.second;
+            }
+        }
+      else
+        // Since it's a different SSC, we have to configure all links.
+        result.second = p.first.size();
+   }
+  else
+    // If no new path has been found, revert to the old path.
+    p = tmp;
+
+  dijkstra::set_up_path(g, p);
+
+  return result;
+}
+
+std::pair<bool, int>
 connection::reconfigure_part(vertex new_src)
 {
   std::pair<bool, int> result;
@@ -337,65 +396,6 @@ connection::reconfigure_retrace2(vertex new_src)
 
   assert(p.first.empty() ||
          d.first.first == source(p.first.front(), g));
-
-  return result;
-}
-
-std::pair<bool, int>
-connection::reconfigure_anew(vertex new_src)
-{
-  std::pair<bool, int> result;
-
-  // Store the existing sscpath, because we'll need it in case we fail
-  // to establish a new connection.
-  sscpath tmp = p;
-
-  // First we need to tear down the existing path.  We might need its
-  // subcarriers to establish a new connection.
-  tear_down();
-
-  // That's the new demand.
-  vertex dst = d.first.second;
-  demand nd(npair(new_src, dst), d.second);
-
-  // When searching for the new path, we allow all available
-  // subcarriers.
-  V2C2S r = dijkstra::search(g, nd);
-  p = dijkstra::trace(g, r, nd);
-  result.first = !p.first.empty();
-
-  if (result.first)
-    {
-      // Make it the new source.
-      d.first.first = new_src;
-
-      // The number of links to configure depends on the SSC.
-      if (p.second == tmp.second)
-        {
-          // Calculate the number of links to configure, i.e. those
-          // links that are in the new path, but are missing in the
-          // old path.  Iterate over the new path, and calculate those
-          // edges that are not present in the old path.
-          result.second = 0;
-          for(path::const_iterator i = p.first.begin();
-              i != p.first.end(); ++i)
-            {
-              edge e = *i;
-              path::const_iterator j = std::find(tmp.first.begin(),
-                                                 tmp.first.end(), e);
-              if (j == tmp.first.end())
-                ++result.second;
-            }
-        }
-      else
-        // Since it's a different SSC, we have to configure all links.
-        result.second = p.first.size();
-   }
-  else
-    // If no new path has been found, revert to the old path.
-    p = tmp;
-
-  dijkstra::set_up_path(g, p);
 
   return result;
 }
