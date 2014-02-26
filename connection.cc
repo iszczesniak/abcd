@@ -52,12 +52,16 @@ connection::reconfigure(vertex new_src)
 
   switch(reconf)
     {
-    case part:
-      result = reconfigure_part(new_src);
-      break;
-
     case anew:
       result = reconfigure_anew(new_src);
+      break;
+
+    case part:
+      // First we do the partial reconfiguration.
+      result = reconfigure_part(new_src);
+      if (!result.first)
+        // And if that fails we do reconfiguration anew.
+        result = reconfigure_anew(new_src);
       break;
 
     case retrace:
