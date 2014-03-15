@@ -49,6 +49,9 @@ struct sdi_args
 
   /// The way connections should be reconfigured.
   connection::reconf_t reconf;
+
+  /// The limit on the simulation time.
+  double sim_time;
 };
 
 /**

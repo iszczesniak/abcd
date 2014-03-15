@@ -18,7 +18,7 @@ main(int argc, const char* argv[])
   sdi_args args = process_sdi_args(argc, argv);
 
   // Simulation time.
-  const double sim_limit = 100;
+  double sim_time = args.sim_time;
 
   // Random number generator.
   boost::mt19937 gen(args.seed);
@@ -68,7 +68,7 @@ main(int argc, const char* argv[])
   // The event loop.
   while(!q.empty())
     {
-      if (q.top().get_time() > sim_limit)
+      if (q.top().get_time() > sim_time)
 	break;
 
       q.top().process();

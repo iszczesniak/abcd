@@ -107,6 +107,9 @@ process_sdi_args(int argc, const char *argv[])
         ("seed", po::value<int>()->default_value(1),
          "the seed of the random number generator")
 
+        ("sim_time", po::value<double>()->default_value(100),
+         "the limit on the simulation time")
+
         ("hash", po::value<string>()->required(),
          "the hash of all the parameters except the seed");
 
@@ -132,6 +135,7 @@ process_sdi_args(int argc, const char *argv[])
       result.l_change = vm["l_change"].as<double>();
       result.mnsc = vm["mnsc"].as<double>();
       result.seed = vm["seed"].as<int>();
+      result.sim_time = vm["sim_time"].as<double>();
       result.hash = vm["hash"].as<string>();
       result.reconf = reconf_interpret(vm["reconf"].as<string>());
       result.select = select_interpret(vm["select"].as<string>());
