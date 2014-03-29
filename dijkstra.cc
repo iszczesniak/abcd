@@ -367,8 +367,8 @@ dijkstra::select_ssc(const SSSC &sssc, int nsc)
         ssc = select_first(sssc, nsc);
         break;
 
-      case fitest:
-        ssc = select_fitest(sssc, nsc);
+      case fittest:
+        ssc = select_fittest(sssc, nsc);
         break;
 
       default:
@@ -427,13 +427,13 @@ dijkstra::select_first(const SSC &ssc, int nsc)
 }
 
 SSC
-dijkstra::select_fitest(const SSSC &sssc, int nsc)
+dijkstra::select_fittest(const SSSC &sssc, int nsc)
 {
   SSC ssc;
 
   for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
     {
-      SSC tmp_ssc = select_fitest(*i, nsc);
+      SSC tmp_ssc = select_fittest(*i, nsc);
 
       if (ssc.empty())
         ssc = tmp_ssc;
@@ -446,7 +446,7 @@ dijkstra::select_fitest(const SSSC &sssc, int nsc)
 }
 
 SSC
-dijkstra::select_fitest(const SSC &ssc, int nsc)
+dijkstra::select_fittest(const SSC &ssc, int nsc)
 {
   SSC result;
 

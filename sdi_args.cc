@@ -42,7 +42,7 @@ select_interpret(const string &select)
   typedef map<string, dijkstra::select_t> select_map_t;
   map<string, dijkstra::select_t> select_map;
   select_map["first"] = dijkstra::first;
-  select_map["fitest"] = dijkstra::fitest;
+  select_map["fittest"] = dijkstra::fittest;
 
   select_map_t::iterator i = select_map.find(select);
 

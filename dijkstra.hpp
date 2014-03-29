@@ -12,7 +12,7 @@ public:
 
   // smallest - the smallest set of contiguous subcarriers are chosen
 
-  enum select_t {first, fitest};
+  enum select_t {first, fittest};
   static select_t select;
 
 private:
@@ -103,19 +103,19 @@ private:
   static SSC
   select_first(const SSC &ssc, int nsc);
 
-  // Select the fitest subcarriers, i.e. the smallest subcarrier
+  // Select the fittest subcarriers, i.e. the smallest subcarrier
   // fragment that fits the required subcarriers from SSSC.  It
   // returns the whole available fragment, i.e. it can have more
   // subcarriers than nsc.
   static SSC
-  select_fitest(const SSSC &sssc, int nsc);
+  select_fittest(const SSSC &sssc, int nsc);
 
-  // Select the fitest subcarriers, i.e. the smallest subcarrier
+  // Select the fittest subcarriers, i.e. the smallest subcarrier
   // fragment from SSC that fits the required number of subcarriers.
   // It returns the whole available fragment, i.e. it can have more
   // subcarriers than nsc.
   static SSC
-  select_fitest(const SSC &ssc, int nsc);
+  select_fittest(const SSC &ssc, int nsc);
 };
 
 #endif /* DIJKSTRA_HPP */
