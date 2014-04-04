@@ -120,3 +120,56 @@ BOOST_AUTO_TEST_CASE(calculate_fragments_test)
   BOOST_CHECK(*(i->begin()) == 5);
   BOOST_CHECK(*(++(i->begin())) == 6);
 }
+
+// A trivial test.
+
+BOOST_AUTO_TEST_CASE(includes_test2)
+{
+  SSSC a, b;
+
+  BOOST_CHECK(includes(a, b));
+
+  SSC ssc1;
+  ssc1.insert(1);
+  a.insert(ssc1);
+
+  BOOST_CHECK(includes(a, b));
+
+  b.insert(ssc1);
+
+  BOOST_CHECK(includes(a, b));
+}
+
+// SSSC b is a subset of SSSC a.
+
+BOOST_AUTO_TEST_CASE(includes_test3)
+{
+  SSSC a, b;
+
+  SSC ssc1, ssc2;
+  ssc1.insert(1);
+  ssc1.insert(2);
+  ssc2.insert(1);
+
+  a.insert(ssc1);
+  b.insert(ssc2);
+
+  BOOST_CHECK(includes(a, b));
+}
+
+// SSSC b is not a subset of SSSC a.
+
+BOOST_AUTO_TEST_CASE(includes_test4)
+{
+  SSSC a, b;
+
+  SSC ssc1, ssc2;
+  ssc1.insert(1);
+  ssc2.insert(1);
+  ssc2.insert(2);
+
+  a.insert(ssc1);
+  b.insert(ssc2);
+
+  BOOST_CHECK(!includes(a, b));
+}
