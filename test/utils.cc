@@ -173,3 +173,22 @@ BOOST_AUTO_TEST_CASE(includes_test4)
 
   BOOST_CHECK(!includes(a, b));
 }
+
+// SSSC b is not a subset of SSSC a.
+
+BOOST_AUTO_TEST_CASE(includes_test5)
+{
+  SSSC a, b;
+
+  SSC ssc1, ssc2, ssc3;
+  ssc1.insert(1);
+  ssc2.insert(1);
+  ssc2.insert(2);
+  ssc3.insert(3);
+
+  a.insert(ssc1);
+  a.insert(ssc2);
+  b.insert(ssc3);
+
+  BOOST_CHECK(!includes(a, b));
+}
