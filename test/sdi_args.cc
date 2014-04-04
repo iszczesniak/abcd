@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_2)
                         "--l_change", "13",
                         "--mnsc", "5",
                         "--reconf", "anew",
-                        "--select", "fitest",
+                        "--select", "fittest",
                         "--hash", "blablabla",
                         "--seed", "2"};
 
@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_2)
 
   BOOST_CHECK(args.seed == 2);
   BOOST_CHECK(args.reconf == connection::anew);
-  BOOST_CHECK(args.select == dijkstra::fitest);
+  BOOST_CHECK(args.select == dijkstra::fittest);
 }
 
 /*

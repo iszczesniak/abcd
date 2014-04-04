@@ -333,7 +333,7 @@ BOOST_AUTO_TEST_CASE(select_test)
   }
 
   {
-    dijkstra::get_select() = dijkstra::fitest;
+    dijkstra::get_select() = dijkstra::fittest;
     SSC ssc = dijkstra::select_ssc(sssc, 2);
     BOOST_CHECK(ssc.size() == 2);
     BOOST_CHECK(*(ssc.begin()) == 7);
