@@ -20,7 +20,7 @@ public:
   // retrace2 - find the shortest paths from the new source node to
   // all the nodes on the already established path and chose the best.
 
-  enum reconf_t {part, anew, retrace, retrace2};
+  enum reconf_t {complete, incremental, curtailing};
 
 private:
   graph &g;
@@ -50,16 +50,13 @@ public:
 
 private: 
   std::pair<bool, int>
-  reconfigure_anew(vertex new_Src);
+  reconfigure_complete(vertex new_Src);
 
   std::pair<bool, int>
-  reconfigure_part(vertex new_Src);
+  reconfigure_incremental(vertex new_Src);
 
   std::pair<bool, int>
-  reconfigure_retrace(vertex new_Src);
-
-  std::pair<bool, int>
-  reconfigure_retrace2(vertex new_Src);
+  reconfigure_curtailing(vertex new_Src);
 
   // The parameter that tells how to reconfigure connections.
   static reconf_t reconf;

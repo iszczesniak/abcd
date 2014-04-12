@@ -15,10 +15,9 @@ reconf_interpret(const string &reconf)
 {
   typedef map<string, connection::reconf_t> reconf_map_t;
   reconf_map_t reconf_map;
-  reconf_map["part"] = connection::part;
-  reconf_map["anew"] = connection::anew;
-  reconf_map["retrace"] = connection::retrace;
-  reconf_map["retrace2"] = connection::retrace2;
+  reconf_map["complete"] = connection::complete;
+  reconf_map["incremental"] = connection::incremental;
+  reconf_map["curtailing"] = connection::curtailing;
 
   reconf_map_t::iterator i = reconf_map.find(reconf);
 
