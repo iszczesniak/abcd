@@ -233,12 +233,16 @@ std::ostream &operator << (std::ostream &os, const std::vector<T> &v)
 {
   typename std::vector<T>::const_iterator i = v.begin();
 
+  os << "[";
+
   while(i != v.end())
     {
       os << *i;
       if (++i != v.end())
         os << ", ";
     }
+
+  os << "]";
 
   return os;
 }
@@ -251,12 +255,16 @@ std::ostream &operator << (std::ostream &os, const std::set<T> &v)
 {
   typename std::set<T>::const_iterator i = v.begin();
 
+  os << "{";
+
   while(i != v.end())
     {
       os << *i;
       if (++i != v.end())
         os << ", ";
     }
+
+  os << "}";
 
   return os;
 }

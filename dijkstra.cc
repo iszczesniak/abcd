@@ -29,10 +29,10 @@ dijkstra::has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
       // than cost.
       if (e.first.first > cost)
         break;
-      else
-        // Check whether the existing result includes "ssc".
-        if (includes(e.second, ssc))
-          return true;
+
+      // Check whether the existing result includes "ssc".
+      if (includes(e.second, ssc))
+        return true;
     }
 
   return false;
@@ -45,34 +45,29 @@ dijkstra::has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
 void
 dijkstra::purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc)
 {
-  // We examine existing results with the cost larger or equal to "cost".
   C2S::iterator i = c2s.begin();
-  while(i != c2s.end() && i->first.first >= cost)
-    {
-      SSSC &sssc = i->second;
 
-      SSSC::iterator j = sssc.begin();
-      while(j != sssc.end())
-        // Check whether "ssc" includes an existing result.
-        if (includes(ssc, *j))
-          {
-            SSSC::iterator j2 = j;
-            ++j;
+  while(i != c2s.end() && i->first.first < cost)
+    ++i;
+
+  while (i != c2s.end())
+    {
+      C2S::iterator i2 = i++;
+      SSSC &sssc = i2->second;
+
+      for (SSSC::iterator j = sssc.begin(); j != sssc.end();)
+        {
+          SSSC::iterator j2 = j++;
+          if (includes(ssc, *j2))
             sssc.erase(j2);
-          }
-        else
-          ++j;
+        }
 
       // Discard the CEP for which SSSC is empty.
       if (sssc.empty())
         {
-          C2S::iterator i2 = i;
-          ++i;
           q.erase(i2->first);
           c2s.erase(i2);
         }
-      else
-        ++i;
     }
 }
 
