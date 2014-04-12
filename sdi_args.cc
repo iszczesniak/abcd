@@ -110,6 +110,9 @@ process_sdi_args(int argc, const char *argv[])
         ("sim_time", po::value<double>()->default_value(100),
          "the limit on the simulation time")
 
+        ("max_len", po::value<int>()->required(),
+         "the maximal length of a path")
+
         ("hash", po::value<string>()->required(),
          "the hash of all the parameters except the seed");
 
@@ -136,6 +139,7 @@ process_sdi_args(int argc, const char *argv[])
       result.mnsc = vm["mnsc"].as<double>();
       result.seed = vm["seed"].as<int>();
       result.sim_time = vm["sim_time"].as<double>();
+      result.max_len = vm["max_len"].as<int>();
       result.hash = vm["hash"].as<string>();
       result.reconf = reconf_interpret(vm["reconf"].as<string>());
       result.select = select_interpret(vm["select"].as<string>());

@@ -37,6 +37,9 @@ struct sdi_args
   /// The mean number of the subcarriers
   double mnsc;
 
+  /// The maximal length of a path we want.
+  int max_len;
+
   /// The seed
   int seed;
 

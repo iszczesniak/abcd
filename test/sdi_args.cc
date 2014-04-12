@@ -28,6 +28,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_1)
                         "--mnsc", "5",
                         "--reconf", "part",
                         "--select", "first",
+                        "--max_len", "1000",
                         "--hash", "blablabla"};
 
   int argc = sizeof(argv) / sizeof(char *);
@@ -46,6 +47,8 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_1)
   BOOST_CHECK_CLOSE(args.mnc, 12, 0.0001);
   BOOST_CHECK_CLOSE(args.l_change, 13, 0.0001);
   BOOST_CHECK_CLOSE(args.mnsc, 5, 0.0001);
+
+  BOOST_CHECK(args.max_len == 1000);
 
   BOOST_CHECK(args.seed == 1);
 }
@@ -69,6 +72,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_2)
                         "--reconf", "anew",
                         "--select", "fittest",
                         "--hash", "blablabla",
+                        "--max_len", "1000",
                         "--seed", "2"};
 
   int argc = sizeof(argv) / sizeof(char *);
@@ -98,6 +102,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_3)
                         "--reconf", "retrace",
                         "--select", "first",
                         "--hash", "blablabla",
+                        "--max_len", "1000",
                         "--seed", "2"};
 
   int argc = sizeof(argv) / sizeof(char *);
@@ -126,6 +131,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_4)
                         "--reconf", "retrace2",
                         "--select", "first",
                         "--hash", "blablabla",
+                        "--max_len", "1000",
                         "--seed", "2"};
 
   int argc = sizeof(argv) / sizeof(char *);
