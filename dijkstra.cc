@@ -2,6 +2,7 @@
 #include "graph.hpp"
 #include "utils.hpp"
 
+#include <climits>
 #include <iterator>
 #include <queue>
 #include <map>
@@ -10,6 +11,7 @@
 using namespace std;
 
 dijkstra::select_t dijkstra::select = dijkstra::first;
+int dijkstra::max_len = INT_MAX;
 
 /**
  * Check whether there is a better or equal result in c2s than the new
@@ -203,29 +205,34 @@ dijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
             {
               // The edge that we examine in this iteration.
               const edge &e = *ei;
-              // The subcarriers available on the edge.
-              const SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
-              // Candidate SSC: the ssc available at node v that can
-              // be carried by edge e, and that has at least nsc
-              // contiguous subcarriers.
-              SSSC c_sssc = exclude(intersection(v_sssc, e_ssc), nsc);
 
-              if (!c_sssc.empty())
+              // The cost of the edge.
+              int ec = boost::get(boost::edge_weight, g, e);
+              // Candidate cost.
+              int new_c = c + ec;
+
+              if (new_c <= max_len)
                 {
-                  // The cost of the edge.
-                  int ec = boost::get(boost::edge_weight, g, e);
-                  // Candidate cost.
-                  int new_c = c + ec;
-                  // Candidate number of hops.
-                  int new_h = h + 1;
-                  // Candidate COST.
-                  COST new_cost = COST(new_c, new_h);
-                  // Candidate CEP.
-                  CEP c_cep = make_pair(new_cost, e);
-                  // The target vertex of the edge.
-                  vertex t = boost::target(e, g);
+                  // The subcarriers available on the edge.
+                  const SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
+                  // Candidate SSC: the ssc available at node v that
+                  // can be carried by edge e, and that has at least
+                  // nsc contiguous subcarriers.
+                  SSSC c_sssc = exclude(intersection(v_sssc, e_ssc), nsc);
 
-                  relaks(q, r[t], c_cep, t, c_sssc);
+                  if (!c_sssc.empty())
+                    {
+                      // Candidate number of hops.
+                      int new_h = h + 1;
+                      // Candidate COST.
+                      COST new_cost = COST(new_c, new_h);
+                      // Candidate CEP.
+                      CEP c_cep = make_pair(new_cost, e);
+                      // The target vertex of the edge.
+                      vertex t = boost::target(e, g);
+
+                      relaks(q, r[t], c_cep, t, c_sssc);
+                    }
                 }
             }
         }
@@ -348,6 +355,12 @@ dijkstra::select_t &
 dijkstra::get_select()
 {
   return select;
+}
+
+int &
+dijkstra::get_max_len()
+{
+  return max_len;
 }
 
 SSC

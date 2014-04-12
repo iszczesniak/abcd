@@ -13,10 +13,13 @@ public:
   // smallest - the smallest set of contiguous subcarriers are chosen
 
   enum select_t {first, fittest};
-  static select_t select;
 
 private:
   typedef std::map<CEP, vertex> pqueue;
+
+  static select_t select;
+
+  static int max_len;
 
 public:
   /**
@@ -59,6 +62,12 @@ public:
    */
   static select_t &
   get_select();
+
+  /**
+   * Returns reference to the max_len field.
+   */
+  static int &
+  get_max_len();
 
   // From the given SSSC, select the SSC according to the "select"
   // field of the class.  The returned SSC has exactly nsc

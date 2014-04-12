@@ -49,6 +49,9 @@ main(int argc, const char* argv[])
   // Set how the ssc should be selected.
   dijkstra::get_select() = args.select;
 
+  // Set the maximal length of a connection.
+  dijkstra::get_max_len() = args.max_len;
+
   // The list of clients.
   std::vector<client *> vc;
 
