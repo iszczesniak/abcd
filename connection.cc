@@ -108,7 +108,9 @@ connection::reconfigure_complete(vertex new_src)
       // Make it the new source.
       d.first.first = new_src;
 
-      // The number of links to configure depends on the SSC.
+      // Now we need to calculate the number of new links to
+      // configure, which depends on the SSC.  Check whether the SSC
+      // of the new path is the same as the SSC of the old path.
       if (p.second == tmp.second)
         {
           // Calculate the number of links to configure, i.e. those
@@ -201,6 +203,8 @@ connection::reconfigure_curtailing(vertex new_src)
   // The destination node.
   vertex dst = d.first.second;
 
+  // It could happen that the roaming of the client brought it to the
+  // destination node.
   if (new_src == dst)
     {
       result.first = true;
