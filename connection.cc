@@ -211,8 +211,8 @@ connection::reconfigure_curtailing(vertex new_src)
   // The destination node.
   vertex dst = d.first.second;
 
-  // It could happen that the roaming of the client brought it to the
-  // destination node.
+  // It could happen that the roaming of the client brought it back to
+  // the destination node.
   if (new_src == dst)
     {
       result.first = true;
