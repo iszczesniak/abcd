@@ -7,6 +7,37 @@
 
 connection::reconf_t connection::reconf;
 
+int
+calc_new_links(const sscpath &new_path, const sscpath &old_path)
+{
+  int number = 0;
+
+  // Now we need to calculate the number of new links to configure,
+  // which depends on the SSC.  Check whether the SSC of the new path
+  // is the same as the SSC of the old path.
+  if (new_path.second == old_path.second)
+    {
+      // Calculate the number of links to configure, i.e. those links
+      // that are in the new path, but are missing in the old path.
+      // Iterate over the new path, and calculate those links that are
+      // not present in the old path.
+      for(path::const_iterator i = new_path.first.begin();
+          i != new_path.first.end(); ++i)
+        {
+          edge e = *i;
+          path::const_iterator j = std::find(old_path.first.begin(),
+                                             old_path.first.end(), e);
+          if (j == old_path.first.end())
+            ++number;
+        }
+    }
+  else
+    // Since it's a different SSC, we have to configure all links.
+    number = new_path.first.size();
+
+  return number;
+}
+
 connection::connection(graph &g): g(g)
 {
 }
@@ -107,30 +138,7 @@ connection::reconfigure_complete(vertex new_src)
     {
       // Make it the new source.
       d.first.first = new_src;
-
-      // Now we need to calculate the number of new links to
-      // configure, which depends on the SSC.  Check whether the SSC
-      // of the new path is the same as the SSC of the old path.
-      if (p.second == tmp.second)
-        {
-          // Calculate the number of links to configure, i.e. those
-          // links that are in the new path, but are missing in the
-          // old path.  Iterate over the new path, and calculate those
-          // edges that are not present in the old path.
-          result.second = 0;
-          for(path::const_iterator i = p.first.begin();
-              i != p.first.end(); ++i)
-            {
-              edge e = *i;
-              path::const_iterator j = std::find(tmp.first.begin(),
-                                                 tmp.first.end(), e);
-              if (j == tmp.first.end())
-                ++result.second;
-            }
-        }
-      else
-        // Since it's a different SSC, we have to configure all links.
-        result.second = p.first.size();
+      result.second = calc_new_links(p, tmp);
    }
   else
     // If no new path has been found, revert to the old path.
