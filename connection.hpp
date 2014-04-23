@@ -55,6 +55,9 @@ private:
   reconfigure_incremental(vertex new_Src);
 
   std::pair<bool, int>
+  reconfigure_curtailing_worker(vertex new_Src);
+
+  std::pair<bool, int>
   reconfigure_curtailing(vertex new_Src);
 
   // The parameter that tells how to reconfigure connections.
