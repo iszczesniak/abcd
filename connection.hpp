@@ -9,15 +9,14 @@
 class connection
 {
 public:
-  // part - partial reconfiguration: establish a new connection
-  // between base stations
+  // complete - search for a completely new connection between the new
+  // source node and the destination without the continuity
+  // constraint.
 
-  // anew - search for a completely new connection
+  // incremental - establish a bridging connection between the old
+  // source node and the new source node.
 
-  // retrace - try to find the shortest path, first from the last node
-  // on the path, then from the previous to the last node, and so on.
-
-  // retrace2 - find the shortest paths from the new source node to
+  // curtailing - find the shortest paths from the new source node to
   // all the nodes on the already established path and chose the best.
 
   enum reconf_t {complete, incremental, curtailing};
