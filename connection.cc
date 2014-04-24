@@ -219,12 +219,12 @@ connection::reconfigure_curtailing_worker(vertex new_src)
   // links can be used by the briding connection.
   while(int_src != dst)
     {
-      // This is the new demand.  Here we state only the number of
-      // subcarriers required.
-      demand nd(npair(new_src, int_src), d.second);
+      // This is the new bridging demand.  Here we state only the
+      // number of subcarriers required.
+      demand bd(npair(new_src, int_src), d.second);
 
-      // The additional path.
-      sscpath ap;
+      // The bridging path.
+      sscpath bp;
 
       std::pair<bool, int> int_result;
 
@@ -243,13 +243,13 @@ connection::reconfigure_curtailing_worker(vertex new_src)
 
           // Do we nee to use the same subcarriers?
           if (!p.second.empty())
-            r = dijkstra::search(g, nd, p.second);
+            r = dijkstra::search(g, bd, p.second);
           else
-            r = dijkstra::search(g, nd);
+            r = dijkstra::search(g, bd);
 
           // Additional path.
-          ap = dijkstra::trace(g, r, nd);
-          int_result = std::make_pair(!ap.first.empty(), ap.first.size());
+          bp = dijkstra::trace(g, r, bd);
+          int_result = std::make_pair(!bp.first.empty(), bp.first.size());
         }
 
       // Is this the best result?  First, we must have found the
@@ -264,13 +264,13 @@ connection::reconfigure_curtailing_worker(vertex new_src)
           if (p.second.empty())
             p.second = np.second;
 
-          if (!ap.first.empty())
+          if (!bp.first.empty())
             {
               // We want the SSC in the additional path to be the same as
               // in the existing path.
-              assert(p.second == ap.second);
+              assert(p.second == bp.second);
               np.first.insert(np.first.begin(),
-                              ap.first.begin(), ap.first.end());
+                              bp.first.begin(), bp.first.end());
             }
 
           assert(d.first.first == source(np.first.front(), g));
