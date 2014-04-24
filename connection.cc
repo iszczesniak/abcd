@@ -38,7 +38,7 @@ calc_new_links(const sscpath &new_path, const sscpath &old_path)
   return number;
 }
 
-connection::connection(graph &g): g(g)
+connection::connection(graph &g): g(g), established(false)
 {
 }
 
@@ -51,7 +51,7 @@ connection::get_demand() const
 bool
 connection::is_established() const
 {
-  return !p.first.empty();
+  return established;
 }
 
 std::pair<bool, int>
@@ -64,21 +64,35 @@ connection::set_up(const demand &d)
 
   this->d = d;
 
-  // We allow to allocate the signal on any of the subcarriers.
-  V2C2S r = dijkstra::search(g, d);
-  p = dijkstra::trace(g, r, d);
-  result.first = is_established();
-  result.second = p.first.size();
+  if (d.first.first != d.first.second)
+    {
+      // We allow to allocate the signal on any of the subcarriers.
+      V2C2S r = dijkstra::search(g, d);
+      p = dijkstra::trace(g, r, d);
+      result.first = !p.first.empty();
+      result.second = p.first.size();
 
-  if (result.first)
-    dijkstra::set_up_path(g, p);
+      if (result.first)
+        dijkstra::set_up_path(g, p);
 
+      established = result.first;
+    }
+  else
+    {
+      // We allow to establish a path between the same source and
+      // destination nodes.  In this case the path is empty.
+      p = sscpath();
+      established = true;
+    }
+    
   return result;
 }
 
 std::pair<bool, int>
 connection::reconfigure(vertex new_src)
 {
+  assert(is_established());
+
   std::pair<bool, int> result;
 
   switch(reconf)
@@ -314,7 +328,8 @@ connection::reconfigure_curtailing(vertex new_src)
       // That's the new source of the connection.
       d.first.first = new_src;
       // Tear down the path.
-      tear_down();
+      dijkstra::tear_down_path(g, p);
+      p = sscpath();
     }
   else
     result = reconfigure_curtailing_worker(new_src);
@@ -330,7 +345,9 @@ connection::reconfigure_curtailing(vertex new_src)
 void
 connection::tear_down()
 {
+  assert(is_established());
   dijkstra::tear_down_path(g, p);
+  established = false;
   p = sscpath();
 }
 

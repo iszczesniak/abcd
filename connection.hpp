@@ -25,6 +25,7 @@ private:
   graph &g;
   demand d;
   sscpath p;
+  bool established;
 
 public:
   connection(graph &g);
