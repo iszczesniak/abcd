@@ -136,11 +136,11 @@ connection::reconfigure_complete(vertex new_src)
 
   // Store the existing sscpath, because we'll need it in case we fail
   // to establish a new connection.
-  sscpath tmp = p.second;
+  sscpathws tmp = p;
 
   // First we need to tear down the existing path.  We might need its
   // subcarriers to establish a new connection.
-  tear_down();
+  dijkstra::tear_down_path(g, p.second);
 
   // That's the new demand.
   vertex dst = d.first.second;
@@ -153,10 +153,10 @@ connection::reconfigure_complete(vertex new_src)
   result.first = !p.second.first.empty();
 
   if (result.first)
-    result.second = calc_new_links(p.second, tmp);
+    result.second = calc_new_links(p.second, tmp.second);
   else
     // If no new path has been found, revert to the old path.
-    p.second = tmp;
+    p = tmp;
 
   dijkstra::set_up_path(g, p.second);
 
