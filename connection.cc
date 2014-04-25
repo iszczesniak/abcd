@@ -319,12 +319,11 @@ connection::reconfigure_curtailing(vertex new_src)
 
   // It could happen that the roaming of the client brought it back to
   // the destination node.
-  if (new_src == d.first.second)
+  vertex dst = d.first.second;
+  if (new_src == dst)
     {
       // Yeah, we found it, and it's nothing: no path and no SSC.
       result.first = true;
-      // That's the new source of the connection.
-      d.first.first = new_src;
       // Tear down the path.
       dijkstra::tear_down_path(g, p.second);
       p.second = sscpath();
