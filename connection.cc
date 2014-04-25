@@ -122,6 +122,10 @@ connection::reconfigure(vertex new_src)
       assert(false);
     }
 
+  // Remember the new source when the configuration succeeded.
+  if (result.first)
+    d.first.first = new_src;
+
   return result;
 }
 
@@ -149,11 +153,7 @@ connection::reconfigure_complete(vertex new_src)
   result.first = !p.second.first.empty();
 
   if (result.first)
-    {
-      // Make it the new source.
-      d.first.first = new_src;
-      result.second = calc_new_links(p.second, tmp);
-   }
+    result.second = calc_new_links(p.second, tmp);
   else
     // If no new path has been found, revert to the old path.
     p.second = tmp;
@@ -196,7 +196,6 @@ connection::reconfigure_incremental(vertex new_src)
       // We want the SSC in the additional path to be the same as in
       // the existing path.
       assert(p.second.second == ap.second);
-      d.first.first = new_src;
       p.second.first.insert(p.second.first.begin(),
                             ap.first.begin(), ap.first.end());
       dijkstra::set_up_path(g, ap);
@@ -274,7 +273,6 @@ connection::reconfigure_curtailing_worker(vertex new_src)
         {
           result = int_result;
           np = p.second;
-          d.first.first = new_src;
           if (p.second.second.empty())
             p.second.second = np.second;
 
