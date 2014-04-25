@@ -81,8 +81,8 @@ connection::set_up(const demand &d)
     {
       // We allow to establish a path between the same source and
       // destination nodes.  In this case the path is empty.
-      p = sscpathws();
       p.first = true;
+      p.second = sscpath();
     }
     
   return result;
