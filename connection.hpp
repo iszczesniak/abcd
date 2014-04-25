@@ -22,10 +22,12 @@ public:
   enum reconf_t {complete, incremental, curtailing};
 
 private:
+  // This is the sscpath with status.
+  typedef std::pair<bool, sscpath> sscpathws;
+
   graph &g;
   demand d;
-  sscpath p;
-  bool established;
+  sscpathws p;
 
 public:
   connection(graph &g);

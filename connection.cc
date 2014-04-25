@@ -38,7 +38,7 @@ calc_new_links(const sscpath &new_path, const sscpath &old_path)
   return number;
 }
 
-connection::connection(graph &g): g(g), established(false)
+connection::connection(graph &g): g(g)
 {
 }
 
@@ -51,7 +51,7 @@ connection::get_demand() const
 bool
 connection::is_established() const
 {
-  return established;
+  return p.first;
 }
 
 std::pair<bool, int>
@@ -68,21 +68,21 @@ connection::set_up(const demand &d)
     {
       // We allow to allocate the signal on any of the subcarriers.
       V2C2S r = dijkstra::search(g, d);
-      p = dijkstra::trace(g, r, d);
-      result.first = !p.first.empty();
-      result.second = p.first.size();
+      p.second = dijkstra::trace(g, r, d);
+      result.first = !p.second.first.empty();
+      result.second = p.second.first.size();
 
       if (result.first)
-        dijkstra::set_up_path(g, p);
+        dijkstra::set_up_path(g, p.second);
 
-      established = result.first;
+      p.first = result.first;
     }
   else
     {
       // We allow to establish a path between the same source and
       // destination nodes.  In this case the path is empty.
-      p = sscpath();
-      established = true;
+      p = sscpathws();
+      p.first = true;
     }
     
   return result;
@@ -132,7 +132,7 @@ connection::reconfigure_complete(vertex new_src)
 
   // Store the existing sscpath, because we'll need it in case we fail
   // to establish a new connection.
-  sscpath tmp = p;
+  sscpath tmp = p.second;
 
   // First we need to tear down the existing path.  We might need its
   // subcarriers to establish a new connection.
@@ -145,20 +145,20 @@ connection::reconfigure_complete(vertex new_src)
   // When searching for the new path, we allow all available
   // subcarriers.
   V2C2S r = dijkstra::search(g, nd);
-  p = dijkstra::trace(g, r, nd);
-  result.first = !p.first.empty();
+  p.second = dijkstra::trace(g, r, nd);
+  result.first = !p.second.first.empty();
 
   if (result.first)
     {
       // Make it the new source.
       d.first.first = new_src;
-      result.second = calc_new_links(p, tmp);
+      result.second = calc_new_links(p.second, tmp);
    }
   else
     // If no new path has been found, revert to the old path.
-    p = tmp;
+    p.second = tmp;
 
-  dijkstra::set_up_path(g, p);
+  dijkstra::set_up_path(g, p.second);
 
   return result;
 }
@@ -182,7 +182,7 @@ connection::reconfigure_incremental(vertex new_src)
   // what SSC is available at the start, which is the SSC of an
   // existing path.  Together with the number of required subcarriers,
   // we search the path that has exactly the required SSC.
-  V2C2S r = dijkstra::search(g, nd, p.second);
+  V2C2S r = dijkstra::search(g, nd, p.second.second);
   // Additional path.
   sscpath ap = dijkstra::trace(g, r, nd);
   // If the path is not empty, then we succeeded in our search.
@@ -195,10 +195,10 @@ connection::reconfigure_incremental(vertex new_src)
     {
       // We want the SSC in the additional path to be the same as in
       // the existing path.
-      assert(p.second == ap.second);
+      assert(p.second.second == ap.second);
       d.first.first = new_src;
-      p.first.insert(p.first.begin(),
-                     ap.first.begin(), ap.first.end());
+      p.second.first.insert(p.second.first.begin(),
+                            ap.first.begin(), ap.first.end());
       dijkstra::set_up_path(g, ap);
     }
 
@@ -212,7 +212,7 @@ connection::reconfigure_curtailing_worker(vertex new_src)
 
   // Store the existing sscpath, because we'll need it in case we
   // fail to establish a new connection.
-  sscpath tmp = p;
+  sscpath tmp = p.second;
 
   // The new sscpath.
   sscpath np;
@@ -256,8 +256,8 @@ connection::reconfigure_curtailing_worker(vertex new_src)
           V2C2S r;
 
           // Do we nee to use the same subcarriers?
-          if (!p.second.empty())
-            r = dijkstra::search(g, bd, p.second);
+          if (!p.second.second.empty())
+            r = dijkstra::search(g, bd, p.second.second);
           else
             r = dijkstra::search(g, bd);
 
@@ -273,16 +273,16 @@ connection::reconfigure_curtailing_worker(vertex new_src)
           (!result.first || int_result.second < result.second))
         {
           result = int_result;
-          np = p;
+          np = p.second;
           d.first.first = new_src;
-          if (p.second.empty())
-            p.second = np.second;
+          if (p.second.second.empty())
+            p.second.second = np.second;
 
           if (!bp.first.empty())
             {
               // We want the SSC in the additional path to be the same as
               // in the existing path.
-              assert(p.second == bp.second);
+              assert(p.second.second == bp.second);
               np.first.insert(np.first.begin(),
                               bp.first.begin(), bp.first.end());
             }
@@ -291,23 +291,23 @@ connection::reconfigure_curtailing_worker(vertex new_src)
         }
 
       // Take down the leading edge in the path.
-      edge ettd = p.first.front();
-      p.first.pop_front();
+      edge ettd = p.second.first.front();
+      p.second.first.pop_front();
       // Retrace one node.
       assert(source(ettd, g) == int_src);
       int_src = target(ettd, g);
       // Take down that edge!
       sscpath sscpathttd;
       sscpathttd.first.push_back(ettd);
-      sscpathttd.second = p.second;
+      sscpathttd.second = p.second.second;
       dijkstra::tear_down_path(g, sscpathttd);
     }
 
   // We should have dismantled the path completely by now.
-  assert(p.first.empty());
+  assert(p.second.first.empty());
 
-  p = (result.first ? np : tmp);
-  dijkstra::set_up_path(g, p);
+  p.second = (result.first ? np : tmp);
+  dijkstra::set_up_path(g, p.second);
 
   return result;
 }
@@ -328,16 +328,16 @@ connection::reconfigure_curtailing(vertex new_src)
       // That's the new source of the connection.
       d.first.first = new_src;
       // Tear down the path.
-      dijkstra::tear_down_path(g, p);
-      p = sscpath();
+      dijkstra::tear_down_path(g, p.second);
+      p.second = sscpath();
     }
   else
     result = reconfigure_curtailing_worker(new_src);
 
   // The path is empty or the source node of the connection is really
   // the source node of the path.
-  assert(p.first.empty() ||
-         d.first.first == source(p.first.front(), g));
+  assert(p.second.first.empty() ||
+         d.first.first == source(p.second.first.front(), g));
 
   return result;
 }
@@ -346,9 +346,8 @@ void
 connection::tear_down()
 {
   assert(is_established());
-  dijkstra::tear_down_path(g, p);
-  established = false;
-  p = sscpath();
+  dijkstra::tear_down_path(g, p.second);
+  p = sscpathws();
 }
 
 connection::reconf_t &
