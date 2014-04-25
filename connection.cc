@@ -163,19 +163,16 @@ connection::reconfigure_complete(vertex new_src)
   return result;
 }
 
+// We search for the shortest path from the new source node to the
+// previous source node.
 std::pair<bool, int>
 connection::reconfigure_incremental(vertex new_src)
 {
   std::pair<bool, int> result;
 
-  vertex old_src = d.first.first;
-
-  // We search for the shortest path from new_src to old_src.  And we
-  // ask for exactly the very same subcarriers that are already used
-  // by the existing connection.
-  
   // This is the new demand.  Here we state only the number of
   // subcarriers required.
+  vertex old_src = d.first.first;
   demand nd(npair(new_src, old_src), d.second);
 
   // When searching a path for a new demand, we also state exactly
@@ -183,22 +180,22 @@ connection::reconfigure_incremental(vertex new_src)
   // existing path.  Together with the number of required subcarriers,
   // we search the path that has exactly the required SSC.
   V2C2S r = dijkstra::search(g, nd, p.second.second);
-  // Additional path.
-  sscpath ap = dijkstra::trace(g, r, nd);
+  // Bridging path.
+  sscpath bp = dijkstra::trace(g, r, nd);
   // If the path is not empty, then we succeeded in our search.
-  result.first = !ap.first.empty();
+  result.first = !bp.first.empty();
   // The number of links to reconfigure.
-  result.second = ap.first.size();
+  result.second = bp.first.size();
 
   // Set up the extra part and modify the list.
   if (result.first)
     {
       // We want the SSC in the additional path to be the same as in
       // the existing path.
-      assert(p.second.second == ap.second);
+      assert(p.second.second == bp.second);
       p.second.first.insert(p.second.first.begin(),
-                            ap.first.begin(), ap.first.end());
-      dijkstra::set_up_path(g, ap);
+                            bp.first.begin(), bp.first.end());
+      dijkstra::set_up_path(g, bp);
     }
 
   return result;
