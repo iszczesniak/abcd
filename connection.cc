@@ -221,22 +221,18 @@ connection::reconfigure_curtailing_worker(vertex new_src)
   vertex dst = d.first.second;
   assert(new_src != dst);
 
-  // That's the intermediate node, from where the old path is
-  // reused.  We start with the old source node.
+  // That's the intermediate node, from where the old path is reused.
+  // We start with the old source node.
   vertex int_src = d.first.first;
 
-  // In every iteration of the loop we search for the shortest
-  // path from new_src to int_src.  And we ask for exactly the
-  // very same subcarriers that are already used by the existing
-  // connection.  We retrace the whole path, and as we do it we
-  // dismantle the path from the beginning because the dismantled
-  // links can be used by the briding connection.
+  // In every iteration of the loop we search for the shortest path
+  // from new_src to int_src.  And we ask for exactly the very same
+  // subcarriers that are already used by the existing connection.  We
+  // retrace the whole path, and as we do it we dismantle the path
+  // from the beginning because the dismantled links can be used by
+  // the briding connection.
   while(int_src != dst)
     {
-      // This is the new bridging demand.  Here we state only the
-      // number of subcarriers required.
-      demand bd(npair(new_src, int_src), d.second);
-
       // The bridging path.
       sscpath bp;
 
@@ -248,6 +244,10 @@ connection::reconfigure_curtailing_worker(vertex new_src)
         int_result.first = true;
       else
         {
+          // This is the new bridging demand.  Here we state only the
+          // number of subcarriers required.
+          demand bd(npair(new_src, int_src), d.second);
+
           // When searching a path for a new demand, we also state
           // exactly what SSC is available at the start, which is the
           // SSC of an existing path.  Together with the number of
