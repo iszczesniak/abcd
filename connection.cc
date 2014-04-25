@@ -122,7 +122,7 @@ connection::reconfigure(vertex new_src)
       assert(false);
     }
 
-  // Remember the new source when the configuration succeeded.
+  // Remember the new source when the reconfiguration succeeded.
   if (result.first)
     d.first.first = new_src;
 
