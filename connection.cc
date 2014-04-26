@@ -336,11 +336,6 @@ connection::reconfigure_curtailing(vertex new_src)
   else
     result = reconfigure_curtailing_worker(new_src);
 
-  // The path is empty or the source node of the connection is really
-  // the source node of the path.
-  assert(p.second.first.empty() ||
-         new_src == source(p.second.first.front(), g));
-
   return result;
 }
 
