@@ -270,6 +270,28 @@ std::ostream &operator << (std::ostream &os, const std::set<T> &v)
 }
 
 /**
+ * This is the << operator for a list.
+ */
+template <typename T>
+std::ostream &operator << (std::ostream &os, const std::list<T> &v)
+{
+  typename std::list<T>::const_iterator i = v.begin();
+
+  os << "(";
+
+  while(i != v.end())
+    {
+      os << *i;
+      if (++i != v.end())
+        os << ", ";
+    }
+
+  os << ")";
+
+  return os;
+}
+
+/**
  * Make sure that the graph has only one connected component, and that
  * perhaps there are some lonely vertexes.  Sort the list in the
  * decreasing order of the number of elements in the sets.
