@@ -206,12 +206,12 @@ connection::reconfigure_curtailing_worker(vertex new_src)
 {
   std::pair<bool, int> result;
 
-  // Store the existing sscpath, because we'll need it in case we
-  // fail to establish a new connection.
-  sscpath tmp = p.second;
+  // Store the existing sscpath, because we'll need it in case we fail
+  // to establish a new connection.
+  sscpathws tmp = p;
 
-  // The new sscpath.
-  sscpath np;
+  // The new sscpathws -- the path after reconfiguration.
+  sscpathws np;
 
   // The destination node of the connection.
   vertex dst = d.first.second;
@@ -229,15 +229,13 @@ connection::reconfigure_curtailing_worker(vertex new_src)
   // the briding connection.
   while(int_src != dst)
     {
-      // The bridging path.
-      sscpath bp;
-
-      std::pair<bool, int> int_result;
+      // The bridging path with status for the int_src node.
+      sscpathws bp;
 
       // It can happen that the client got back to some node
       // previously visited, and so we just cut the path.
       if (new_src == int_src)
-        int_result.first = true;
+        bp.first = true;
       else
         {
           // This is the new bridging demand.  Here we state only the
@@ -251,38 +249,48 @@ connection::reconfigure_curtailing_worker(vertex new_src)
           // the required SSC.
           V2C2S r;
 
-          // Do we nee to use the same subcarriers?
+          // In bridging, do we need to use the same subcarriers?
           if (!p.second.second.empty())
             r = dijkstra::search(g, bd, p.second.second);
           else
-            r = dijkstra::search(g, bd);
+            {
+              // We are free not to care about the continuity
+              // constraint only when path p is empty.
+              assert(p.second.first.empty());
+              r = dijkstra::search(g, bd);
+            }
 
           // Additional path.
-          bp = dijkstra::trace(g, r, bd);
-          int_result = std::make_pair(!bp.first.empty(), bp.first.size());
+          bp.second = dijkstra::trace(g, r, bd);
+          bp.first = !bp.second.first.empty();
         }
 
       // Is this the best result?  First, we must have found the
       // result, and then it must be the first result ever or it must
       // be better than a previous best result.
-      if (int_result.first &&
-          (!result.first || int_result.second < result.second))
+      if (bp.first &&
+          (!result.first || bp.second.first.size() < result.second))
         {
-          result = int_result;
-          np = p.second;
-          if (p.second.second.empty())
-            p.second.second = np.second;
+          result.first = true;
+          // That's the shortest length of the briding path.
+          result.second = bp.second.first.size();
 
-          if (!bp.first.empty())
-            {
-              // We want the SSC in the additional path to be the same as
-              // in the existing path.
-              assert(p.second.second == bp.second);
-              np.first.insert(np.first.begin(),
-                              bp.first.begin(), bp.first.end());
-            }
+          // Build the new path np from p and bp.
+          np = p;
+          // Take the SSC from bp if p doesn't have it.  This can
+          // happen if the previous reconfiguration resulted in an
+          // empty path.
+          if (np.second.second.empty())
+            np.second.second = bp.second.second;
 
-          assert(d.first.first == source(np.first.front(), g));
+          // We want the SSC in the additional path to be the same as
+          // in the existing path.
+          assert(bp.second.second.empty() ||
+                 np.second.second == bp.second.second);
+          np.second.first.insert(np.second.first.begin(),
+                                 bp.second.first.begin(), bp.second.first.end());
+
+          assert(new_src == source(np.second.first.front(), g));
         }
 
       // Take down the leading edge in the path.
@@ -301,7 +309,7 @@ connection::reconfigure_curtailing_worker(vertex new_src)
   // We should have dismantled the path completely by now.
   assert(p.second.first.empty());
 
-  p.second = (result.first ? np : tmp);
+  p = (result.first ? np : tmp);
   dijkstra::set_up_path(g, p.second);
 
   return result;
@@ -331,7 +339,7 @@ connection::reconfigure_curtailing(vertex new_src)
   // The path is empty or the source node of the connection is really
   // the source node of the path.
   assert(p.second.first.empty() ||
-         d.first.first == source(p.second.first.front(), g));
+         new_src == source(p.second.first.front(), g));
 
   return result;
 }
