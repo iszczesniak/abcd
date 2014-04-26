@@ -227,7 +227,7 @@ connection::reconfigure_curtailing_worker(vertex new_src)
   // retrace the whole path, and as we do it we dismantle the path
   // from the beginning because the dismantled links can be used by
   // the briding connection.
-  while(int_src != dst)
+  while(true)
     {
       // The bridging path with status for the int_src node.
       sscpathws bp;
@@ -249,16 +249,17 @@ connection::reconfigure_curtailing_worker(vertex new_src)
           // the required SSC.
           V2C2S r;
 
-          // In bridging, do we need to use the same subcarriers?
-          if (!p.second.second.empty())
-            r = dijkstra::search(g, bd, p.second.second);
-          else
+          // In bridging, do we need to use the same subcarriers?  We
+          // have to care about the continuity constraint only when
+          // the path is not empty and the ssc is not empty.
+          if (!p.second.first.empty())
             {
-              // We are free not to care about the continuity
-              // constraint only when path p is empty.
-              assert(p.second.first.empty());
-              r = dijkstra::search(g, bd);
+              // SSC must not be empty for a non-empty path.
+              assert(!p.second.second.empty());
+              r = dijkstra::search(g, bd, p.second.second);
             }
+          else
+            r = dijkstra::search(g, bd);
 
           // Additional path.
           bp.second = dijkstra::trace(g, r, bd);
@@ -277,21 +278,28 @@ connection::reconfigure_curtailing_worker(vertex new_src)
 
           // Build the new path np from p and bp.
           np = p;
-          // Take the SSC from bp if p doesn't have it.  This can
-          // happen if the previous reconfiguration resulted in an
-          // empty path.
-          if (np.second.second.empty())
+          // Take the SSC from bp if p is empty.  This can happen in
+          // the case we examine the destination node as the end point
+          // of the briding connection.
+          if (np.second.first.empty())
             np.second.second = bp.second.second;
 
           // We want the SSC in the additional path to be the same as
           // in the existing path.
-          assert(bp.second.second.empty() ||
-                 np.second.second == bp.second.second);
+          assert(!np.second.second.empty());
           np.second.first.insert(np.second.first.begin(),
-                                 bp.second.first.begin(), bp.second.first.end());
+                                 bp.second.first.begin(),
+                                 bp.second.first.end());
 
           assert(new_src == source(np.second.first.front(), g));
         }
+
+      // This is the condition for breaking the loop which should go
+      // exactly here.  This allows us to consider also the dst node
+      // as the end node for the briding path, and prevents the
+      // execution of the code below.
+      if (int_src == dst)
+        break;
 
       // Take down the leading edge in the path.
       edge ettd = p.second.first.front();
