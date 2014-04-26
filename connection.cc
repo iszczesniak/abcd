@@ -298,7 +298,7 @@ connection::reconfigure_curtailing_worker(vertex new_src)
       // exactly here.  This allows us to consider also the dst node
       // as the end node for the briding path, and prevents the
       // execution of the code below.
-      if (int_src == dst)
+      if (p.second.first.empty())
         break;
 
       // Take down the leading edge in the path.
