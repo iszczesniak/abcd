@@ -222,11 +222,13 @@ connection::reconfigure_curtailing_worker(vertex new_src)
   vertex int_src = d.first.first;
 
   // In every iteration of the loop we search for the shortest path
-  // from new_src to int_src.  And we ask for exactly the very same
-  // subcarriers that are already used by the existing connection.  We
-  // retrace the whole path, and as we do it we dismantle the path
-  // from the beginning because the dismantled links can be used by
-  // the briding connection.
+  // from new_src to int_src.  All nodes of the existing connection
+  // are considered, including the destination node.  We need to
+  // consider the destination node too, because we might be dealing
+  // with an empty path, when the client roamed to its destination
+  // node.  We retrace the whole path, and as we do it we dismantle
+  // the path from the beginning because the dismantled links can be
+  // used by the briding connection.
   while(true)
     {
       // The bridging path with status for the int_src node.
@@ -238,16 +240,11 @@ connection::reconfigure_curtailing_worker(vertex new_src)
         bp.first = true;
       else
         {
+          V2C2S r;
+
           // This is the new bridging demand.  Here we state only the
           // number of subcarriers required.
           demand bd(npair(new_src, int_src), d.second);
-
-          // When searching a path for a new demand, we also state
-          // exactly what SSC is available at the start, which is the
-          // SSC of an existing path.  Together with the number of
-          // required subcarriers, we search the path that has exactly
-          // the required SSC.
-          V2C2S r;
 
           // In bridging, do we need to use the same subcarriers?  We
           // have to care about the continuity constraint only when
