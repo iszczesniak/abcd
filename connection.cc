@@ -103,19 +103,13 @@ connection::reconfigure(vertex new_src)
       break;
 
     case incremental:
-      // First we do the incremental reconfiguration.
+      // The incremental reconfiguration.
       result = reconfigure_incremental(new_src);
-      if (!result.first)
-        // And if that fails we do the complete reconfiguration.
-        result = reconfigure_complete(new_src);
       break;
 
     case curtailing:
-      // First we do the curtailing reconfiguration.
+      // The curtailing reconfiguration.
       result = reconfigure_curtailing(new_src);
-      if (!result.first)
-        // And if that fails we do the complete reconfiguration.
-        result = reconfigure_complete(new_src);
       break;
 
     default:
