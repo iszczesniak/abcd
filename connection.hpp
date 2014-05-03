@@ -19,7 +19,8 @@ public:
   // curtailing - find the shortest paths from the new source node to
   // all the nodes on the already established path and chose the best.
 
-  enum reconf_t {complete, incremental, curtailing};
+  enum reconf_t {complete, incremental, curtailing,
+                 incrementalnorevert, curtailingnorevert};
 
 private:
   // This is the sscpath with status.

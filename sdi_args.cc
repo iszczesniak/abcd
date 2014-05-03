@@ -17,7 +17,9 @@ reconf_interpret(const string &reconf)
   reconf_map_t reconf_map;
   reconf_map["complete"] = connection::complete;
   reconf_map["incremental"] = connection::incremental;
+  reconf_map["incrementalnorevert"] = connection::incrementalnorevert;
   reconf_map["curtailing"] = connection::curtailing;
+  reconf_map["curtailingnorevert"] = connection::curtailingnorevert;
 
   reconf_map_t::iterator i = reconf_map.find(reconf);
 
