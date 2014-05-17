@@ -170,32 +170,58 @@ connection::reconfigure_incremental(vertex new_src)
 {
   std::pair<bool, int> result;
 
-  // This is the new demand.  Here we state only the number of
+  // This is the bridging demand.  Here we state only the number of
   // subcarriers required.
   vertex old_src = d.first.first;
-  demand nd(npair(new_src, old_src), d.second);
+  demand bd(npair(new_src, old_src), d.second);
 
-  // When searching a path for a new demand, we also state exactly
-  // what SSC is available at the start, which is the SSC of an
-  // existing path.  Together with the number of required subcarriers,
-  // we search the path that has exactly the required SSC.
-  V2C2S r = dijkstra::search(g, nd, p.second.second);
-  // Bridging path.
-  sscpath bp = dijkstra::trace(g, r, nd);
-  // If the path is not empty, then we succeeded in our search.
-  result.first = !bp.first.empty();
-  // The number of links to reconfigure.
-  result.second = bp.first.size();
-
-  // Set up the extra part and modify the list.
-  if (result.first)
+  vertex dst = d.first.second;
+  if (new_src == dst)
     {
-      // We want the SSC in the additional path to be the same as in
-      // the existing path.
-      assert(p.second.second == bp.second);
-      p.second.first.insert(p.second.first.begin(),
-                            bp.first.begin(), bp.first.end());
-      dijkstra::set_up_path(g, bp);
+      // Yeah, we found it, and it's nothing: no path and no SSC.
+      result.first = true;
+      // Tear down the path.
+      dijkstra::tear_down_path(g, p.second);
+      p.second = sscpath();
+    }
+  else
+    {
+      V2C2S r;
+
+      // In bridging, do we need to use the same subcarriers?  We have
+      // to care about the continuity constraint only when the path is
+      // not empty and the ssc is not empty.
+      if (!p.second.first.empty())
+        {
+          // SSC must not be empty for a non-empty path.
+          assert(!p.second.second.empty());
+          r = dijkstra::search(g, bd, p.second.second);
+        }
+      else
+        r = dijkstra::search(g, bd);
+
+      // Bridging path.
+      sscpath bp = dijkstra::trace(g, r, bd);
+      // If the path is not empty, then we succeeded in our search.
+      result.first = !bp.first.empty();
+      // The number of links to reconfigure.
+      result.second = bp.first.size();
+
+      // Set up the extra part and modify the list.
+      if (result.first)
+        {
+          // Remember the SSC of the briding path if the existing path
+          // was empty.
+          if (p.second.second.empty())
+            p.second.second = bp.second;
+
+          // We want the SSC in the additional path to be the same as
+          // in the existing path.
+          assert(p.second.second == bp.second);
+          p.second.first.insert(p.second.first.begin(),
+                                bp.first.begin(), bp.first.end());
+          dijkstra::set_up_path(g, bp);
+        }
     }
 
   return result;
