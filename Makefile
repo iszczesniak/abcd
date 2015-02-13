@@ -2,7 +2,7 @@ TARGETS = sdi
 TARGET_OBJS = $(addsuffix .o, $(TARGETS))
 
 OBJS = client.o connection.o dijkstra.o event.o graph.o module.o	\
-sdi_args.o stats.o utils.o utils_netgen.o
+sdi_args.o stats.o utils.o utils_netgen.o punkt.o teventqueue.o
 
 #CXXFLAGS = -g -Wno-deprecated
 CXXFLAGS = -O3 -Wno-deprecated
