@@ -10,8 +10,9 @@
 
 #include <boost/graph/adjacency_list.hpp>
 
-// The set of subcarriers.  It's used to describe the subcarriers that
-// are all avaiable along a single path.
+// The set of subcarriers.  It's used to describe available
+// subcarriers.  are all avaiable along a single path.  Look at SSSC
+// below.
 typedef std::set<int> SSC;
 
 // The set of SSC.  It's used to describe the subcarriers that are
@@ -32,7 +33,8 @@ namespace boost {
 }
 
 /**
- * The type of the graph we use.
+ * The type of the graph we use.  The edge_ssc_t property describes
+ * the subcarriers available, i.e. not already taken.
  */
 typedef
 boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS,

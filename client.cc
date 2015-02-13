@@ -2,6 +2,8 @@
 #include "dijkstra.hpp"
 #include "utils_netgen.hpp"
 
+#include <utility>
+
 using namespace std;
 
 client::client(graph &g, pqueue &q, int id, boost::mt19937 &rng,
@@ -12,7 +14,7 @@ client::client(graph &g, pqueue &q, int id, boost::mt19937 &rng,
   l_sleep(l_sleep), sd(l_sleep), sdg(rng, sd),
   l_change(l_change), cd(l_change), cdg(rng, cd),
   mnc(mnc), ncd(mnc), ncdg(rng, ncd),
-  mnsc(mnsc), nscd(mnsc), nscdg(rng, nscd),
+  mnsc(mnsc - 1), nscd(mnsc), nscdg(rng, nscd),
   conn(g), st(stats::get())
 {
 }
@@ -28,13 +30,14 @@ void client::operator()(double t)
   if (idle)
     {
       // The client is now idle, and should get busy now.
-      bool success = set_up();
-      st->established(success);
+      pair<bool, int> result = set_up();
+      st->established(result.first);
 
-      if (success)
+      if (result.first)
         {
           idle = false;
           nc_left = ncdg();
+          st->established_length(result.second);
         }
     }
   else
@@ -42,9 +45,12 @@ void client::operator()(double t)
       if (nc_left)
         {
           // It's time now to reconfigure.
-          bool status = reconfigure();
-          if (status)
-            --nc_left;
+          pair<bool, int> result = reconfigure();
+          if (result.first)
+            {
+              --nc_left;
+              st->reconfigured_links(result.second);
+            }
           else
             {
               nc_left = 0;
@@ -77,7 +83,8 @@ void client::schedule(double t)
   module::schedule(t + dt);
 }
 
-bool client::set_up()
+pair<bool, int>
+client::set_up()
 {
   // The new demand.
   demand d;
@@ -89,7 +96,8 @@ bool client::set_up()
   return conn.set_up(d);
 }
 
-bool client::reconfigure()
+std::pair<bool, int>
+client::reconfigure()
 {
   // We change the source node, and the destination node stays
   // unchanged.  We choose the new source node from one of the
@@ -106,4 +114,10 @@ bool client::reconfigure()
   vertex new_src = get_random_element(sov, rng);
 
   return conn.reconfigure(new_src);
+}
+
+bool
+client::is_idle()
+{
+  return idle;
 }

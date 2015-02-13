@@ -1,5 +1,5 @@
-#ifndef IJS_CLIENT
-#define IJS_CLIENT
+#ifndef CLIENT_HPP
+#define CLIENT_HPP
 
 #include "event.hpp"
 #include "connection.hpp"
@@ -10,6 +10,8 @@
 #include <boost/random.hpp>
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
+
+#include <utility>
 
 namespace ba = boost::accumulators;
 
@@ -80,10 +82,18 @@ public:
   // Processes the event and changes the state of the client.
   void operator()(double t);
 
+  // Tell whether the client is idle.
+  bool is_idle();
+
 private:
-  bool set_up();
-  bool reconfigure();
-  void tear_down();
+  std::pair<bool, int>
+  set_up();
+
+  std::pair<bool, int>
+  reconfigure();
+
+  void
+  tear_down();
 };
 
-#endif
+#endif /* CLIENT_HPP */

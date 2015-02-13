@@ -18,7 +18,7 @@ main(int argc, const char* argv[])
   sdi_args args = process_sdi_args(argc, argv);
 
   // Simulation time.
-  const double sim_limit = 100;
+  double sim_time = args.sim_time;
 
   // Random number generator.
   boost::mt19937 gen(args.seed);
@@ -37,17 +37,26 @@ main(int argc, const char* argv[])
   // The number of subcarriers for each edge.
   set_subcarriers(g, args.nr_sc);
 
+  // The distance for each edge.
+  set_distances(g, 5, 30, gen);
+
   // The DES priority queue.
   pqueue q;
 
   // Set how the connections should be reconfigured.
   connection::get_reconf() = args.reconf;
 
-  // The stats module.
-  stats s(args, g, q);
+  // Set how the ssc should be selected.
+  dijkstra::get_select() = args.select;
+
+  // Set the maximal length of a connection.
+  dijkstra::get_max_len() = args.max_len;
 
   // The list of clients.
-  std::vector<module *> vc;
+  std::vector<client *> vc;
+
+  // The stats module.
+  stats s(args, g, q, vc);
 
   // Create the modules for the simulation.
   for(int i = 0; i < args.nr_clients; ++i)
@@ -62,7 +71,7 @@ main(int argc, const char* argv[])
   // The event loop.
   while(!q.empty())
     {
-      if (q.top().get_time() > sim_limit)
+      if (q.top().get_time() > sim_time)
 	break;
 
       q.top().process();
@@ -70,7 +79,7 @@ main(int argc, const char* argv[])
     }
 
   // Delete the clients.
-  for(std::vector<module *>::const_iterator i = vc.begin();
+  for(std::vector<client *>::const_iterator i = vc.begin();
       i != vc.end(); ++i)
     delete *i;
 }

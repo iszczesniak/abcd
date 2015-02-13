@@ -26,6 +26,25 @@ includes(const SSSC &a, const SSC &b)
 }
 
 bool
+includes(const SSSC &a, const SSSC &b)
+{
+  bool status = true;
+
+  for(SSSC::const_iterator ib = b.begin(); status && ib != b.end(); ++ib)
+    {
+      bool found = false;
+
+      for(SSSC::const_iterator ia = a.begin(); !found && ia != a.end(); ++ia)
+        if (includes(*ia, *ib))
+          found = true;
+
+      status &= found;
+    }
+
+  return status;
+}
+
+bool
 excludes(const SSC &a, const SSC &b)
 {
   return intersection(a, b).empty();
@@ -156,4 +175,33 @@ get_components(const graph &g)
   l.sort(stlos);
 
   return l;
+}
+
+SSSC
+split(const SSC &ssc)
+{
+  SSSC sssc;
+
+  for(SSC::const_iterator i = ssc.begin(); i != ssc.end();)
+    {
+      SSC tmp;
+      int sc;
+
+      do
+        {
+          sc = *i;
+          tmp.insert(sc);
+          ++i;
+        } while (i != ssc.end() && sc + 1 == *i);
+
+      sssc.insert(tmp);
+    }
+
+  return sssc;
+}
+
+int
+calculate_fragments(const SSC &ssc)
+{
+  return split(ssc).size();
 }
