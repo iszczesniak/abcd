@@ -1,52 +1,9 @@
-#include "teventqueue.h"
+#include "teventqueue.hpp"
 #include <list>
 #include <fstream>
+#include <assert.h>
 
 using namespace std;
-
-/*TNode *removeFromSet(unsigned int n, set<TNode*> &setP)
-{
-    if (setP.size() < n)
-    {
-        cerr << "ERROR revmoveFromSet of size " << setP.size() << ", position: " << n << endl;
-        exit(1);
-    }
-    set<TNode*>::iterator it = setP.begin();
-    for (; it != setP.end() && n >  0; ++it)
-    {
-        --n;
-    }
-    TNode *node = *it;
-    setP.erase(node);
-    return node;
-}
-*/
-
-/**
- * @brief removeWrongAspiredEdges - usuwa nieprawidłowe krawędzie z listy aspiredEdges
- * Sprawdza, czy poprzednio dodane na listę aspiredEdges krawędzie spełniają warunek Gabriela z ostatnio dodaną krawędzią.
- * @param aspiredEdges - uporządkowana lista krawędzi wychodzących z badanego wierzchołka n, które mogą być dodane do grafu Gabriela
- * @param n - badany wierzchołek, próbujemy dodać do grafu Gabriela krawędzie, które z niego wychodzą
- */
-void removeWrongAspiredEdges(list<TNode *> &aspiredEdges, const TNode &n)
-{
-    if (aspiredEdges.size() < 2)
-        return;
-    TMPoint o(0, 0);
-    long double rG;
-    list<TNode*>::iterator it = aspiredEdges.begin();
-    list<TNode*>::iterator itLast = aspiredEdges.end();
-    --itLast;  // wskazuje drugi wierzchołek z ostatnio dodanej krawędzi (pierwszy wierzchołek krawędzi jest w n)
-    while (it != itLast)
-    {
-       caclulateGabrielCircle( *(*it), n, o, rG);
-       if (Gdistance( *(*itLast), o) < rG)
-           it = aspiredEdges.erase(it);
-       else
-           ++it;
-    }
-}
-
 
 /**
  * @brief Gdistance calculates a distance between n1 and o
@@ -54,22 +11,21 @@ void removeWrongAspiredEdges(list<TNode *> &aspiredEdges, const TNode &n)
  * @param o - a centre of a circle
  * @return a distance
  */
-long double Gdistance(const TNode &n1, const TMPoint &o)
+long double Gdistance(const TNode &n1, const TMyPoint &o)
 {
-    TMPoint p1 = n1.getPoint();
+    TMyPoint p1 = n1.getPoint();
     long double rG = sqrt((p1.getX() - o.getX()) * (p1.getX() - o.getX()) + (p1.getY() - o.getY()) * (p1.getY() - o.getY())) ; // sqrt
     return rG;
 }
 
-void caclulateGabrielCircle(const TNode &n1, const TNode &n2, TMPoint &o, long double &rG)
+void caclulateGabrielCircle(const TNode &n1, const TNode &n2, TMyPoint &o, long double &rG)
 {
-    TMPoint p1 = n1.getPoint();
-    TMPoint p2 = n2.getPoint();
+    TMyPoint p1 = n1.getPoint();
+    TMyPoint p2 = n2.getPoint();
     o.setX( (p1.getX() + p2.getX()) / 2.0 );
     o.setY( (p1.getY() + p2.getY()) / 2.0 );
     rG = sqrt((p1.getX() - p2.getX()) * (p1.getX() - p2.getX()) + (p1.getY() - p2.getY()) * (p1.getY() - p2.getY()))/2.0 ;  // sqrt
 }
-
 
 bool TNode::operator < (const TNode &n) const
 {
@@ -82,11 +38,6 @@ bool TNode::operator < (const TNode &n) const
 void TNode::removeEdge(TNode *n)
 {
     edges.erase(n);
-    /*
-    set<TNode*>::iterator it = edges.find(n);
-    if (it != edges.end())
-        edges.erase(it);
-        */
 }
 
 ostream &operator << (ostream &out, const TNode &n)
@@ -99,10 +50,6 @@ ostream &operator << (ostream &out, const TNode &n)
     return out;
 }
 
-TEventQueue::TEventQueue()
-{
-}
-
 /**
  * @brief TTringle::isInside checks the location of n against a triangle
  * @param n - node (point) which is tested
@@ -113,14 +60,14 @@ TEventQueue::TEventQueue()
  */
 int TTriangle::isInside(TNode *n)
 {
-    TMPoint p(p1->getPoint());
-    TMPoint q(p2->getPoint());
-    TMPoint r(p3->getPoint());
-    TMPoint s(n->getPoint());
+    TMyPoint p(p1->getPoint());
+    TMyPoint q(p2->getPoint());
+    TMyPoint r(p3->getPoint());
+    TMyPoint s(n->getPoint());
     long double pr1 = whereTurn(p,q, s);
     long double pr2 = whereTurn(p, r, s);
     long double product = pr1 * pr2;
-    TMPoint pmin, pmax;
+    TMyPoint pmin, pmax;
     if (product == 0)
     {
         if (pr1 == 0)
@@ -160,7 +107,6 @@ int TTriangle::isInside(TNode *n)
         else
             return -1;
     }
-
     if (product > 0)
         return -1;
     pr1 = whereTurn(r,p, s);
@@ -176,12 +122,11 @@ int TTriangle::isInside(TNode *n)
     return 1;
 }
 
-
-void determine_M(list<TNode*> &P, TMPoint &p_1, TMPoint & p_2, TMPoint &p_3)
+void determine_M(list<TNode*> &P, TMyPoint &p_1, TMyPoint & p_2, TMyPoint &p_3)
 {
    if (P.size() < 1)
        cerr << "ERROR: list has no elements." << endl;
-   TMPoint p;
+   TMyPoint p;
    long double M = 0;
    for (list<TNode*>::iterator it = P.begin(); it != P.end(); ++it)
    {
@@ -198,7 +143,6 @@ void determine_M(list<TNode*> &P, TMPoint &p_1, TMPoint & p_2, TMPoint &p_3)
    p_3.setX(-3 * M);
    p_3.setY(-3 * M);
 }
-
 
 /**
  * @brief findTriangles finds a trinangle or two triangles in a graph T that includes a node n (when n lies on a edge the function return the references to 2 triangles)
@@ -281,20 +225,6 @@ ostream &operator << (ostream &out, TTriangle &tr)
     }
     file.close();
     return out;
-
-    /*
-      out << "Triangle " << &t << ": " << t.p1->getPoint() << ", " << t.p2->getPoint() << ", " << t.p3->getPoint() << " >> ";
-      out << "sons: " << &t << ": " << endl;
-      if (t.sons.size() == 0 )
-         out << "leaf" << endl;
-      else
-        out << endl;
-    for (set<TTriangle *>::iterator it = t.sons.begin(); it != t.sons.end(); ++it)
-    {
-       out << *(*it);
-    }
-    return out;
-     */
 }
 
 TNode* TTriangle::getNode(int i)
@@ -312,7 +242,6 @@ TNode* TTriangle::getNode(int i)
     }
 }
 
-
 void legalizeEdge(TNode *pr, TNode *pi, TNode *pj, TTriangle *T, list<TTriangle*> &triangles, TNode *p1, TNode *p2, TNode *p3)
 {
    if ( (pi == p1 || pi == p2 || pi == p3) && (pj == p1 || pj == p2 || pj == p3) )   // przypadek (i) - i, j są ujemne, legalna
@@ -322,7 +251,7 @@ void legalizeEdge(TNode *pr, TNode *pi, TNode *pj, TTriangle *T, list<TTriangle*
    TTriangle* t1 = 0;
    TTriangle* t2 = 0;
    TNode *pk;
-   TNode n( TMPoint((pi->getPoint().getX() + pj->getPoint().getX())/2.0, (pi->getPoint().getY() + pj->getPoint().getY())/2.0) ); // punkt będący środkiem krawędzi pi, pj
+   TNode n( TMyPoint((pi->getPoint().getX() + pj->getPoint().getX())/2.0, (pi->getPoint().getY() + pj->getPoint().getY())/2.0) ); // punkt będący środkiem krawędzi pi, pj
    findTriangles(T, &n, &t1, &t2);
    if (t2 != 0 && t2 != 0)
    {
@@ -372,10 +301,10 @@ void legalizeEdge(TNode *pr, TNode *pi, TNode *pj, TTriangle *T, list<TTriangle*
        else
        {  // nielegalne,
 
-           TMPoint p( pr->getPoint() );
-           TMPoint q( pj->getPoint() );
-           TMPoint r( pi->getPoint() ) ;
-           TMPoint s( pk->getPoint() );
+           TMyPoint p( pr->getPoint() );
+           TMyPoint q( pj->getPoint() );
+           TMyPoint r( pi->getPoint() ) ;
+           TMyPoint s( pk->getPoint() );
            if (isInsideOfCircle(p, q, r, s) == true)
            {
                pj->removeEdge(pi);
@@ -400,10 +329,10 @@ void legalizeEdge(TNode *pr, TNode *pi, TNode *pj, TTriangle *T, list<TTriangle*
    if ( ((pi == p1 || pi == p2 || pi == p3) || (pj == p1 || pj == p2 || pj == p3)) &&
         (  !( (pr == p1 || pr == p2 || pr == p3) || (pk == p1 || pk == p2 || pk == p3) )   ) )
    { // przypadek (iii - i lub j jest ujemne, natomiast l, k są dodatnie) - nielegalna, zmieniamy
-       TMPoint p( pr->getPoint() );
-       TMPoint q( pj->getPoint() );
-       TMPoint r( pi->getPoint() ) ;
-       TMPoint s( pk->getPoint() );
+       TMyPoint p( pr->getPoint() );
+       TMyPoint q( pj->getPoint() );
+       TMyPoint r( pi->getPoint() ) ;
+       TMyPoint s( pk->getPoint() );
        if (isInsideOfCircle(p, q, r, s) == true)
        {
            pj->removeEdge(pi);
@@ -423,11 +352,10 @@ void legalizeEdge(TNode *pr, TNode *pi, TNode *pj, TTriangle *T, list<TTriangle*
        }
        return;
    }
-   // ważna jest kolejność punktów
-   TMPoint p( pr->getPoint() );
-   TMPoint q( pj->getPoint() );
-   TMPoint r( pi->getPoint() ) ;
-   TMPoint s( pk->getPoint() );
+   TMyPoint p( pr->getPoint() );
+   TMyPoint q( pj->getPoint() );
+   TMyPoint r( pi->getPoint() ) ;
+   TMyPoint s( pk->getPoint() );
    // przypadek (ii) - wszystkie indeksy są dodatnie (nie ma punktów specjalnych)
    if (isInsideOfCircle(p, q, r, s) == true)
    { // przekręcenie przekątnych
@@ -459,7 +387,7 @@ void delaunayTriangulation(list<TTriangle*> &triangles, list<TNode*> &P)
     removedoubleNodes(P);
     if (P.size() <= 0)
         return;
-    TMPoint p_1, p_2, p_3;
+    TMyPoint p_1, p_2, p_3;
     determine_M(P, p_1, p_2, p_3);
     TNode* p1 = new TNode(p_1);
     TNode* p2 = new TNode(p_2);
@@ -489,9 +417,6 @@ void delaunayTriangulation(list<TTriangle*> &triangles, list<TNode*> &P)
         findTriangles(T, pr, &t1, &t2);
         if (t2 != 0)
         {  // czterej synowie
-
-
-
             TNode *pi = 0, *pj = 0, *pk = 0, *pl = 0;
 
             set<TNode*> T1;
@@ -580,8 +505,6 @@ void delaunayTriangulation(list<TTriangle*> &triangles, list<TNode*> &P)
             legalizeEdge(pr, pl, pj, T, triangles, p1, p2, p3);
             legalizeEdge(pr, pi, pk, T, triangles, p1, p2, p3);
             legalizeEdge(pr, pj, pk, T, triangles, p1, p2, p3);
-//            cout << "po podziale 4s t1: " << *t1 << endl;
-//            cout << "t2: " << *t2 << endl;
         }
         else
         {
@@ -611,15 +534,12 @@ void delaunayTriangulation(list<TTriangle*> &triangles, list<TNode*> &P)
                 legalizeEdge(pr, pi, pj, T, triangles, p1, p2, p3);
                 legalizeEdge(pr, pj, pk, T, triangles, p1, p2, p3);
                 legalizeEdge(pr, pi, pk, T, triangles, p1, p2, p3);
-
-//                cout << "po podziale 3s t1: " << *t1 << endl;
             }
             else
               cerr << "NO triangle" << endl;
         }
     }
     // usuwamy wierzchołki p1, p2, p3 z listy P wraz krawędziami incydentnymi, itp.
-
     int n = 3;
     for (list<TNode*>::iterator it = P.begin(); it != P.end() && n > 0; ++it, --n)
     {
@@ -634,7 +554,6 @@ void delaunayTriangulation(list<TTriangle*> &triangles, list<TNode*> &P)
     P.erase(P.begin());
     P.erase(P.begin());
     P.erase(P.begin());
-
 }
 
 /**
@@ -643,13 +562,13 @@ void delaunayTriangulation(list<TTriangle*> &triangles, list<TNode*> &P)
  */
 void removedoubleNodes(list<TNode *> &P)
 {
-    set<TMPoint> nodes;
+    set<TMyPoint> nodes;
     unsigned int nodeSize;
     list<TNode *>::iterator it = P.begin();
     while ( it != P.end() )
     {
             nodeSize = nodes.size();
-            TMPoint p = (*it)->getPoint();
+            TMyPoint p = (*it)->getPoint();
             nodes.insert(p);
             if ( nodeSize == nodes.size() )
             {
@@ -662,25 +581,33 @@ void removedoubleNodes(list<TNode *> &P)
     }
 }
 
-
 /**
  * @brief makeGabrielGraph removes wrong edges from Delaunay Triangulation to make Gabriel graph
  * @param P - list of nodes (it is a Delaunays graph)
  */
-void makeGabrielGraph(list<TNode*> &P)
+void convertDelaunay2GabrielGraph(list<TNode*> &P)
 {
-    TMPoint o(0, 0);
+    TMyPoint o(0, 0);
     long double rG;
     set<TNode*> edges;
     for (list<TNode*>::iterator it = P.begin(); it != P.end(); ++it)
     {
        edges = (*it)->getEdges();
 
-       //edges.insert();
-       for (set<TNode*>::iterator itEdge = edges.begin(); itEdge != edges.end(); ++itEdge)
+       for (set<TNode*>::iterator itEdge = edges.begin(); itEdge != edges.end(); ++itEdge)  // for each edge where *(*it) is one of its ends
        {
+           set<TNode*> toCheck = (*itEdge)->getEdges();      // The nodes to check
+           toCheck.insert(edges.begin(), edges.end());
            caclulateGabrielCircle( *(*itEdge), *(*it), o, rG);
-       //    if (Gdistance( *(*itLast), o) < rG)
+           for (set<TNode*>::iterator it2Check = toCheck.begin(); it2Check != toCheck.end(); ++it2Check)
+           {
+              if (Gdistance( *(*it2Check), o) < rG)
+              {  // remove the edge (it, it2Check)
+                  (*it)->removeEdge(*itEdge);
+                  (*itEdge)->removeEdge(*it);
+                  break;
+              }
+           }
 
        }
     }
@@ -694,7 +621,7 @@ list<TNode *> generate_Nodes(unsigned int w, unsigned int h, unsigned int number
     {
         int x = random() %  w;
         int y = random() % h;
-        TNode* n = new TNode(TMPoint(x, y));
+        TNode* n = new TNode(TMyPoint(x, y));
         size = P.size();
         P.insert(n);
         if (size <= P.size())
@@ -702,4 +629,18 @@ list<TNode *> generate_Nodes(unsigned int w, unsigned int h, unsigned int number
     }
     list<TNode *> nodeList(P.begin(), P.end());
     return nodeList;
+}
+
+/**
+ * @brief edgeNumber counts edges
+ * @param P - a list of nodes
+ * @return
+ */
+unsigned int edgeNumber(list<TNode*> &P)
+{
+    unsigned int count = 0;
+    for (list<TNode*>::iterator it = P.begin(); it != P.end(); ++it)
+        count += (*it)->getEdgesNumber();
+    assert(count % 2 == 0);
+    return count / 2;
 }
