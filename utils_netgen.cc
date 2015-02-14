@@ -50,3 +50,66 @@ move_if_needed(vertex v, const graph &g, std::set<vertex> &connected,
       saturated.insert(v);
     }
 }
+
+
+unsigned int
+generate_Gabriel_graph(graph &g, int nodes)
+{
+  assert(nodes >= 2);
+
+  // Create a graph with the following number of nodes.
+  g = graph(nodes);
+
+  // The set of lone vertexes.
+  std::set<vertex> lonely = get_vertexes<std::set<vertex> >(g);
+  
+
+  unsigned int w = 100;
+  unsigned int h = 100;
+  unsigned int number = nodes;
+  list<TNode *>P = generate_Nodes(w, h, number);
+  
+  list<TTriangle *> triangles;
+  delaunayTriangulation(triangles, P);
+
+  convertDelaunay2GabrielGraph(P);
+
+  unsigned int  edges = edgeNumber(P);
+  
+  map<TNode*, vertex> mapNV;
+  
+  std::set<vertex>::iterator itV = lonely.begin();
+  for (list<TNode *>::iterator it = P.begin(); it != P.end(); ++it, ++itV)
+  {
+     mapNV.insert( pair<TNode*, const vertex&> (*it, *itV)  );
+  }
+  
+  for (list<TNode *>::iterator it = P.begin(); it != P.end(); ++it, ++itV)
+  {
+      vertex src = mapNV[*it];
+      set<TNode*> myEdges = (*it)->getEdges();
+      
+      for (set<TNode*>::iterator itE = myEdges.begin(); itE != myEdges.end(); ++itE)
+      {
+         vertex dst = mapNV[*itE];      
+         (*itE)->removeEdge(*it);
+         edge e;
+         bool status;
+         tie(e, status) = add_edge(src, dst, g);
+         boost::get(boost::edge_weight, g, e) = (int) (dist2( (*it)->getPoint() , (*itE)->getPoint() ) + 0.5);
+         assert(status);    
+      }
+  }
+  
+  // <AG> zwolnić pamięć dla P i tr
+  for (list<TNode *>::iterator it = P.begin(); it != P.end(); ++it, ++itV)
+  {
+    delete *it;
+  }
+  
+  for (list<TTriangle *>::iterator it =  triangles.begin(); it != triangles.end(); ++it)
+  {
+    delete *it;
+  }
+  return edges;
+}
