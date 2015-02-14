@@ -2,6 +2,7 @@
 #include "graph.hpp"
 #include "utils.hpp"
 
+#include <climits>
 #include <iterator>
 #include <queue>
 #include <map>
@@ -9,7 +10,8 @@
 
 using namespace std;
 
-typedef map<CEP, vertex> pqueue;
+dijkstra::select_t dijkstra::select = dijkstra::first;
+int dijkstra::max_len = INT_MAX;
 
 /**
  * Check whether there is a better or equal result in c2s than the new
@@ -17,7 +19,7 @@ typedef map<CEP, vertex> pqueue;
  * "ssc".
  */
 bool
-has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
+dijkstra::has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
 {
   // We examine the existing results with the cost lower or equal to
   // "cost".
@@ -29,10 +31,10 @@ has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
       // than cost.
       if (e.first.first > cost)
         break;
-      else
-        // Check whether the existing result includes "ssc".
-        if (includes(e.second, ssc))
-          return true;
+
+      // Check whether the existing result includes "ssc".
+      if (includes(e.second, ssc))
+        return true;
     }
 
   return false;
@@ -43,41 +45,37 @@ has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
  * larger or equal cost and with a SSC that is included in "ssc".
  */
 void
-purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc)
+dijkstra::purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc)
 {
-  // We examine existing results with the cost larger or equal to "cost".
   C2S::iterator i = c2s.begin();
-  while(i != c2s.end() && i->first.first >= cost)
-    {
-      SSSC &sssc = i->second;
 
-      SSSC::iterator j = sssc.begin();
-      while(j != sssc.end())
-        // Check whether "ssc" includes an existing result.
-        if (includes(ssc, *j))
-          {
-            SSSC::iterator j2 = j;
-            ++j;
+  while(i != c2s.end() && i->first.first < cost)
+    ++i;
+
+  while (i != c2s.end())
+    {
+      C2S::iterator i2 = i++;
+      SSSC &sssc = i2->second;
+
+      for (SSSC::iterator j = sssc.begin(); j != sssc.end();)
+        {
+          SSSC::iterator j2 = j++;
+          if (includes(ssc, *j2))
             sssc.erase(j2);
-          }
-        else
-          ++j;
+        }
 
       // Discard the CEP for which SSSC is empty.
       if (sssc.empty())
         {
-          C2S::iterator i2 = i;
-          ++i;
           q.erase(i2->first);
           c2s.erase(i2);
         }
-      else
-        ++i;
     }
 }
 
 void
-relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v, const SSC &ssc)
+dijkstra::relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v,
+                 const SSC &ssc)
 {
   // Check whether there is an SSC in c2s that includes c_ssc at the
   // same or lower cost then c_cep.  If yes, then we can ignore this
@@ -96,14 +94,15 @@ relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v, const SSC &ssc)
 }
 
 void
-relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v, const SSSC &sssc)
+dijkstra::relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v,
+                 const SSSC &sssc)
 {
   for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
     relaks(q, c2s, cep, v, *i);
 }
 
 V2C2S
-dijkstra(const graph &g, const demand &d)
+dijkstra::search(const graph &g, const demand &d)
 {
   SSC ssc;
   vertex src = d.first.first;
@@ -121,11 +120,11 @@ dijkstra(const graph &g, const demand &d)
       include(ssc, e_ssc);
     }
 
-  return dijkstra(g, d, ssc);
+  return search(g, d, ssc);
 }
 
 V2C2S
-dijkstra(const graph &g, const demand &d, const SSC &src_ssc)
+dijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
 {
   V2C2S r;
 
@@ -206,29 +205,34 @@ dijkstra(const graph &g, const demand &d, const SSC &src_ssc)
             {
               // The edge that we examine in this iteration.
               const edge &e = *ei;
-              // The subcarriers available on the edge.
-              const SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
-              // Candidate SSC: the ssc available at node v that can
-              // be carried by edge e, and that has at least nsc
-              // contiguous subcarriers.
-              SSSC c_sssc = exclude(intersection(v_sssc, e_ssc), nsc);
 
-              if (!c_sssc.empty())
+              // The cost of the edge.
+              int ec = boost::get(boost::edge_weight, g, e);
+              // Candidate cost.
+              int new_c = c + ec;
+
+              if (new_c <= max_len)
                 {
-                  // The cost of the edge.
-                  int ec = boost::get(boost::edge_weight, g, e);
-                  // Candidate cost.
-                  int new_c = c + ec;
-                  // Candidate number of hops.
-                  int new_h = h + 1;
-                  // Candidate COST.
-                  COST new_cost = COST(new_c, new_h);
-                  // Candidate CEP.
-                  CEP c_cep = make_pair(new_cost, e);
-                  // The target vertex of the edge.
-                  vertex t = boost::target(e, g);
+                  // The subcarriers available on the edge.
+                  const SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
+                  // Candidate SSC: the ssc available at node v that
+                  // can be carried by edge e, and that has at least
+                  // nsc contiguous subcarriers.
+                  SSSC c_sssc = exclude(intersection(v_sssc, e_ssc), nsc);
 
-                  relaks(q, r[t], c_cep, t, c_sssc);
+                  if (!c_sssc.empty())
+                    {
+                      // Candidate number of hops.
+                      int new_h = h + 1;
+                      // Candidate COST.
+                      COST new_cost = COST(new_c, new_h);
+                      // Candidate CEP.
+                      CEP c_cep = make_pair(new_cost, e);
+                      // The target vertex of the edge.
+                      vertex t = boost::target(e, g);
+
+                      relaks(q, r[t], c_cep, t, c_sssc);
+                    }
                 }
             }
         }
@@ -238,7 +242,7 @@ dijkstra(const graph &g, const demand &d, const SSC &src_ssc)
 }
 
 sscpath
-shortest_path(const graph &g, const V2C2S &r, const demand &d)
+dijkstra::trace(const graph &g, const V2C2S &r, const demand &d)
 {
   sscpath p;
 
@@ -265,10 +269,9 @@ shortest_path(const graph &g, const V2C2S &r, const demand &d)
           COST c = bri->first.first;
 
           // This is the path SSC.
-          assert(!(bri->second.empty()));
-          const SSC &p_ssc = *(bri->second.begin());
+          const SSC ssc = select_ssc(bri->second, nsc);
           // And we remember this as the final result.
-          p.second = p_ssc;
+          p.second = ssc;
 
           // We start with the destination node.
           vertex crt = dst;
@@ -282,7 +285,7 @@ shortest_path(const graph &g, const V2C2S &r, const demand &d)
               // contains SSC.
               C2S::const_iterator j;
               for(j = c2s.begin(); j != c2s.end(); ++j)
-                if (j->first.first == c && includes(j->second, p_ssc))
+                if (j->first.first == c && includes(j->second, ssc))
                   break;
 
               // Make sure we found the right CEP.
@@ -301,17 +304,6 @@ shortest_path(const graph &g, const V2C2S &r, const demand &d)
           // by now, should be 0.
           assert(c.first == 0);
           assert(c.second == 0);
-
-          // This is the largest set that can support the demand.
-          SSC &ssc = p.second;
-
-          // We select the first sc subcarriers from ssc.
-          assert(ssc.size() >= nsc);
-          SSC::iterator ssc_i = ssc.begin();
-          advance(ssc_i, nsc);
-          ssc.erase(ssc_i, ssc.end());
-          ssc = exclude(ssc, nsc);
-          assert(!ssc.empty());
         }
     }
 
@@ -319,7 +311,7 @@ shortest_path(const graph &g, const V2C2S &r, const demand &d)
 }
 
 void
-set_up_path(graph &g, const sscpath &p)
+dijkstra::set_up_path(graph &g, const sscpath &p)
 {
   const path &l = p.first;
   const SSC &p_ssc = p.second;
@@ -339,7 +331,7 @@ set_up_path(graph &g, const sscpath &p)
 }
 
 void
-tear_down_path(graph &g, const sscpath &p)
+dijkstra::tear_down_path(graph &g, const sscpath &p)
 {
   const path &l = p.first;
   const SSC &p_ssc = p.second;
@@ -357,4 +349,131 @@ tear_down_path(graph &g, const sscpath &p)
       // Put back the p_ssc subcarriers to e_ssc.
       include(e_ssc, p_ssc);
     }
+}
+
+dijkstra::select_t &
+dijkstra::get_select()
+{
+  return select;
+}
+
+int &
+dijkstra::get_max_len()
+{
+  return max_len;
+}
+
+SSC
+dijkstra::select_ssc(const SSSC &sssc, int nsc)
+{
+  // This is the selected set.
+  SSC ssc;
+
+  switch(select)
+      {
+      case first:
+        ssc = select_first(sssc, nsc);
+        break;
+
+      case fittest:
+        ssc = select_fittest(sssc, nsc);
+        break;
+
+      default:
+        assert(false);
+      }
+
+  // Now in ssc we have got a fragment that has at least nsc
+  // subcarriers, but most likely it has more.  We need to select
+  // exactly nsc subcarriers.
+  SSC::const_iterator fin = ssc.begin();
+  advance(fin, nsc);
+  ssc.erase(fin, ssc.end());
+
+  return ssc;
+}
+
+SSC
+dijkstra::select_first(const SSSC &sssc, int nsc)
+{
+  SSC ssc;
+
+  for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
+    {
+      SSC tmp_ssc = select_first(*i, nsc);
+
+      if (ssc.empty())
+        ssc = tmp_ssc;
+      else
+        if (*tmp_ssc.begin() < *ssc.begin())
+          ssc = tmp_ssc;
+    }
+
+  return ssc;
+}
+
+SSC
+dijkstra::select_first(const SSC &ssc, int nsc)
+{
+  SSC result;
+
+  SSSC sssc = split(ssc);
+
+  for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
+    {
+      const SSC &tmp = *i;
+
+      // We only care about those fragments that can handle nsc.
+      if (tmp.size() >= nsc)
+        {
+          result = tmp;
+          break;
+        }
+    }
+
+  return result;
+}
+
+SSC
+dijkstra::select_fittest(const SSSC &sssc, int nsc)
+{
+  SSC ssc;
+
+  for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
+    {
+      SSC tmp_ssc = select_fittest(*i, nsc);
+
+      if (ssc.empty())
+        ssc = tmp_ssc;
+      else
+        if (tmp_ssc.size() < ssc.size())
+          ssc = tmp_ssc;
+    }
+
+  return ssc;
+}
+
+SSC
+dijkstra::select_fittest(const SSC &ssc, int nsc)
+{
+  SSC result;
+
+  SSSC sssc = split(ssc);
+
+  for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
+    {
+      const SSC &tmp = *i;
+
+      // We only care about those fragments that can handle nsc.
+      if (tmp.size() >= nsc)
+        {
+          if (result.empty())
+            result = tmp;
+          else
+            if (tmp.size() < result.size())
+              result = tmp;
+        }
+    }
+
+  return result;
 }

@@ -22,7 +22,8 @@
 namespace ba = boost::accumulators;
 
 /**
- * Generate a random number in [min, max].
+ * Generate a random number from min to max, including both min and
+ * max.
  */
 template<typename T>
 int
@@ -44,6 +45,12 @@ includes(const SSC &a, const SSC &b);
  */
 bool
 includes(const SSSC &a, const SSC &b);
+
+/**
+ * Check whether b is a subset of a.
+ */
+bool
+includes(const SSSC &a, const SSSC &b);
 
 /**
  * Check whether b is not a subset of a.
@@ -226,12 +233,16 @@ std::ostream &operator << (std::ostream &os, const std::vector<T> &v)
 {
   typename std::vector<T>::const_iterator i = v.begin();
 
+  os << "[";
+
   while(i != v.end())
     {
       os << *i;
       if (++i != v.end())
         os << ", ";
     }
+
+  os << "]";
 
   return os;
 }
@@ -244,12 +255,38 @@ std::ostream &operator << (std::ostream &os, const std::set<T> &v)
 {
   typename std::set<T>::const_iterator i = v.begin();
 
+  os << "{";
+
   while(i != v.end())
     {
       os << *i;
       if (++i != v.end())
         os << ", ";
     }
+
+  os << "}";
+
+  return os;
+}
+
+/**
+ * This is the << operator for a list.
+ */
+template <typename T>
+std::ostream &operator << (std::ostream &os, const std::list<T> &v)
+{
+  typename std::list<T>::const_iterator i = v.begin();
+
+  os << "(";
+
+  while(i != v.end())
+    {
+      os << *i;
+      if (++i != v.end())
+        os << ", ";
+    }
+
+  os << ")";
 
   return os;
 }
@@ -296,15 +333,23 @@ std::pair<typename boost::graph_traits<G>::vertex_descriptor,
 random_node_pair(const G &g, R &gen)
 {
   typedef typename boost::graph_traits<G>::vertex_descriptor vertex;
+  typedef typename boost::graph_traits<G>::vertex_iterator vertex_i;
 
-  assert(check_components(g));
-  std::set<vertex> s = *get_components(g).begin();
+  vertex_i begin = vertices(g).first;
+  int n = num_vertices(g);
 
-  assert(s.size());
-  vertex src = get_random_element(s, gen);
-  s.erase(src);
-  assert(s.size());
-  vertex dst = get_random_element(s, gen);
+  int src_n = get_random_int(0, n - 1, gen);
+  vertex_i src_i = begin;
+  std::advance(src_i, src_n);
+  vertex src = *src_i;
+
+  // Choose any number between 0 and n - 1, but not src_n.
+  int dst_n = get_random_int(0, n - 2, gen);
+  if (dst_n == src_n)
+    dst_n = n - 1;
+  vertex_i dst_i = begin;
+  std::advance(dst_i, dst_n);
+  vertex dst = *dst_i;
 
   return std::make_pair(src, dst);
 }
@@ -329,5 +374,11 @@ calculate_load(const G &g)
 
   return ba::mean(load_acc);
 }
+
+SSSC
+split(const SSC &ssc);
+
+int
+calculate_fragments(const SSC &ssc);
 
 #endif /* UTILS_HPP */
