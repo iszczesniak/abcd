@@ -1,5 +1,7 @@
 #include "utils_netgen.hpp"
 
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>   
 #include <sstream>
 #include <iomanip>
 
@@ -56,7 +58,7 @@ unsigned int
 generate_Gabriel_graph(graph &g, int nodes)
 {
   assert(nodes >= 2);
-
+  srand (time(NULL));
   // Create a graph with the following number of nodes.
   g = graph(nodes);
 
