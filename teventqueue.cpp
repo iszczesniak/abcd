@@ -624,7 +624,7 @@ list<TNode *> generate_Nodes(unsigned int w, unsigned int h, unsigned int number
         TNode* n = new TNode(TMyPoint(x, y));
         size = P.size();
         P.insert(n);
-        if (size <= P.size())
+        if (size == P.size())
             delete n;
     }
     list<TNode *> nodeList(P.begin(), P.end());
