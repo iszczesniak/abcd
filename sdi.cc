@@ -24,23 +24,7 @@ main(int argc, const char* argv[])
   boost::mt19937 gen(args.seed);
 
   // Generate the graph.
-  graph g;
-//  int res = generate_graph(g, args.nr_nodes, args.nr_edges, gen);
-  int res = generate_Gabriel_graph(g, args.nr_nodes);
-//  generate_Gabriel_graph(graph &g, int nodes)
-  assert(res == args.nr_edges);
-
-  // Make sure there is only one component.
-  assert(check_components(g));
-
-  // Name the vertexes.
-  name_vertices(g);
-
-  // The number of subcarriers for each edge.
-  set_subcarriers(g, args.nr_sc);
-
-  // The distance for each edge.
-  set_distances(g, 5, 30, gen);
+  graph g = generate_graph(args, gen);
 
   // The DES priority queue.
   pqueue q;

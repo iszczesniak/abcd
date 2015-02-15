@@ -2,17 +2,15 @@
 #define UTILS_NETGEN_HPP
 
 #include "graph.hpp"
-#include "utils.hpp"
-
-#include <iterator>
-#include <vector>
-#include <iostream>
-
 #include "mypoint.hpp"
+#include "sdi_args.hpp"
+#include "utils.hpp"
 #include "teventqueue.hpp"
-#include <list>
+
+#include <iostream>
+#include <iterator>
 #include <set>
-#include <map>
+#include <vector>
 
 #include <boost/graph/random.hpp>
 #include <boost/graph/iteration_macros.hpp>
@@ -164,14 +162,14 @@ add_random_edge(graph &g, std::set<vertex> &lonely,
  * @return the number of edges actually created.
  */
 template<typename T>
-int
-generate_graph(graph &g, int nodes, int edges, T &gen)
+graph
+generate_random_graph(const sdi_args &args, T &gen)
 {
-  assert(nodes >= 2);
-  assert(edges >= 0);
+  assert(args.nr_nodes >= 2);
+  assert(args.nr_edges >= 0);
 
   // Create a graph with the following number of nodes.
-  g = graph(nodes);
+  graph g = graph(args.nr_nodes);
 
   // The set of lone vertexes.
   std::set<vertex> lonely = get_vertexes<std::set<vertex> >(g);
@@ -183,30 +181,59 @@ generate_graph(graph &g, int nodes, int edges, T &gen)
   std::set<vertex> saturated;
 
   // In every iteration we add a new random edge.
-  for (int created = 0; created < edges; ++created)
+  for (int created = 0; created < args.nr_edges; ++created)
     if (!add_random_edge(g, lonely, connected, saturated, gen))
       {
         assert(lonely.empty());
         assert(connected.size() <= 1);
-        assert(saturated.size() >= nodes - 1);
-        return created;
+        assert(saturated.size() >= args.nr_nodes - 1);
+        // Fail, because we can't create the requested number of edges.
+        abort();
       }
 
-  return edges;
+  // Make sure we created the requested number of edges.
+  assert(num_edges (g) == args.nr_edges);
+
+  // The distance for each edge.
+  set_distances(g, 5, 30, gen);
+
+  return g;
 }
 
 /**
  * Generate the Gabriel graph.  The graph has one connected component.
- *  We don't allow loop edges
- * (i.e. that start and end at some node), and we don't allow parallel
- * edges.
+ * We don't allow for loop edges (i.e. that start and end at the same
+ * node), and we don't allow for parallel edges.
  *
- * @return the number of edges actually created.
+ * @return the graph
  */
 
-unsigned int
-generate_Gabriel_graph(graph &g, int nodes);
+graph
+generate_gabriel_graph(const sdi_args &args);
 
+template<typename T>
+graph
+generate_graph(const sdi_args &args, T &gen)
+{
+  graph g;
 
+  if (args.gtype == random_graph)
+    g = generate_random_graph(args, gen);
+  else if (args.gtype == gabriel_graph)
+    g = generate_gabriel_graph(args);
+  else
+    assert(false);
+
+  // Make sure there is only one component.
+  assert(check_components(g));
+
+  // Name the vertexes.
+  name_vertices(g);
+
+  // The number of subcarriers for each edge.
+  set_subcarriers(g, args.nr_sc);
+
+  return g;
+}
 
 #endif /* UTILS_NETGEN_HPP */

@@ -53,38 +53,34 @@ move_if_needed(vertex v, const graph &g, std::set<vertex> &connected,
     }
 }
 
-
-unsigned int
-generate_Gabriel_graph(graph &g, int nodes)
+graph
+generate_gabriel_graph(const sdi_args &args)
 {
-  assert(nodes >= 2);
-  srand (time(NULL));
+  assert(args.nr_nodes >= 2);
+  srand (args.seed);
   // Create a graph with the following number of nodes.
-  g = graph(nodes);
+  graph g = graph(args.nr_nodes);
 
   // The set of lone vertexes.
   std::set<vertex> lonely = get_vertexes<std::set<vertex> >(g);
-  
 
-  unsigned int w = 100;
-  unsigned int h = 100;
-  unsigned int number = nodes;
-  list<TNode *>P = generate_Nodes(w, h, number);
+  unsigned int w = 5000;
+  unsigned int h = 5000;
+  unsigned int number = args.nr_nodes;
+  list<TNode *> P = generate_Nodes(w, h, number);
   
   list<TTriangle *> triangles;
   delaunayTriangulation(triangles, P);
 
   convertDelaunay2GabrielGraph(P);
 
-  unsigned int  edges = edgeNumber(P);
+  unsigned int edges = edgeNumber(P);
   
   map<TNode*, vertex> mapNV;
   
   std::set<vertex>::iterator itV = lonely.begin();
   for (list<TNode *>::iterator it = P.begin(); it != P.end(); ++it, ++itV)
-  {
-     mapNV.insert( pair<TNode*, const vertex&> (*it, *itV)  );
-  }
+    mapNV[*it] = *itV;
   
   for (list<TNode *>::iterator it = P.begin(); it != P.end(); ++it, ++itV)
   {
@@ -98,20 +94,19 @@ generate_Gabriel_graph(graph &g, int nodes)
          edge e;
          bool status;
          tie(e, status) = add_edge(src, dst, g);
-         boost::get(boost::edge_weight, g, e) = (int) (dist2( (*it)->getPoint() , (*itE)->getPoint() ) + 0.5);
+         int dist = (int) (dist2((*it)->getPoint() , (*itE)->getPoint()) + 0.5);
+         boost::get(boost::edge_weight, g, e) = dist;
          assert(status);    
       }
   }
-  
+
   // <AG> zwolnić pamięć dla P i tr
-  for (list<TNode *>::iterator it = P.begin(); it != P.end(); ++it, ++itV)
-  {
+  for (list<TNode *>::iterator it = P.begin(); it != P.end(); ++it)
     delete *it;
-  }
-  
-  for (list<TTriangle *>::iterator it =  triangles.begin(); it != triangles.end(); ++it)
-  {
+
+  for (list<TTriangle *>::iterator it = triangles.begin();
+       it != triangles.end(); ++it)
     delete *it;
-  }
-  return edges;
+
+  return g;
 }

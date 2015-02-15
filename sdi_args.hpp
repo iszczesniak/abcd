@@ -7,6 +7,8 @@
 
 using namespace std;
 
+enum graph_t {random_graph, gabriel_graph};
+
 /**
  * These are the program arguments.  In this single class we store all
  * information passed at the command line.
@@ -52,6 +54,9 @@ struct sdi_args
 
   /// The way connections should be reconfigured.
   connection::reconf_t reconf;
+
+  /// The graph type;
+  graph_t gtype;
 
   /// The limit on the simulation time.
   double sim_time;
