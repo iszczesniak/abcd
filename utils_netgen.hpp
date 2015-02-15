@@ -217,9 +217,9 @@ generate_graph(const sdi_args &args, T &gen)
 {
   graph g;
 
-  if (args.gtype == random_graph)
+  if (args.grapht == random_graph)
     g = generate_random_graph(args, gen);
-  else if (args.gtype == gabriel_graph)
+  else if (args.grapht == gabriel_graph)
     g = generate_gabriel_graph(args);
   else
     assert(false);

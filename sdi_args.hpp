@@ -56,7 +56,7 @@ struct sdi_args
   connection::reconf_t reconf;
 
   /// The graph type;
-  graph_t gtype;
+  graph_t grapht;
 
   /// The limit on the simulation time.
   double sim_time;

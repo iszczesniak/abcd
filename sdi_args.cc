@@ -3,59 +3,61 @@
 
 #include <iostream>
 #include <map>
+#include <string>
 
 #include <boost/program_options.hpp>
 
 using namespace std;
 namespace po = boost::program_options;
 
-// Handles the reconf parameter.
-connection::reconf_t
-reconf_interpret(const string &reconf)
+template <typename T>
+T
+interpret (const string &name, const string &text,
+           const map <string, T> &m)
 {
-  typedef map<string, connection::reconf_t> reconf_map_t;
-  reconf_map_t reconf_map;
-  reconf_map["complete"] = connection::complete;
-  reconf_map["incremental"] = connection::incremental;
-  reconf_map["curtailing"] = connection::curtailing;
+  auto i = m.find (text);
 
-  reconf_map_t::iterator i = reconf_map.find(reconf);
-
-  if (i == reconf_map.end())
+  if (i == m.end ())
     {
-      cerr << "Wrong value of reconf.  Choose one from:";
-      for(reconf_map_t::iterator i = reconf_map.begin();
-          i != reconf_map.end(); ++i)
-        cerr << " " << i->first;
+      cerr << "Wrong value of " << name << ".  Choose one of:";
+      for (auto &p: m)
+        cerr << " " << p.first;
       cerr << endl;
-      exit(1);
+      exit (1);
     }
 
   return i->second;
 }
 
+// Handles the reconf parameter.
+connection::reconf_t
+reconf_interpret (const string &reconf)
+{
+  map <string, connection::reconf_t> reconf_map;
+  reconf_map["complete"] = connection::complete;
+  reconf_map["incremental"] = connection::incremental;
+  reconf_map["curtailing"] = connection::curtailing;
+  return interpret ("reconf", reconf, reconf_map);
+}
+
 // Handles the select parameter.
 dijkstra::select_t
-select_interpret(const string &select)
+select_interpret (const string &select)
 {
-  typedef map<string, dijkstra::select_t> select_map_t;
-  map<string, dijkstra::select_t> select_map;
+  map <string, dijkstra::select_t> select_map;
   select_map["first"] = dijkstra::first;
   select_map["fittest"] = dijkstra::fittest;
+  return interpret ("select", select, select_map);
+}
 
-  select_map_t::iterator i = select_map.find(select);
-
-  if (i == select_map.end())
-    {
-      cerr << "Wrong value of select.  Choose one from:";
-      for(select_map_t::iterator i = select_map.begin();
-          i != select_map.end(); ++i)
-        cerr << " " << i->first;
-      cerr << endl;
-      exit(1);
-    }
-
-  return i->second;
+// Handles the select parameter.
+graph_t
+grapht_interpret (const string &grapht)
+{
+  map <string, graph_t> grapht_map;
+  grapht_map["random"] = random_graph;
+  grapht_map["gabriel"] = gabriel_graph;
+  return interpret ("grapht", grapht, grapht_map);
 }
 
 sdi_args
@@ -69,9 +71,6 @@ process_sdi_args(int argc, const char *argv[])
 
       opts.add_options()
         ("help,h", "produce help message")
-
-        ("network", po::value<string>()->required(),
-         "the network type")
 
         ("nodes", po::value<int>()->required(),
          "the number of nodes to generate")
@@ -102,6 +101,9 @@ process_sdi_args(int argc, const char *argv[])
 
         ("select", po::value<string>()->required(),
          "the way subcarriers should be selected")
+
+        ("grapht", po::value<string>()->required()->default_value("random"),
+         "the graph type")
 
         ("seed", po::value<int>()->default_value(1),
          "the seed of the random number generator")
@@ -142,6 +144,7 @@ process_sdi_args(int argc, const char *argv[])
       result.hash = vm["hash"].as<string>();
       result.reconf = reconf_interpret(vm["reconf"].as<string>());
       result.select = select_interpret(vm["select"].as<string>());
+      result.grapht = grapht_interpret(vm["grapht"].as<string>());
     }
   catch(const std::exception& e)
     {

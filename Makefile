@@ -5,7 +5,7 @@ OBJS = client.o connection.o dijkstra.o event.o graph.o module.o	\
 sdi_args.o stats.o utils.o utils_netgen.o mypoint.o teventqueue.o
 
 #CXXFLAGS = -g -Wno-deprecated
-CXXFLAGS = -O3 -Wno-deprecated
+CXXFLAGS = -std=c++11 -O3 -Wno-deprecated
 
 # Boost
 #BOOSTPATH := ~/boost
