@@ -8,9 +8,17 @@
 #include <vector>
 #include <iostream>
 
+#include "mypoint.hpp"
+#include "teventqueue.hpp"
+#include <list>
+#include <set>
+#include <map>
+
 #include <boost/graph/random.hpp>
 #include <boost/graph/iteration_macros.hpp>
 #include <boost/iterator/counting_iterator.hpp>
+
+using namespace std;
 
 /**
  * Names the vertices.
@@ -186,5 +194,19 @@ generate_graph(graph &g, int nodes, int edges, T &gen)
 
   return edges;
 }
+
+/**
+ * Generate the Gabriel graph.  The graph has one connected component.
+ *  We don't allow loop edges
+ * (i.e. that start and end at some node), and we don't allow parallel
+ * edges.
+ *
+ * @return the number of edges actually created.
+ */
+
+unsigned int
+generate_Gabriel_graph(graph &g, int nodes);
+
+
 
 #endif /* UTILS_NETGEN_HPP */
