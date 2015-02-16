@@ -4,24 +4,10 @@ TARGET_OBJS = $(addsuffix .o, $(TARGETS))
 OBJS = client.o connection.o dijkstra.o event.o graph.o module.o	\
 sdi_args.o stats.o utils.o utils_netgen.o mypoint.o teventqueue.o
 
-#CXXFLAGS = -g -Wno-deprecated
+#CXXFLAGS = -std=c++11 -g -Wno-deprecated
 CXXFLAGS = -std=c++11 -O3 -Wno-deprecated
 
-# Boost
-#BOOSTPATH := ~/boost
-#CXXFLAGS := $(CXXFLAGS) -I $(BOOSTPATH)/include
-#:LDFLAGS := $(LDFLAGS) -L $(BOOSTPATH)/lib
-#LDFLAGS := $(LDFLAGS) -l boost_program_options
-
-CXXFLAGS := $(CXXFLAGS) -I /usr/include/boost
-
-#LDFLAGS := $(LDFLAGS) -L $(BOOSTPATH)/lib
-LDFLAGS := $(LDFLAGS) -L /lib 
-LDFLAGS := $(LDFLAGS) -l boost_program_options -lboost_system -lstdc++ -lm
-
-
-
-
+LDFLAGS := -l boost_program_options
 
 all: $(TARGETS)
 
