@@ -94,7 +94,7 @@ generate_gabriel_graph(const sdi_args &args)
          edge e;
          bool status;
          tie(e, status) = add_edge(src, dst, g);
-         int dist = (int) (dist2((*it)->getPoint() , (*itE)->getPoint()) + 0.5);
+         int dist = (int) (sqrt(dist2((*it)->getPoint(), (*itE)->getPoint())) + 0.5);
          boost::get(boost::edge_weight, g, e) = dist;
          assert(status);    
       }
