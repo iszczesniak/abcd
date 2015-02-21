@@ -10,8 +10,9 @@ CXXFLAGS := $(CXXFLAGS) -std=c++11 -Wno-deprecated
 ifdef BOOST_ROOT
 	CXXFLAGS := $(CXXFLAGS) -I $(BOOST_ROOT)/include
 	LDFLAGS := $(LDFLAGS) -L $(BOOST_ROOT)/lib
-	LDFLAGS := $(LDFLAGS) -l boost_program_options
 endif
+
+LDFLAGS := $(LDFLAGS) -l boost_program_options
 
 all: $(TARGETS)
 
