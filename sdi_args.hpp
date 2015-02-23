@@ -7,7 +7,7 @@
 
 using namespace std;
 
-enum graph_t {random_graph, gabriel_graph};
+enum network_t {random_network, gabriel_network};
 
 /**
  * These are the program arguments.  In this single class we store all
@@ -56,7 +56,7 @@ struct sdi_args
   connection::reconf_t reconf;
 
   /// The graph type;
-  graph_t grapht;
+  network_t network;
 
   /// The limit on the simulation time.
   double sim_time;

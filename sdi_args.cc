@@ -51,13 +51,13 @@ select_interpret (const string &select)
 }
 
 // Handles the select parameter.
-graph_t
-grapht_interpret (const string &grapht)
+network_t
+network_interpret (const string &network)
 {
-  map <string, graph_t> grapht_map;
-  grapht_map["random"] = random_graph;
-  grapht_map["gabriel"] = gabriel_graph;
-  return interpret ("grapht", grapht, grapht_map);
+  map <string, network_t> network_map;
+  network_map["random"] = network_t::random_network;
+  network_map["gabriel"] = network_t::gabriel_network;
+  return interpret ("network", network, network_map);
 }
 
 sdi_args
@@ -102,7 +102,7 @@ process_sdi_args(int argc, const char *argv[])
         ("select", po::value<string>()->required(),
          "the way subcarriers should be selected")
 
-        ("grapht", po::value<string>()->required()->default_value("random"),
+        ("network", po::value<string>()->required()->default_value("random"),
          "the graph type")
 
         ("seed", po::value<int>()->default_value(1),
@@ -144,7 +144,7 @@ process_sdi_args(int argc, const char *argv[])
       result.hash = vm["hash"].as<string>();
       result.reconf = reconf_interpret(vm["reconf"].as<string>());
       result.select = select_interpret(vm["select"].as<string>());
-      result.grapht = grapht_interpret(vm["grapht"].as<string>());
+      result.network = network_interpret(vm["network"].as<string>());
     }
   catch(const std::exception& e)
     {
