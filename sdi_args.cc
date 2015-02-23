@@ -50,7 +50,7 @@ select_interpret (const string &select)
   return interpret ("select", select, select_map);
 }
 
-// Handles the select parameter.
+// Handles the network parameter.
 network_t
 network_interpret (const string &network)
 {
@@ -75,7 +75,7 @@ process_sdi_args(int argc, const char *argv[])
         ("nodes", po::value<int>()->required(),
          "the number of nodes to generate")
 
-        ("edges", po::value<int>()->required(),
+        ("edges", po::value<int>(),
          "the number of edges to generate")
 
         ("subcarriers", po::value<int>()->required(),
@@ -131,7 +131,6 @@ process_sdi_args(int argc, const char *argv[])
       po::notify(vm);
 
       result.nr_nodes = vm["nodes"].as<int>();
-      result.nr_edges = vm["edges"].as<int>();
       result.nr_sc = vm["subcarriers"].as<int>();
       result.nr_clients = vm["clients"].as<int>();
       result.l_sleep = vm["l_sleep"].as<double>();
@@ -145,6 +144,12 @@ process_sdi_args(int argc, const char *argv[])
       result.reconf = reconf_interpret(vm["reconf"].as<string>());
       result.select = select_interpret(vm["select"].as<string>());
       result.network = network_interpret(vm["network"].as<string>());
+
+      if (result.network == network_t::random_network)
+        {
+          assert(vm.count("edges"));
+          result.nr_edges = vm["edges"].as<int>();
+        }
     }
   catch(const std::exception& e)
     {
