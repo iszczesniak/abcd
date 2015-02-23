@@ -64,8 +64,8 @@ generate_gabriel_graph(const sdi_args &args)
   // The set of lone vertexes.
   std::set<vertex> lonely = get_vertexes<std::set<vertex> >(g);
 
-  unsigned int w = 5000;
-  unsigned int h = 5000;
+  unsigned int w = 100;
+  unsigned int h = 100;
   unsigned int number = args.nr_nodes;
   list<TNode *> P = generate_Nodes(w, h, number);
   
