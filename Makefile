@@ -7,6 +7,9 @@ sdi_args.o stats.o utils.o utils_netgen.o mypoint.o teventqueue.o
 CXXFLAGS := $(CXXFLAGS) -g
 CXXFLAGS := $(CXXFLAGS) -std=c++11
 
+# Use the c++ linker
+LINK.o = $(LINK.cc)
+
 ifdef BOOST_ROOT
 	CXXFLAGS := $(CXXFLAGS) -I $(BOOST_ROOT)/include
 	LDFLAGS := $(LDFLAGS) -L $(BOOST_ROOT)/lib
