@@ -11,6 +11,33 @@ using namespace std;
 namespace po = boost::program_options;
 
 template <typename T>
+void requires (const po::variables_map& vm,
+               const char* for_arg, const T for_val,
+               const char* req)
+{
+  // Make sure the argument we are looking for is present.
+  if (vm.count (for_arg))
+    // Make sure the argument has the right value.
+    if (vm[for_arg].as<T> () == for_val)
+      // Throw, if the required argument is not present.
+      if (vm.count (req) == 0)
+        throw logic_error (string ("Option '") + for_arg 
+                           + "' that is equal to '" + for_val
+                           + "' requires option '" + req + "'.");
+}
+
+void requires (const po::variables_map& vm,
+               const char* for_arg, const char* req)
+{
+  // Make sure the argument we are looking for is present.
+  if (vm.count (for_arg))
+    // Throw, if the required argument is not present.
+    if (vm.count (req) == 0)
+      throw logic_error (string ("Option '") + for_arg 
+                         + "' requires option '" + req + "'.");
+}
+
+template <typename T>
 T
 interpret (const string &name, const string &text,
            const map <string, T> &m)
@@ -102,7 +129,7 @@ process_sdi_args(int argc, const char *argv[])
         ("select", po::value<string>()->required(),
          "the way subcarriers should be selected")
 
-        ("network", po::value<string>()->required()->default_value("random"),
+        ("network", po::value<string>()->required(),
          "the graph type")
 
         ("seed", po::value<int>()->default_value(1),
@@ -119,6 +146,8 @@ process_sdi_args(int argc, const char *argv[])
 
       po::variables_map vm;
       po::store(po::command_line_parser(argc, argv).options(opts).run(), vm);
+      requires(vm, "network", "nodes");
+      requires(vm, "network", string("random"), "edges");
 
       if (vm.count("help"))
         {
@@ -144,12 +173,7 @@ process_sdi_args(int argc, const char *argv[])
       result.reconf = reconf_interpret(vm["reconf"].as<string>());
       result.select = select_interpret(vm["select"].as<string>());
       result.network = network_interpret(vm["network"].as<string>());
-
-      if (result.network == network_t::random_network)
-        {
-          assert(vm.count("edges"));
-          result.nr_edges = vm["edges"].as<int>();
-        }
+      result.nr_edges = vm["edges"].as<int>();
     }
   catch(const std::exception& e)
     {
