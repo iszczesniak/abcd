@@ -119,13 +119,9 @@ stats::calculate_conns()
 {
   int count = 0;
 
-  for(std::vector<client *>::const_iterator i = vc.begin();
-      i != vc.end(); ++i)
-    {
-      client *c = *i;
-      if (!c->is_idle())
-        ++count;
-    }
+  for(auto const &c: vc)
+    if (!c->is_idle())
+      ++count;
 
   return count;
 }
