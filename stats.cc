@@ -23,9 +23,9 @@ stats::stats(const sdi_args &args, const graph &g, pqueue &q,
        << "estab" << " "
     // The probability of completing a connection.
        << "compl" << " "
-    // The number of currently supported connections.
+    // The number of currently active connections.
        << "conns" << " "
-    // The mean number of fragments on a link.
+    // The mean number of fragments on links.
        << "frags" << " "
     // The mean number of links to configure in order to reconfigure a
     // connection
@@ -60,7 +60,10 @@ stats::operator()(double t)
   // We reset the accumulator to get new means in the next interval.
   cca = dbl_acc();
 
+  // The number of active connections.
   cout << calculate_conns() << " ";
+
+  // The mean number of fragments of links.
   cout << calculate_frags() << " ";
 
   // The mean number of links to configure in order to reconfigure a
