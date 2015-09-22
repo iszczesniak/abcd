@@ -108,14 +108,14 @@ process_sdi_args(int argc, const char *argv[])
         ("subcarriers", po::value<int>()->required(),
          "the number of subcarriers")
 
-        ("clients", po::value<int>()->required(),
-         "the number of clients")
+        ("mcat", po::value<double>()->required(),
+         "the mean client-arrival time")
 
-        ("l_sleep", po::value<double>()->required(),
-         "the lambda for the sleep time")
+        ("mbst", po::value<double>()->required(),
+         "the mean BS-change time")
 
-        ("mnc", po::value<double>()->required(),
-         "the mean number of changes")
+        ("mdct", po::value<double>()->required(),
+         "the mean DC-change time")
 
         ("l_change", po::value<double>()->required(),
          "the lambda for the change time")

@@ -24,20 +24,17 @@ struct sdi_args
   /// The number of subcarriers.
   int nr_sc;
 
-  /// The number of clients.
-  int nr_clients;
+  /// The mean client arrival time.
+  double mcat;
 
-  /// The lambda for the sleep time.
-  double l_sleep;
+  /// The mean holding time.
+  double mht;
 
-  /// The mean number of connection changes.
-  double mnc;
+  /// The mean BS-change time.
+  double mbst;
 
-  /// The lambda for the change.
-  double l_change;
-
-  /// The mean number of the subcarriers
-  double mnsc;
+  /// The mean DC-change time.
+  double mdct;
 
   /// The maximal length of a path we want.
   int max_len;

@@ -27,20 +27,12 @@ class client: public module
   boost::mt19937 &rng;
 
   // The mean holding time.
-  double h_time;
+  double mht;
   // The holding time distribution.
   boost::exponential_distribution<> htd;
   // The holding time generator.
   boost::variate_generator<boost::mt19937 &,
-                           boost::exponential_distribution<> > cdg;
-
-  // The mean DC-change time.
-  double mdct;
-  // The DC-change time distribution.
-  boost::exponential_distribution<> dctd;
-  // The DC-change time generator.
-  boost::variate_generator<boost::mt19937 &,
-                           boost::exponential_distribution<> > dctg;
+                           boost::exponential_distribution<> > htg;
 
   // The mean BS-change time.
   double mbst;
@@ -49,6 +41,14 @@ class client: public module
   // The BS-change time generator.
   boost::variate_generator<boost::mt19937 &,
                            boost::exponential_distribution<> > bstg;
+  
+  // The mean DC-change time.
+  double mdct;
+  // The DC-change time distribution.
+  boost::exponential_distribution<> dctd;
+  // The DC-change time generator.
+  boost::variate_generator<boost::mt19937 &,
+                           boost::exponential_distribution<> > dctg;
 
   // The distribution for the number of subcarriers.
   double mnsc;
@@ -72,7 +72,7 @@ public:
    * between changes.
    */
   client(graph &g, pqueue &q, int id, boost::mt19937 &r,
-         double l_sleep, double mnc, double l_change, double mnsc);
+         double mht, double mbst, double mdct, double mnsc);
   ~client();
 
   // Schedule the new event based on the current state of the client.
