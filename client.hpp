@@ -26,29 +26,29 @@ class client: public module
   // The client random number generator.
   boost::mt19937 &rng;
 
-  // Is the client idle?
-  bool idle;
-
-  // The number of changes left to make.
-  int nc_left;
-
-  // Sleep distribution.
-  double l_sleep;
-  boost::exponential_distribution<> sd;
-  boost::variate_generator<boost::mt19937 &,
-                           boost::exponential_distribution<> > sdg;
-
-  // Change distribution.
-  double l_change;
-  boost::exponential_distribution<> cd;
+  // The mean holding time.
+  double h_time;
+  // The holding time distribution.
+  boost::exponential_distribution<> htd;
+  // The holding time generator.
   boost::variate_generator<boost::mt19937 &,
                            boost::exponential_distribution<> > cdg;
 
-  // The distribution for the number of changes.
-  double mnc;
-  boost::poisson_distribution<> ncd;
+  // The mean DC-change time.
+  double mdct;
+  // The DC-change time distribution.
+  boost::exponential_distribution<> dctd;
+  // The DC-change time generator.
   boost::variate_generator<boost::mt19937 &,
-                           boost::poisson_distribution<> > ncdg;
+                           boost::exponential_distribution<> > dctg;
+
+  // The mean BS-change time.
+  double mbst;
+  // The BS-change time distribution.
+  boost::exponential_distribution<> bstd;
+  // The BS-change time generator.
+  boost::variate_generator<boost::mt19937 &,
+                           boost::exponential_distribution<> > bstg;
 
   // The distribution for the number of subcarriers.
   double mnsc;
