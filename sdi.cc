@@ -26,9 +26,6 @@ main(int argc, const char* argv[])
   // Generate the graph.
   graph g = generate_graph(args, gen);
 
-  // The DES priority queue.
-  pqueue q;
-
   // Set how the connections should be reconfigured.
   connection::get_reconf() = args.reconf;
 
@@ -38,21 +35,15 @@ main(int argc, const char* argv[])
   // Set the maximal length of a connection.
   dijkstra::get_max_len() = args.max_len;
 
-  // The list of clients.
-  std::vector<client *> vc;
+  // The DES priority queue.
+  pqueue q;
+
+  // Create the traffic module for the simulation.
+  traffic t(g, q, gen, args.mcat, args.mht,
+            args.mbst, args.mdct, args.mnsc);
 
   // The stats module.
-  stats s(args, g, q, vc);
-
-  // Create the modules for the simulation.
-  for(int i = 0; i < args.nr_clients; ++i)
-    {
-      client *c = new client(g, q, i, gen,
-                             args.l_sleep, args.mnc, args.l_change,
-                             args.mnsc);
-      c->schedule(0);
-      vc.push_back(c);
-    }
+  stats s(args, g, q, t);
 
   // The event loop.
   while(!q.empty())
@@ -63,9 +54,4 @@ main(int argc, const char* argv[])
       q.top().process();
       q.pop();
     }
-
-  // Delete the clients.
-  for(std::vector<client *>::const_iterator i = vc.begin();
-      i != vc.end(); ++i)
-    delete *i;
 }

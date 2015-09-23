@@ -9,7 +9,7 @@ using namespace std;
 stats *stats::singleton;
 
 stats::stats(const sdi_args &args, const graph &g, pqueue &q,
-             const std::vector<client *> &vc):
+             const traffic &t):
   module(q), args(args), g(g), vc(vc)
 {
   assert(!singleton);
