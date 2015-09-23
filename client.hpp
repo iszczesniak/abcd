@@ -50,9 +50,11 @@ class client: public module
   boost::variate_generator<boost::mt19937 &,
                            boost::exponential_distribution<> > dctg;
 
-  // The distribution for the number of subcarriers.
+  // The mean number of subcarriers.
   double mnsc;
+  // The number of subcarriers distribution.
   boost::poisson_distribution<> nscd;
+  // The number of subcarriers generator.
   boost::variate_generator<boost::mt19937 &,
                            boost::poisson_distribution<> > nscdg;
 
