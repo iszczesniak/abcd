@@ -15,11 +15,34 @@ enum network_t {random_network, gabriel_network};
  */
 struct sdi_args
 {
+  /// -----------------------------------------------------------------
+  /// The network options
+  /// -----------------------------------------------------------------
+  
+  /// The graph type;
+  network_t network;
+
   /// The number of nodes in the graph.
   int nr_nodes;
 
   /// The number of edges in the graph.
   int nr_edges;
+
+  /// The number of subcarriers.
+  int nr_sc;
+
+  /// The maximal length of a path we want.
+  int max_len;
+
+  /// The way to reconfigure connections.
+  connection::reconf_t reconf;
+
+  /// The way to select subcarriers.
+  dijkstra::select_t select;
+
+  /// -----------------------------------------------------------------
+  /// The traffic options
+  /// -----------------------------------------------------------------
 
   /// The mean client arrival time.
   double mcat;
@@ -35,9 +58,10 @@ struct sdi_args
 
   /// The mean number of subcarriers.
   int mnsc;
-  
-  /// The maximal length of a path we want.
-  int max_len;
+
+  /// -----------------------------------------------------------------
+  /// The simulation options
+  /// -----------------------------------------------------------------
 
   /// The seed
   int seed;
@@ -45,15 +69,6 @@ struct sdi_args
   /// The hash of all the parameters except the seed parameter.  It's
   /// used to identify the configuration of the simulation.
   string hash;
-
-  /// The way to select subcarriers.
-  dijkstra::select_t select;
-
-  /// The way to reconfigure connections.
-  connection::reconf_t reconf;
-
-  /// The graph type;
-  network_t network;
 
   /// The limit on the simulation time.
   double sim_time;

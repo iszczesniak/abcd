@@ -94,11 +94,14 @@ process_sdi_args(int argc, const char *argv[])
 
   try
     {
-      po::options_description opts("The options");
+      // General options.
+      po::options_description gen("General options");
+      gen.add_options()
+        ("help,h", "produce help message");
 
-      opts.add_options()
-        ("help,h", "produce help message")
-
+      // Network options.
+      po::options_description net("Network options");
+      net.add_options()
         ("network", po::value<string>()->required(),
          "the graph type")
 
@@ -110,7 +113,19 @@ process_sdi_args(int argc, const char *argv[])
 
         ("subcarriers", po::value<int>()->required(),
          "the number of subcarriers")
-        
+
+        ("max_len", po::value<int>()->required(),
+         "the maximal length of a path")
+
+        ("reconf", po::value<string>()->required(),
+         "the way connections should be reconfigured")
+
+        ("select", po::value<string>()->required(),
+         "the way subcarriers should be selected");
+
+      // Traffic options.
+      po::options_description tra("Traffic options");
+      tra.add_options()
         ("mcat", po::value<double>()->required(),
          "the mean client-arrival time")
 
@@ -124,28 +139,25 @@ process_sdi_args(int argc, const char *argv[])
          "the mean DC-change time")
 
         ("mnsc", po::value<double>()->required(),
-         "the mean number of subcarriers")
+         "the mean number of subcarriers");
 
-        ("reconf", po::value<string>()->required(),
-         "the way connections should be reconfigured")
-
-        ("select", po::value<string>()->required(),
-         "the way subcarriers should be selected")
-
+      // Simulation options.
+      po::options_description sim("Simulation options");
+      sim.add_options()
         ("seed", po::value<int>()->default_value(1),
          "the seed of the random number generator")
 
         ("sim_time", po::value<double>()->default_value(100),
          "the limit on the simulation time")
 
-        ("max_len", po::value<int>()->required(),
-         "the maximal length of a path")
-
         ("hash", po::value<string>()->required(),
          "the hash of all the parameters except the seed");
 
+      options_description all("Allowed options");
+      all.add(gen).add(net).add(tra).add(sim);
+      
       po::variables_map vm;
-      po::store(po::command_line_parser(argc, argv).options(opts).run(), vm);
+      po::store(po::command_line_parser(argc, argv).options(all).run(), vm);
       requires(vm, "network", "nodes");
       requires(vm, "network", string("random"), "edges");
 
@@ -159,21 +171,26 @@ process_sdi_args(int argc, const char *argv[])
       // notified automatically and the program will exit.
       po::notify(vm);
 
+      // The network options.
+      result.network = network_interpret(vm["network"].as<string>());
       result.nr_nodes = vm["nodes"].as<int>();
+      result.nr_edges = vm["edges"].as<int>();
       result.nr_sc = vm["subcarriers"].as<int>();
-      result.nr_clients = vm["clients"].as<int>();
-      result.l_sleep = vm["l_sleep"].as<double>();
-      result.mnc = vm["mnc"].as<double>();
-      result.l_change = vm["l_change"].as<double>();
-      result.mnsc = vm["mnsc"].as<double>();
-      result.seed = vm["seed"].as<int>();
-      result.sim_time = vm["sim_time"].as<double>();
       result.max_len = vm["max_len"].as<int>();
-      result.hash = vm["hash"].as<string>();
       result.reconf = reconf_interpret(vm["reconf"].as<string>());
       result.select = select_interpret(vm["select"].as<string>());
-      result.network = network_interpret(vm["network"].as<string>());
-      result.nr_edges = vm["edges"].as<int>();
+
+      // The traffic options.
+      result.mcat = vm["mcat"].as<double>();
+      result.mht = vm["mht"].as<double>();
+      result.mbst = vm["mbst"].as<double>();
+      result.mdct = vm["mdct"].as<double>();
+      result.mnsc = vm["mnsc"].as<double>();
+
+      // The simulation options.
+      result.seed = vm["seed"].as<int>();
+      result.hash = vm["hash"].as<string>();
+      result.sim_time = vm["sim_time"].as<double>();
     }
   catch(const std::exception& e)
     {
