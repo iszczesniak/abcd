@@ -7,13 +7,11 @@
 using namespace std;
 
 client::client(graph &g, pqueue &q, int id, boost::mt19937 &rng,
-               double l_sleep, double mnc, double l_change,
-               double mnsc):
+               double mht, double mbst, double mdct, double mnsc):
   g(g), module(q), id(id), rng(rng),
-  idle(true), nc_left(0),
-  l_sleep(l_sleep), sd(l_sleep), sdg(rng, sd),
-  l_change(l_change), cd(l_change), cdg(rng, cd),
-  mnc(mnc), ncd(mnc), ncdg(rng, ncd),
+  mht(mht), htd(mht), htg(rng, htd),
+  mbst(mbst), bstd(mbst), bstg(rng, bstd), 
+  mdct(mdct), dctd(mdct), dctg(rng, dctd),
   mnsc(mnsc - 1), nscd(mnsc), nscdg(rng, nscd),
   conn(g), st(stats::get())
 {
@@ -21,7 +19,7 @@ client::client(graph &g, pqueue &q, int id, boost::mt19937 &rng,
 
 client::~client()
 {
-  if (!idle)
+  if (conn.is_established())
     conn.tear_down();
 }
 
@@ -114,10 +112,4 @@ client::reconfigure()
   vertex new_src = get_random_element(sov, rng);
 
   return conn.reconfigure(new_src);
-}
-
-bool
-client::is_idle()
-{
-  return idle;
 }
