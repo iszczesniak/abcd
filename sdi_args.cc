@@ -99,6 +99,9 @@ process_sdi_args(int argc, const char *argv[])
       opts.add_options()
         ("help,h", "produce help message")
 
+        ("network", po::value<string>()->required(),
+         "the graph type")
+
         ("nodes", po::value<int>()->required(),
          "the number of nodes to generate")
 
@@ -107,18 +110,18 @@ process_sdi_args(int argc, const char *argv[])
 
         ("subcarriers", po::value<int>()->required(),
          "the number of subcarriers")
-
+        
         ("mcat", po::value<double>()->required(),
          "the mean client-arrival time")
+
+        ("mht", po::value<double>()->required(),
+         "the mean holding time")
 
         ("mbst", po::value<double>()->required(),
          "the mean BS-change time")
 
         ("mdct", po::value<double>()->required(),
          "the mean DC-change time")
-
-        ("l_change", po::value<double>()->required(),
-         "the lambda for the change time")
 
         ("mnsc", po::value<double>()->required(),
          "the mean number of subcarriers")
@@ -128,9 +131,6 @@ process_sdi_args(int argc, const char *argv[])
 
         ("select", po::value<string>()->required(),
          "the way subcarriers should be selected")
-
-        ("network", po::value<string>()->required(),
-         "the graph type")
 
         ("seed", po::value<int>()->default_value(1),
          "the seed of the random number generator")

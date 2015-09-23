@@ -21,9 +21,6 @@ struct sdi_args
   /// The number of edges in the graph.
   int nr_edges;
 
-  /// The number of subcarriers.
-  int nr_sc;
-
   /// The mean client arrival time.
   double mcat;
 
@@ -36,6 +33,9 @@ struct sdi_args
   /// The mean DC-change time.
   double mdct;
 
+  /// The mean number of subcarriers.
+  int mnsc;
+  
   /// The maximal length of a path we want.
   int max_len;
 
@@ -49,7 +49,7 @@ struct sdi_args
   /// The way to select subcarriers.
   dijkstra::select_t select;
 
-  /// The way connections should be reconfigured.
+  /// The way to reconfigure connections.
   connection::reconf_t reconf;
 
   /// The graph type;
