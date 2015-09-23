@@ -153,7 +153,7 @@ process_sdi_args(int argc, const char *argv[])
         ("hash", po::value<string>()->required(),
          "the hash of all the parameters except the seed");
 
-      options_description all("Allowed options");
+      po::options_description all("Allowed options");
       all.add(gen).add(net).add(tra).add(sim);
       
       po::variables_map vm;
@@ -163,7 +163,7 @@ process_sdi_args(int argc, const char *argv[])
 
       if (vm.count("help"))
         {
-          cout << opts << "\n";
+          cout << all << "\n";
           exit(0);
         }
 
