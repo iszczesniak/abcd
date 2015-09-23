@@ -11,11 +11,12 @@ traffic::traffic(graph &g, pqueue &q, boost::mt19937 &rng,
   schedule(0);
 }
 
+void
 traffic::operator()(double t)
 {
-  new client(g, q, i, gen,
-             args.l_sleep, args.mnc, args.l_change,
-             args.mnsc);
-  c->schedule(0);
-  vc.push_back(c);
+  //  client *c = new client(g, q, i, gen,
+  //                         args.l_sleep, args.mnc, args.l_change,
+  //                       args.mnsc);
+  //c->schedule(0);
+  //vc.push_back(c);
 }
