@@ -6,7 +6,7 @@
 
 using namespace std;
 
-client::client(graph &g, pqueue &q, int id, boost::mt19937 &rng,
+client::client(graph &g, int id, boost::mt19937 &rng,
                double mht, double mbst, double mdct, double mnsc):
   g(g), module(q), id(id), rng(rng),
   mht(mht), htd(mht), htg(rng, htd),
@@ -25,6 +25,7 @@ client::~client()
 
 void client::operator()(double t)
 {
+  /*
   if (idle)
     {
       // The client is now idle, and should get busy now.
@@ -67,11 +68,13 @@ void client::operator()(double t)
     }
 
   schedule(t);
+  */
 }
 
-// Schedule the next event based on the current time 0.
-void client::schedule(double t)
+// Schedule the next event based on the current time t.
+void client::schedule_next(double t)
 {
+  /*
   double dt;
 
   // The time to sleep.  The time to next event depends on the current
@@ -79,12 +82,13 @@ void client::schedule(double t)
   dt = idle ? sdg() : cdg();
 
   module::schedule(t + dt);
+  */
 }
 
 pair<bool, int>
 client::set_up()
 {
-  // The new demand.
+  /*  // The new demand.
   demand d;
   // The demand end nodes.
   d.first = random_node_pair(g, rng);
@@ -92,11 +96,13 @@ client::set_up()
   d.second = nscdg() + 1;
 
   return conn.set_up(d);
+  */
 }
 
 std::pair<bool, int>
 client::reconfigure()
 {
+  /*
   // We change the source node, and the destination node stays
   // unchanged.  We choose the new source node from one of the
   // neighbours of the current source node.
@@ -112,4 +118,5 @@ client::reconfigure()
   vertex new_src = get_random_element(sov, rng);
 
   return conn.reconfigure(new_src);
+  */
 }
