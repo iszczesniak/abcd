@@ -44,5 +44,5 @@ main(int argc, const char* argv[])
   stats s(args, t);
 
   // Run the simulation.
-  run(args.sim_time);
+  sim.run(args.sim_time);
 }

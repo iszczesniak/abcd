@@ -2,11 +2,10 @@
 
 using namespace std;
 
-traffic::traffic(graph &g, pqueue &q, boost::mt19937 &rng,
-                 double mcat, double mht, double mbst,
+traffic::traffic(double mcat, double mht, double mbst,
                  double mdct, double mnsc):
-  g(g), module(q), rng(rng), mcat(mcat), mht(mht),
-  mbst(mbst), mdct(mdct), mnsc(mnsc), idc(0)
+  mcat(mcat), mht(mht), mbst(mbst), mdct(mdct),
+  mnsc(mnsc), idc(0)
 {
   schedule(0);
 }

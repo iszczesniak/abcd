@@ -6,9 +6,10 @@
 
 #include <boost/random.hpp>
 
-#include "client.hpp"
 #include "graph.hpp"
 #include "module.hpp"
+
+class client;
 
 class traffic: public module
 {
@@ -27,8 +28,7 @@ class traffic: public module
   double mcat, mht, mbst, mdct, mnsc;
 
 public:
-  traffic(graph &g, pqueue &q, boost::mt19937 &rng,
-          double mcat, double mht, double mbst,
+  traffic(double mcat, double mht, double mbst,
           double mdct, double mnsc);
 
   // Processes the event and changes the state of the client.
