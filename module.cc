@@ -1,7 +1,8 @@
 #include "module.hpp"
 #include "event.hpp"
 
-module::module(pqueue &q) : q(q)
+module::module() :
+  sim(simulation::get())
 {
 }
 

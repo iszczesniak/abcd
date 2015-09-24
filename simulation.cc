@@ -3,10 +3,17 @@
 using namespace std;
 
 simulation::simulation(graph &g, boost::mt19937 &rng):
-  g(g), rng(rng)
+  g(g), rng(rng), t()
 {
   assert(!singleton);
   singleton = this;
+}
+
+void
+simulation::schedule(const event &e)
+{
+  assert(e.get_time() >= t);
+  q.push(e);
 }
 
 void

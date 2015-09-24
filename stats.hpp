@@ -6,6 +6,7 @@
 #include "graph.hpp"
 #include "module.hpp"
 #include "sdi_args.hpp"
+#include "traffic.hpp"
 
 #include <vector>
 
@@ -23,9 +24,6 @@ class stats: public module
   
   // The graph the stats operates on.
   const graph &g;
-
-  // Vector of clients.
-  const std::vector<client *> &vc;
 
   // The accumulator with double values.
   typedef ba::accumulator_set<double, ba::stats<ba::tag::mean> > dbl_acc;
@@ -46,9 +44,11 @@ class stats: public module
   // The arguments of the run.
   sdi_args args;
 
+  // The traffic of the run.
+  const traffic &t;
+
 public:
-  stats(const sdi_args &args, const graph &g, pqueue &q,
-        const std::vector<client *> &vc);
+  stats(const sdi_args &, const traffic &);
 
   static stats *
   get();

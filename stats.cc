@@ -8,9 +8,8 @@ using namespace std;
 
 stats *stats::singleton;
 
-stats::stats(const sdi_args &args, const graph &g, pqueue &q,
-             const traffic &t):
-  module(q), args(args), g(g), vc(vc)
+stats::stats(const sdi_args &args, const traffic &t):
+  args(args), t(t)
 {
   assert(!singleton);
   singleton = this;

@@ -20,13 +20,17 @@ class simulation
 
   // The singleton for the class.
   static simulation *singleton;
+
+  // Keeps track of the simulation time.
+  double t;
   
 public:
   simulation(graph &, boost::mt19937 &);
 
   // Run the simulation with the given simulation time limit.
   void run(double);
-  
+
+  // Get the singleton.
   static simulation &get();
 };
 

@@ -5,6 +5,7 @@
 #include "event.hpp"
 #include "graph.hpp"
 #include "sdi_args.hpp"
+#include "simulation.hpp"
 #include "stats.hpp"
 #include "utils_netgen.hpp"
 
@@ -17,14 +18,11 @@ main(int argc, const char* argv[])
 {
   sdi_args args = process_sdi_args(argc, argv);
 
-  // Simulation time.
-  double sim_time = args.sim_time;
-
   // Random number generator.
-  boost::mt19937 gen(args.seed);
+  boost::mt19937 rng(args.seed);
 
   // Generate the graph.
-  graph g = generate_graph(args, gen);
+  graph g = generate_graph(args, rng);
 
   // Set how the connections should be reconfigured.
   connection::get_reconf() = args.reconf;
@@ -35,23 +33,16 @@ main(int argc, const char* argv[])
   // Set the maximal length of a connection.
   dijkstra::get_max_len() = args.max_len;
 
-  // The DES priority queue.
-  pqueue q;
-
+  // This simulation object.
+  simulation sim(g, rng);
+  
   // Create the traffic module for the simulation.
-  traffic t(g, q, gen, args.mcat, args.mht,
-            args.mbst, args.mdct, args.mnsc);
+  traffic t(args.mcat, args.mht, args.mbst, args.mdct,
+            args.mnsc);
 
   // The stats module.
-  stats s(args, g, q, t);
+  stats s(args, t);
 
-  // The event loop.
-  while(!q.empty())
-    {
-      if (q.top().get_time() > sim_time)
-	break;
-
-      q.top().process();
-      q.pop();
-    }
+  // Run the simulation.
+  run(args.sim_time);
 }
