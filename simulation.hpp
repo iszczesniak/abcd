@@ -1,8 +1,6 @@
 #ifndef SIMULATION_HPP
 #define SIMULATION_HPP
 
-#include <memory>
-
 #include <boost/random.hpp>
 
 #include "client.hpp"
@@ -18,14 +16,17 @@ class simulation
   graph &g;
 
   // The random number generator.
-  boost::mt19937 &rng;
+  boost::mt19937 rng;
 
   // The singleton for the class.
-  static std::unique_ptr<simulation> s;
+  static simulation *singleton;
   
 public:
-  traffic(graph &g);
+  simulation(graph &, boost::mt19937 &);
 
+  // Run the simulation with the given simulation time limit.
+  void run(double);
+  
   static simulation &get();
 };
 
