@@ -10,19 +10,19 @@
 class simulation
 {
   // The DES priority queue.
-  pqueue q;
+  pqueue _q;
 
   // The graph we're working on.
-  graph &g;
+  graph &_g;
 
   // The random number generator.
-  boost::mt19937 rng;
+  boost::mt19937 &_rng;
 
   // The singleton for the class.
-  static simulation *singleton;
+  static simulation *_s;
 
   // Keeps track of the simulation time.
-  double t;
+  double _t;
   
 public:
   simulation(graph &, boost::mt19937 &);
@@ -31,7 +31,17 @@ public:
   void run(double);
 
   // Get the singleton.
-  static simulation &get();
+  static simulation *get();
+
+  // Get the graph
+  graph &g() const;
+
+  // Get the rng.
+  boost::mt19937 &rng() const;
+
+  // Schedule an event at the given time for the given module.
+  void
+  schedule(double, module *);
 };
 
 #endif /* SIMULATION_HPP */
