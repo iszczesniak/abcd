@@ -1,5 +1,6 @@
 #include "client.hpp"
 #include "dijkstra.hpp"
+#include "simulation.hpp"
 #include "utils_netgen.hpp"
 
 #include <utility>

@@ -9,7 +9,7 @@
 // scheduled with the schedule function.
 class module
 {
-  pqueue &q;
+  simulation &sim;
 
 public:
   module();

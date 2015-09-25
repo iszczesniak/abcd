@@ -15,6 +15,8 @@
 
 namespace ba = boost::accumulators;
 
+class simulation;
+
 class client: public module
 {
   // The simulation object.
