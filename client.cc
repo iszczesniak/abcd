@@ -6,9 +6,8 @@
 
 using namespace std;
 
-client::client(graph &g, int id, boost::mt19937 &rng,
-               double mht, double mbst, double mdct, double mnsc):
-  g(g), module(q), id(id), rng(rng),
+client::client(double mht, double mbst, double mdct, double mnsc):
+  sim(*simulation::get()), g(sim.g()), rng(sim.rng()),
   mht(mht), htd(mht), htg(rng, htd),
   mbst(mbst), bstd(mbst), bstg(rng, bstd), 
   mdct(mdct), dctd(mdct), dctg(rng, dctd),

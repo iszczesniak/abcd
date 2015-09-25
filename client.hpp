@@ -17,14 +17,17 @@ namespace ba = boost::accumulators;
 
 class client: public module
 {
+  // The simulation object.
+  simulation &sim;
+
   // The graph the client operates on.
   graph &g;
 
-  // The client ID.
-  int id;
-
   // The client random number generator.
   boost::mt19937 &rng;
+
+  // The client ID.
+  int id;
 
   // The mean holding time.
   double mht;
@@ -65,13 +68,12 @@ class client: public module
   stats *st;
 
 public:
-  client(graph &g, pqueue &q, int id, boost::mt19937 &r,
-         double mht, double mbst, double mdct, double mnsc);
+  client(double mht, double mbst, double mdct, double mnsc);
   ~client();
   
-  // Schedule the new event based on the current state of the client.
+  // Schedule the next event based on the current state of the client.
   // This function doesn't change the state of the client.
-  void schedule(double t);
+  void schedule_next(double t);
 
   // Processes the event and changes the state of the client.
   void operator()(double t);
