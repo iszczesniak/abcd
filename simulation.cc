@@ -2,6 +2,9 @@
 
 using namespace std;
 
+// The pointer for the singleton object.
+simulation *simulation::_s = NULL;
+
 simulation::simulation(graph &g, boost::mt19937 &rng):
   _g(g), _rng(rng), _t()
 {
@@ -10,10 +13,10 @@ simulation::simulation(graph &g, boost::mt19937 &rng):
 }
 
 simulation
-*simulation::get()
+&simulation::get()
 {
   assert(_s);
-  return _s;
+  return *_s;
 }
 
 graph

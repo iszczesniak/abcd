@@ -37,7 +37,7 @@ public:
   void run(double);
 
   // Get the singleton.
-  static simulation *get();
+  static simulation &get();
 
   // Get the graph
   graph &g() const;
