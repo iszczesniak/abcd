@@ -5,7 +5,13 @@
 
 #include "event.hpp"
 #include "graph.hpp"
-#include "module.hpp"
+
+// We need to forward-declare the module class.  We cannot include its
+// header file, because that header file includes this file
+// (simulation.hpp), which will not finally, define the simulation
+// class, and the compilation fails.  At this moment the declaration
+// of the module class is enough, because we only use a pointer to it.
+class module;
 
 class simulation
 {
