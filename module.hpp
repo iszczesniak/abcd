@@ -9,7 +9,7 @@
 // scheduled with the schedule function.
 class module
 {
-  simulation &sim;
+  simulation *sim;
 
 public:
   module();
