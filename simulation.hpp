@@ -3,7 +3,7 @@
 
 #include <boost/random.hpp>
 
-#include "client.hpp"
+#include "event.hpp"
 #include "graph.hpp"
 #include "module.hpp"
 
