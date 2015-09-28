@@ -6,6 +6,7 @@
 
 using namespace std;
 
+// The singleton of the class.  The compiler initializes it to null.
 stats *stats::singleton;
 
 stats::stats(const sdi_args &args, const traffic &t):
@@ -60,7 +61,7 @@ stats::operator()(double t)
   cca = dbl_acc();
 
   // The number of active connections.
-  cout << calculate_conns() << " ";
+  cout << t.nr_clients() << " ";
 
   // The mean number of fragments of links.
   cout << calculate_frags() << " ";
@@ -111,19 +112,6 @@ void
 stats::established_length(int len)
 {
   lea(len);
-}
-
-int
-stats::calculate_conns()
-{
-  int count = 0;
-
-  /*  for(auto const &c: vc)
-    if (!c->is_idle())
-      ++count;
-  */
-  
-  return count;
 }
 
 double

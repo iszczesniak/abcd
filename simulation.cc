@@ -2,8 +2,8 @@
 
 using namespace std;
 
-// The pointer for the singleton object.
-simulation *simulation::_s = NULL;
+// The singleton of the class.  The compiler initializes it to null.
+simulation *simulation::_s;
 
 simulation::simulation(graph &g, boost::mt19937 &rng):
   _g(g), _rng(rng), _t()
