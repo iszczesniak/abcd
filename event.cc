@@ -8,7 +8,7 @@ event::event(double t, module *m): t(t), m(m)
 
 void event::process() const
 {
-  s->(t);
+  (*m)(t);
 }
 
 bool event::operator<(const event &e) const
