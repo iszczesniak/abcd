@@ -18,12 +18,6 @@ main(int argc, const char* argv[])
 {
   sdi_args args = process_sdi_args(argc, argv);
 
-  // Random number generator.
-  boost::mt19937 rng(args.seed);
-
-  // Generate the graph.
-  graph g = generate_graph(args, rng);
-
   // Set how the connections should be reconfigured.
   connection::get_reconf() = args.reconf;
 
@@ -33,10 +27,16 @@ main(int argc, const char* argv[])
   // Set the maximal length of a connection.
   dijkstra::get_max_len() = args.max_len;
 
+  // Random number generator.
+  boost::mt19937 rng(args.seed);
+
+  // Generate the graph.
+  graph g = generate_graph(args, rng);
+
   // This simulation object.
   simulation sim(g, rng);
   
-  // Create the traffic module for the simulation.
+  // The traffic module.
   traffic t(args.mcat, args.mht, args.mbst, args.mdct,
             args.mnsc);
 
