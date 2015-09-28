@@ -8,10 +8,10 @@ class module;
 class event
 {
   double t;
-  module *s;
+  module *m;
 
 public:
-  event(double t, module *s);
+  event(double t, module *m);
   void process() const;
   bool operator<(const event &e) const;
   double get_time() const;

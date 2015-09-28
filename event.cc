@@ -1,13 +1,14 @@
 #include "event.hpp"
+
 #include "module.hpp"
 
-event::event(double t, module *s): t(t), s(s)
+event::event(double t, module *m): t(t), m(m)
 {
 }
 
 void event::process() const
 {
-  (*s)(t);
+  s->(t);
 }
 
 bool event::operator<(const event &e) const
