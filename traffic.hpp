@@ -13,6 +13,7 @@ class client;
 
 class traffic: public module
 {
+  // The graph we are working on.
   graph &g;
 
   // The list of clients.

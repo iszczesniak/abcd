@@ -9,7 +9,7 @@ using namespace std;
 stats *stats::singleton;
 
 stats::stats(const sdi_args &args, const traffic &t):
-  args(args), t(t)
+  g(simulation::get()->g()), args(args), t(t)
 {
   assert(!singleton);
   singleton = this;
@@ -118,10 +118,11 @@ stats::calculate_conns()
 {
   int count = 0;
 
-  for(auto const &c: vc)
+  /*  for(auto const &c: vc)
     if (!c->is_idle())
       ++count;
-
+  */
+  
   return count;
 }
 
