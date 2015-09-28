@@ -55,7 +55,7 @@ class client: public module
   connection conn;
 
   // The statistics object.
-  stats *st;
+  stats &st;
 
 public:
   client(double mht, double mbst, double mdct, double mnsc);

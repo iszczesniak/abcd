@@ -21,7 +21,10 @@ class stats: public module
 {
   // The singleton of the class.
   static stats *singleton;
-  
+
+  // The traffic of the run.
+  const traffic &tra;
+
   // The accumulator with double values.
   typedef ba::accumulator_set<double, ba::stats<ba::tag::mean> > dbl_acc;
 
@@ -41,13 +44,10 @@ class stats: public module
   // The arguments of the run.
   sdi_args args;
 
-  // The traffic of the run.
-  const traffic &t;
-
 public:
   stats(const sdi_args &, const traffic &);
 
-  static stats *
+  static stats &
   get();
 
   void
@@ -74,10 +74,6 @@ public:
   reconfigured_links(int nl);
 
 private:
-  // Calculate the number of currently active clients.
-  int
-  calculate_conns();
-
   // Calculate the average number of fragments on a link.
   double
   calculate_frags();

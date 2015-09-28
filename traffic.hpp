@@ -27,6 +27,9 @@ public:
 
   // Processes the event and changes the state of the client.
   void operator()(double t);
+
+  // Return the number of clients.
+  int nr_clients() const;
 };
 
 #endif /* TRAFFIC_HPP */

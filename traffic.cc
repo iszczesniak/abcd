@@ -9,6 +9,12 @@ traffic::traffic(double mcat, double mht, double mbst,
   schedule(0);
 }
 
+int
+traffic::nr_clients() const
+{
+  return lc.size();
+}
+
 void
 traffic::operator()(double t)
 {

@@ -9,8 +9,8 @@ using namespace std;
 // The singleton of the class.  The compiler initializes it to null.
 stats *stats::singleton;
 
-stats::stats(const sdi_args &args, const traffic &t):
-  args(args), t(t)
+stats::stats(const sdi_args &args, const traffic &tra):
+  args(args), tra(tra)
 {
   assert(!singleton);
   singleton = this;
@@ -36,10 +36,10 @@ stats::stats(const sdi_args &args, const traffic &t):
        << endl;
 }
 
-stats *
+stats &
 stats::get()
 {
-  return singleton;
+  return *singleton;
 }
 
 void
@@ -61,7 +61,7 @@ stats::operator()(double t)
   cca = dbl_acc();
 
   // The number of active connections.
-  cout << t.nr_clients() << " ";
+  cout << tra.nr_clients() << " ";
 
   // The mean number of fragments of links.
   cout << calculate_frags() << " ";
