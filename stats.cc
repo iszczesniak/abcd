@@ -9,7 +9,7 @@ using namespace std;
 stats *stats::singleton;
 
 stats::stats(const sdi_args &args, const traffic &t):
-  g(simulation::get()->g()), args(args), t(t)
+  args(args), t(t)
 {
   assert(!singleton);
   singleton = this;

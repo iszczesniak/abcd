@@ -1,14 +1,15 @@
 #include "client.hpp"
-#include "dijkstra.hpp"
-#include "simulation.hpp"
-#include "utils_netgen.hpp"
 
 #include <utility>
+
+#include "dijkstra.hpp"
+#include "simulation.hpp"
+#include "stats.hpp"
+#include "utils_netgen.hpp"
 
 using namespace std;
 
 client::client(double mht, double mbst, double mdct, double mnsc):
-  sim(*simulation::get()), g(sim.g()), rng(sim.rng()),
   mht(mht), htd(mht), htg(rng, htd),
   mbst(mbst), bstd(mbst), bstg(rng, bstd), 
   mdct(mdct), dctd(mdct), dctg(rng, dctd),

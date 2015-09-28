@@ -22,9 +22,6 @@ class stats: public module
   // The singleton of the class.
   static stats *singleton;
   
-  // The graph the stats operates on.
-  const graph &g;
-
   // The accumulator with double values.
   typedef ba::accumulator_set<double, ba::stats<ba::tag::mean> > dbl_acc;
 

@@ -9,8 +9,16 @@
 // scheduled with the schedule function.
 class module
 {
-  simulation *sim;
+protected:
+  // The simulation object.
+  simulation &sim;
 
+  // The graph of the simulation.
+  graph &g;
+  
+  // The random number generator.
+  boost::mt19937 &rng;
+  
 public:
   module();
   // We need the destructor to be virtual.

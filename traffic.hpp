@@ -6,21 +6,14 @@
 
 #include <boost/random.hpp>
 
+#include "client.hpp"
 #include "graph.hpp"
 #include "module.hpp"
 
-class client;
-
 class traffic: public module
 {
-  // The graph we are working on.
-  graph &g;
-
   // The list of clients.
   std::list<std::unique_ptr<client>> lc;
-
-  // The random number generator.
-  boost::mt19937 &rng;
 
   // The ID counter.
   int idc;

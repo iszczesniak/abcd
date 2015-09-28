@@ -1,11 +1,8 @@
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
-#include "event.hpp"
 #include "connection.hpp"
-#include "graph.hpp"
 #include "module.hpp"
-#include "stats.hpp"
 
 #include <boost/random.hpp>
 #include <boost/accumulators/accumulators.hpp>
@@ -15,19 +12,10 @@
 
 namespace ba = boost::accumulators;
 
-class simulation;
+class stats;
 
 class client: public module
 {
-  // The simulation object.
-  simulation &sim;
-
-  // The graph the client operates on.
-  graph &g;
-
-  // The client random number generator.
-  boost::mt19937 &rng;
-
   // The client ID.
   int id;
 
