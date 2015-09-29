@@ -89,7 +89,7 @@ void client::schedule_next(double t)
 pair<bool, int>
 client::set_up()
 {
-  /*  // The new demand.
+  // The new demand.
   demand d;
   // The demand end nodes.
   d.first = random_node_pair(g, rng);
@@ -97,7 +97,6 @@ client::set_up()
   d.second = nscdg() + 1;
 
   return conn.set_up(d);
-  */
 }
 
 std::pair<bool, int>

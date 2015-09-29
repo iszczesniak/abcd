@@ -61,14 +61,14 @@ public:
   client(double mht, double mbst, double mdct, double mnsc);
   ~client();
   
-  // Schedule the next event based on the current state of the client.
-  // This function doesn't change the state of the client.
-  void schedule_next(double t);
-
   // Processes the event and changes the state of the client.
   void operator()(double t);
 
 private:
+  // Schedule the next event based on the current state of the client.
+  // This function doesn't change the state of the client.
+  void schedule_next(double t);
+
   std::pair<bool, int>
   set_up();
 
