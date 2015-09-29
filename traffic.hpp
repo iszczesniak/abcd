@@ -18,8 +18,15 @@ class traffic: public module
   // The ID counter.
   int idc;
 
-  // The constructor arguments.
-  double mcat, mht, mbst, mdct, mnsc;
+  // The mean client arrival time.
+  double mcat;
+  // The holding time distribution.
+  boost::exponential_distribution<> catd;
+  // The holding time generator.
+  boost::variate_generator<boost::mt19937 &,
+                           boost::exponential_distribution<> > catg;
+
+  double mht, mbst, mdct, mnsc;
 
 public:
   traffic(double mcat, double mht, double mbst,
@@ -30,6 +37,9 @@ public:
 
   // Return the number of clients.
   int nr_clients() const;
+
+private:
+  void schedule_next(double);
 };
 
 #endif /* TRAFFIC_HPP */
