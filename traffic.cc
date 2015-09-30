@@ -12,21 +12,21 @@ traffic::traffic(double mcat, double mht, double mbst,
 
 traffic::~traffic()
 {
-  for(auto c: lc)
+  for(auto c: cs)
     delete c;
 }
 
 int
 traffic::nr_clients() const
 {
-  return lc.size();
+  return cs.size();
 }
 
 void
 traffic::operator()(double t)
 {
   client *c = new client(mht, mbst, mdct, mnsc);
-  lc.push_back(c);
+  cs.insert(c);
 }
 
 void
@@ -34,4 +34,10 @@ traffic::schedule_next(double t)
 {
   double dt = catg();
   schedule(t + dt);
+}
+
+void
+traffic::erase(client *c)
+{
+  cs.erase(c);
 }

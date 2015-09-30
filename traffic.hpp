@@ -1,7 +1,7 @@
 #ifndef TRAFFIC_HPP
 #define TRAFFIC_HPP
 
-#include <list>
+#include <set>
 
 #include <boost/random.hpp>
 
@@ -11,8 +11,8 @@
 
 class traffic: public module
 {
-  // The list of clients.
-  std::list<client *> lc;
+  // The set of clients.
+  std::set<client *> cs;
 
   // The ID counter.
   int idc;
@@ -38,6 +38,9 @@ public:
 
   // Return the number of clients.
   int nr_clients() const;
+
+  // Remote the client from the traffic.
+  void erase(client *);
 
 private:
   void schedule_next(double);
