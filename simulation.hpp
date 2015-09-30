@@ -48,6 +48,10 @@ public:
   // Schedule an event at the given time for the given module.
   void
   schedule(double, module *);
+
+  // Return the current simulaion time.
+  double
+  now();
 };
 
 #endif /* SIMULATION_HPP */

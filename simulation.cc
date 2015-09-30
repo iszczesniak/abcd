@@ -55,3 +55,9 @@ simulation::run(double sim_time)
       _q.pop();
     }
 }
+
+double
+simulation::now()
+{
+  return _t;
+}
