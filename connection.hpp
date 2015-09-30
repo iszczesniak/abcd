@@ -31,6 +31,7 @@ private:
 
 public:
   connection(graph &g);
+  ~connection();
 
   const demand &
   get_demand() const;

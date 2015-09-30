@@ -42,6 +42,12 @@ connection::connection(graph &g): g(g)
 {
 }
 
+connection::~connection()
+{
+  if (is_established())
+    tear_down();
+}
+
 const demand &
 connection::get_demand() const
 {
