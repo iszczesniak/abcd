@@ -25,7 +25,7 @@ traffic::nr_clients() const
 void
 traffic::operator()(double t)
 {
-  client *c = new client(mht, mbst, mdct, mnsc);
+  client *c = new client(mht, mbst, mdct, mnsc, *this);
   cs.insert(c);
 }
 

@@ -5,85 +5,35 @@
 #include "dijkstra.hpp"
 #include "simulation.hpp"
 #include "stats.hpp"
+#include "traffic.hpp"
 #include "utils_netgen.hpp"
 
 using namespace std;
 
-client::client(double mht, double mbst, double mdct, double mnsc):
+client::client(double mht, double mbst, double mdct, double mnsc,
+               traffic &tra):
   mht(mht), htd(mht), htg(rng, htd),
-  mbst(mbst), bstd(mbst), bstg(rng, bstd), 
+  mbst(mbst), bstd(mbst), bstg(rng, bstd),
   mdct(mdct), dctd(mdct), dctg(rng, dctd),
   mnsc(mnsc - 1), nscd(mnsc), nscdg(rng, nscd),
-  conn(g), st(stats::get())
+  conn(g), st(stats::get()), tra(tra)
 {
-}
-
-client::~client()
-{
-  if (conn.is_established())
-    conn.tear_down();
+  // Tear down time.
+  tdt = now() + htg();
+  schedule();
 }
 
 void client::operator()(double t)
 {
-  /*
-  if (idle)
-    {
-      // The client is now idle, and should get busy now.
-      pair<bool, int> result = set_up();
-      st->established(result.first);
-
-      if (result.first)
-        {
-          idle = false;
-          nc_left = ncdg();
-          st->established_length(result.second);
-        }
-    }
+  if (!conn.is_established())
+    set_up();
   else
     {
-      if (nc_left)
-        {
-          // It's time now to reconfigure.
-          pair<bool, int> result = reconfigure();
-          if (result.first)
-            {
-              --nc_left;
-              st->reconfigured_links(result.second);
-            }
-          else
-            {
-              nc_left = 0;
-              idle = true;
-              conn.tear_down();
-              st->completed(false);
-            }
-        }
+      if (t != tdt)
+        reconfigure();
       else
-        {
-          // It's time now to turn the connection down.
-          idle = true;
-          conn.tear_down();
-          st->completed(true);
-        }
+        tear_down();
     }
-
-  schedule(t);
-  */
-}
-
-// Schedule the next event based on the current time t.
-void client::schedule_next(double t)
-{
-  /*
-  double dt;
-
-  // The time to sleep.  The time to next event depends on the current
-  // state of the client.
-  dt = idle ? sdg() : cdg();
-
-  module::schedule(t + dt);
-  */
 }
 
 pair<bool, int>
@@ -96,13 +46,39 @@ client::set_up()
   // The number of subcarriers the signal requires.  It's Poisson + 1.
   d.second = nscdg() + 1;
 
-  return conn.set_up(d);
+  // The conection client is now idle, and should get busy now.
+  pair<bool, int> result = conn.set_up(d);
+
+  st.established(result.first);
+
+  if (result.first)
+    {
+      st.established_length(result.second);
+      schedule_next();
+    }
+  else
+    destroy();
 }
 
 std::pair<bool, int>
 client::reconfigure()
 {
   /*
+  // It's time now to reconfigure.
+  pair<bool, int> result = reconfigure();
+  if (result.first)
+    {
+      --nc_left;
+      st->reconfigured_links(result.second);
+    }
+  else
+    {
+      nc_left = 0;
+      idle = true;
+      conn.tear_down();
+      st->completed(false);
+    }
+  
   // We change the source node, and the destination node stays
   // unchanged.  We choose the new source node from one of the
   // neighbours of the current source node.
@@ -119,4 +95,28 @@ client::reconfigure()
 
   return conn.reconfigure(new_src);
   */
+}
+
+void client::tear_down()
+{
+  conn.tear_down();
+  st.completed(true);
+}
+
+// Schedule the next event based on the current time t.
+void client::schedule_next()
+{
+  // The time to switch to the next base station.
+  double bst = now() + bstg();
+
+  // Next time.
+  double nt = bst < tdt ? bst : tdt;
+
+  schedule(nt);
+}
+
+void client::destroy()
+{
+  tra.erase(this);
+  delete this;
 }

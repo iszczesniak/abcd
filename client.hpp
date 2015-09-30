@@ -13,11 +13,15 @@
 namespace ba = boost::accumulators;
 
 class stats;
+class traffic;
 
 class client: public module
 {
   // The client ID.
   int id;
+
+  // The tear down time.
+  double tdt;
 
   // The mean holding time.
   double mht;
@@ -54,21 +58,19 @@ class client: public module
   // The connection.
   connection conn;
 
+  // The traffic object the client belongs to.
+  traffic &tra;
+  
   // The statistics object.
   stats &st;
 
 public:
-  client(double mht, double mbst, double mdct, double mnsc);
-  ~client();
+  client(double mht, double mbst, double mdct, double mnsc, traffic &tra);
   
   // Processes the event and changes the state of the client.
   void operator()(double t);
 
 private:
-  // Schedule the next event based on the current state of the client.
-  // This function doesn't change the state of the client.
-  void schedule_next(double t);
-
   std::pair<bool, int>
   set_up();
 
@@ -77,6 +79,12 @@ private:
 
   void
   tear_down();
+
+  // Schedule the next event.
+  void schedule_next();
+
+  // Self_destruction: report this to the traffic, and delete itself.
+  void destroy();
 };
 
 #endif /* CLIENT_HPP */
