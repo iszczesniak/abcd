@@ -9,6 +9,18 @@ module::~module()
 {
 }
 
+double
+module::now()
+{
+  return sim.now();
+}
+
+void
+module::schedule()
+{
+  sim.schedule(now(), this);
+}
+
 void
 module::schedule(double t)
 {

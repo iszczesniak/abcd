@@ -27,6 +27,12 @@ public:
   // This function processes an event for this module.
   virtual void operator()(double t) = 0;
 
+  // Return the current time of the simulation.
+  double now();
+
+  // Schedule an event for this module at the current time.
+  void schedule();
+
   // Schedule an event for this module at time t.
   void schedule(double t);
 };
