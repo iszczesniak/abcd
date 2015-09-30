@@ -10,6 +10,12 @@ traffic::traffic(double mcat, double mht, double mbst,
   schedule(0);
 }
 
+traffic::~traffic()
+{
+  for(auto c: lc)
+    delete c;
+}
+
 int
 traffic::nr_clients() const
 {
@@ -20,7 +26,7 @@ void
 traffic::operator()(double t)
 {
   client *c = new client(mht, mbst, mdct, mnsc);
-  lc.push_back(std::unique_ptr<client>(c));
+  lc.push_back(c);
 }
 
 void

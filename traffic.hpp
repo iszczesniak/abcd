@@ -2,7 +2,6 @@
 #define TRAFFIC_HPP
 
 #include <list>
-#include <memory>
 
 #include <boost/random.hpp>
 
@@ -13,7 +12,7 @@
 class traffic: public module
 {
   // The list of clients.
-  std::list<std::unique_ptr<client>> lc;
+  std::list<client *> lc;
 
   // The ID counter.
   int idc;
@@ -31,6 +30,8 @@ class traffic: public module
 public:
   traffic(double mcat, double mht, double mbst,
           double mdct, double mnsc);
+
+  ~traffic();
 
   // Processes the event and changes the state of the client.
   void operator()(double t);
