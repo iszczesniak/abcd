@@ -12,10 +12,10 @@ using namespace std;
 
 client::client(double mht, double mbst, double mdct, double mnsc,
                traffic &tra):
-  mht(mht), htd(mht), htg(rng, htd),
-  mbst(mbst), bstd(mbst), bstg(rng, bstd),
-  mdct(mdct), dctd(mdct), dctg(rng, dctd),
-  mnsc(mnsc - 1), nscd(mnsc), nscdg(rng, nscd),
+  mht(mht), htd(1 / mht), htg(rng, htd),
+  mbst(mbst), bstd(1 / mbst), bstg(rng, bstd),
+  mdct(mdct), dctd(1 / mdct), dctg(rng, dctd),
+  mnsc(mnsc - 1), nscd(1 / mnsc), nscdg(rng, nscd),
   conn(g), st(stats::get()), tra(tra)
 {
   // Tear down time.
