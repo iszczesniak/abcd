@@ -108,7 +108,7 @@ process_sdi_args(int argc, const char *argv[])
         ("nodes", po::value<int>()->required(),
          "the number of nodes to generate")
 
-        ("edges", po::value<int>(),
+        ("edges", po::value<int>()->default_value(0),
          "the number of edges to generate")
 
         ("subcarriers", po::value<int>()->required(),
