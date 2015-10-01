@@ -45,7 +45,7 @@ void client::set_up()
   // The number of subcarriers the signal requires.  It's Poisson + 1.
   d.second = nscdg() + 1;
 
-  // The conection client is now idle, and should get busy now.
+  // Set up the connection.
   pair<bool, int> result = conn.set_up(d);
 
   st.established(result.first);
@@ -61,21 +61,7 @@ void client::set_up()
 
 void client::reconfigure()
 {
-  /*
-  // It's time now to reconfigure.
-  pair<bool, int> result = reconfigure();
-  if (result.first)
-    {
-      --nc_left;
-      st->reconfigured_links(result.second);
-    }
-  else
-    {
-      nc_left = 0;
-      idle = true;
-      conn.tear_down();
-      st->completed(false);
-    }
+  assert(conn.is_established());
   
   // We change the source node, and the destination node stays
   // unchanged.  We choose the new source node from one of the
@@ -88,15 +74,25 @@ void client::reconfigure()
   for(boost::tie(ei, eei) = boost::in_edges(old_src, g); ei != eei; ++ei)
     sov.insert(source(*ei, g));
 
-  // Now we chose at random from one of the found nodes.
+  // Now we choose at random from one of the found nodes.
   vertex new_src = get_random_element(sov, rng);
+  std::pair<bool, int> result = conn.reconfigure(new_src);
 
-  return conn.reconfigure(new_src);
-  */
+  if (result.first)
+    {
+      st.reconfigured_links(result.second);
+      schedule_next();
+    }
+  else
+    {
+      st.completed(false);
+      destroy();
+    }
 }
 
 void client::tear_down()
 {
+  assert(conn.is_established());
   conn.tear_down();
   st.completed(true);
 }
