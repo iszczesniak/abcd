@@ -95,6 +95,7 @@ void client::tear_down()
   assert(conn.is_established());
   conn.tear_down();
   st.completed(true);
+  destroy();
 }
 
 // Schedule the next event based on the current time t.
