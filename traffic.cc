@@ -27,6 +27,7 @@ traffic::operator()(double t)
 {
   client *c = new client(mht, mbst, mdct, mnsc, *this);
   cs.insert(c);
+  schedule_next(t);
 }
 
 void
