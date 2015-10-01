@@ -71,14 +71,9 @@ public:
   void operator()(double t);
 
 private:
-  std::pair<bool, int>
-  set_up();
-
-  std::pair<bool, int>
-  reconfigure();
-
-  void
-  tear_down();
+  void set_up();
+  void reconfigure();
+  void tear_down();
 
   // Schedule the next event.
   void schedule_next();

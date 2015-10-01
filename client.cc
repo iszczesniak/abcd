@@ -36,8 +36,7 @@ void client::operator()(double t)
     }
 }
 
-pair<bool, int>
-client::set_up()
+void client::set_up()
 {
   // The new demand.
   demand d;
@@ -60,8 +59,7 @@ client::set_up()
     destroy();
 }
 
-std::pair<bool, int>
-client::reconfigure()
+void client::reconfigure()
 {
   /*
   // It's time now to reconfigure.
