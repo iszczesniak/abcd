@@ -97,7 +97,10 @@ process_sdi_args(int argc, const char *argv[])
       // General options.
       po::options_description gen("General options");
       gen.add_options()
-        ("help,h", "produce help message");
+        ("help,h", "produce help message")
+
+        ("net_stats", po::value<bool>()->default_value(false),
+         "produce network stats");
 
       // Network options.
       po::options_description net("Network options");
@@ -170,6 +173,9 @@ process_sdi_args(int argc, const char *argv[])
       // If there is something wrong with parameters, we will get
       // notified automatically and the program will exit.
       po::notify(vm);
+
+      // The general options.
+      result.net_stats = vm["net_stats"].as<bool>();
 
       // The network options.
       result.network = network_interpret(vm["network"].as<string>());

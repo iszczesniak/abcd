@@ -13,11 +13,14 @@
 
 using namespace std;
 
-int
-main(int argc, const char* argv[])
+void
+net_stats(const sdi_args &args)
 {
-  sdi_args args = process_sdi_args(argc, argv);
+}
 
+void
+simulate(const sdi_args &args)
+{
   // Set how the connections should be reconfigured.
   connection::get_reconf() = args.reconf;
 
@@ -45,4 +48,17 @@ main(int argc, const char* argv[])
 
   // Run the simulation.
   sim.run(args.sim_time);
+}
+
+int
+main(int argc, const char* argv[])
+{
+  sdi_args args = process_sdi_args(argc, argv);
+
+  if (args.net_stats)
+    net_stats(args);
+  else
+    simulate(args);
+    
+  return 0;
 }
