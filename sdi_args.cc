@@ -166,7 +166,6 @@ process_sdi_args(int argc, const char *argv[])
       
       po::variables_map vm;
       po::store(po::command_line_parser(argc, argv).options(all).run(), vm);
-      requires(vm, "net_stats", true, "network");
       requires(vm, "network", "nodes");
       requires(vm, "network", string("random"), "edges");
 
@@ -181,7 +180,8 @@ process_sdi_args(int argc, const char *argv[])
       po::notify(vm);
 
       // The general options.
-      result.net_stats = vm["net_stats"].as<bool>();
+      if (vm.count("net_stats"))
+        result.net_stats = true;
 
       // The network options.
       result.network = network_interpret(vm["network"].as<string>());

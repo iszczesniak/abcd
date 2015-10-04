@@ -16,6 +16,16 @@ using namespace std;
 void
 net_stats(const sdi_args &args)
 {
+  for (int i = 0; i < 100; ++i)
+    {
+      // Random number generator.
+      boost::mt19937 rng(i);
+
+      // Generate the graph.
+      graph g = generate_graph(args, rng);
+
+      assert(check_components(g));
+    }
 }
 
 void
