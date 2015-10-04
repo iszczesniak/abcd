@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <map>
+#include <sstream>
 #include <string>
 
 #include <boost/program_options.hpp>
@@ -21,9 +22,14 @@ void requires (const po::variables_map& vm,
     if (vm[for_arg].as<T> () == for_val)
       // Throw, if the required argument is not present.
       if (vm.count (req) == 0)
-        throw logic_error (string ("Option '") + for_arg 
-                           + "' that is equal to '" + for_val
-                           + "' requires option '" + req + "'.");
+        {
+          ostringstream os;
+          os << "Option '" << for_arg 
+             << "' that is equal to '" << for_val
+             << "' requires option '" << req << "'.";
+
+          throw logic_error (os.str());
+        }
 }
 
 void requires (const po::variables_map& vm,
@@ -99,8 +105,7 @@ process_sdi_args(int argc, const char *argv[])
       gen.add_options()
         ("help,h", "produce help message")
 
-        ("net_stats", po::value<bool>()->default_value(false),
-         "produce network stats");
+        ("net_stats", "produce network stats");
 
       // Network options.
       po::options_description net("Network options");
@@ -161,6 +166,7 @@ process_sdi_args(int argc, const char *argv[])
       
       po::variables_map vm;
       po::store(po::command_line_parser(argc, argv).options(all).run(), vm);
+      requires(vm, "net_stats", true, "network");
       requires(vm, "network", "nodes");
       requires(vm, "network", string("random"), "edges");
 
