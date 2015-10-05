@@ -27,7 +27,11 @@ net_stats(const sdi_args &args)
   typedef ba::accumulator_set<double, ba::stats<ba::tag::mean,
                                                 ba::tag::variance> > dbl_acc;
 
+  // Link lengths.
   dbl_acc lls;
+
+  // Node degrees.
+  dbl_acc nds;
   
   for (int i = 0; i < 100; ++i)
     {
@@ -43,11 +47,20 @@ net_stats(const sdi_args &args)
       auto es = boost::edges(g);
       for (auto ei = es.first; ei != es.second; ++ei)
         lls(boost::get(boost::edge_weight, g, *ei));
-    }
 
+      // Calculate the mean value of the node degree.
+      auto ns = boost::vertices(g);
+      for (auto ni = ns.first; ni != ns.second; ++ni)
+        nds(boost::out_degree(*ni, g));
+    }
+  
   cout << "Link length: "
        << "mean = " << ba::mean(lls) << ", "
        << "variance = " << ba::variance(lls) << endl;
+
+  cout << "Node degree: "
+       << "mean = " << ba::mean(nds) << ", "
+       << "variance = " << ba::variance(nds) << endl;
 }
 
 void
