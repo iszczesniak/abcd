@@ -1,3 +1,4 @@
+#include <iostream>
 #include <list>
 #include <queue>
 
@@ -11,11 +12,21 @@
 
 #include <boost/random.hpp>
 
+#include <boost/accumulators/accumulators.hpp>
+#include <boost/accumulators/statistics.hpp>
+
+namespace ba = boost::accumulators;
+
 using namespace std;
 
 void
 net_stats(const sdi_args &args)
 {
+  // The accumulator with double values.
+  typedef ba::accumulator_set<double, ba::stats<ba::tag::mean> > dbl_acc;
+
+  dbl_acc lls;
+  
   for (int i = 0; i < 100; ++i)
     {
       // Random number generator.
@@ -25,7 +36,15 @@ net_stats(const sdi_args &args)
       graph g = generate_graph(args, rng);
 
       assert(check_components(g));
+
+      // Calculate the mean value of the edge lengths.
+      auto es = boost::edges(g);
+      for (auto ei = es.first; ei != es.second; ++ei)
+        lls(boost::get(boost::edge_weight, g, *ei));
     }
+
+  cout << "The mean link length: "
+       << ba::mean(lls) << endl;
 }
 
 void
