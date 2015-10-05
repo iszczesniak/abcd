@@ -14,6 +14,7 @@
 
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
+#include <boost/accumulators/statistics/variance.hpp>
 
 namespace ba = boost::accumulators;
 
@@ -23,14 +24,15 @@ void
 net_stats(const sdi_args &args)
 {
   // The accumulator with double values.
-  typedef ba::accumulator_set<double, ba::stats<ba::tag::mean> > dbl_acc;
+  typedef ba::accumulator_set<double, ba::stats<ba::tag::mean,
+                                                ba::tag::variance> > dbl_acc;
 
   dbl_acc lls;
   
   for (int i = 0; i < 100; ++i)
     {
       // Random number generator.
-      boost::mt19937 rng(i);
+      boost::mt19937 rng(args.seed + i);
 
       // Generate the graph.
       graph g = generate_graph(args, rng);
@@ -43,8 +45,9 @@ net_stats(const sdi_args &args)
         lls(boost::get(boost::edge_weight, g, *ei));
     }
 
-  cout << "The mean link length: "
-       << ba::mean(lls) << endl;
+  cout << "Link length: "
+       << "mean = " << ba::mean(lls) << ", "
+       << "variance = " << ba::variance(lls) << endl;
 }
 
 void
