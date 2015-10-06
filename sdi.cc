@@ -72,6 +72,15 @@ net_stats(const sdi_args &args)
 
           boost::dijkstra_shortest_paths
             (g, s, boost::predecessor_map(&pred[0]).distance_map(&dist[0]));
+
+          for (auto nj = ns.first; nj != ns.second; ++nj)
+            if (ni != nj)
+              {
+                vertex d = *nj;
+                cout << "s = " << s << ", d = " << d
+                     << ", dist = " << dist[d] << endl;
+                spls(dist[d]);
+              }
         }
     }
 
@@ -82,6 +91,10 @@ net_stats(const sdi_args &args)
   cout << "Node degree: "
        << "mean = " << ba::mean(nds) << ", "
        << "variance = " << ba::variance(nds) << endl;
+
+  cout << "Shortest path length: "
+       << "mean = " << ba::mean(spls) << ", "
+       << "variance = " << ba::variance(spls) << endl;
 }
 
 void
