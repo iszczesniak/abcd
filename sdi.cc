@@ -78,7 +78,11 @@ net_stats(const sdi_args &args)
               {
                 vertex d = *nj;
                 cout << "s = " << s << ", d = " << d
-                     << ", dist = " << dist[d] << endl;
+                     << ", dist = " << dist[d]
+                     << ", pred = " << pred[d]
+                     << ", in degree = " << boost::out_degree(*nj, g)
+                     << ", out degree = " << boost::out_degree(*nj, g)
+                     << endl;
                 spls(dist[d]);
               }
         }
