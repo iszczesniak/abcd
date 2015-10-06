@@ -3,6 +3,7 @@
 #include <queue>
 
 #include "client.hpp"
+#include "dijkstra.hpp"
 #include "event.hpp"
 #include "graph.hpp"
 #include "sdi_args.hpp"
@@ -32,6 +33,12 @@ net_stats(const sdi_args &args)
 
   // Node degrees.
   dbl_acc nds;
+
+  // Shortest path number of hops.
+  dbl_acc spns;
+
+  // Shortest path lengths.
+  dbl_acc spls;
   
   for (int i = 0; i < 100; ++i)
     {
@@ -52,6 +59,23 @@ net_stats(const sdi_args &args)
       auto ns = boost::vertices(g);
       for (auto ni = ns.first; ni != ns.second; ++ni)
         nds(boost::out_degree(*ni, g));
+
+      // Calculate stats for shortest paths.
+      for (auto ni = ns.first; ni != ns.second; ++ni)
+        for (auto nj = ns.first; nj != ns.second; ++nj)
+          if (ni != nj)
+            {
+              demand d = demand(npair(*ni, *nj), 1);
+              V2C2S r = dijkstra::search(g, d);
+              sscpath p = dijkstra::trace(g, r, d);
+
+              // The path must not be empty.
+              assert(!p.first.empty());
+              // The SSC must not be empty.
+              assert(!p.second.empty());
+
+              cout << "." << endl;
+            }
     }
   
   cout << "Link length: "
