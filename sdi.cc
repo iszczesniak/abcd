@@ -17,6 +17,8 @@
 #include <boost/accumulators/statistics.hpp>
 #include <boost/accumulators/statistics/variance.hpp>
 
+#include <boost/graph/dijkstra_shortest_paths.hpp>
+
 namespace ba = boost::accumulators;
 
 using namespace std;
@@ -62,22 +64,17 @@ net_stats(const sdi_args &args)
 
       // Calculate stats for shortest paths.
       for (auto ni = ns.first; ni != ns.second; ++ni)
-        for (auto nj = ns.first; nj != ns.second; ++nj)
-          if (ni != nj)
-            {
-              demand d = demand(npair(*ni, *nj), 1);
-              V2C2S r = dijkstra::search(g, d);
-              sscpath p = dijkstra::trace(g, r, d);
+        {
+          vector<int> dist(num_vertices(g));
+          vector<vertex> pred(num_vertices(g));
 
-              // The path must not be empty.
-              assert(!p.first.empty());
-              // The SSC must not be empty.
-              assert(!p.second.empty());
+          vertex s = *ni;
 
-              cout << "." << endl;
-            }
+          boost::dijkstra_shortest_paths
+            (g, s, boost::predecessor_map(&pred[0]).distance_map(&dist[0]));
+        }
     }
-  
+
   cout << "Link length: "
        << "mean = " << ba::mean(lls) << ", "
        << "variance = " << ba::variance(lls) << endl;
