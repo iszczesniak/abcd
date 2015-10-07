@@ -37,7 +37,7 @@ net_stats(const sdi_args &args)
   dbl_acc nds;
 
   // Shortest path number of hops.
-  dbl_acc spns;
+  dbl_acc sphs;
 
   // Shortest path lengths.
   dbl_acc spls;
@@ -77,13 +77,21 @@ net_stats(const sdi_args &args)
             if (ni != nj)
               {
                 vertex d = *nj;
-                cout << "s = " << s << ", d = " << d
-                     << ", dist = " << dist[d]
-                     << ", pred = " << pred[d]
-                     << ", in degree = " << boost::out_degree(*nj, g)
-                     << ", out degree = " << boost::out_degree(*nj, g)
-                     << endl;
+                // Make sure the path was found.
+                assert(pred[d] != d);
+
+                // Record the distance.
                 spls(dist[d]);
+
+                // Record the number of hops.
+                int hops = 0;
+                vertex c = d;
+                while(c != s)
+                  {
+                    c = pred[c];
+                    ++hops;
+                  }
+                sphs(hops);
               }
         }
     }
@@ -99,6 +107,10 @@ net_stats(const sdi_args &args)
   cout << "Shortest path length: "
        << "mean = " << ba::mean(spls) << ", "
        << "variance = " << ba::variance(spls) << endl;
+
+  cout << "Shortest path hops: "
+       << "mean = " << ba::mean(sphs) << ", "
+       << "variance = " << ba::variance(sphs) << endl;
 }
 
 void
