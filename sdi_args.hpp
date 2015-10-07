@@ -20,7 +20,7 @@ struct sdi_args
   /// -----------------------------------------------------------------
 
   // Show graph stats.
-  bool net_stats;
+  bool net_stats = false;
 
   /// -----------------------------------------------------------------
   /// The network options
