@@ -257,7 +257,6 @@ void legalizeEdge(TNode *pr, TNode *pi, TNode *pj, TTriangle *T, list<TTriangle*
    {
        TNode *nodes_ij[3] = {t1->getNode(1), t1->getNode(2), t1->getNode(3)};
        set<TNode *> setT1(nodes_ij, nodes_ij + 3);
-//       cout << "size T1: " << setT1.size() << endl;
        setT1.insert(t2->getNode(1));
        setT1.insert(t2->getNode(2));
        setT1.insert(t2->getNode(3));
@@ -276,7 +275,6 @@ void legalizeEdge(TNode *pr, TNode *pi, TNode *pj, TTriangle *T, list<TTriangle*
        cerr << "pi: " << *pi << endl;
        cerr << "pj: " << *pj << endl;
        cerr << "pr: " << *pr << endl;
-       //cerr << "pk: " << *pk << endl;
        cerr << "n : " << n << endl;
        exit(-1);
    }
@@ -616,18 +614,20 @@ void convertDelaunay2GabrielGraph(list<TNode*> &P)
 list<TNode *> generate_Nodes(unsigned int w, unsigned int h, unsigned int number)
 {
     set<TNode *> P;
+    set<TMyPoint> testedPoints;
     unsigned int size;
-    while (P.size() < number)
+    while (testedPoints.size() < number)
     {
-        int x = random() %  w;
-        int y = random() % h;
-        TNode* n = new TNode(TMyPoint(x, y));
-        size = P.size();
-        P.insert(n);
-        if (size == P.size())
-            delete n;
+      int x = random() %  w;
+      int y = random() % h;
+      TMyPoint p(x, y);
+      testedPoints.insert(p);
     }
-    list<TNode *> nodeList(P.begin(), P.end());
+    list<TNode *> nodeList;
+    for (set<TMyPoint>::iterator it = testedPoints.begin(); it != testedPoints.end(); ++it)
+    {
+      nodeList.push_back(new TNode(*it));
+    }
     return nodeList;
 }
 
