@@ -39,9 +39,10 @@ namespace boost {
 typedef
 boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS,
 		      boost::property<boost::vertex_name_t, std::string>,
+		      boost::property<boost::edge_capacity_t, int,
 		      boost::property<boost::edge_weight_t, int,
 		      boost::property<boost::edge_nosc_t, int,
-		      boost::property<boost::edge_ssc_t, SSC> > > >
+                      boost::property<boost::edge_ssc_t, SSC> > > > >
 graph;
 
 typedef boost::graph_traits<graph>::edge_descriptor edge;
