@@ -32,6 +32,12 @@ namespace boost {
   BOOST_INSTALL_PROPERTY(edge, nosc);
 }
 
+typedef boost::adjacency_list_traits<boost::vecS, boost::vecS,
+                                     boost::undirectedS>::edge_descriptor edge;
+
+typedef boost::adjacency_list_traits<boost::vecS, boost::vecS,
+                                     boost::undirectedS>::vertex_descriptor vertex;
+
 /**
  * The type of the graph we use.  The edge_ssc_t property describes
  * the subcarriers available, i.e. not already taken.
@@ -41,13 +47,11 @@ boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS,
 		      boost::property<boost::vertex_name_t, std::string>,
 		      boost::property<boost::edge_capacity_t, int,
       		      boost::property<boost::edge_residual_capacity_t, int,
+                      boost::property<boost::edge_reverse_t, edge,
                       boost::property<boost::edge_weight_t, int,
 		      boost::property<boost::edge_nosc_t, int,
-                      boost::property<boost::edge_ssc_t, SSC> > > > > >
+                      boost::property<boost::edge_ssc_t, SSC> > > > > > >
 graph;
-
-typedef boost::graph_traits<graph>::edge_descriptor edge;
-typedef boost::graph_traits<graph>::vertex_descriptor vertex;
 
 namespace std {
 
