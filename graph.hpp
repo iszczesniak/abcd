@@ -45,8 +45,7 @@ typedef boost::adjacency_list_traits<boost::vecS, boost::vecS,
  */
 typedef
 boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS,
-		      boost::property<boost::vertex_name_t, std::string,
-                      boost::property<boost::vertex_index_t, int> >,
+		      boost::property<boost::vertex_name_t, std::string>,
 		      boost::property<boost::edge_capacity_t, int,
       		      boost::property<boost::edge_index_t, int,
       		      boost::property<boost::edge_residual_capacity_t, int,
