@@ -7,6 +7,7 @@ int main() {
   graph &g1 = g0.create_subgraph();
 
   add_vertex(g1);
+  add_vertex(g1);
   
   std::cout << num_vertices(g0) << std::endl;
   std::cout << num_vertices(g1) << std::endl;
@@ -20,5 +21,8 @@ int main() {
   boost::tie(e2, s2) = boost::add_edge(0, 1, g1);
   assert(s2);
 
+  std::cout << num_edges(g0) << std::endl;
+  std::cout << num_edges(g1) << std::endl;
+  
   return 0;
 }
