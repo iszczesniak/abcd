@@ -47,11 +47,12 @@ boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS,
 		      boost::property<boost::vertex_name_t, std::string,
                       boost::property<boost::vertex_index_t, int> >,
 		      boost::property<boost::edge_capacity_t, int,
+      		      boost::property<boost::edge_index_t, int,
       		      boost::property<boost::edge_residual_capacity_t, int,
                       boost::property<boost::edge_reverse_t, edge,
                       boost::property<boost::edge_weight_t, int,
 		      boost::property<boost::edge_nosc_t, int,
-                      boost::property<boost::edge_ssc_t, SSC> > > > > > >
+                      boost::property<boost::edge_ssc_t, SSC> > > > > > > >
 graph;
 
 namespace std {
