@@ -1,4 +1,4 @@
-TARGETS = sdi
+TARGETS = sdi try
 TARGET_OBJS = $(addsuffix .o, $(TARGETS))
 
 OBJS = client.o connection.o dijkstra.o event.o graph.o module.o	\
@@ -21,6 +21,8 @@ LDFLAGS := $(LDFLAGS) -l boost_program_options
 all: $(TARGETS)
 
 sdi: $(OBJS)
+
+try: $(OBJS)
 
 .PHONY: clean count depend test
 
