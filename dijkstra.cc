@@ -313,15 +313,20 @@ dijkstra::trace(const graph &g, const V2C2S &r, const demand &d)
 void
 dijkstra::set_up_path(graph &g, const sscpath &p)
 {
+  boost::property_map<graph, boost::edge_ssc_t>::type
+    sscm = get(boost::edge_ssc_t(), g);
+  
   const path &l = p.first;
   const SSC &p_ssc = p.second;
 
   // Iterate over the edges of the path.
   for(path::const_iterator i = l.begin(); i != l.end(); ++i)
     {
-      const edge &e = *i;
+      const edge e = *i;
 
-      SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
+      // The SSC for edge e.
+      SSC &e_ssc = sscm[e];
+
       // Make sure that the edge has the required subcarriers.
       assert(includes(e_ssc, p_ssc));
 
@@ -333,6 +338,9 @@ dijkstra::set_up_path(graph &g, const sscpath &p)
 void
 dijkstra::tear_down_path(graph &g, const sscpath &p)
 {
+  boost::property_map<graph, boost::edge_ssc_t>::type
+    sscm = get(boost::edge_ssc_t(), g);
+
   const path &l = p.first;
   const SSC &p_ssc = p.second;
 
@@ -341,7 +349,8 @@ dijkstra::tear_down_path(graph &g, const sscpath &p)
     {
       const edge &e = *i;
 
-      SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
+      // The SSC for edge e.
+      SSC &e_ssc = sscm[e];
 
       // Make sure that the edge has these subcarriers taken.
       assert(excludes(e_ssc, p_ssc));

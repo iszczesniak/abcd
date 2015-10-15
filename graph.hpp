@@ -9,6 +9,7 @@
 #include <vector>
 
 #include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/subgraph.hpp>
 
 // The set of subcarriers.  It's used to describe available
 // subcarriers.  are all avaiable along a single path.  Look at SSSC
@@ -53,7 +54,9 @@ boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS,
                       boost::property<boost::edge_weight_t, int,
 		      boost::property<boost::edge_nosc_t, int,
                       boost::property<boost::edge_ssc_t, SSC> > > > > > > >
-graph;
+base_graph;
+
+typedef boost::subgraph<base_graph> graph;
 
 namespace std {
 

@@ -61,6 +61,9 @@ generate_gabriel_graph(const sdi_args &args)
   // Create a graph with the following number of nodes.
   graph g = graph(args.nr_nodes);
 
+  boost::property_map<graph, boost::edge_weight_t>::type
+    wm = get(boost::edge_weight_t(), g);
+
   // The set of lone vertexes.
   std::set<vertex> lonely = get_vertexes<std::set<vertex> >(g);
 
@@ -95,7 +98,7 @@ generate_gabriel_graph(const sdi_args &args)
          bool status;
          tie(e, status) = add_edge(src, dst, g);
          int dist = (int) (sqrt(dist2((*it)->getPoint(), (*itE)->getPoint())) + 0.5);
-         boost::get(boost::edge_weight, g, e) = dist;
+         wm[e] = dist;
          assert(status);    
       }
   }
