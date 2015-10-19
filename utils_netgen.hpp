@@ -27,21 +27,6 @@ name_vertices(graph &g);
 /**
  * Sets the distance property on edges.
  */
-template<typename G, typename T>
-void
-set_capacity(G &g, T cap)
-{
-  typename boost::property_map<G, boost::edge_capacity_t>::type
-    cm = get(boost::edge_capacity_t(), g);
-
-  typename boost::graph_traits<G>::edge_iterator ei, ee;
-  for (tie(ei, ee) = edges(g); ei != ee; ++ei)
-    cm[*ei] = cap;
-}
-
-/**
- * Sets the distance property on edges.
- */
 template<typename T>
 void
 set_distances(graph &g, int min, int max, T &gen)
@@ -250,9 +235,6 @@ generate_graph(const sdi_args &args, T &gen)
   // The number of subcarriers for each edge.
   set_subcarriers(g, args.nr_sc);
 
-  // The capacity used for calculating max flow.
-  set_capacity(g, 1);
-  
   return g;
 }
 
