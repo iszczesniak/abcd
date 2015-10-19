@@ -42,7 +42,6 @@ int main()
 
       // Map the edges to each other.
       e2e[ne] = re;
-      e2e[re] = ne;
       
       // The weight of the normal edge.
       int weight = wm[ne];
