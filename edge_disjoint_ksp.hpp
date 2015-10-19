@@ -8,13 +8,11 @@
 
 namespace boost {
 
-  namespace detail {
-
-    template <typename Graph, class Weight>
+    template <typename Graph, typename Weight>
     void edge_disjoint_ksp(const Graph& g,
                            typename graph_traits<Graph>::vertex_descriptor s,
                            typename graph_traits<Graph>::vertex_descriptor t, 
-                           Weight w)
+                           Weight wm)
     {
       typedef typename graph_traits<Graph>::edge_descriptor edge;
 
@@ -41,7 +39,7 @@ namespace boost {
           e2e[ne] = re;
       
           // The weight of the normal edge.
-          int weight = get(w, ne);
+          int weight = get(wm, ne);
       
           // Properties for the normal edge.
           e2w[ne] = weight;
@@ -52,19 +50,21 @@ namespace boost {
           e2c[re] = 0;
         }
 
-      boost::associative_property_map<std::map<edge, edge>> rev(e2e);
-      boost::associative_property_map<std::map<edge, int>> cap(e2c);
-      boost::associative_property_map<std::map<edge, int>> res(e2r);
-      boost::associative_property_map<std::map<edge, int>> wgt(e2w);
-      boost::successive_shortest_path_nonnegative_weights(g, s, t,
-                                                          capacity_map(cap).
-                                                          residual_capacity_map(res).
-                                                          reverse_edge_map(rev).
-                                                          weight_map(wgt));
+      associative_property_map<std::map<edge, edge>> rev(e2e);
+      associative_property_map<std::map<edge, int>> cap(e2c);
+      associative_property_map<std::map<edge, int>> res(e2r);
+      associative_property_map<std::map<edge, int>> wgt(e2w);
+
+      /*
+      successive_shortest_path_nonnegative_weights(g, s, t,
+                                                   capacity_map(cap).
+                                                   residual_capacity_map(res).
+                                                   reverse_edge_map(rev).
+                                                   weight_map(wgt));
+      */
     }
 
-  } // detail
-
+  /*
   template <typename Graph, typename P, typename T, typename R>
   void edge_disjoint_ksp(const Graph& g,
                          typename graph_traits<Graph>::vertex_descriptor s,
@@ -75,6 +75,7 @@ namespace boost {
                               choose_const_pmap(get_param(params, vertex_index),
                                                 g, vertex_index));
   }
+  */
 
 } // boost
 

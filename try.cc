@@ -5,12 +5,11 @@
 
 int main()
 {
-  // Build the graph.
   graph g;
 
   vertex s = 0, t = 1;
 
-  boost::edge_disjoint_ksp(g, s, t);
+  boost::edge_disjoint_ksp(g, s, t, boost::get(boost::edge_weight_t(), g));
 
   return 0;
 }
