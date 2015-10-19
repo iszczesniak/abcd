@@ -17,8 +17,7 @@ stats.o: stats.cc client.hpp connection.hpp graph.hpp module.hpp \
  utils_netgen.hpp mypoint.hpp utils.hpp teventqueue.hpp
 traffic.o: traffic.cc traffic.hpp client.hpp connection.hpp graph.hpp \
  module.hpp simulation.hpp event.hpp
-try.o: try.cc graph.hpp sdi_args.hpp connection.hpp dijkstra.hpp \
- utils_netgen.hpp mypoint.hpp utils.hpp teventqueue.hpp
+try.o: try.cc graph.hpp edge_disjoint_ksp.hpp
 utils.o: utils.cc utils.hpp graph.hpp
 utils_netgen.o: utils_netgen.cc utils_netgen.hpp graph.hpp mypoint.hpp \
  sdi_args.hpp connection.hpp dijkstra.hpp utils.hpp teventqueue.hpp

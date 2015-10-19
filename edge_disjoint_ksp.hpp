@@ -15,39 +15,40 @@ namespace boost {
                            Weight wm)
     {
       typedef typename graph_traits<Graph>::edge_descriptor edge;
-
+      typedef typename Weight::value_type weight_t;
+      
       // Fill in the maps.
       std::map<edge, edge> e2e;
       std::map<edge, int> e2c;
       std::map<edge, int> e2r;
-      std::map<edge, int> e2w;
+      std::map<edge, weight_t> e2w;
 
       typename graph_traits<Graph>::edge_iterator ei, ee;
       for (tie(ei, ee) = edges(g); ei != ee; ++ei)
         {
           // Normal edge.
-          const edge &ne = *ei;
+          const edge &e = *ei;
           // Reverse edge.
-          edge re;
+          edge r;
           // Status of the edge creation.
           bool success;
-          boost::tie(re, success) =
-            boost::edge(boost::target(ne, g), boost::source(ne, g), g);
+          boost::tie(r, success) =
+            boost::edge(boost::target(e, g), boost::source(e, g), g);
           assert(success);
 
           // Map the edges to each other.
-          e2e[ne] = re;
+          e2e[e] = r;
       
           // The weight of the normal edge.
-          int weight = get(wm, ne);
+          int weight = get(wm, e);
       
           // Properties for the normal edge.
-          e2w[ne] = weight;
-          e2c[ne] = 1;
+          e2w[e] = weight;
+          e2c[e] = 1;
       
           // Properties for the reverse edge.
-          e2w[re] = -weight;
-          e2c[re] = 0;
+          e2w[r] = -weight;
+          e2c[r] = 0;
         }
 
       associative_property_map<std::map<edge, edge>> rev(e2e);
