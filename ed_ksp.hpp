@@ -18,7 +18,9 @@ namespace boost {
   {
     typedef typename graph_traits<Graph>::edge_descriptor edge_t;
     typedef typename Weight::value_type weight_t;
-    typename std::list<std::list<typename Graph::edge_descriptor>> paths;
+    typedef typename std::list<typename Graph::edge_descriptor> path_t;
+      
+    std::list<path_t> paths;
     
     // Fill in the maps.
     std::map<edge_t, edge_t> e2e;
@@ -64,9 +66,30 @@ namespace boost {
                                                  reverse_edge_map(rev).
                                                  weight_map(wgt));
 
-     
+    typename graph_traits<Graph>::out_edge_iterator oi, oie;
+    for (tie(oi, oie) = out_edges(s, g); oi != oie; ++oi)
+      {
+        const edge_t &e = *oi;
+
+        if (get(cap, e) == 1 && get(res, e) == 0)
+          {
+            paths.push_back(path_t());
+            path_t &p = paths.back();
+
+            p.push_back(e);
+            put(cap, e, 0);
+
+            /*
+            while (target(e, g) != t)
+              {
+                typename graph_traits<Graph>::out_edge_iterator oj, oje;
+                for (tie(oj, oje) = out_edges(s, g); oj != oje; ++oj);
+              }
+            */
+          }
+      }
       
-    return paths;
+      return paths;
   }
 
   template <typename Graph>
