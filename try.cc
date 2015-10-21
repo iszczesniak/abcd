@@ -1,5 +1,8 @@
 #include "graph.hpp"
 #include "ed_ksp.hpp"
+#include <iostream>
+
+using namespace std;
 
 // Add edge, test, and set weight.
 edge
@@ -27,5 +30,7 @@ int main()
 
   plist l = boost::ed_ksp(g, 0, 1);
 
+  cout << l.size() << endl;
+  
   return 0;
 }
