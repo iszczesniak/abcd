@@ -12,9 +12,9 @@ namespace boost {
   template <typename Graph, typename Weight>
   std::list<std::list<typename Graph::edge_descriptor>>
   edge_disjoint_ksp(Graph& g,
-                         typename graph_traits<Graph>::vertex_descriptor s,
-                         typename graph_traits<Graph>::vertex_descriptor t,
-                         Weight wm)
+                    typename graph_traits<Graph>::vertex_descriptor s,
+                    typename graph_traits<Graph>::vertex_descriptor t,
+                    Weight wm)
   {
     typedef typename graph_traits<Graph>::edge_descriptor edge;
     typedef typename Weight::value_type weight_t;
@@ -35,8 +35,7 @@ namespace boost {
         edge r;
         // Status of the edge creation.
         bool success;
-        boost::tie(r, success) =
-          boost::edge(boost::target(e, g), boost::source(e, g), g);
+        tie(r, success) = boost::edge(target(e, g), source(e, g), g);
         assert(success);
 
         // Map the edge.
