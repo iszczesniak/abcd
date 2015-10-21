@@ -1,5 +1,5 @@
 #include "graph.hpp"
-#include "edge_disjoint_ksp.hpp"
+#include "ed_ksp.hpp"
 
 // Add edge, test, and set weight.
 edge

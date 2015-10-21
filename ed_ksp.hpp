@@ -1,5 +1,5 @@
-#ifndef BOOST_GRAPH_EDGE_DISJOINT_KSP
-#define BOOST_GRAPH_EDGE_DISJOINT_KSP
+#ifndef BOOST_GRAPH_ED_KSP
+#define BOOST_GRAPH_ED_KSP
 
 #include <map>
 #include <list>
@@ -86,4 +86,4 @@ namespace boost {
 
 } // boost
 
-#endif /* BOOST_GRAPH_EDGE_DISJOINT_KSP */
+#endif /* BOOST_GRAPH_ED_KSP */
