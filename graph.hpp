@@ -77,8 +77,11 @@ typedef std::map<CEP, SSSC> C2S;
 // information for a given vertex.
 typedef std::map<vertex, C2S> V2C2S;
 
-// The path definition.
+// The path.
 typedef std::list<edge> path;
+
+// The list of paths.
+typedef std::list<path> plist;
 
 // The SSC path.
 typedef std::pair<path, SSC> sscpath;

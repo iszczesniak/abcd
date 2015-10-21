@@ -2,6 +2,7 @@
 #define BOOST_GRAPH_EDGE_DISJOINT_KSP
 
 #include <map>
+#include <list>
 
 #include <boost/property_map/property_map.hpp>
 #include <boost/graph/successive_shortest_path_nonnegative_weights.hpp>
@@ -9,6 +10,7 @@
 namespace boost {
 
   template <typename Graph, typename Weight>
+  std::list<std::list<typename Graph::edge_descriptor>>
   void edge_disjoint_ksp(Graph& g,
                          typename graph_traits<Graph>::vertex_descriptor s,
                          typename graph_traits<Graph>::vertex_descriptor t,
