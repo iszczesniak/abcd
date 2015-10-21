@@ -25,7 +25,7 @@ int main()
   foo(g, 1, 0, 1);
   foo(g, 1, 0, 1);
 
-  plist l = boost::edge_disjoint_ksp(g, 0, 1);
+  plist l = boost::ed_ksp(g, 0, 1);
 
   return 0;
 }

@@ -11,10 +11,10 @@ namespace boost {
 
   template <typename Graph, typename Weight>
   std::list<std::list<typename Graph::edge_descriptor>>
-  edge_disjoint_ksp(Graph& g,
-                    typename graph_traits<Graph>::vertex_descriptor s,
-                    typename graph_traits<Graph>::vertex_descriptor t,
-                    Weight wm)
+  ed_ksp(Graph& g,
+         typename graph_traits<Graph>::vertex_descriptor s,
+         typename graph_traits<Graph>::vertex_descriptor t,
+         Weight wm)
   {
     typedef typename graph_traits<Graph>::edge_descriptor edge;
     typedef typename Weight::value_type weight_t;
@@ -64,16 +64,24 @@ namespace boost {
                                                  reverse_edge_map(rev).
                                                  weight_map(wgt));
 
-    return paths;
+    typename graph_traits<Graph>::out_edge_iterator oei, oee;
+    for (boost::tie(oei, oee) = out_edges(s, g); oei != oee; ++oei)
+      {
+        const edge &e = *oei;
+
+        
+      }
+      
+      return paths;
   }
 
   template <typename Graph>
   std::list<std::list<typename Graph::edge_descriptor>>
-  edge_disjoint_ksp(Graph& g,
-                         typename graph_traits<Graph>::vertex_descriptor s,
-                         typename graph_traits<Graph>::vertex_descriptor t)
+  ed_ksp(Graph& g,
+         typename graph_traits<Graph>::vertex_descriptor s,
+         typename graph_traits<Graph>::vertex_descriptor t)
   {
-    return edge_disjoint_ksp(g, s, t, get(edge_weight_t(), g));
+    return ed_ksp(g, s, t, get(edge_weight_t(), g));
   }
 
 } // boost
