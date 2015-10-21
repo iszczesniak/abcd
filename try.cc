@@ -12,7 +12,7 @@ int main()
 
   vertex s = 0, t = 1;
 
-  boost::edge_disjoint_ksp(g, s, t);
+  plist = boost::edge_disjoint_ksp(g, s, t);
 
   return 0;
 }
