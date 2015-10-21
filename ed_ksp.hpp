@@ -16,23 +16,23 @@ namespace boost {
          typename graph_traits<Graph>::vertex_descriptor t,
          Weight wm)
   {
-    typedef typename graph_traits<Graph>::edge_descriptor edge;
+    typedef typename graph_traits<Graph>::edge_descriptor edge_t;
     typedef typename Weight::value_type weight_t;
     typename std::list<std::list<typename Graph::edge_descriptor>> paths;
     
     // Fill in the maps.
-    std::map<edge, edge> e2e;
-    std::map<edge, int> e2c;
-    std::map<edge, int> e2r;
-    std::map<edge, weight_t> e2w;
+    std::map<edge_t, edge_t> e2e;
+    std::map<edge_t, int> e2c;
+    std::map<edge_t, int> e2r;
+    std::map<edge_t, weight_t> e2w;
 
     typename graph_traits<Graph>::edge_iterator ei, ee;
     for (tie(ei, ee) = edges(g); ei != ee; ++ei)
       {
         // Normal edge.
-        const edge &e = *ei;
+        const edge_t &e = *ei;
         // Reverse edge.
-        edge r;
+        edge_t r;
         // Status of the edge creation.
         bool success;
         tie(r, success) = boost::edge(target(e, g), source(e, g), g);
@@ -53,10 +53,10 @@ namespace boost {
         e2c[r] = 0;
       }
 
-    associative_property_map<std::map<edge, edge>> rev(e2e);
-    associative_property_map<std::map<edge, int>> cap(e2c);
-    associative_property_map<std::map<edge, int>> res(e2r);
-    associative_property_map<std::map<edge, int>> wgt(e2w);
+    associative_property_map<std::map<edge_t, edge_t>> rev(e2e);
+    associative_property_map<std::map<edge_t, int>> cap(e2c);
+    associative_property_map<std::map<edge_t, int>> res(e2r);
+    associative_property_map<std::map<edge_t, int>> wgt(e2w);
 
     successive_shortest_path_nonnegative_weights(g, s, t,
                                                  capacity_map(cap).
@@ -64,15 +64,9 @@ namespace boost {
                                                  reverse_edge_map(rev).
                                                  weight_map(wgt));
 
-    typename graph_traits<Graph>::out_edge_iterator oei, oee;
-    for (boost::tie(oei, oee) = out_edges(s, g); oei != oee; ++oei)
-      {
-        const edge &e = *oei;
-
-        
-      }
+     
       
-      return paths;
+    return paths;
   }
 
   template <typename Graph>
