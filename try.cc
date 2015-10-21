@@ -1,18 +1,31 @@
 #include "graph.hpp"
 #include "edge_disjoint_ksp.hpp"
 
+// Add edge, test, and set weight.
+edge
+foo(graph &g, vertex s, vertex d, int w)
+{
+  edge e;
+  bool success;
+
+  boost::tie(e, success) = add_edge(s, d, g);
+  assert(success);
+
+  boost::get(boost::edge_weight, g, e) = w;
+
+  return e;
+}
+
 int main()
 {
   graph g;
 
-  assert(add_edge(0, 1, g).second);
-  assert(add_edge(0, 1, g).second);
-  assert(add_edge(1, 0, g).second);
-  assert(add_edge(1, 0, g).second);
+  foo(g, 0, 1, 1);
+  foo(g, 0, 1, 1);
+  foo(g, 1, 0, 1);
+  foo(g, 1, 0, 1);
 
-  vertex s = 0, t = 1;
-
-  plist = boost::edge_disjoint_ksp(g, s, t);
+  plist = boost::edge_disjoint_ksp(g, 0, 1);
 
   return 0;
 }
