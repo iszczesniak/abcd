@@ -70,7 +70,7 @@ namespace boost {
     typename graph_traits<Graph>::out_edge_iterator oi, oie;
     for (tie(oi, oie) = out_edges(s, g); oi != oie; ++oi)
       {
-        const edge_t &e = *oi;
+        edge_t e = *oi;
 
         if (get(cap, e) == 1 && get(res, e) == 0)
           {
@@ -93,7 +93,13 @@ namespace boost {
                   break;
 
                 typename graph_traits<Graph>::out_edge_iterator oj, oje;
-                for (tie(oj, oje) = out_edges(s, g); oj != oje; ++oj);
+                for (tie(oj, oje) = out_edges(nv, g); oj != oje; ++oj)
+                  {
+                    e = *oj;
+
+                    if (get(cap, e) == 1 && get(res, e) == 0)
+                      break;
+                  }
 
                 assert(oj != oje);
               } while(true);
