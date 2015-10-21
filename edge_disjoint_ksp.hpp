@@ -11,14 +11,15 @@ namespace boost {
 
   template <typename Graph, typename Weight>
   std::list<std::list<typename Graph::edge_descriptor>>
-  void edge_disjoint_ksp(Graph& g,
+  edge_disjoint_ksp(Graph& g,
                          typename graph_traits<Graph>::vertex_descriptor s,
                          typename graph_traits<Graph>::vertex_descriptor t,
                          Weight wm)
   {
     typedef typename graph_traits<Graph>::edge_descriptor edge;
     typedef typename Weight::value_type weight_t;
-      
+    typename std::list<std::list<typename Graph::edge_descriptor>> paths;
+    
     // Fill in the maps.
     std::map<edge, edge> e2e;
     std::map<edge, int> e2c;
@@ -63,14 +64,17 @@ namespace boost {
                                                  residual_capacity_map(res).
                                                  reverse_edge_map(rev).
                                                  weight_map(wgt));
+
+    return paths;
   }
 
   template <typename Graph>
-  void edge_disjoint_ksp(Graph& g,
+  std::list<std::list<typename Graph::edge_descriptor>>
+  edge_disjoint_ksp(Graph& g,
                          typename graph_traits<Graph>::vertex_descriptor s,
                          typename graph_traits<Graph>::vertex_descriptor t)
   {
-    edge_disjoint_ksp(g, s, t, get(edge_weight_t(), g));
+    return edge_disjoint_ksp(g, s, t, get(edge_weight_t(), g));
   }
 
 } // boost
