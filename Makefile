@@ -22,7 +22,7 @@ all: $(TARGETS)
 
 sdi: $(OBJS)
 
-try: $(OBJS)
+try: graph.o try.o
 
 .PHONY: clean count depend test
 
