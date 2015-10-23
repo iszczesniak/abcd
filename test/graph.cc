@@ -20,4 +20,11 @@ BOOST_AUTO_TEST_CASE(parallel_edge_test)
   BOOST_CHECK(r1);
   BOOST_CHECK(r2);
   BOOST_CHECK(e1 != e2);
+
+  std::map<edge, int> e2i;
+  e2i[e1] = 1;
+  e2i[e2] = 2;
+  BOOST_CHECK(e2i[e1] == 1);
+  BOOST_CHECK(e2i[e2] == 2);
+  BOOST_CHECK(e2i.size() == 2);
 }
