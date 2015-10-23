@@ -47,18 +47,6 @@ graph;
 typedef graph::edge_descriptor edge;
 typedef graph::vertex_descriptor vertex;
 
-namespace std {
-
-  /**
-   * This is the operator needed by std::map when its key is the edge
-   * type.
-   */
-  bool operator <(const edge &, const edge &);
-
-  bool operator == (const edge &, const edge &);
-
-}
-
 // The cost of reaching a vertex.  The first argument is the cost of a
 // path, say the length, and the other is the number of hops to reach
 // the vertex from the source.  We need the number of hops to choose
