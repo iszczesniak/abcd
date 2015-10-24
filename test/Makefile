@@ -2,8 +2,8 @@ TESTS = sdi_args dijkstra graph utils
 
 OBJS = ../dijkstra.o ../graph.o ../sdi_args.o ../utils.o
 
-#CXXFLAGS = -g -Wno-deprecated
-CXXFLAGS = -O3 -Wno-deprecated
+#CXXFLAGS = -g -Wno-deprecated -std=c++11
+CXXFLAGS = -O3 -Wno-deprecated -std=c++11
 
 CXXFLAGS := $(CXXFLAGS) -I ../
 

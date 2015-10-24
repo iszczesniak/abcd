@@ -21,10 +21,10 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_1)
                         "--nodes", "10",
                         "--edges", "30",
                         "--subcarriers", "50",
-                        "--clients", "100",
-                        "--l_sleep", "11",
-                        "--mnc", "12",
-                        "--l_change", "13",
+                        "--mcat", "1",
+                        "--mht", "2",
+                        "--mbst", "3",
+                        "--mdct", "4",
                         "--mnsc", "5",
                         "--reconf", "incremental",
                         "--select", "first",
@@ -38,15 +38,15 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_1)
   BOOST_CHECK(args.nr_nodes == 10);
   BOOST_CHECK(args.nr_edges == 30);
   BOOST_CHECK(args.nr_sc == 50);
-  BOOST_CHECK(args.nr_clients == 100);
   BOOST_CHECK(args.hash == "blablabla");
   BOOST_CHECK(args.reconf == connection::incremental);
   BOOST_CHECK(args.select == dijkstra::get_select());
 
-  BOOST_CHECK_CLOSE(args.l_sleep, 11, 0.0001);
-  BOOST_CHECK_CLOSE(args.mnc, 12, 0.0001);
-  BOOST_CHECK_CLOSE(args.l_change, 13, 0.0001);
-  BOOST_CHECK_CLOSE(args.mnsc, 5, 0.0001);
+  BOOST_CHECK_CLOSE(args.mcat, 1, 0.0001);
+  BOOST_CHECK_CLOSE(args.mht, 2, 0.0001);
+  BOOST_CHECK_CLOSE(args.mbst, 3, 0.0001);
+  BOOST_CHECK_CLOSE(args.mdct, 4, 0.0001);
+  BOOST_CHECK_CLOSE(args.mnsc, 5.0, 0.0001);
 
   BOOST_CHECK(args.max_len == 1000);
 
@@ -64,10 +64,10 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_2)
                         "--nodes", "10",
                         "--edges", "30",
                         "--subcarriers", "50",
-                        "--clients", "100",
-                        "--l_sleep", "11",
-                        "--mnc", "12",
-                        "--l_change", "13",
+                        "--mcat", "1",
+                        "--mht", "2",
+                        "--mbst", "3",
+                        "--mdct", "4",
                         "--mnsc", "5",
                         "--reconf", "complete",
                         "--select", "fittest",
@@ -94,10 +94,10 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_3)
                         "--nodes", "10",
                         "--edges", "30",
                         "--subcarriers", "50",
-                        "--clients", "100",
-                        "--l_sleep", "11",
-                        "--mnc", "12",
-                        "--l_change", "13",
+                        "--mcat", "1",
+                        "--mht", "2",
+                        "--mbst", "3",
+                        "--mdct", "4",
                         "--mnsc", "5",
                         "--reconf", "curtailing",
                         "--select", "first",

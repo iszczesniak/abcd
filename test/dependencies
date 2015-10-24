@@ -1,9 +1,11 @@
 dijkstra.o: dijkstra.cc ../utils.hpp ../graph.hpp ../utils_netgen.hpp \
- ../utils.hpp ../dijkstra.hpp
+ ../mypoint.hpp ../sdi_args.hpp ../connection.hpp ../dijkstra.hpp \
+ ../utils.hpp ../teventqueue.hpp ../dijkstra.hpp
 first.o: first.cc ../graph.hpp ../dijkstra.hpp ../graph.hpp \
- ../utils_netgen.hpp ../utils.hpp
+ ../utils_netgen.hpp ../mypoint.hpp ../sdi_args.hpp ../connection.hpp \
+ ../dijkstra.hpp ../utils.hpp ../teventqueue.hpp
 graph.o: graph.cc ../utils.hpp ../graph.hpp
 sdi_args.o: sdi_args.cc ../sdi_args.hpp ../connection.hpp ../graph.hpp \
- ../dijkstra.hpp ../utils.hpp ../utils_netgen.hpp ../utils.hpp \
- ../dijkstra.hpp
+ ../dijkstra.hpp ../utils.hpp ../utils_netgen.hpp ../mypoint.hpp \
+ ../sdi_args.hpp ../utils.hpp ../teventqueue.hpp ../dijkstra.hpp
 utils.o: utils.cc ../utils.hpp ../graph.hpp
