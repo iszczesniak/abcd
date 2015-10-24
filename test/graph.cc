@@ -1,9 +1,7 @@
-#include "utils.hpp"
-
 #define BOOST_TEST_MODULE graph
 
+#include "graph.hpp"
 #include <boost/test/unit_test.hpp>
-#include <boost/random/linear_congruential.hpp>
 
 BOOST_AUTO_TEST_CASE(parallel_edge_test)
 {
