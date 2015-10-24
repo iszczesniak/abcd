@@ -65,37 +65,7 @@ struct SampleGraph {
         Reversed & m_rev;
     };
 
-
     static void getSampleGraph(Graph &g, vertex_descriptor & s, vertex_descriptor & t) {
-        size_type N(6);
-        typedef property_map < Graph, edge_reverse_t >::type Reversed;
-
-        for(size_type i = 0; i < N; ++i){
-            add_vertex(g);
-        }
-        Capacity  capacity = get(edge_capacity, g);
-        Reversed rev = get(edge_reverse, g);
-        ResidualCapacity residual_capacity = get(edge_residual_capacity, g); 
-        Weight weight = get(edge_weight, g);
-
-        s = 0;
-        t = 5;
-
-        EdgeAdder ea(g, weight, capacity, rev, residual_capacity);
-
-        ea.addEdge(0, 1, 4 ,2);
-        ea.addEdge(0, 2, 2 ,2);
-
-        ea.addEdge(1, 3, 2 ,2);
-        ea.addEdge(1, 4, 1 ,1);
-        ea.addEdge(2, 3, 1 ,1);
-        ea.addEdge(2, 4, 1 ,1);
-
-        ea.addEdge(3, 5, 4 ,20);
-        ea.addEdge(4, 5, 2 ,20);
-    }       
-
-    static void getSampleGraph2(Graph &g, vertex_descriptor & s, vertex_descriptor & t) {
 
         const boost::graph_traits<Graph>::vertices_size_type N(5);
         typedef property_map < Graph, edge_reverse_t >::type Reversed;
@@ -115,19 +85,7 @@ struct SampleGraph {
         EdgeAdder ea(g, weight, capacity, rev, residual_capacity);
 
         ea.addEdge(0, 1, 4 ,2);
-        ea.addEdge(0, 2, 2 ,2);
-        ea.addEdge(1, 2, 2 ,2);
-        ea.addEdge(2, 3, 1 ,1);
-        ea.addEdge(2, 4, 1 ,1);
-        ea.addEdge(3, 4, 1 ,1);
-
-
         ea.addEdge(1, 0, 2 ,2);
-        ea.addEdge(2, 0, 1 ,1);
-        ea.addEdge(2, 1, 5 ,2);
-        ea.addEdge(3, 2, 1 ,1);
-        ea.addEdge(4, 2, 2 ,2);
-        ea.addEdge(4, 3, 1 ,3);
     }       
 };
 } //boost
