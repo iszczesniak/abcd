@@ -11,7 +11,7 @@ namespace boost {
 
   template <typename Graph, typename Weight>
   std::list<std::list<typename Graph::edge_descriptor>>
-  ed_ksp(Graph& g,
+  ed_ksp(const Graph& _g,
          typename graph_traits<Graph>::vertex_descriptor s,
          typename graph_traits<Graph>::vertex_descriptor t,
          Weight wm)
@@ -20,7 +20,11 @@ namespace boost {
     typedef typename graph_traits<Graph>::vertex_descriptor vertex_t;
     typedef typename Weight::value_type weight_t;
     typedef typename std::list<typename Graph::edge_descriptor> path_t;
-      
+
+    // Create a copy, because we'll modify it.
+    Graph g = _g;
+
+    // The result.
     std::list<path_t> paths;
     
     // Fill in the maps.
@@ -29,16 +33,19 @@ namespace boost {
     std::map<edge_t, int> e2r;
     std::map<edge_t, weight_t> e2w;
 
+    // The set of edges.
+    std::set<edge_t> soe;
     typename graph_traits<Graph>::edge_iterator ei, ee;
     for (tie(ei, ee) = edges(g); ei != ee; ++ei)
+      soe.insert(*ei);
+
+    for (const auto &e: soe)
       {
-        // Normal edge.
-        const edge_t &e = *ei;
         // Reverse edge.
         edge_t r;
         // Status of the edge creation.
         bool success;
-        tie(r, success) = boost::edge(target(e, g), source(e, g), g);
+        tie(r, success) = add_edge(target(e, g), source(e, g), g);
         assert(success);
 
         // Map the edge.
@@ -59,7 +66,7 @@ namespace boost {
     associative_property_map<std::map<edge_t, edge_t>> rev(e2e);
     associative_property_map<std::map<edge_t, int>> cap(e2c);
     associative_property_map<std::map<edge_t, int>> res(e2r);
-    associative_property_map<std::map<edge_t, int>> wgt(e2w);
+    associative_property_map<std::map<edge_t, weight_t>> wgt(e2w);
 
     successive_shortest_path_nonnegative_weights(g, s, t,
                                                  capacity_map(cap).
