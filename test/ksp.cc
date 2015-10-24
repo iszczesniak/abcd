@@ -1,12 +1,14 @@
+#define BOOST_TEST_MODULE ksp
+
 #include "graph.hpp"
 #include "ed_ksp.hpp"
-#include <iostream>
+#include <boost/test/unit_test.hpp>
 
 using namespace std;
 
-// Add edge, test, and set weight.
+// Add an edge, test it, and set weight.
 edge
-foo(graph &g, vertex s, vertex d, int w)
+ade(graph &g, vertex s, vertex d, int w)
 {
   edge e;
   bool success;
@@ -19,16 +21,32 @@ foo(graph &g, vertex s, vertex d, int w)
   return e;
 }
 
-int main()
+pair<edge, edge>
+aue(graph &g, vertex s, vertex d, int w)
 {
-  graph g;
+  return make_pair(ade(g, s, d, w), ade(g, d, s, w));  
+}
 
-  foo(g, 0, 1, 1);
-  foo(g, 1, 0, 1);
+//      1
+//     /|\
+//    / | \
+//   0  |  3--4
+//    \ | /
+//     \|/
+//      2
 
-  plist l = boost::ed_ksp(g, 0, 1);
+BOOST_AUTO_TEST_CASE(ksp_1)
+{
+  graph g(5);
 
-  cout << l.size() << endl;
-  
-  return 0;
+  aue(g, 0, 1, 1);
+  aue(g, 0, 2, 1);
+  aue(g, 1, 2, 1);
+  aue(g, 1, 3, 1);
+  aue(g, 2, 3, 1);
+  aue(g, 3, 4, 1);
+
+  plist l;
+  l = boost::ed_ksp(g, 3, 4);
+  BOOST_CHECK(l.size() == 1);
 }

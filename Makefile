@@ -1,4 +1,4 @@
-TARGETS = sdi try
+TARGETS = sdi
 TARGET_OBJS = $(addsuffix .o, $(TARGETS))
 
 OBJS = client.o connection.o dijkstra.o event.o module.o sdi_args.o	\

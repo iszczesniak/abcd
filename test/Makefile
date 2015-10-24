@@ -1,4 +1,4 @@
-TESTS = sdi_args dijkstra graph utils
+TESTS = dijkstra graph ksp sdi_args utils 
 
 OBJS = ../dijkstra.o ../graph.o ../sdi_args.o ../utils.o
 
@@ -23,6 +23,9 @@ dijkstra: dijkstra.o $(OBJS)
 	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 graph: graph.o $(OBJS)
+	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
+
+ksp: ksp.o $(OBJS)
 	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 sdi_args: sdi_args.o $(OBJS)
