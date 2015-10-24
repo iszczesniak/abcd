@@ -64,7 +64,7 @@ struct sdi_args
   double mdct;
 
   /// The mean number of subcarriers.
-  int mnsc;
+  double mnsc;
 
   /// -----------------------------------------------------------------
   /// The simulation options
