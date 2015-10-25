@@ -66,16 +66,8 @@ BOOST_AUTO_TEST_CASE(ksp_1)
 
   std::multimap<int, path> r;
 
-  r = boost::ed_ksp(g, 3, 4);
+  r = boost::ed_ksp(g, c, d);
+  path p = path().push_back(cd);
   BOOST_CHECK(r.size() == 1);
-
-  // There are two paths of length 2.
-  r = boost::ed_ksp(g, 0, 3);
-  BOOST_CHECK(r.size() == 2);
-
-  r = boost::ed_ksp(g, 0, 4);
-  BOOST_CHECK(r.size() == 1);
-
-  r = boost::ed_ksp(g, 1, 2);
-  BOOST_CHECK(r.size() == 3);
+  //  BOOST_CHECK(eq(r, 0, 5, path().append(cd)));
 }
