@@ -10,7 +10,8 @@
 namespace boost {
 
   template <typename Graph, typename Weight>
-  std::list<std::list<typename Graph::edge_descriptor>>
+  std::multimap<typename Weight::value_type,
+                std::list<typename Graph::edge_descriptor>>
   ed_ksp(const Graph& _g,
          typename graph_traits<Graph>::vertex_descriptor s,
          typename graph_traits<Graph>::vertex_descriptor t,
@@ -25,7 +26,7 @@ namespace boost {
     Graph g = _g;
 
     // The result.
-    std::list<path_t> paths;
+    std::multimap<weight_t, path_t> result;
     
     // Fill in the maps.
     std::map<edge_t, edge_t> e2e;
@@ -81,13 +82,16 @@ namespace boost {
 
         if (get(cap, e) == 1 && get(res, e) == 0)
           {
-            paths.push_back(path_t());
-            path_t &p = paths.back();
+            path_t p;
+            weight_t w = weight_t();
 
             do
               {
                 // Push the edge to the path.
                 p.push_back(e);
+                // Increase the cost.
+                w += get(wgt, e);
+
                 // Set the capacity to zero, so that the edge is not
                 // used for a different path.
                 put(cap, e, 0);
@@ -110,14 +114,17 @@ namespace boost {
 
                 assert(oj != oje);
               } while(true);
+
+            result.insert(make_pair(w, p));
           }
       }
       
-      return paths;
+      return result;
   }
 
   template <typename Graph>
-  std::list<std::list<typename Graph::edge_descriptor>>
+  std::multimap<typename property_map<Graph, edge_weight_t>::value_type,
+                std::list<typename Graph::edge_descriptor>>
   ed_ksp(Graph& g,
          typename graph_traits<Graph>::vertex_descriptor s,
          typename graph_traits<Graph>::vertex_descriptor t)

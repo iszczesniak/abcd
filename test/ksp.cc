@@ -1,5 +1,6 @@
 #define BOOST_TEST_MODULE ksp
 
+#include <map>
 #include "graph.hpp"
 #include "ed_ksp.hpp"
 #include <boost/test/unit_test.hpp>
@@ -46,20 +47,18 @@ BOOST_AUTO_TEST_CASE(ksp_1)
   aue(g, 2, 3, 1);
   aue(g, 3, 4, 1);
 
-  plist l;
+  std::multimap<int, path> r;
 
-  l = boost::ed_ksp(g, 3, 4);
-  BOOST_CHECK(l.size() == 1);
+  r = boost::ed_ksp(g, 3, 4);
+  BOOST_CHECK(r.size() == 1);
 
   // There are two paths of length 2.
-  l = boost::ed_ksp(g, 0, 3);
-  BOOST_CHECK(l.size() == 2);
-  BOOST_CHECK(l.front().size() == 2);
-  BOOST_CHECK((++l.begin())->size() == 2);
+  r = boost::ed_ksp(g, 0, 3);
+  BOOST_CHECK(r.size() == 2);
 
-  l = boost::ed_ksp(g, 0, 4);
-  BOOST_CHECK(l.size() == 1);
+  r = boost::ed_ksp(g, 0, 4);
+  BOOST_CHECK(r.size() == 1);
 
-  l = boost::ed_ksp(g, 1, 2);
-  BOOST_CHECK(l.size() == 3);
+  r = boost::ed_ksp(g, 1, 2);
+  BOOST_CHECK(r.size() == 3);
 }
