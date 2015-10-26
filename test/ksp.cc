@@ -28,6 +28,13 @@ aue(graph &g, vertex s, vertex d, int w)
   return make_pair(ade(g, s, d, w), ade(g, d, s, w));  
 }
 
+bool
+irek(const std::multimap<int, path> &r, int w, const path &p)
+{
+  std::multimap<int, path>::const_iterator i = r.find(w);
+  return i != r.end() && i->second == p;
+}
+
 //       a
 //      /|\
 //     1 | 3 
@@ -65,9 +72,17 @@ BOOST_AUTO_TEST_CASE(ksp_1)
   tie(ce, ec) = aue(g, c, e, 6);
 
   std::multimap<int, path> r;
-
   r = boost::ed_ksp(g, c, d);
-  path p = path().push_back(cd);
   BOOST_CHECK(r.size() == 1);
-  //  BOOST_CHECK(eq(r, 0, 5, path().append(cd)));
+  BOOST_CHECK(irek(r, 5, path{cd}));
+
+  r = boost::ed_ksp(g, b, d);
+  BOOST_CHECK(r.size() == 1);
+  BOOST_CHECK(irek(r, 9, path{ba, ac, cd}));
+
+  r = boost::ed_ksp(g, a, e);
+  BOOST_CHECK(r.size() == 3);
+  BOOST_CHECK(irek(r, 2, path{ae}));
+  BOOST_CHECK(irek(r, 5, path{ab, be}));
+  BOOST_CHECK(irek(r, 9, path{ac, ce}));
 }

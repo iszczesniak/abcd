@@ -34,14 +34,27 @@ namespace boost {
     std::map<edge_t, int> e2r;
     std::map<edge_t, weight_t> e2w;
 
-    // The set of edges.
-    std::set<edge_t> soe;
-    typename graph_traits<Graph>::edge_iterator ei, ee;
-    for (tie(ei, ee) = edges(g); ei != ee; ++ei)
-      soe.insert(*ei);
+    // The map of edges.
+    std::map<edge_t, edge_t> e2_e;
+    typename graph_traits<Graph>::edge_iterator ei, eie;
+    tie(ei, eie) = edges(g);
+    typename graph_traits<Graph>::edge_iterator _ei, _eie;
+    tie(_ei, _eie) = edges(_g);
 
-    for (const auto &e: soe)
+    while(ei != eie)
       {
+        edge_t e = *ei;
+        edge_t _e = *_ei;
+        assert(source(e, g) == source(_e, _g));
+        assert(target(e, g) == target(_e, _g));
+        e2_e[e] = _e;
+        ++ei;
+        ++_ei;
+      }
+
+    for (const auto &ep: e2_e)
+      {
+        edge_t e = ep.first;
         // Reverse edge.
         edge_t r;
         // Status of the edge creation.
@@ -87,8 +100,13 @@ namespace boost {
 
             do
               {
-                // Push the edge to the path.
-                p.push_back(e);
+                // Push the edge to the path, but we have to find that
+                // edge in the input graph, not the copy of the graph
+                // we're working on.
+                auto i = e2_e.find(e);
+                assert(i != e2_e.end());
+                p.push_back(i->second);
+
                 // Increase the cost.
                 w += get(wgt, e);
 
