@@ -22,25 +22,18 @@ namespace boost {
     typedef typename Weight::value_type weight_t;
     typedef typename std::list<typename Graph::edge_descriptor> path_t;
 
+    // The result.
+    std::multimap<weight_t, path_t> result;
+
     // Create a copy, because we'll modify it.
     Graph g = _g;
 
-    // The result.
-    std::multimap<weight_t, path_t> result;
-    
-    // Fill in the maps.
-    std::map<edge_t, edge_t> e2e;
-    std::map<edge_t, int> e2c;
-    std::map<edge_t, int> e2r;
-    std::map<edge_t, weight_t> e2w;
-
-    // The map of edges.
+    // Create the map of edges.
     std::map<edge_t, edge_t> e2_e;
     typename graph_traits<Graph>::edge_iterator ei, eie;
     tie(ei, eie) = edges(g);
     typename graph_traits<Graph>::edge_iterator _ei, _eie;
     tie(_ei, _eie) = edges(_g);
-
     while(ei != eie)
       {
         edge_t e = *ei;
@@ -52,6 +45,11 @@ namespace boost {
         ++_ei;
       }
 
+    // Fill in the maps.
+    std::map<edge_t, edge_t> e2e;
+    std::map<edge_t, int> e2c;
+    std::map<edge_t, int> e2r;
+    std::map<edge_t, weight_t> e2w;
     for (const auto &ep: e2_e)
       {
         edge_t e = ep.first;
@@ -88,6 +86,7 @@ namespace boost {
                                                  reverse_edge_map(rev).
                                                  weight_map(wgt));
 
+    // Trace the results.
     typename graph_traits<Graph>::out_edge_iterator oi, oie;
     for (tie(oi, oie) = out_edges(s, g); oi != oie; ++oi)
       {
