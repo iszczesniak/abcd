@@ -37,11 +37,11 @@ irek(const std::multimap<int, path> &r, int w, const path &p)
 
 //       a
 //      /|\
-//     1 | 3 
-//    /  |  \
-//   b   2   c--5--d
-//    \  |  /
-//     4 | 6
+//     4 | 6   --5--
+//    /  |  \ /     \
+//   b   2   c       d
+//    \  |  / \     /
+//     1 | 3   --7--
 //      \|/
 //       e
 
@@ -61,24 +61,28 @@ BOOST_AUTO_TEST_CASE(ksp_1)
   edge ae, ea;
   edge ac, ca;
   edge be, eb;
-  edge cd, dc;
+  edge cd1, dc1;
+  edge cd2, dc2;
   edge ce, ec;
 
-  tie(ab, ba) = aue(g, a, b, 1);
+  tie(ab, ba) = aue(g, a, b, 4);
   tie(ae, ea) = aue(g, a, e, 2);
-  tie(ac, ca) = aue(g, a, c, 3);
-  tie(be, eb) = aue(g, b, e, 4);
-  tie(cd, dc) = aue(g, c, d, 5);
-  tie(ce, ec) = aue(g, c, e, 6);
+  tie(ac, ca) = aue(g, a, c, 6);
+  tie(be, eb) = aue(g, b, e, 1);
+  tie(cd1, dc1) = aue(g, c, d, 5);
+  tie(cd2, dc2) = aue(g, c, d, 7);
+  tie(ce, ec) = aue(g, c, e, 3);
 
   std::multimap<int, path> r;
   r = boost::ed_ksp(g, c, d);
-  BOOST_CHECK(r.size() == 1);
-  BOOST_CHECK(irek(r, 5, path{cd}));
+  BOOST_CHECK(r.size() == 2);
+  BOOST_CHECK(irek(r, 5, path{cd1}));
+  BOOST_CHECK(irek(r, 7, path{cd2}));
 
   r = boost::ed_ksp(g, b, d);
-  BOOST_CHECK(r.size() == 1);
-  BOOST_CHECK(irek(r, 9, path{ba, ac, cd}));
+  BOOST_CHECK(r.size() == 2);
+  BOOST_CHECK(irek(r, 9, path{be, ec, cd1}));
+  BOOST_CHECK(irek(r, 17, path{ba, ac, cd2}));
 
   r = boost::ed_ksp(g, a, e);
   BOOST_CHECK(r.size() == 3);
