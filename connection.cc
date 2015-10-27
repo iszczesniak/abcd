@@ -1,5 +1,5 @@
 #include "connection.hpp"
-#include "dijkstra.hpp"
+#include "routing.hpp"
 
 #include <algorithm>
 #include <iostream>
@@ -72,16 +72,11 @@ connection::set_up(const demand &d)
 
   if (d.first.first != d.first.second)
     {
-      // We allow to allocate the signal on any of the subcarriers.
-      V2C2S r = dijkstra::search(g, d);
-      p.second = dijkstra::trace(g, r, d);
+      sscpath sp = routing::set_up(g, d);
       result.first = !p.second.first.empty();
       result.second = p.second.first.size();
-
-      if (result.first)
-        dijkstra::set_up_path(g, p.second);
-
       p.first = result.first;
+      p.second = sp;
     }
   else
     {
@@ -146,7 +141,7 @@ connection::reconfigure_complete(vertex new_src)
 
   // First we need to tear down the existing path.  We might need its
   // subcarriers to establish a new connection.
-  dijkstra::tear_down_path(g, p.second);
+  routing::tear_down_path(g, p.second);
 
   // That's the new demand.
   vertex dst = d.first.second;

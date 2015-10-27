@@ -1,5 +1,6 @@
 #include "sdi_args.hpp"
 #include "connection.hpp"
+#include "routing.hpp"
 
 #include <iostream>
 #include <map>
@@ -62,6 +63,16 @@ interpret (const string &name, const string &text,
   return i->second;
 }
 
+// Handles the routing parameter.
+routing::type
+reconf_interpret (const string &reconf)
+{
+  map <string, routing::type> reconf_map;
+  reconf_map["cdijkstra"] = routing::cdijkstra;
+  reconf_map["ed_ksp"] = routing::ed_ksp;
+  return interpret ("reconf", reconf, reconf_map);
+}
+
 // Handles the reconf parameter.
 connection::reconf_t
 reconf_interpret (const string &reconf)
@@ -70,7 +81,7 @@ reconf_interpret (const string &reconf)
   reconf_map["complete"] = connection::complete;
   reconf_map["incremental"] = connection::incremental;
   reconf_map["curtailing"] = connection::curtailing;
-  return interpret ("reconf", reconf, reconf_map);
+  return interpret ("routing", reconf, reconf_map);
 }
 
 // Handles the select parameter.
@@ -129,7 +140,10 @@ process_sdi_args(int argc, const char *argv[])
          "the way connections should be reconfigured")
 
         ("select", po::value<string>()->required(),
-         "the way subcarriers should be selected");
+         "the way subcarriers should be selected")
+
+        ("routing", po::value<string>()->required(),
+         "the routing algorithm");
 
       // Traffic options.
       po::options_description tra("Traffic options");
@@ -191,8 +205,9 @@ process_sdi_args(int argc, const char *argv[])
       result.max_len = vm["max_len"].as<int>();
       result.reconf = reconf_interpret(vm["reconf"].as<string>());
       result.select = select_interpret(vm["select"].as<string>());
+      result.routing = routing_interpret(vm["routing"].as<string>());
 
-      // The traffic options.
+        // The traffic options.
       result.mcat = vm["mcat"].as<double>();
       result.mht = vm["mht"].as<double>();
       result.mbst = vm["mbst"].as<double>();

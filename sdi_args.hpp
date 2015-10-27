@@ -45,8 +45,11 @@ struct sdi_args
   connection::reconf_t reconf;
 
   /// The way to select subcarriers.
-  dijkstra::select_t select;
+  routing::select_t select;
 
+  /// The routing algorithm;
+  routing::type routing_type;
+  
   /// -----------------------------------------------------------------
   /// The traffic options
   /// -----------------------------------------------------------------

@@ -1,9 +1,9 @@
 TARGETS = sdi
 TARGET_OBJS = $(addsuffix .o, $(TARGETS))
 
-OBJS = client.o connection.o dijkstra.o event.o module.o sdi_args.o	\
-simulation.o stats.o utils.o utils_netgen.o mypoint.o teventqueue.o	\
-traffic.o
+OBJS = client.o connection.o dijkstra.o event.o module.o routing.o	\
+sdi_args.o simulation.o stats.o utils.o utils_netgen.o mypoint.o	\
+teventqueue.o traffic.o
 
 CXXFLAGS := $(CXXFLAGS) -g
 CXXFLAGS := $(CXXFLAGS) -std=c++11
