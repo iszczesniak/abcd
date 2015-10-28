@@ -48,8 +48,8 @@ struct sdi_args
   /// The way to select subcarriers.
   routing::select_t select;
 
-  /// The routing algorithm;
-  routing::routing_type routing;
+  /// The routing algorithm.
+  routing::routing_t rt;
   
   /// -----------------------------------------------------------------
   /// The traffic options

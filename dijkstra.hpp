@@ -46,18 +46,6 @@ public:
   static void
   tear_down_path(graph &g, const sscpath &p);
 
-  /**
-   * Return reference to the select field.
-   */
-  static select_t &
-  get_select();
-
-  /**
-   * Returns reference to the max_len field.
-   */
-  static int &
-  get_max_len();
-
   // From the given SSSC, select the SSC according to the "select"
   // field of the class.  The returned SSC has exactly nsc
   // subcarriers, even though the chosen contiguous fragment from SSSC

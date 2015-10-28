@@ -14,15 +14,26 @@ public:
   // smallest - the smallest set of contiguous subcarriers are chosen
   enum select_t {first, fittest};
 
-  static select_t select;
-
-  static int max_len;
-
   static sscpath
   set_up(const graph &g, const demand &d);
 
+  /**
+   * Return reference to the routing type field.
+   */
   static routing_t &
   get_routing();
+
+  /**
+   * Return reference to the select type field.
+   */
+  static select_t &
+  get_select();
+
+  /**
+   * Returns reference to the max_len field.
+   */
+  static int &
+  get_max_len();
 
 private:
   // Route with the constrained Dijkstra.
@@ -34,6 +45,10 @@ private:
   ed_ksp_f(const graph &g, const demand &d);  
 
   static routing_t m_rt;
+
+  static select_t m_select;
+
+  static int m_max_len;
 };
 
 #endif /* ROUTING_HPP */

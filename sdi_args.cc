@@ -64,13 +64,13 @@ interpret (const string &name, const string &text,
 }
 
 // Handles the routing parameter.
-routing::routing_type
-reconf_interpret (const string &reconf)
+routing::routing_t
+rt_interpret (const string &rt)
 {
-  map <string, routing::routing_type> routing_map;
-  routing_map["cdijkstra"] = routing::cdijkstra;
-  routing_map["ed_ksp"] = routing::ed_ksp;
-  return interpret ("reconf", routing, routing_map);
+  map <string, routing::routing_t> rt_map;
+  rt_map["cdijkstra"] = routing::cdijkstra;
+  rt_map["ed_ksp"] = routing::ed_ksp;
+  return interpret ("rt", rt, rt_map);
 }
 
 // Handles the reconf parameter.
@@ -81,16 +81,16 @@ reconf_interpret (const string &reconf)
   reconf_map["complete"] = connection::complete;
   reconf_map["incremental"] = connection::incremental;
   reconf_map["curtailing"] = connection::curtailing;
-  return interpret ("routing", reconf, reconf_map);
+  return interpret ("reconf", reconf, reconf_map);
 }
 
 // Handles the select parameter.
-dijkstra::select_t
+routing::select_t
 select_interpret (const string &select)
 {
-  map <string, dijkstra::select_t> select_map;
-  select_map["first"] = dijkstra::first;
-  select_map["fittest"] = dijkstra::fittest;
+  map <string, routing::select_t> select_map;
+  select_map["first"] = routing::first;
+  select_map["fittest"] = routing::fittest;
   return interpret ("select", select, select_map);
 }
 
@@ -142,7 +142,7 @@ process_sdi_args(int argc, const char *argv[])
         ("select", po::value<string>()->required(),
          "the way subcarriers should be selected")
 
-        ("routing", po::value<string>()->required(),
+        ("rt", po::value<string>()->required(),
          "the routing algorithm");
 
       // Traffic options.
@@ -205,7 +205,7 @@ process_sdi_args(int argc, const char *argv[])
       result.max_len = vm["max_len"].as<int>();
       result.reconf = reconf_interpret(vm["reconf"].as<string>());
       result.select = select_interpret(vm["select"].as<string>());
-      result.routing = routing_interpret(vm["routing"].as<string>());
+      result.rt = rt_interpret(vm["rt"].as<string>());
 
         // The traffic options.
       result.mcat = vm["mcat"].as<double>();
