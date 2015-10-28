@@ -3,6 +3,7 @@
 
 #include "connection.hpp"
 #include "dijkstra.hpp"
+#include "routing.hpp"
 #include <string>
 
 using namespace std;
@@ -48,7 +49,7 @@ struct sdi_args
   routing::select_t select;
 
   /// The routing algorithm;
-  routing::type routing_type;
+  routing::routing_type routing;
   
   /// -----------------------------------------------------------------
   /// The traffic options

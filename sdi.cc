@@ -116,6 +116,9 @@ net_stats(const sdi_args &args)
 void
 simulate(const sdi_args &args)
 {
+  // Set how the routing shoule be done.
+  routing::get_routing() = args.routing;
+    
   // Set how the connections should be reconfigured.
   connection::get_reconf() = args.reconf;
 

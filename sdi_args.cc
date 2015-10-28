@@ -64,13 +64,13 @@ interpret (const string &name, const string &text,
 }
 
 // Handles the routing parameter.
-routing::type
+routing::routing_type
 reconf_interpret (const string &reconf)
 {
-  map <string, routing::type> reconf_map;
-  reconf_map["cdijkstra"] = routing::cdijkstra;
-  reconf_map["ed_ksp"] = routing::ed_ksp;
-  return interpret ("reconf", reconf, reconf_map);
+  map <string, routing::routing_type> routing_map;
+  routing_map["cdijkstra"] = routing::cdijkstra;
+  routing_map["ed_ksp"] = routing::ed_ksp;
+  return interpret ("reconf", routing, routing_map);
 }
 
 // Handles the reconf parameter.

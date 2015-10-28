@@ -1,5 +1,13 @@
 #include "routing.hpp"
 
+static routing::routing_type rt = routing::cdijkstra;
+
+routing::routing_type &
+routing::get()
+{
+  return routing;
+}
+
 sscpath
 routing::set_up(const graph &g, const demand &d)
 {
@@ -19,7 +27,7 @@ routing::set_up(const graph &g, const demand &d)
 }
   
 sscpath
-routing::cdijkstra(const graph &g, const demand &d)
+routing::cdijkstra_f(const graph &g, const demand &d)
 {
   sscpath 
 
@@ -37,6 +45,6 @@ routing::cdijkstra(const graph &g, const demand &d)
 }
 
 sscpath
-routing::ed_ksp(const graph &g, const demand &d)
+routing::ed_ksp_f(const graph &g, const demand &d)
 {
 }
