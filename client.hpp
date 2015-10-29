@@ -34,22 +34,6 @@ class client: public module
   boost::variate_generator<boost::mt19937 &,
                            boost::exponential_distribution<> > htg;
 
-  // The mean BS-change time.
-  double mbst;
-  // The BS-change time distribution.
-  boost::exponential_distribution<> bstd;
-  // The BS-change time generator.
-  boost::variate_generator<boost::mt19937 &,
-                           boost::exponential_distribution<> > bstg;
-  
-  // The mean DC-change time.
-  double mdct;
-  // The DC-change time distribution.
-  boost::exponential_distribution<> dctd;
-  // The DC-change time generator.
-  boost::variate_generator<boost::mt19937 &,
-                           boost::exponential_distribution<> > dctg;
-
   // The mean number of subcarriers.
   double mnsc;
   // The number of subcarriers distribution.
@@ -68,18 +52,14 @@ class client: public module
   stats &st;
 
 public:
-  client(double mht, double mbst, double mdct, double mnsc, traffic &tra);
+  client(double mht, double mnsc, traffic &tra);
   
   // Processes the event and changes the state of the client.
   void operator()(double t);
 
 private:
   void set_up();
-  void reconfigure();
   void tear_down();
-
-  // Schedule the next event.
-  void schedule_next();
 
   // Self_destruction: report this to the traffic, and delete itself.
   void destroy();

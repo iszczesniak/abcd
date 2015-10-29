@@ -10,30 +10,21 @@
 
 using namespace std;
 
-client::client(double mht, double mbst, double mdct, double mnsc,
-               traffic &tra):
+client::client(double mht, double mnsc, traffic &tra):
   mht(mht), htd(1 / mht), htg(rng, htd),
-  mbst(mbst), bstd(1 / mbst), bstg(rng, bstd),
-  mdct(mdct), dctd(1 / mdct), dctg(rng, dctd),
   mnsc(mnsc - 1), nscd(1 / mnsc), nscdg(rng, nscd),
   conn(g), st(stats::get()), tra(tra)
 {
+  set_up();
+  
   // Tear down time.
   tdt = now() + htg();
-  schedule();
+  schedule(tdt);
 }
 
 void client::operator()(double t)
 {
-  if (!conn.is_established())
-    set_up();
-  else
-    {
-      if (t != tdt)
-        reconfigure();
-      else
-        tear_down();
-    }
+  tear_down();
 }
 
 void client::set_up()
@@ -59,55 +50,12 @@ void client::set_up()
     destroy();
 }
 
-void client::reconfigure()
-{
-  assert(conn.is_established());
-  
-  // We change the source node, and the destination node stays
-  // unchanged.  We choose the new source node from one of the
-  // neighbours of the current source node.
-  vertex old_src = conn.get_demand().first.first;
-
-  // From these vertexes we can reach the current source node.
-  set<vertex> sov;
-  boost::graph_traits<graph>::in_edge_iterator ei, eei;
-  for(boost::tie(ei, eei) = boost::in_edges(old_src, g); ei != eei; ++ei)
-    sov.insert(source(*ei, g));
-
-  // Now we choose at random from one of the found nodes.
-  vertex new_src = get_random_element(sov, rng);
-  std::pair<bool, int> result = conn.reconfigure(new_src);
-
-  if (result.first)
-    {
-      st.reconfigured_links(result.second);
-      schedule_next();
-    }
-  else
-    {
-      st.completed(false);
-      destroy();
-    }
-}
-
 void client::tear_down()
 {
   assert(conn.is_established());
   conn.tear_down();
   st.completed(true);
   destroy();
-}
-
-// Schedule the next event based on the current time t.
-void client::schedule_next()
-{
-  // The time to switch to the next base station.
-  double bst = now() + bstg();
-
-  // Next time.
-  double nt = bst < tdt ? bst : tdt;
-
-  schedule(nt);
 }
 
 void client::destroy()
