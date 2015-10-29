@@ -15,6 +15,9 @@ namespace ba = boost::accumulators;
 class stats;
 class traffic;
 
+/**
+ * The client class.  This class takes care of reporting the stats.
+ */
 class client: public module
 {
   // The client ID.
