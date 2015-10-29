@@ -21,7 +21,7 @@ public:
    * Return reference to the routing type field.
    */
   static routing_t &
-  get_routing();
+  get_rt();
 
   /**
    * Return reference to the select type field.

@@ -117,16 +117,16 @@ void
 simulate(const sdi_args &args)
 {
   // Set how the routing shoule be done.
-  routing::get_routing() = args.routing;
+  routing::get_rt() = args.rt;
     
   // Set how the connections should be reconfigured.
   connection::get_reconf() = args.reconf;
 
   // Set how the ssc should be selected.
-  dijkstra::get_select() = args.select;
+  routing::get_select() = args.select;
 
   // Set the maximal length of a connection.
-  dijkstra::get_max_len() = args.max_len;
+  routing::get_max_len() = args.max_len;
 
   // Random number generator.
   boost::mt19937 rng(args.seed);
