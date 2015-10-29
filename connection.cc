@@ -73,8 +73,8 @@ connection::set_up(const demand &d)
   if (d.first.first != d.first.second)
     {
       sscpath sp = routing::set_up(g, d);
-      result.first = !p.second.first.empty();
-      result.second = p.second.first.size();
+      result.first = !sp.first.empty();
+      result.second = sp.first.size();
       p.first = result.first;
       p.second = sp;
     }
