@@ -136,9 +136,6 @@ process_sdi_args(int argc, const char *argv[])
         ("max_len", po::value<int>()->required(),
          "the maximal length of a path")
 
-        ("reconf", po::value<string>()->required(),
-         "the way connections should be reconfigured")
-
         ("select", po::value<string>()->required(),
          "the way subcarriers should be selected")
 
@@ -153,12 +150,6 @@ process_sdi_args(int argc, const char *argv[])
 
         ("mht", po::value<double>()->required(),
          "the mean holding time")
-
-        ("mbst", po::value<double>()->required(),
-         "the mean BS-change time")
-
-        ("mdct", po::value<double>()->required(),
-         "the mean DC-change time")
 
         ("mnsc", po::value<double>()->required(),
          "the mean number of subcarriers");
@@ -203,15 +194,12 @@ process_sdi_args(int argc, const char *argv[])
       result.nr_edges = vm["edges"].as<int>();
       result.nr_sc = vm["subcarriers"].as<int>();
       result.max_len = vm["max_len"].as<int>();
-      result.reconf = reconf_interpret(vm["reconf"].as<string>());
       result.select = select_interpret(vm["select"].as<string>());
       result.rt = rt_interpret(vm["rt"].as<string>());
 
         // The traffic options.
       result.mcat = vm["mcat"].as<double>();
       result.mht = vm["mht"].as<double>();
-      result.mbst = vm["mbst"].as<double>();
-      result.mdct = vm["mdct"].as<double>();
       result.mnsc = vm["mnsc"].as<double>();
 
       // The simulation options.

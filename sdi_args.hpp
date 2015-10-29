@@ -42,9 +42,6 @@ struct sdi_args
   /// The maximal length of a path we want.
   int max_len;
 
-  /// The way to reconfigure connections.
-  connection::reconf_t reconf;
-
   /// The way to select subcarriers.
   routing::select_t select;
 
@@ -60,12 +57,6 @@ struct sdi_args
 
   /// The mean holding time.
   double mht;
-
-  /// The mean BS-change time.
-  double mbst;
-
-  /// The mean DC-change time.
-  double mdct;
 
   /// The mean number of subcarriers.
   double mnsc;
