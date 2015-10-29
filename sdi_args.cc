@@ -73,17 +73,6 @@ rt_interpret (const string &rt)
   return interpret ("rt", rt, rt_map);
 }
 
-// Handles the reconf parameter.
-connection::reconf_t
-reconf_interpret (const string &reconf)
-{
-  map <string, connection::reconf_t> reconf_map;
-  reconf_map["complete"] = connection::complete;
-  reconf_map["incremental"] = connection::incremental;
-  reconf_map["curtailing"] = connection::curtailing;
-  return interpret ("reconf", reconf, reconf_map);
-}
-
 // Handles the select parameter.
 routing::select_t
 select_interpret (const string &select)
