@@ -40,8 +40,8 @@ public:
   is_established() const;
 
   // Set up the connection:
-  // @ .first - true if successfull
-  // @ .second - the number of links of the established connection.
+  // @return .first - true if successfull
+  // @return .second - the number of links of the established connection
   std::pair<bool, int>
   set_up(const demand &d);
 
