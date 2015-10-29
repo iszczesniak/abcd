@@ -37,15 +37,12 @@ void client::set_up()
   d.second = nscdg() + 1;
 
   // Set up the connection.
-  pair<bool, int> result = conn.set_up(d);
+  pair<bool, int> result = conn.establish(d);
 
   st.established(result.first);
 
   if (result.first)
-    {
-      st.established_length(result.second);
-      schedule_next();
-    }
+    st.established_length(result.second);
   else
     destroy();
 }
