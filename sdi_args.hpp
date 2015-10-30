@@ -50,7 +50,7 @@ struct sdi_args
   routing::select_t select;
 
   /// The routing algorithm.
-  routing::routing_t rt;
+  routing_t rt;
   
   /// -----------------------------------------------------------------
   /// The traffic options

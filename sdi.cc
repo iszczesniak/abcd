@@ -116,9 +116,6 @@ net_stats(const sdi_args &args)
 void
 simulate(const sdi_args &args)
 {
-  // Set how the routing shoule be done.
-  routing::get_rt() = args.rt;
-    
   // Set how the ssc should be selected.
   routing::get_select() = args.select;
 
