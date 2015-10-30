@@ -1,4 +1,4 @@
-#include "dijkstra.hpp"
+#include "cdijkstra.hpp"
 #include "graph.hpp"
 #include "utils.hpp"
 
@@ -10,16 +10,13 @@
 
 using namespace std;
 
-dijkstra::select_t dijkstra::select = dijkstra::first;
-int dijkstra::max_len = INT_MAX;
-
 /**
  * Check whether there is a better or equal result in c2s than the new
  * result, i.e. of a lower or equal cost and with a SSC that includes
  * "ssc".
  */
 bool
-dijkstra::has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
+cdijkstra::has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
 {
   // We examine the existing results with the cost lower or equal to
   // "cost".
@@ -45,7 +42,7 @@ dijkstra::has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
  * larger or equal cost and with a SSC that is included in "ssc".
  */
 void
-dijkstra::purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc)
+cdijkstra::purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc)
 {
   C2S::iterator i = c2s.begin();
 
@@ -74,7 +71,7 @@ dijkstra::purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc)
 }
 
 void
-dijkstra::relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v,
+cdijkstra::relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v,
                  const SSC &ssc)
 {
   // Check whether there is an SSC in c2s that includes c_ssc at the
@@ -94,7 +91,7 @@ dijkstra::relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v,
 }
 
 void
-dijkstra::relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v,
+cdijkstra::relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v,
                  const SSSC &sssc)
 {
   for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
@@ -102,7 +99,7 @@ dijkstra::relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v,
 }
 
 V2C2S
-dijkstra::search(const graph &g, const demand &d)
+cdijkstra::search(const graph &g, const demand &d)
 {
   SSC ssc;
   vertex src = d.first.first;
@@ -124,7 +121,7 @@ dijkstra::search(const graph &g, const demand &d)
 }
 
 V2C2S
-dijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
+cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
 {
   V2C2S r;
 
@@ -211,7 +208,7 @@ dijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
               // Candidate cost.
               int new_c = c + ec;
 
-              if (new_c <= max_len)
+              if (new_c <= m_max_len)
                 {
                   // The subcarriers available on the edge.
                   const SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
@@ -242,7 +239,7 @@ dijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
 }
 
 sscpath
-dijkstra::trace(const graph &g, const V2C2S &r, const demand &d)
+cdijkstra::trace(const graph &g, const V2C2S &r, const demand &d)
 {
   sscpath p;
 

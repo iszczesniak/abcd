@@ -1,6 +1,6 @@
 #include "routing.hpp"
 
-static routing::routing_type rt = routing::cdijkstra;
+int dijkstra::m_max_len = INT_MAX;
 
 routing::routing_type &
 routing::get()
@@ -9,20 +9,26 @@ routing::get()
 }
 
 sscpath
-routing::set_up(const graph &g, const demand &d)
+routing::route(const graph &g, const demand &d)
 {
   sscpath result;
   
   assert(d.first.first != d.first.second);
 
-  switch (type):
-    == cdijkstra)
-    result = cdijkstra(g, d);
-  else if (type == ed_ksp)
-    result = ed_ksp(g, d);
-  else
-    abort();
-  
+  switch (type)
+    {
+    case cdijkstra:
+      result = cdijkstra(g, d);
+      break;
+      
+    case ed_ksp:
+      result = ed_ksp(g, d);
+      break;
+
+    default:
+      abort();
+    }
+
   return result;
 }
   

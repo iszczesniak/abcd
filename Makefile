@@ -1,14 +1,14 @@
 TARGETS = sdi
 TARGET_OBJS = $(addsuffix .o, $(TARGETS))
 
-OBJS = client.o connection.o dijkstra.o event.o module.o routing.o	\
+OBJS = client.o cdijkstra.o connection.o event.o module.o routing.o	\
 sdi_args.o simulation.o stats.o utils.o utils_netgen.o mypoint.o	\
 teventqueue.o traffic.o
 
 CXXFLAGS := $(CXXFLAGS) -g
 CXXFLAGS := $(CXXFLAGS) -std=c++11
 
-# Use the c++ linker
+# Use the C++ linker
 LINK.o = $(LINK.cc)
 
 ifdef BOOST_ROOT

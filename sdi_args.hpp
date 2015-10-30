@@ -1,14 +1,18 @@
 #ifndef SDI_ARGS_HPP
 #define SDI_ARGS_HPP
 
+#include "cdijkstra.hpp"
 #include "connection.hpp"
-#include "dijkstra.hpp"
 #include "routing.hpp"
 #include <string>
 
 using namespace std;
 
+// The network type.
 enum network_t {random_network, gabriel_network};
+
+// The type of routing.
+enum routing_t {cdijkstra, ed_ksp};
 
 /**
  * These are the program arguments.  In this single class we store all

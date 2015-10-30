@@ -2,8 +2,8 @@
 #include <list>
 #include <queue>
 
+#include "cdijkstra.hpp"
 #include "client.hpp"
-#include "dijkstra.hpp"
 #include "event.hpp"
 #include "graph.hpp"
 #include "sdi_args.hpp"
