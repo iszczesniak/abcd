@@ -68,7 +68,7 @@ routing::routing_t
 rt_interpret (const string &rt)
 {
   map <string, routing::routing_t> rt_map;
-  rt_map["cdijkstra"] = routing::cdijkstra;
+  rt_map["cdijkstra"] = routing::cdijkstra_t;
   rt_map["ed_ksp"] = routing::ed_ksp;
   return interpret ("rt", rt, rt_map);
 }

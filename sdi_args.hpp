@@ -12,7 +12,7 @@ using namespace std;
 enum network_t {random_network, gabriel_network};
 
 // The type of routing.
-enum routing_t {cdijkstra, ed_ksp};
+enum routing_t {cdijkstra_t, ed_ksp_t};
 
 /**
  * These are the program arguments.  In this single class we store all
