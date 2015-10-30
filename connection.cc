@@ -24,7 +24,7 @@ connection::get_demand() const
 bool
 connection::is_established() const
 {
-  return p.first;
+  return m_p.first;
 }
 
 std::pair<bool, int>
@@ -39,7 +39,7 @@ connection::establish(const demand &d)
 
   if (m_d.first.first != m_d.first.second)
     {
-      sscpath sp = routing::route(g, d);
+      sscpath sp = routing::route(m_g, m_d);
       result.first = !sp.first.empty();
       result.second = sp.first.size();
       m_p.first = result.first;
@@ -57,6 +57,6 @@ void
 connection::tear_down()
 {
   assert(is_established());
-  routing::tear_down_path(g, p.second);
-  p = sscpathws();
+  routing::tear_down_path(m_g, m_p.second);
+  m_p = sscpathws();
 }
