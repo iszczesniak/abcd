@@ -16,7 +16,7 @@ class cdijkstra: public routing
 public:
   cdijkstra();
   
-  virtual sscpath
+  sscpath
   route(graph &g, const demand &d);
 
 protected:

@@ -9,6 +9,10 @@
 
 using namespace std;
 
+cdijkstra::cdijkstra()
+{
+}
+
 sscpath
 cdijkstra::route(graph &g, const demand &d)
 {

@@ -1,8 +1,6 @@
 #include <iostream>
-#include <list>
 
 #include "cdijkstra.hpp"
-#include "client.hpp"
 #include "graph.hpp"
 #include "sdi_args.hpp"
 #include "simulation.hpp"
@@ -14,8 +12,6 @@
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
 #include <boost/accumulators/statistics/variance.hpp>
-
-#include <boost/graph/dijkstra_shortest_paths.hpp>
 
 namespace ba = boost::accumulators;
 
