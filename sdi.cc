@@ -1,10 +1,8 @@
 #include <iostream>
 #include <list>
-#include <queue>
 
 #include "cdijkstra.hpp"
 #include "client.hpp"
-#include "event.hpp"
 #include "graph.hpp"
 #include "sdi_args.hpp"
 #include "simulation.hpp"
@@ -116,11 +114,13 @@ net_stats(const sdi_args &args)
 void
 simulate(const sdi_args &args)
 {
+  cdijkstra r;
+
   // Set how the ssc should be selected.
-  routing::get_select() = args.select;
+  r.get_select() = args.select;
 
   // Set the maximal length of a connection.
-  routing::get_max_len() = args.max_len;
+  r.get_max_len() = args.max_len;
 
   // Random number generator.
   boost::mt19937 rng(args.seed);

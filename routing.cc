@@ -1,53 +1,5 @@
 #include "routing.hpp"
 
-int dijkstra::m_max_len = INT_MAX;
-
-routing::routing_type &
-routing::get()
-{
-  return routing;
-}
-
-sscpath
-routing::route(const graph &g, const demand &d)
-{
-  sscpath result;
-  
-  assert(d.first.first != d.first.second);
-
-  switch (type)
-    {
-    case cdijkstra:
-      result = cdijkstra(g, d);
-      break;
-      
-    case ed_ksp:
-      result = ed_ksp(g, d);
-      break;
-
-    default:
-      abort();
-    }
-
-  return result;
-}
-  
-sscpath
-routing::cdijkstra_f(const graph &g, const demand &d)
-{
-  sscpath result;
-  // We allow to allocate the signal on any of the subcarriers.
-  V2C2S r = dijkstra::search(g, d);
-  result = dijkstra::trace(g, r, d);
-  if (!result.first.empty())
-    set_up_path(g, p.second);
-}
-
-sscpath
-routing::ed_ksp_f(const graph &g, const demand &d)
-{
-}
-
 void
 routing::set_up_path(graph &g, const sscpath &p)
 {
