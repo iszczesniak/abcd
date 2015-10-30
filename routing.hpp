@@ -15,7 +15,7 @@ public:
    * Route the demand, i.e., find the path, and allocate resources.
    */
   static sscpath
-  route(const graph &g, const demand &d);
+  route(const graph &g, const demand &d) = 0;
 
   /**
    * Return reference to the select type field.

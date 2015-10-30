@@ -2,13 +2,23 @@
 #include "graph.hpp"
 #include "utils.hpp"
 
-#include <climits>
 #include <iterator>
 #include <queue>
 #include <map>
 #include <utility>
 
 using namespace std;
+
+sscpath
+cdijkstra::route(graph &g, const demand &d)
+{
+  // We allow to allocate the signal on any of the subcarriers.
+  V2C2S r = search(g, d);
+  sscpath result = trace(g, r, d);
+  if (!result.first.empty())
+    set_up_path(g, result);
+  return result;
+}
 
 /**
  * Check whether there is a better or equal result in c2s than the new
