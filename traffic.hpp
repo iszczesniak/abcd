@@ -25,11 +25,10 @@ class traffic: public module
   boost::variate_generator<boost::mt19937 &,
                            boost::exponential_distribution<> > catg;
 
-  double mht, mbst, mdct, mnsc;
+  double mht, mnsc;
 
 public:
-  traffic(double mcat, double mht, double mbst,
-          double mdct, double mnsc);
+  traffic(double mcat, double mht, double mnsc);
 
   ~traffic();
 

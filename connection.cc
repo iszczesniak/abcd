@@ -5,7 +5,7 @@
 #include <iostream>
 #include <utility>
 
-connection::connection(graph &g): g(g)
+connection::connection(graph &g): m_g(g)
 {
 }
 
@@ -18,7 +18,7 @@ connection::~connection()
 const demand &
 connection::get_demand() const
 {
-  return d;
+  return m_d;
 }
 
 bool
@@ -42,21 +42,21 @@ connection::establish(const demand &d)
       sscpath sp = routing::route(g, d);
       result.first = !sp.first.empty();
       result.second = sp.first.size();
-      p.first = result.first;
-      p.second = sp;
+      m_p.first = result.first;
+      m_p.second = sp;
     }
   else
     // We allow to establish a path between the same source and
     // destination nodes.  In this case the path is empty.
-    p = make_pair(true, sscpath());
+    m_p = make_pair(true, sscpath());
 
-  return set_up(d);
+  return result;
 }
 
 void
 connection::tear_down()
 {
   assert(is_established());
-  dijkstra::tear_down_path(g, p.second);
+  routing::tear_down_path(g, p.second);
   p = sscpathws();
 }

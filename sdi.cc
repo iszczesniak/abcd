@@ -119,9 +119,6 @@ simulate(const sdi_args &args)
   // Set how the routing shoule be done.
   routing::get_rt() = args.rt;
     
-  // Set how the connections should be reconfigured.
-  connection::get_reconf() = args.reconf;
-
   // Set how the ssc should be selected.
   routing::get_select() = args.select;
 
@@ -138,8 +135,7 @@ simulate(const sdi_args &args)
   simulation sim(g, rng);
   
   // The traffic module.
-  traffic t(args.mcat, args.mht, args.mbst, args.mdct,
-            args.mnsc);
+  traffic t(args.mcat, args.mht, args.mnsc);
 
   // The stats module.
   stats s(args, t);

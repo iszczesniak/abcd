@@ -11,9 +11,9 @@ class connection
   // This is the sscpath with status.
   typedef std::pair<bool, sscpath> sscpathws;
 
-  graph &g;
-  demand d;
-  sscpathws p;
+  graph &m_g;
+  demand m_d;
+  sscpathws m_p;
 
 public:
   connection(graph &g);
