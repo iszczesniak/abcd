@@ -6,22 +6,16 @@
 class routing
 {
 public:
-  // The type of routing.
-  enum routing_t {cdijkstra, ed_ksp};
-
   // The type of specturm selection:
   // first - the first subcarriers that fit the demand are chosen
   // smallest - the smallest set of contiguous subcarriers are chosen
   enum select_t {first, fittest};
 
-  static sscpath
-  set_up(const graph &g, const demand &d);
-
   /**
-   * Return reference to the routing type field.
+   * Route the demand, i.e., find the path, and allocate resources.
    */
-  static routing_t &
-  get_rt();
+  static sscpath
+  route(const graph &g, const demand &d);
 
   /**
    * Return reference to the select type field.
@@ -84,17 +78,7 @@ public:
   static SSC
   select_fittest(const SSC &ssc, int nsc);
 
-private:
-  // Route with the constrained Dijkstra.
-  static sscpath
-  cdijkstra_f(const graph &g, const demand &d);
-
-  // Route with the edge-disjoint k-shortest paths.
-  static sscpath
-  ed_ksp_f(const graph &g, const demand &d);  
-
-  static routing_t m_rt;
-
+protected:
   static select_t m_select;
 
   static int m_max_len;

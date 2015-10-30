@@ -2,7 +2,6 @@
 
 #include <utility>
 
-#include "dijkstra.hpp"
 #include "simulation.hpp"
 #include "stats.hpp"
 #include "traffic.hpp"

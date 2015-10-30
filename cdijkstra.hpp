@@ -1,11 +1,15 @@
-#ifndef DIJKSTRA_HPP
-#define DIJKSTRA_HPP
+#ifndef CDIJKSTRA_HPP
+#define CDIJKSTRA_HPP
 
 #include "graph.hpp"
+#include "routing.hpp"
 
 #include <map>
 
-class dijkstra
+/**
+ * Constrained Dijkstra.
+ */
+class cdijkstra: public routing
 {
 private:
   typedef std::map<CEP, vertex> pqueue;
@@ -57,4 +61,4 @@ private:
          const SSSC &sssc);
 };
 
-#endif /* DIJKSTRA_HPP */
+#endif /* CDIJKSTRA_HPP */
