@@ -16,14 +16,8 @@ public:
   /**
    * Route the demand, i.e., find the path, and allocate resources.
    */
-  virtual sscpath
-  route(graph &g, const demand &d) = 0;
-
-  /**
-   * Return reference to the select type field.
-   */
-  select_t &
-  get_select();
+  static sscpath
+  route(graph &g, const demand &d);
 
   /**
    * Returns reference to the max_len field.

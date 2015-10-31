@@ -112,9 +112,6 @@ simulate(const sdi_args &args)
 {
   cdijkstra r;
 
-  // Set how the ssc should be selected.
-  r.get_select() = args.select;
-
   // Set the maximal length of a connection.
   r.get_max_len() = args.max_len;
 
