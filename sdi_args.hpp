@@ -11,9 +11,6 @@ using namespace std;
 // The network type.
 enum network_t {random_network, gabriel_network};
 
-// The type of routing.
-enum routing_t {cdijkstra_t, ed_ksp_t};
-
 /**
  * These are the program arguments.  In this single class we store all
  * information passed at the command line.
@@ -50,7 +47,7 @@ struct sdi_args
   routing::select_t select;
 
   /// The routing algorithm.
-  routing_t rt;
+  std::string rt;
   
   /// -----------------------------------------------------------------
   /// The traffic options

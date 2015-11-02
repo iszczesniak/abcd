@@ -1,5 +1,21 @@
 #include "routing.hpp"
 
+#include "cdijkstra.hpp"
+#include "utils.hpp"
+
+#include <iostream>
+
+routing::routing(const std::string &type)
+{
+  if (type == "cdijkstra")
+    s = new cdijkstra();
+  else
+    {
+      std::cerr << "routing types: cdijkstra" << std::endl;
+      exit(1);
+    }
+}
+
 void
 routing::set_up_path(graph &g, const sscpath &p)
 {
@@ -50,16 +66,16 @@ routing::tear_down_path(graph &g, const sscpath &p)
     }
 }
 
-routing::select_t &
-routing::get_select()
-{
-  return select;
-}
-
 int &
 routing::get_max_len()
 {
-  return max_len;
+  return m_max_len;
+}
+
+routing::select_t &
+routing::get_select()
+{
+  return m_select;
 }
 
 SSC
@@ -68,7 +84,7 @@ routing::select_ssc(const SSSC &sssc, int nsc)
   // This is the selected set.
   SSC ssc;
 
-  switch(select)
+  switch(m_select)
       {
       case first:
         ssc = select_first(sssc, nsc);

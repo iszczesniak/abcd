@@ -112,8 +112,11 @@ simulate(const sdi_args &args)
 {
   cdijkstra r;
 
-  // Set the maximal length of a connection.
+  // Set the maximal length for routing.
   r.get_max_len() = args.max_len;
+
+  // Set the select type for routing.
+  r.get_select() = args.select;
 
   // Random number generator.
   boost::mt19937 rng(args.seed);

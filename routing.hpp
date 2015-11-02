@@ -2,11 +2,12 @@
 #define ROUTING_HPP
 
 #include "graph.hpp"
+#include <memory>
 
 class routing
-{
+{  
 public:
-  routing();
+  routing(const std::string &type);
 
   // The type of specturm selection:
   // first - the first subcarriers that fit the demand are chosen
@@ -18,26 +19,36 @@ public:
    */
   static sscpath
   route(graph &g, const demand &d);
+  
+  /**
+   * Tear down the path in the graph.  This process puts back the
+   * subcarriers on the edges that are used by the path.
+   */
+  static void
+  tear_down_path(graph &g, const sscpath &p);
 
   /**
    * Returns reference to the max_len field.
    */
-  int &
+  static int &
   get_max_len();
 
-   /**
+  /**
+   * Returns reference to the select field.
+   */
+  static select_t &
+  get_select();
+
+  // The type of routing.
+  enum routing_t {cdijkstra_t, ed_ksp_t};
+
+protected:
+  /**
    * Set up the path in the graph.  This process takes away the
    * subcarriers on the edges that are used by the path.
    */
   void
   set_up_path(graph &g, const sscpath &p);
-
-  /**
-   * Tear down the path in the graph.  This process puts back the
-   * subcarriers on the edges that are used by the path.
-   */
-  void
-  tear_down_path(graph &g, const sscpath &p);
 
   /**
    * From the given SSSC, select the SSC according to the "select"
@@ -74,10 +85,11 @@ public:
   SSC
   select_fittest(const SSC &ssc, int nsc);
 
-protected:
-  select_t m_select;
+  static select_t m_select;
 
-  int m_max_len;
+  static int m_max_len;
+
+  static std::auto_ptr<routing> s;
 };
 
 #endif /* ROUTING_HPP */
