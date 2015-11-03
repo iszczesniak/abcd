@@ -110,13 +110,13 @@ net_stats(const sdi_args &args)
 void
 simulate(const sdi_args &args)
 {
-  cdijkstra r;
+  routing r(args.rt);
 
   // Set the maximal length for routing.
-  r.get_max_len() = args.max_len;
+  routing::get_max_len() = args.max_len;
 
   // Set the select type for routing.
-  r.get_select() = args.select;
+  routing::get_select() = args.select;
 
   // Random number generator.
   boost::mt19937 rng(args.seed);
