@@ -63,16 +63,6 @@ interpret (const string &name, const string &text,
   return i->second;
 }
 
-// Handles the routing parameter.
-routing::routing_t
-rt_interpret (const string &rt)
-{
-  map <string, routing::routing_t> rt_map;
-  rt_map["cdijkstra"] = routing::cdijkstra_t;
-  rt_map["ed_ksp"] = routing::ed_ksp;
-  return interpret ("rt", rt, rt_map);
-}
-
 // Handles the select parameter.
 routing::select_t
 select_interpret (const string &select)
@@ -184,7 +174,7 @@ process_sdi_args(int argc, const char *argv[])
       result.nr_sc = vm["subcarriers"].as<int>();
       result.max_len = vm["max_len"].as<int>();
       result.select = select_interpret(vm["select"].as<string>());
-      result.rt = rt_interpret(vm["rt"].as<string>());
+      result.rt = vm["rt"].as<string>();
 
         // The traffic options.
       result.mcat = vm["mcat"].as<double>();
