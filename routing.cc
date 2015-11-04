@@ -8,7 +8,10 @@
 routing::routing(const std::string &type)
 {
   if (type == "cdijkstra")
-    s = new cdijkstra();
+    {
+      routing *r = new cdijkstra();
+      singleton = r;
+    }
   else
     {
       std::cerr << "routing types: cdijkstra" << std::endl;

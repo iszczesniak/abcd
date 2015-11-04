@@ -85,11 +85,14 @@ protected:
   SSC
   select_fittest(const SSC &ssc, int nsc);
 
+  // The object with the actual implementation.
+  unique_ptr<routing> m_obj;
+  
   static select_t m_select;
 
   static int m_max_len;
 
-  static std::auto_ptr<routing> s;
+  static routing *singleton;
 };
 
 #endif /* ROUTING_HPP */
