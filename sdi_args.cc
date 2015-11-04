@@ -1,6 +1,8 @@
 #include "sdi_args.hpp"
+
 #include "connection.hpp"
 #include "routing.hpp"
+#include "utils.hpp"
 
 #include <iostream>
 #include <map>
@@ -42,25 +44,6 @@ void requires (const po::variables_map& vm,
     if (vm.count (req) == 0)
       throw logic_error (string ("Option '") + for_arg 
                          + "' requires option '" + req + "'.");
-}
-
-template <typename T>
-T
-interpret (const string &name, const string &text,
-           const map <string, T> &m)
-{
-  auto i = m.find (text);
-
-  if (i == m.end ())
-    {
-      cerr << "Wrong value of " << name << ".  Choose one of:";
-      for (auto &p: m)
-        cerr << " " << p.first;
-      cerr << endl;
-      exit (1);
-    }
-
-  return i->second;
 }
 
 // Handles the select parameter.

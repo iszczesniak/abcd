@@ -13,11 +13,11 @@
 #include <boost/accumulators/statistics/mean.hpp>
 
 #include <cassert>
+#include <iostream>
 #include <list>
 #include <set>
 #include <string>
 #include <vector>
-#include <set>
 
 namespace ba = boost::accumulators;
 
@@ -32,6 +32,28 @@ get_random_int(int min, int max, T &gen)
   boost::uniform_int<> range(min, max);
   boost::variate_generator<T &, boost::uniform_int<> > rgen(gen, range);
   return rgen();
+}
+
+/**
+ * Interpret a string, and return the matched enum.
+ */
+template <typename T>
+T
+interpret (const std::string &name, const std::string &text,
+           const std::map <std::string, T> &m)
+{
+  auto i = m.find (text);
+
+  if (i == m.end ())
+    {
+      std::cerr << "Wrong value of " << name << ".  Choose one of:";
+      for (auto &p: m)
+        std::cerr << " " << p.first;
+      std::cerr << std::endl;
+      exit (1);
+    }
+
+  return i->second;
 }
 
 /**
