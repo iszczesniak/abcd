@@ -7,14 +7,17 @@
 
 using namespace std;
 
+routing::select_t routing::m_st;
+
+int routing::m_ml;
+
+std::unique_ptr<routing> routing::singleton;
+
 void
 routing::set_rt(const std::string &rt)
 {
   if (rt == "cdijkstra")
-    {
-      routing *r = new cdijkstra();
-      singleton = r;
-    }
+    singleton.reset(new cdijkstra());
   else
     {
       std::cerr << "routing types: cdijkstra" << std::endl;
@@ -83,25 +86,13 @@ routing::tear_down_path(graph &g, const sscpath &p)
     }
 }
 
-int &
-routing::get_max_len()
-{
-  return m_max_len;
-}
-
-routing::select_t &
-routing::get_select()
-{
-  return m_select;
-}
-
 SSC
 routing::select_ssc(const SSSC &sssc, int nsc)
 {
   // This is the selected set.
   SSC ssc;
 
-  switch(m_select)
+  switch(m_st)
       {
       case first:
         ssc = select_first(sssc, nsc);

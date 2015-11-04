@@ -9,10 +9,6 @@
 
 using namespace std;
 
-cdijkstra::cdijkstra()
-{
-}
-
 sscpath
 cdijkstra::route(graph &g, const demand &d)
 {
@@ -222,7 +218,7 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
               // Candidate cost.
               int new_c = c + ec;
 
-              if (new_c <= m_max_len)
+              if (new_c <= m_ml)
                 {
                   // The subcarriers available on the edge.
                   const SSC &e_ssc = boost::get(boost::edge_ssc, g, e);

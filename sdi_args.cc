@@ -173,7 +173,7 @@ process_sdi_args(int argc, const char *argv[])
       result.nr_edges = vm["edges"].as<int>();
       result.nr_sc = vm["subcarriers"].as<int>();
       result.ml = vm["ml"].as<int>();
-      result.st = vm["st"].as<string>());
+      result.st = vm["st"].as<string>();
       result.rt = vm["rt"].as<string>();
 
         // The traffic options.
