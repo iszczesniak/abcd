@@ -10,7 +10,7 @@
 using namespace std;
 
 sscpath
-cdijkstra::route(graph &g, const demand &d)
+cdijkstra::route_w(graph &g, const demand &d)
 {
   // We allow to allocate the signal on any of the subcarriers.
   V2C2S r = search(g, d);

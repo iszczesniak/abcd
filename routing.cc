@@ -13,6 +13,13 @@ int routing::m_ml;
 
 std::unique_ptr<routing> routing::singleton;
 
+sscpath
+routing::route(graph &g, const demand &d)
+{
+  assert(singleton);
+  return singleton->route_w(g, d);
+}
+
 void
 routing::set_rt(const std::string &rt)
 {
@@ -62,7 +69,7 @@ routing::set_up_path(graph &g, const sscpath &p)
 }
 
 void
-routing::tear_down_path(graph &g, const sscpath &p)
+routing::tear_down(graph &g, const sscpath &p)
 {
   boost::property_map<graph, boost::edge_ssc_t>::type
     sscm = get(boost::edge_ssc_t(), g);

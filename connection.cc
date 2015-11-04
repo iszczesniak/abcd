@@ -57,6 +57,6 @@ void
 connection::tear_down()
 {
   assert(is_established());
-  routing::tear_down_path(m_g, m_p.second);
+  routing::tear_down(m_g, m_p.second);
   m_p = sscpathws();
 }

@@ -23,34 +23,39 @@ public:
    * subcarriers on the edges that are used by the path.
    */
   static void
-  tear_down_path(graph &g, const sscpath &p);
+  tear_down(graph &g, const sscpath &p);
 
   /**
    * Set the maximul length of a path.
    */
   static void
-  set_ml(int);
+  set_ml(int ml);
 
   /**
    * Set the spectrum selection type.
    */
   static void
-  set_st(const std::string &);
+  set_st(const std::string &st);
 
   /**
    * Set the routing type.
    */
   static void
-  set_rt(const std::string &);
+  set_rt(const std::string &rt);
   
 protected:
   /**
-   * Set up the path in the graph.  This process takes away the
-   * subcarriers on the edges that are used by the path.
+   * This is the worker function for the route function.
+   */
+  virtual sscpath
+  route_w(graph &g, const demand &d) = 0;
+
+  /**
+   * Set up the given path.
    */
   void
   set_up_path(graph &g, const sscpath &p);
-
+  
   /**
    * From the given SSSC, select the SSC according to the "select"
    * field of the class.  The returned SSC has exactly nsc
@@ -94,10 +99,6 @@ protected:
 
   /// The singleton, which does the routing.
   static std::unique_ptr<routing> singleton;
-
-private:
-  // Disallow creating this type.
-  routing();  
 };
 
 #endif /* ROUTING_HPP */

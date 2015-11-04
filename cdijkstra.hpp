@@ -13,13 +13,10 @@ class cdijkstra: public routing
 {
   typedef std::map<CEP, vertex> pqueue;
 
-public:
-  cdijkstra();
-  
-  sscpath
-  route(graph &g, const demand &d);
-
 protected:
+  sscpath
+  route_w(graph &g, const demand &d);
+
   /**
    * Find the shortest path in graph g for demand d.  We start the
    * search at node src.  In this version of the function we try to

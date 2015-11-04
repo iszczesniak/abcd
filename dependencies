@@ -1,3 +1,4 @@
+cdijkstra.o: cdijkstra.cc cdijkstra.hpp graph.hpp routing.hpp utils.hpp
 client.o: client.cc client.hpp connection.hpp graph.hpp module.hpp \
  simulation.hpp event.hpp stats.hpp sdi_args.hpp cdijkstra.hpp \
  routing.hpp traffic.hpp utils_netgen.hpp mypoint.hpp utils.hpp \
@@ -5,12 +6,12 @@ client.o: client.cc client.hpp connection.hpp graph.hpp module.hpp \
 connection.o: connection.cc connection.hpp graph.hpp routing.hpp
 event.o: event.cc event.hpp module.hpp simulation.hpp graph.hpp
 module.o: module.cc module.hpp simulation.hpp event.hpp graph.hpp
-routing.o: routing.cc routing.hpp graph.hpp
-sdi.o: sdi.cc cdijkstra.hpp graph.hpp client.hpp connection.hpp \
- module.hpp simulation.hpp event.hpp sdi_args.hpp routing.hpp stats.hpp \
- traffic.hpp utils_netgen.hpp mypoint.hpp utils.hpp teventqueue.hpp
-sdi_args.o: sdi_args.cc sdi_args.hpp cdijkstra.hpp graph.hpp \
- connection.hpp routing.hpp
+routing.o: routing.cc routing.hpp graph.hpp cdijkstra.hpp utils.hpp
+sdi.o: sdi.cc cdijkstra.hpp graph.hpp routing.hpp sdi_args.hpp \
+ connection.hpp simulation.hpp event.hpp stats.hpp module.hpp traffic.hpp \
+ client.hpp utils_netgen.hpp mypoint.hpp utils.hpp teventqueue.hpp
+sdi_args.o: sdi_args.cc sdi_args.hpp cdijkstra.hpp graph.hpp routing.hpp \
+ connection.hpp
 simulation.o: simulation.cc simulation.hpp event.hpp graph.hpp
 stats.o: stats.cc client.hpp connection.hpp graph.hpp module.hpp \
  simulation.hpp event.hpp stats.hpp sdi_args.hpp cdijkstra.hpp \
@@ -19,3 +20,6 @@ stats.o: stats.cc client.hpp connection.hpp graph.hpp module.hpp \
 traffic.o: traffic.cc traffic.hpp client.hpp connection.hpp graph.hpp \
  module.hpp simulation.hpp event.hpp
 utils.o: utils.cc utils.hpp graph.hpp
+utils_netgen.o: utils_netgen.cc utils_netgen.hpp graph.hpp mypoint.hpp \
+ sdi_args.hpp cdijkstra.hpp routing.hpp connection.hpp utils.hpp \
+ teventqueue.hpp
