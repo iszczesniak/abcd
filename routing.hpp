@@ -7,8 +7,6 @@
 class routing
 {  
 public:
-  routing(const std::string &type);
-
   // The type of specturm selection:
   // first - the first subcarriers that fit the demand are chosen
   // smallest - the smallest set of contiguous subcarriers are chosen
@@ -28,20 +26,23 @@ public:
   tear_down_path(graph &g, const sscpath &p);
 
   /**
-   * Returns reference to the max_len field.
+   * Set the maximul length of a path.
    */
-  static int &
-  get_max_len();
+  static void
+  set_ml(int);
 
   /**
-   * Returns reference to the select field.
+   * Set the spectrum selection type.
    */
-  static select_t &
-  get_select();
+  static void
+  set_st(const std::string &);
 
-  // The type of routing.
-  enum routing_t {cdijkstra_t, ed_ksp_t};
-
+  /**
+   * Set the routing type.
+   */
+  static void
+  set_rt(const std::string &);
+  
 protected:
   /**
    * Set up the path in the graph.  This process takes away the
@@ -85,14 +86,18 @@ protected:
   SSC
   select_fittest(const SSC &ssc, int nsc);
 
-  // The object with the actual implementation.
-  unique_ptr<routing> m_obj;
-  
-  static select_t m_select;
+  /// The spectrum selection type.
+  static select_t m_st;
 
-  static int m_max_len;
+  /// The maximal length of a path.
+  static int m_ml;
 
-  static routing *singleton;
+  /// The singleton, which does the routing.
+  static std::unique_ptr<routing> singleton;
+
+private:
+  // Disallow creating this type.
+  routing();  
 };
 
 #endif /* ROUTING_HPP */

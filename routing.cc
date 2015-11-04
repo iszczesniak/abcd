@@ -5,9 +5,12 @@
 
 #include <iostream>
 
-routing::routing(const std::string &type)
+using namespace std;
+
+void
+routing::set_rt(const std::string &rt)
 {
-  if (type == "cdijkstra")
+  if (rt == "cdijkstra")
     {
       routing *r = new cdijkstra();
       singleton = r;
@@ -17,6 +20,17 @@ routing::routing(const std::string &type)
       std::cerr << "routing types: cdijkstra" << std::endl;
       exit(1);
     }
+}
+
+void
+routing::set_ml(int ml)
+{
+  m_ml = ml;
+}
+
+void
+routing::set_st(const std::string &st)
+{
 }
 
 void

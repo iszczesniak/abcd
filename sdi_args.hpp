@@ -41,10 +41,10 @@ struct sdi_args
   int nr_sc;
 
   /// The maximal length of a path we want.
-  int max_len;
+  int ml;
 
-  /// The way to select subcarriers.
-  routing::select_t select;
+  /// The spectrum selection type.
+  std::string st;
 
   /// The routing algorithm.
   std::string rt;

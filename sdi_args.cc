@@ -112,11 +112,11 @@ process_sdi_args(int argc, const char *argv[])
         ("subcarriers", po::value<int>()->required(),
          "the number of subcarriers")
 
-        ("max_len", po::value<int>()->required(),
+        ("ml", po::value<int>()->required(),
          "the maximal length of a path")
 
-        ("select", po::value<string>()->required(),
-         "the way subcarriers should be selected")
+        ("st", po::value<string>()->required(),
+         "the spectrum selection type")
 
         ("rt", po::value<string>()->required(),
          "the routing algorithm");
@@ -172,8 +172,8 @@ process_sdi_args(int argc, const char *argv[])
       result.nr_nodes = vm["nodes"].as<int>();
       result.nr_edges = vm["edges"].as<int>();
       result.nr_sc = vm["subcarriers"].as<int>();
-      result.max_len = vm["max_len"].as<int>();
-      result.select = select_interpret(vm["select"].as<string>());
+      result.ml = vm["ml"].as<int>();
+      result.st = vm["st"].as<string>());
       result.rt = vm["rt"].as<string>();
 
         // The traffic options.
