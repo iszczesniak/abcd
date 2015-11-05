@@ -11,6 +11,11 @@
 
 #include <boost/program_options.hpp>
 
+// Option strings.
+#define NT_S "nt"
+#define EDGES_S "edges"
+#define NODES_S "nodes"
+
 using namespace std;
 namespace po = boost::program_options;
 
@@ -63,13 +68,13 @@ process_sdi_args(int argc, const char *argv[])
       // Network options.
       po::options_description net("Network options");
       net.add_options()
-        ("nt", po::value<string>()->required(),
+        (NT_S, po::value<string>()->required(),
          "the network type")
 
-        ("nodes", po::value<int>()->required(),
+        (NODES_S, po::value<int>(),
          "the number of nodes to generate")
 
-        ("edges", po::value<int>()->default_value(0),
+        (EDGES_S, po::value<int>(),
          "the number of edges to generate")
 
         ("subcarriers", po::value<int>()->required(),
@@ -113,8 +118,10 @@ process_sdi_args(int argc, const char *argv[])
       
       po::variables_map vm;
       po::store(po::command_line_parser(argc, argv).options(all).run(), vm);
-      requires(vm, "nt", "nodes");
-      requires(vm, "nt", string("random"), "edges");
+
+      // Dependencies.
+      requires(vm, NT_S, NODES_S);
+      requires(vm, NT_S, string("random"), EDGES_S);
 
       if (vm.count("help"))
         {
@@ -131,9 +138,9 @@ process_sdi_args(int argc, const char *argv[])
         result.net_stats = true;
 
       // The network options.
-      result.nt = vm["nt"].as<string>();
-      result.nr_nodes = vm["nodes"].as<int>();
-      result.nr_edges = vm["edges"].as<int>();
+      result.nt = vm[NT_S].as<string>();
+      result.nr_nodes = vm[NODES_S].as<int>();
+      result.nr_edges = vm[EDGES_S].as<int>();
       result.nr_sc = vm["subcarriers"].as<int>();
       result.ml = vm["ml"].as<int>();
       result.st = vm["st"].as<string>();
