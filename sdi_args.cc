@@ -46,16 +46,6 @@ void requires (const po::variables_map& vm,
                          + "' requires option '" + req + "'.");
 }
 
-// Handles the select parameter.
-routing::select_t
-select_interpret (const string &select)
-{
-  map <string, routing::select_t> select_map;
-  select_map["first"] = routing::first;
-  select_map["fittest"] = routing::fittest;
-  return interpret ("select", select, select_map);
-}
-
 // Handles the network parameter.
 network_t
 network_interpret (const string &network)

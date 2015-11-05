@@ -7,11 +7,11 @@
 
 using namespace std;
 
-routing::select_t routing::m_st;
+routing::st_t routing::m_st;
 
 int routing::m_ml;
 
-std::unique_ptr<routing> routing::singleton;
+unique_ptr<routing> routing::singleton;
 
 sscpath
 routing::route(graph &g, const demand &d)
@@ -20,15 +20,36 @@ routing::route(graph &g, const demand &d)
   return singleton->route_w(g, d);
 }
 
-void
-routing::set_rt(const std::string &rt)
+routing::st_t
+routing::st_interpret (const string &st)
 {
-  if (rt == "cdijkstra")
-    singleton.reset(new cdijkstra());
-  else
+  map <string, routing::st_t> st_map;
+  st_map["first"] = routing::st_t::first;
+  st_map["fittest"] = routing::st_t::fittest;
+  return interpret ("spectrum selection type", st, st_map);
+}
+
+routing::rt_t
+routing::rt_interpret (const string &rt)
+{
+  map <string, routing::rt_t> rt_map;
+  rt_map["cdijkstra"] = rt_t::cdijkstra;
+  return interpret ("routing type", rt, rt_map);
+}
+
+void
+routing::set_rt(const string &rt)
+{
+  rt_t t = rt_interpret(rt);
+
+  switch (t)
     {
-      std::cerr << "routing types: cdijkstra" << std::endl;
-      exit(1);
+    case rt_t::cdijkstra:
+      singleton.reset(new cdijkstra());
+      break;
+      
+    default:
+      abort();
     }
 }
 
@@ -39,8 +60,9 @@ routing::set_ml(int ml)
 }
 
 void
-routing::set_st(const std::string &st)
+routing::set_st(const string &st)
 {
+  m_st = st_interpret(st);
 }
 
 void
@@ -99,19 +121,19 @@ routing::select_ssc(const SSSC &sssc, int nsc)
   // This is the selected set.
   SSC ssc;
 
-  switch(m_st)
-      {
-      case first:
-        ssc = select_first(sssc, nsc);
-        break;
+  switch (m_st)
+    {
+    case st_t::first:
+      ssc = select_first(sssc, nsc);
+      break;
 
-      case fittest:
-        ssc = select_fittest(sssc, nsc);
-        break;
+    case st_t::fittest:
+      ssc = select_fittest(sssc, nsc);
+      break;
 
-      default:
-        assert(false);
-      }
+    default:
+      assert(false);
+    }
 
   // Now in ssc we have got a fragment that has at least nsc
   // subcarriers, but most likely it has more.  We need to select

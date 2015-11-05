@@ -10,8 +10,12 @@ public:
   // The type of specturm selection:
   // first - the first subcarriers that fit the demand are chosen
   // smallest - the smallest set of contiguous subcarriers are chosen
-  enum select_t {first, fittest};
+  enum class st_t {first, fittest};
 
+  // The type of routing:
+  // cdijkstra - constrained dijkstra
+  enum class rt_t {cdijkstra};
+  
   /**
    * Route the demand, i.e., find the path, and allocate resources.
    */
@@ -91,8 +95,16 @@ protected:
   SSC
   select_fittest(const SSC &ssc, int nsc);
 
+  // Interpret the string and return the routing type.
+  static rt_t
+  rt_interpret (const std::string &rt);
+
+  // Interpret the string and return the spectrum selection type.
+  static st_t
+  st_interpret (const std::string &st);
+
   /// The spectrum selection type.
-  static select_t m_st;
+  static st_t m_st;
 
   /// The maximal length of a path.
   static int m_ml;
