@@ -18,6 +18,12 @@
 
 using namespace std;
 
+// The network type.
+enum class nt_t {random_network, gabriel_network};
+
+nt_t
+nt_interpret (const string &nt);
+
 /**
  * Names the vertices.
  */
@@ -219,13 +225,21 @@ generate_graph(const sdi_args &args, T &gen)
 {
   graph g;
 
-  if (args.network == random_network)
-    g = generate_random_graph(args, gen);
-  else if (args.network == gabriel_network)
-    g = generate_gabriel_graph(args);
-  else
-    assert(false);
+  nt_t nt = nt_interpret(args.nt);
+  switch (nt)
+    {
+    case nt_t::random_network:
+      g = generate_random_graph(args, gen);
+      break;
+      
+    case nt_t::gabriel_network:
+      g = generate_gabriel_graph(args);
+      break;
 
+    default:
+      abort();
+    }
+  
   // Make sure there is only one component.
   assert(check_components(g));
 

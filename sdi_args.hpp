@@ -8,9 +8,6 @@
 
 using namespace std;
 
-// The network type.
-enum network_t {random_network, gabriel_network};
-
 /**
  * These are the program arguments.  In this single class we store all
  * information passed at the command line.
@@ -28,8 +25,8 @@ struct sdi_args
   /// The network options
   /// -----------------------------------------------------------------
   
-  /// The graph type;
-  network_t network;
+  /// The network type.
+  std::string nt;
 
   /// The number of nodes in the graph.
   int nr_nodes;

@@ -7,6 +7,16 @@
 
 using namespace std;
 
+// Handles the network parameter.
+nt_t
+nt_interpret (const string &nt)
+{
+  map <string, nt_t> nt_map;
+  nt_map["random"] = nt_t::random_network;
+  nt_map["gabriel"] = nt_t::gabriel_network;
+  return interpret ("network type", nt, nt_map);
+}
+
 void
 name_vertices(graph &g)
 {

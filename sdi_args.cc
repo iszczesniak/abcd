@@ -46,16 +46,6 @@ void requires (const po::variables_map& vm,
                          + "' requires option '" + req + "'.");
 }
 
-// Handles the network parameter.
-network_t
-network_interpret (const string &network)
-{
-  map <string, network_t> network_map;
-  network_map["random"] = network_t::random_network;
-  network_map["gabriel"] = network_t::gabriel_network;
-  return interpret ("network", network, network_map);
-}
-
 sdi_args
 process_sdi_args(int argc, const char *argv[])
 {
@@ -73,8 +63,8 @@ process_sdi_args(int argc, const char *argv[])
       // Network options.
       po::options_description net("Network options");
       net.add_options()
-        ("network", po::value<string>()->required(),
-         "the graph type")
+        ("nt", po::value<string>()->required(),
+         "the network type")
 
         ("nodes", po::value<int>()->required(),
          "the number of nodes to generate")
@@ -123,8 +113,8 @@ process_sdi_args(int argc, const char *argv[])
       
       po::variables_map vm;
       po::store(po::command_line_parser(argc, argv).options(all).run(), vm);
-      requires(vm, "network", "nodes");
-      requires(vm, "network", string("random"), "edges");
+      requires(vm, "nt", "nodes");
+      requires(vm, "nt", string("random"), "edges");
 
       if (vm.count("help"))
         {
@@ -141,7 +131,7 @@ process_sdi_args(int argc, const char *argv[])
         result.net_stats = true;
 
       // The network options.
-      result.network = network_interpret(vm["network"].as<string>());
+      result.nt = vm["nt"].as<string>();
       result.nr_nodes = vm["nodes"].as<int>();
       result.nr_edges = vm["edges"].as<int>();
       result.nr_sc = vm["subcarriers"].as<int>();
