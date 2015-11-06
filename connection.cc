@@ -5,6 +5,8 @@
 #include <iostream>
 #include <utility>
 
+using namespace std;
+
 connection::connection(graph &g): m_g(g)
 {
 }
@@ -27,10 +29,11 @@ connection::is_established() const
   return m_p.first;
 }
 
-std::pair<bool, int>
+pair<bool, int>
 connection::establish(const demand &d)
 {
-  std::pair<bool, int> result;
+  cout << "*" << endl;
+  pair<bool, int> result;
 
   // Make sure the connection is not established.
   assert(!is_established());
