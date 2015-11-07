@@ -96,8 +96,11 @@ exclude(const SSC &ssc, int nsc)
           int sc = *i;
 
           // The break condition for this loop, i.e. the condition to
-          // stop building the partial set.  If we break the loop, we
-          // don't add the sc element and don't increment i.
+          // stop building the partial set, because the previously
+          // inserted element is not one less small than sc.  If we
+          // break the loop, we don't add the sc element and don't
+          // increment i.  The element pointed to by i will be
+          // inserted into a new partial set.
           if (!partial.empty() && ((*partial.rbegin() + 1) != sc))
             break;
 
