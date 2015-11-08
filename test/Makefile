@@ -1,6 +1,6 @@
-TESTS = dijkstra graph ksp sdi_args utils 
+TESTS = cdijkstra graph ksp sdi_args utils 
 
-OBJS = ../dijkstra.o ../graph.o ../sdi_args.o ../utils.o
+OBJS = ../cdijkstra.o ../graph.o ../sdi_args.o ../utils.o
 
 #CXXFLAGS = -g -Wno-deprecated -std=c++11
 CXXFLAGS = -O3 -Wno-deprecated -std=c++11

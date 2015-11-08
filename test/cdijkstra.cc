@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-#define BOOST_TEST_MODULE Dijkstra
+#define BOOST_TEST_MODULE cdijkstra
 
 #include <boost/test/unit_test.hpp>
 
@@ -12,7 +12,7 @@
  * Make sure that we can't find a path if there are no subcarriers.
  * The graph is a simple case of two nodes and a single link.
  */
-BOOST_AUTO_TEST_CASE(dijkstra_test_1)
+BOOST_AUTO_TEST_CASE(cdijkstra_test_1)
 {
   graph g(2);
   vertex src = *(boost::vertices(g).first);
@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_1)
  * Make sure that we can find a path if there are subcarriers.  The
  * graph is a simple case of two nodes and a single link.
  */
-BOOST_AUTO_TEST_CASE(dijkstra_test_2)
+BOOST_AUTO_TEST_CASE(cdijkstra_test_2)
 {
   graph g(2);
   vertex src = *(boost::vertices(g).first);
@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_2)
  * Make sure we can establish a path with a worse cost then initially
  * it seemed.
  */
-BOOST_AUTO_TEST_CASE(dijkstra_test_3)
+BOOST_AUTO_TEST_CASE(cdijkstra_test_3)
 {
   graph g(3);
   vertex src = *(boost::vertices(g).first);
@@ -153,7 +153,7 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_3)
  * that led to that node with a worse cost then edge e2 and with the
  * same subcarriers.
  */
-BOOST_AUTO_TEST_CASE(dijkstra_test_4)
+BOOST_AUTO_TEST_CASE(cdijkstra_test_4)
 {
   graph g(3);
   vertex src = *(vertices(g).first);
@@ -193,7 +193,7 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_4)
  * e2.  e2 offers the shortest path with subcarrier 0, and e1 offers
  * the two subcarriers: 0 and 1 albeit at a higher cost.
  */
-BOOST_AUTO_TEST_CASE(dijkstra_test_5)
+BOOST_AUTO_TEST_CASE(cdijkstra_test_5)
 {
   graph g(3);
   vertex src = *(vertices(g).first);
@@ -239,7 +239,7 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_5)
  * it offers a worse path then edge e1.  This tests for the existance
  * of better old results.
  */
-BOOST_AUTO_TEST_CASE(dijkstra_test_6)
+BOOST_AUTO_TEST_CASE(cdijkstra_test_6)
 {
   graph g(2);
   vertex src = *(vertices(g).first);
@@ -271,7 +271,7 @@ BOOST_AUTO_TEST_CASE(dijkstra_test_6)
  * it offers a worse path then edge e2.  This tests the purging of the
  * old results.
  */
-BOOST_AUTO_TEST_CASE(dijkstra_test_7)
+BOOST_AUTO_TEST_CASE(cdijkstra_test_7)
 {
   graph g(2);
   vertex src = *(vertices(g).first);
