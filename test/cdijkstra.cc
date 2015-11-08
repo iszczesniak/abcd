@@ -1,4 +1,6 @@
 #include "cdijkstra.hpp"
+
+#include "graph.hpp"
 #include "utils.hpp"
 #include "utils_netgen.hpp"
 
@@ -6,6 +8,15 @@
 
 #define BOOST_TEST_MODULE cdijkstra
 #include <boost/test/unit_test.hpp>
+
+// This class lets us test the protected functions of cdijkstra.
+class cdijkstra_test: public cdijkstra
+{
+public:
+  using cdijkstra::search;
+  using cdijkstra::trace;
+  using routing::select_ssc;
+};
 
 /*
  * Make sure that we can't find a path if there are no subcarriers.
@@ -119,7 +130,7 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_3)
 
 /*
  * Make sure we don't remember at node mid the results for edge e1
- * that led to that node with a worse cost then edge e2 and with the
+ * that led to that node with a worse cost than edge e2 and with the
  * same subcarriers.
  */
 BOOST_AUTO_TEST_CASE(cdijkstra_test_4)
@@ -144,8 +155,9 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_4)
   boost::get(boost::edge_weight, g, e3) = 2;
   boost::get(boost::edge_ssc, g, e3).insert(0);
 
+  cdijkstra_test cdt;
   demand d = demand(npair(src, dst), 1);
-  V2C2S result = dijkstra::search(g, d);
+  V2C2S result = cdt.search(g, d);
 
   // We found the path.
   BOOST_CHECK(!result[dst].empty());
@@ -185,8 +197,9 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_5)
   boost::get(boost::edge_weight, g, e3) = 2;
   boost::get(boost::edge_ssc, g, e3).insert(0);
 
+  cdijkstra_test cdt;
   demand d = demand(npair(src, dst), 1);
-  V2C2S result = dijkstra::search(g, d);
+  V2C2S result = cdt.search(g, d);
 
   // We found the path.
   BOOST_CHECK(!result[dst].empty());
@@ -227,8 +240,9 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_6)
   boost::get(boost::edge_weight, g, e2) = 2;
   boost::get(boost::edge_ssc, g, e2).insert(0);
 
+  cdijkstra_test cdt;
   demand d = demand(npair(src, dst), 1);
-  V2C2S result = dijkstra::search(g, d);
+  V2C2S result = cdt.search(g, d);
 
   BOOST_CHECK(result[dst].size() == 1);
   BOOST_CHECK(result[dst].begin()->first.first.first == 1);
@@ -258,8 +272,9 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_7)
   boost::get(boost::edge_weight, g, e2) = 1;
   boost::get(boost::edge_ssc, g, e2).insert(0);
 
+  cdijkstra_test cdt;
   demand d = demand(npair(src, dst), 1);
-  V2C2S result = dijkstra::search(g, d);
+  V2C2S result = cdt.search(g, d);
 
   BOOST_CHECK(result[dst].size() == 1);
   BOOST_CHECK(result[dst].begin()->first.first.first == 1);
@@ -294,16 +309,16 @@ BOOST_AUTO_TEST_CASE(select_test)
   sssc.insert(ssc2);
 
   {
-    dijkstra::get_select() = dijkstra::first;
-    SSC ssc = dijkstra::select_ssc(sssc, 2);
+    routing::set_st("first");
+    SSC ssc = cdijkstra_test::select_ssc(sssc, 2);
     BOOST_CHECK(ssc.size() == 2);
     BOOST_CHECK(*(ssc.begin()) == 0);
     BOOST_CHECK(*(++ssc.begin()) == 1);
   }
 
   {
-    dijkstra::get_select() = dijkstra::fittest;
-    SSC ssc = dijkstra::select_ssc(sssc, 2);
+    routing::set_st("fittest");
+    SSC ssc = cdijkstra_test::select_ssc(sssc, 2);
     BOOST_CHECK(ssc.size() == 2);
     BOOST_CHECK(*(ssc.begin()) == 7);
     BOOST_CHECK(*(++ssc.begin()) == 8);
