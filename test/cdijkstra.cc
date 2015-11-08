@@ -1,11 +1,10 @@
+#include "cdijkstra.hpp"
 #include "utils.hpp"
 #include "utils_netgen.hpp"
-#include "dijkstra.hpp"
 
 #include <iostream>
 
 #define BOOST_TEST_MODULE cdijkstra
-
 #include <boost/test/unit_test.hpp>
 
 /*
@@ -20,10 +19,11 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_1)
   boost::add_edge(src, dst, g);
   set_subcarriers(g, 2);
 
+  routing::set_rt("cdijkstra");
   demand d = demand(npair(src, dst), 3);
-  V2C2S result = dijkstra::search(g, d);
+  sscpath result = routing::route(g, d);
   // There are no results for dst.
-  BOOST_CHECK(result.find(dst) == result.end());
+  BOOST_CHECK(result.first.empty());
 }
 
 /*
@@ -38,32 +38,26 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_2)
   edge e = boost::add_edge(src, dst, g).first;
   set_subcarriers(g, 3);
 
-  demand d = demand(npair(src, dst), 3);
-  V2C2S result = dijkstra::search(g, d);
-
-  BOOST_CHECK(result.find(dst) != result.end());
-  // There is one set in SSSC.
-  BOOST_CHECK(result[dst].begin()->second.size() == 1);
-  // And that one set has three subcarriers.
-  BOOST_CHECK(result[dst].begin()->second.begin()->size() == 3);
-
-  sscpath p = dijkstra::trace(g, result, d);
-  // The path has one edge.
-  BOOST_CHECK(p.first.size() == 1);
-  // That one edge is e.
-  BOOST_CHECK(*(p.first.begin()) == e);
-  // The path uses SSC with three subcarriers.
-  BOOST_CHECK(p.second.size() == 3);
-
   // There are three subcarriers available.
   BOOST_CHECK(boost::get(boost::edge_ssc, g, e).size() == 3);
-  // Set up the path.
-  dijkstra::set_up_path(g, p);
+
+  routing::set_rt("cdijkstra");
+  demand d = demand(npair(src, dst), 3);
+  sscpath result = routing::route(g, d);
+
+  // The result has three subcarriers.
+  BOOST_CHECK(result.second.size() == 3);
+
+  // The path has one edge.
+  BOOST_CHECK(result.first.size() == 1);
+  // That one edge is e.
+  BOOST_CHECK(result.first.front() == e);
+  
   // The subcarriers have been taken.
   BOOST_CHECK(boost::get(boost::edge_ssc, g, e).empty());
   // Release the subcarriers taken by the path.
-  dijkstra::tear_down_path(g, p);
-  // There are three subcarriers available.
+  routing::tear_down(g, result);
+  // The three subcarriers available again.
   BOOST_CHECK(boost::get(boost::edge_ssc, g, e).size() == 3);
 }
 
