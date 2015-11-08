@@ -11,7 +11,7 @@ sdi.o: sdi.cc cdijkstra.hpp graph.hpp routing.hpp sdi_args.hpp \
  connection.hpp simulation.hpp event.hpp stats.hpp module.hpp traffic.hpp \
  client.hpp utils_netgen.hpp mypoint.hpp utils.hpp teventqueue.hpp
 sdi_args.o: sdi_args.cc sdi_args.hpp cdijkstra.hpp graph.hpp routing.hpp \
- connection.hpp
+ connection.hpp utils.hpp
 simulation.o: simulation.cc simulation.hpp event.hpp graph.hpp
 stats.o: stats.cc client.hpp connection.hpp graph.hpp module.hpp \
  simulation.hpp event.hpp stats.hpp sdi_args.hpp cdijkstra.hpp \
