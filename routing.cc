@@ -3,13 +3,14 @@
 #include "cdijkstra.hpp"
 #include "utils.hpp"
 
+#include <climits>
 #include <iostream>
 
 using namespace std;
 
 routing::st_t routing::m_st;
 
-int routing::m_ml;
+int routing::m_ml = INT_MAX;
 
 unique_ptr<routing> routing::singleton;
 
