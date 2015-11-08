@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_2)
 }
 
 /*
- * Make sure we can establish a path with a worse cost then initially
+ * Make sure we can establish a path with a worse cost than initially
  * it seemed.
  */
 BOOST_AUTO_TEST_CASE(cdijkstra_test_3)
@@ -90,43 +90,18 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_3)
   boost::get(boost::edge_ssc, g, e3).insert(2);
   boost::get(boost::edge_ssc, g, e3).insert(3);
 
+  routing::set_rt("cdijkstra");
   demand d = demand(npair(src, dst), 2);
-  V2C2S result = dijkstra::search(g, d);
+  sscpath result = routing::route(g, d);
 
-  V2C2S::const_iterator i = result.find(dst);
-  assert(i != result.end());
-  const C2S &c2s = i->second;
-
-  // We found the path.
-  BOOST_CHECK(!c2s.empty());
-  // The cost of the path is 3.
-  BOOST_CHECK(c2s.begin()->first.first.first == 3);
-  // We reach the destination by edge e3.
-  BOOST_CHECK(c2s.begin()->first.second == e3);
+  // We found the path - it should be e1, e3.
+  BOOST_CHECK(!result.first.empty());
+  BOOST_CHECK(result.first.front() == e1);
+  BOOST_CHECK(result.first.back() == e3);
   // There are two subcarriers in the solution: 2 and 3.
-  BOOST_CHECK(c2s.begin()->second.size() == 1);
-  BOOST_CHECK(*(c2s.begin()->second.begin()->begin()) == 2);
-  BOOST_CHECK(*(++(c2s.begin()->second.begin()->begin())) == 3);
-
-  sscpath p = dijkstra::trace(g, result, d);
-  // The path has two edges.
-  BOOST_CHECK(p.first.size() == 2);
-  // The first edge is e2, the second e3.
-  BOOST_CHECK(*(p.first.begin()) == e2);
-  BOOST_CHECK(*(++p.first.begin()) == e3);
-  // The path uses SSC with three subcarriers.
-  BOOST_CHECK(p.second.size() == 2);
-  // The subcarriers used are 2 and 3.
-  BOOST_CHECK(p.second.find(2) != p.second.end());
-  BOOST_CHECK(p.second.find(3) != p.second.end());
-
-  // The number of subcarriers befor the path is set up.
-  BOOST_CHECK(boost::get(boost::edge_ssc, g, e1).size() == 2);
-  BOOST_CHECK(boost::get(boost::edge_ssc, g, e2).size() == 2);
-  BOOST_CHECK(boost::get(boost::edge_ssc, g, e3).size() == 2);
-
-  // Set up the path.
-  dijkstra::set_up_path(g, p);
+  BOOST_CHECK(result.second.size() == 2);
+  BOOST_CHECK(result.second.count(2) == 1);
+  BOOST_CHECK(result.second.count(3) == 1);
 
   // The number of subcarriers after the path is set up.
   BOOST_CHECK(boost::get(boost::edge_ssc, g, e1).size() == 2);
@@ -134,9 +109,9 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_3)
   BOOST_CHECK(boost::get(boost::edge_ssc, g, e3).size() == 0);
 
   // Tear down the path.
-  dijkstra::tear_down_path(g, p);
+  routing::tear_down(g, result);
 
-  // The number of subcarriers befor the path is set up.
+  // The number of subcarriers after the path is taken down.
   BOOST_CHECK(boost::get(boost::edge_ssc, g, e1).size() == 2);
   BOOST_CHECK(boost::get(boost::edge_ssc, g, e2).size() == 2);
   BOOST_CHECK(boost::get(boost::edge_ssc, g, e3).size() == 2);
