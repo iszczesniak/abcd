@@ -3,61 +3,61 @@
 using namespace std;
 
 // The singleton of the class.  The compiler initializes it to null.
-simulation *simulation::_s;
+simulation *simulation::m_s;
 
 simulation::simulation(graph &g, boost::mt19937 &rng):
-  _g(g), _rng(rng), _t()
+  m_g(g), m_rng(rng), m_t()
 {
-  assert(!_s);
-  _s = this;
+  assert(!m_s);
+  m_s = this;
 }
 
 simulation
 &simulation::get()
 {
-  assert(_s);
-  return *_s;
+  assert(m_s);
+  return *m_s;
 }
 
 graph
 &simulation::g() const
 {
-  return _g;
+  return m_g;
 }
 
 boost::mt19937
 &simulation::rng() const
 {
-  return _rng;
+  return m_rng;
 }
 
 void
 simulation::schedule(double t, module *m)
 {
-  assert(t >= _t);
-  _q.push(event(t, m));
+  assert(t >= m_t);
+  m_q.push(event(t, m));
 }
 
 void
 simulation::run(double sim_time)
 {
   // The event loop.
-  while(!_q.empty())
+  while(!m_q.empty())
     {
-      const event &e = _q.top();
+      const event &e = m_q.top();
 
-      _t = e.get_time();
+      m_t = e.get_time();
 
-      if (_t > sim_time)
+      if (m_t > sim_time)
 	break;
 
       e.process();
-      _q.pop();
+      m_q.pop();
     }
 }
 
 double
 simulation::now()
 {
-  return _t;
+  return m_t;
 }

@@ -16,19 +16,19 @@ class module;
 class simulation
 {
   // The DES priority queue.
-  pqueue _q;
+  pqueue m_q;
 
   // The graph we're working on.
-  graph &_g;
+  graph &m_g;
 
   // The random number generator.
-  boost::mt19937 &_rng;
+  boost::mt19937 &m_rng;
 
   // The singleton for the class.
-  static simulation *_s;
+  static simulation *m_s;
 
   // Keeps track of the simulation time.
-  double _t;
+  double m_t;
   
 public:
   simulation(graph &, boost::mt19937 &);
