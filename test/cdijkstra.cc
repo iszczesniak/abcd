@@ -105,9 +105,9 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_3)
   demand d = demand(npair(src, dst), 2);
   sscpath result = routing::route(g, d);
 
-  // We found the path - it should be e1, e3.
-  BOOST_CHECK(!result.first.empty());
-  BOOST_CHECK(result.first.front() == e1);
+  // We found the path - it should be e2, e3.
+  BOOST_CHECK(result.first.size() == 2);
+  BOOST_CHECK(result.first.front() == e2);
   BOOST_CHECK(result.first.back() == e3);
   // There are two subcarriers in the solution: 2 and 3.
   BOOST_CHECK(result.second.size() == 2);
@@ -283,7 +283,6 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_7)
 
 BOOST_AUTO_TEST_CASE(select_test)
 {
-  /*
   SSC ssc1, ssc2;
 
   ssc1.insert(1);
@@ -324,5 +323,4 @@ BOOST_AUTO_TEST_CASE(select_test)
     BOOST_CHECK(*(ssc.begin()) == 7);
     BOOST_CHECK(*(++ssc.begin()) == 8);
   }
-  */
 }
