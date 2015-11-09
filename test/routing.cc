@@ -16,7 +16,7 @@ public:
   using routing::select_ssc;
 };
 
-BOOST_AUTO_TEST_CASE(select_test)
+BOOST_AUTO_TEST_CASE(select_test1)
 {
   SSC ssc1, ssc2;
 
@@ -58,4 +58,13 @@ BOOST_AUTO_TEST_CASE(select_test)
     BOOST_CHECK(*(ssc.begin()) == 7);
     BOOST_CHECK(*(++ssc.begin()) == 8);
   }
+}
+
+BOOST_AUTO_TEST_CASE(select_test2)
+{
+  SSC ssc1(boost::counting_iterator<int>(0),
+           boost::counting_iterator<int>(100));
+
+  for (int i = 0; i < 1000; ++i)
+    SSC ssc2 = exclude(ssc1, 2);
 }
