@@ -31,6 +31,7 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_1)
   set_subcarriers(g, 2);
 
   routing::set_rt("cdijkstra");
+  routing::set_st("first");
   demand d = demand(npair(src, dst), 3);
   sscpath result = routing::route(g, d);
   // There are no results for dst.
@@ -53,6 +54,7 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_2)
   BOOST_CHECK(boost::get(boost::edge_ssc, g, e).size() == 3);
 
   routing::set_rt("cdijkstra");
+  routing::set_st("first");
   demand d = demand(npair(src, dst), 3);
   sscpath result = routing::route(g, d);
 
@@ -102,6 +104,7 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_3)
   boost::get(boost::edge_ssc, g, e3).insert(3);
 
   routing::set_rt("cdijkstra");
+  routing::set_st("first");
   demand d = demand(npair(src, dst), 2);
   sscpath result = routing::route(g, d);
 
@@ -156,6 +159,7 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_4)
   boost::get(boost::edge_ssc, g, e3).insert(0);
 
   cdijkstra_test cdt;
+  routing::set_st("first");
   demand d = demand(npair(src, dst), 1);
   V2C2S result = cdt.search(g, d);
 
@@ -198,6 +202,7 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_5)
   boost::get(boost::edge_ssc, g, e3).insert(0);
 
   cdijkstra_test cdt;
+  routing::set_st("first");
   demand d = demand(npair(src, dst), 1);
   V2C2S result = cdt.search(g, d);
 
@@ -241,6 +246,7 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_6)
   boost::get(boost::edge_ssc, g, e2).insert(0);
 
   cdijkstra_test cdt;
+  routing::set_st("first");
   demand d = demand(npair(src, dst), 1);
   V2C2S result = cdt.search(g, d);
 
@@ -273,6 +279,7 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_7)
   boost::get(boost::edge_ssc, g, e2).insert(0);
 
   cdijkstra_test cdt;
+  routing::set_st("first");
   demand d = demand(npair(src, dst), 1);
   V2C2S result = cdt.search(g, d);
 
