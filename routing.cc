@@ -8,7 +8,9 @@
 
 using namespace std;
 
-routing::st_t routing::m_st;
+routing::rt_t routing::m_rt = routing::rt_t::none;
+
+routing::st_t routing::m_st = routing::st_t::none;
 
 int routing::m_ml = INT_MAX;
 
@@ -41,9 +43,9 @@ routing::rt_interpret (const string &rt)
 void
 routing::set_rt(const string &rt)
 {
-  rt_t t = rt_interpret(rt);
+  m_rt = rt_interpret(rt);
 
-  switch (t)
+  switch (m_rt)
     {
     case rt_t::cdijkstra:
       singleton.reset(new cdijkstra());
@@ -54,16 +56,34 @@ routing::set_rt(const string &rt)
     }
 }
 
+routing::rt_t
+routing::get_rt()
+{
+  return m_rt;
+}
+
 void
 routing::set_ml(int ml)
 {
   m_ml = ml;
 }
 
+int
+routing::get_ml()
+{
+  return m_ml;
+}
+
 void
 routing::set_st(const string &st)
 {
   m_st = st_interpret(st);
+}
+
+routing::st_t
+routing::get_st()
+{
+  return m_st;
 }
 
 void

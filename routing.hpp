@@ -10,11 +10,11 @@ public:
   // The type of specturm selection:
   // first - the first subcarriers that fit the demand are chosen
   // smallest - the smallest set of contiguous subcarriers are chosen
-  enum class st_t {first, fittest};
+  enum class st_t {none, first, fittest};
 
   // The type of routing:
   // cdijkstra - constrained dijkstra
-  enum class rt_t {cdijkstra};
+  enum class rt_t {none, cdijkstra};
   
   /**
    * Route the demand, i.e., find the path, and allocate resources.
@@ -35,18 +35,27 @@ public:
   static void
   set_ml(int ml);
 
+  static int
+  get_ml();
+
   /**
    * Set the spectrum selection type.
    */
   static void
   set_st(const std::string &st);
 
+  static st_t
+  get_st();
+
   /**
    * Set the routing type.
    */
   static void
   set_rt(const std::string &rt);
-  
+
+  static rt_t
+  get_rt();
+
 protected:
   /**
    * This is the worker function for the route function.
@@ -108,6 +117,9 @@ protected:
 
   /// The maximal length of a path.
   static int m_ml;
+
+  /// The routing algorithm.
+  static rt_t m_rt;
 
   /// The singleton, which does the routing.
   static std::unique_ptr<routing> singleton;
