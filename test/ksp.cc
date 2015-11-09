@@ -1,9 +1,11 @@
 #define BOOST_TEST_MODULE ksp
 
-#include <map>
 #include "graph.hpp"
 #include "ed_ksp.hpp"
+
 #include <boost/test/unit_test.hpp>
+
+#include <map>
 
 using namespace std;
 

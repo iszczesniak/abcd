@@ -1,6 +1,6 @@
 TESTS = cdijkstra graph ksp sdi_args utils 
 
-OBJS = ../cdijkstra.o ../graph.o ../sdi_args.o ../utils.o
+OBJS = ../cdijkstra.o  ../routing.o ../sdi_args.o ../utils.o
 
 #CXXFLAGS = -g -Wno-deprecated -std=c++11
 CXXFLAGS = -O3 -Wno-deprecated -std=c++11
@@ -19,7 +19,7 @@ LDFLAGS := $(LDFLAGS) -l boost_program_options
 
 all: $(TESTS)
 
-dijkstra: dijkstra.o $(OBJS)
+cdijkstra: cdijkstra.o $(OBJS)
 	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 graph: graph.o $(OBJS)
