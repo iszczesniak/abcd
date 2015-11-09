@@ -1,4 +1,4 @@
-TESTS = cdijkstra graph ksp sdi_args utils 
+TESTS = cdijkstra graph ksp routing sdi_args utils 
 
 OBJS = ../cdijkstra.o  ../routing.o ../sdi_args.o ../utils.o
 
@@ -26,6 +26,9 @@ graph: graph.o $(OBJS)
 	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 ksp: ksp.o $(OBJS)
+	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
+
+routing: routing.o $(OBJS)
 	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 sdi_args: sdi_args.o $(OBJS)

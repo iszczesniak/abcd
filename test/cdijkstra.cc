@@ -15,7 +15,6 @@ class cdijkstra_test: public cdijkstra
 public:
   using cdijkstra::search;
   using cdijkstra::trace;
-  using routing::select_ssc;
 };
 
 /*
@@ -286,48 +285,4 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_7)
   BOOST_CHECK(result[dst].size() == 1);
   BOOST_CHECK(result[dst].begin()->first.first.first == 1);
   BOOST_CHECK(result[dst].begin()->first.second == e2);
-}
-
-BOOST_AUTO_TEST_CASE(select_test)
-{
-  SSC ssc1, ssc2;
-
-  ssc1.insert(1);
-  ssc1.insert(2);
-  ssc1.insert(3);
-  ssc1.insert(4);
-
-  ssc1.insert(5);
-  ssc1.insert(6);
-  ssc1.insert(7);
-  ssc1.insert(8);
-
-  ssc2.insert(0);
-  ssc2.insert(1);
-  ssc2.insert(2);
-  ssc2.insert(3);
-
-  ssc2.insert(7);
-  ssc2.insert(8);
-  ssc2.insert(9);
-
-  SSSC sssc;
-  sssc.insert(ssc1);
-  sssc.insert(ssc2);
-
-  {
-    routing::set_st("first");
-    SSC ssc = cdijkstra_test::select_ssc(sssc, 2);
-    BOOST_CHECK(ssc.size() == 2);
-    BOOST_CHECK(*(ssc.begin()) == 0);
-    BOOST_CHECK(*(++ssc.begin()) == 1);
-  }
-
-  {
-    routing::set_st("fittest");
-    SSC ssc = cdijkstra_test::select_ssc(sssc, 2);
-    BOOST_CHECK(ssc.size() == 2);
-    BOOST_CHECK(*(ssc.begin()) == 7);
-    BOOST_CHECK(*(++ssc.begin()) == 8);
-  }
 }
