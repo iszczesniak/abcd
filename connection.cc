@@ -32,7 +32,6 @@ connection::is_established() const
 pair<bool, int>
 connection::establish(const demand &d)
 {
-  cout << "*" << endl;
   pair<bool, int> result;
 
   // Make sure the connection is not established.
