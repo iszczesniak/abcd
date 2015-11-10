@@ -11,7 +11,7 @@ class module
 {
 protected:
   // The simulation object.
-  simulation &sim;
+  simulation &m_sim;
 
   // The graph of the simulation.
   graph &g;

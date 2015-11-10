@@ -1,7 +1,7 @@
 #include "module.hpp"
 
 module::module() :
-  sim(simulation::get()), g(sim.g()), rng(sim.rng())
+  m_sim(simulation::get()), g(m_sim.g()), rng(m_sim.rng())
 {
 }
 
@@ -12,17 +12,17 @@ module::~module()
 double
 module::now()
 {
-  return sim.now();
+  return m_sim.now();
 }
 
 void
 module::schedule()
 {
-  sim.schedule(now(), this);
+  m_sim.schedule(now(), this);
 }
 
 void
 module::schedule(double t)
 {
-  sim.schedule(t, this);
+  m_sim.schedule(t, this);
 }

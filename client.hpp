@@ -58,7 +58,7 @@ public:
   void operator()(double t);
 
 private:
-  void set_up();
+  bool set_up();
   void tear_down();
 
   // Self_destruction: report this to the traffic, and delete itself.

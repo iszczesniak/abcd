@@ -14,11 +14,12 @@ client::client(double mht, double mnsc, traffic &tra):
   mnsc(mnsc - 1), nscd(1 / mnsc), nscdg(rng, nscd),
   conn(g), st(stats::get()), tra(tra)
 {
-  set_up();
-  
-  // Tear down time.
-  tdt = now() + htg();
-  schedule(tdt);
+  if (set_up())
+    {
+      // Tear down time.
+      tdt = now() + htg();
+      schedule(tdt);
+    }
 }
 
 void client::operator()(double t)
@@ -26,7 +27,7 @@ void client::operator()(double t)
   tear_down();
 }
 
-void client::set_up()
+bool client::set_up()
 {
   // The new demand.
   demand d;
@@ -44,6 +45,8 @@ void client::set_up()
     st.established_length(result.second);
   else
     destroy();
+
+  return result.first;
 }
 
 void client::tear_down()
