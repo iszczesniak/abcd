@@ -16,6 +16,8 @@ client::client(double mht, double mnsc, traffic &tra):
 {
   if (set_up())
     {
+      // Register the client with the traffic.
+      tra.insert(this);
       // Tear down time.
       tdt = now() + htg();
       schedule(tdt);

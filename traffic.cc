@@ -24,8 +24,10 @@ traffic::nr_clients() const
 void
 traffic::operator()(double t)
 {
-  client *c = new client(mht, mnsc, *this);
-  cs.insert(c);
+  // We are creating a client, but we ain't doing anything with the
+  // pointer we get!  It's so, because it's up to the client to
+  // register itself with the traffic.
+  new client(mht, mnsc, *this);
   schedule_next(t);
 }
 
@@ -34,6 +36,12 @@ traffic::schedule_next(double t)
 {
   double dt = catg();
   schedule(t + dt);
+}
+
+void
+traffic::insert(client *c)
+{
+  cs.insert(c);
 }
 
 void

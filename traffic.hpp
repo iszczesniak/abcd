@@ -38,6 +38,9 @@ public:
   // Return the number of clients.
   int nr_clients() const;
 
+  // Insert the client to the traffic.
+  void insert(client *);
+
   // Remote the client from the traffic.
   void erase(client *);
 
