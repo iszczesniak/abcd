@@ -2,7 +2,9 @@
 #define ROUTING_HPP
 
 #include "graph.hpp"
+
 #include <memory>
+#include <boost/optional.hpp>
 
 class routing
 {  
@@ -33,9 +35,9 @@ public:
    * Set the maximul length of a path.
    */
   static void
-  set_ml(int ml);
+  set_ml(boost::optional<int> ml);
 
-  static int
+  static boost::optional<int>
   get_ml();
 
   /**
@@ -116,7 +118,7 @@ protected:
   static st_t m_st;
 
   /// The maximal length of a path.
-  static int m_ml;
+  static boost::optional<int> m_ml;
 
   /// The routing algorithm.
   static rt_t m_rt;

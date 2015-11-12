@@ -80,7 +80,7 @@ process_sdi_args(int argc, const char *argv[])
         ("subcarriers", po::value<int>()->required(),
          "the number of subcarriers")
 
-        ("ml", po::value<int>()->required(),
+        ("ml", po::value<int>(),
          "the maximal length of a path")
 
         ("st", po::value<string>()->required(),
@@ -142,7 +142,10 @@ process_sdi_args(int argc, const char *argv[])
       result.nr_nodes = vm[NODES_S].as<int>();
       result.nr_edges = vm[EDGES_S].as<int>();
       result.nr_sc = vm["subcarriers"].as<int>();
-      result.ml = vm["ml"].as<int>();
+
+      if (vm.count("ml"))
+        result.ml = vm["ml"].as<int>();
+
       result.st = vm["st"].as<string>();
       result.rt = vm["rt"].as<string>();
 

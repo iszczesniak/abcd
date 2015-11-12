@@ -218,7 +218,10 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
               // Candidate cost.
               int new_c = c + ec;
 
-              if (new_c <= m_ml)
+              // Consider that path when there is no maximal length
+              // given or when the new lenght is not greater than the
+              // limit.
+              if (!m_ml || new_c <= m_ml.get())
                 {
                   // The subcarriers available on the edge.
                   const SSC &e_ssc = boost::get(boost::edge_ssc, g, e);

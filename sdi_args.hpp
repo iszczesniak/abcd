@@ -4,7 +4,9 @@
 #include "cdijkstra.hpp"
 #include "connection.hpp"
 #include "routing.hpp"
+
 #include <string>
+#include <boost/optional.hpp>
 
 using namespace std;
 
@@ -38,7 +40,7 @@ struct sdi_args
   int nr_sc;
 
   /// The maximal length of a path we want.
-  int ml;
+  boost::optional<int> ml;
 
   /// The spectrum selection type.
   std::string st;

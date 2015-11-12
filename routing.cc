@@ -12,7 +12,7 @@ routing::rt_t routing::m_rt = routing::rt_t::none;
 
 routing::st_t routing::m_st = routing::st_t::none;
 
-int routing::m_ml = INT_MAX;
+boost::optional<int> routing::m_ml;
 
 unique_ptr<routing> routing::singleton;
 
@@ -63,12 +63,12 @@ routing::get_rt()
 }
 
 void
-routing::set_ml(int ml)
+routing::set_ml(boost::optional<int> ml)
 {
   m_ml = ml;
 }
 
-int
+boost::optional<int>
 routing::get_ml()
 {
   return m_ml;
