@@ -45,11 +45,17 @@ BOOST_AUTO_TEST_CASE(filtered_graph_test)
 
   set<edge> x;
   xe_filter<graph> f(x);
-  boost::filtered_graph<graph, xe_filter<graph> > fg(g, f);
+  typedef boost::filtered_graph<graph, xe_filter<graph> > fg_t;
+  fg_t fg(g, f);
   
   edge e1, e2, e3;
   bool s;
   tie(e1, s) = add_edge(a, b, g);
   tie(e2, s) = add_edge(a, b, g);
   tie(e3, s) = add_edge(b, c, g);
+
+  x.insert(e1);
+
+  fg_t::edge_iterator i, ie;
+  tie(i, ie) = boost::edges(fg);
 }
