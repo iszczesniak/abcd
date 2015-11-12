@@ -1,3 +1,6 @@
+#ifndef XE_FILTER
+#define XE_FILTER
+
 #include <boost/graph/filtered_graph.hpp>
 #include <set>
 
@@ -22,3 +25,5 @@ struct xe_filter
 
   edge_set &m_excluded;
 };
+
+#endif /* XE_FILTER */
