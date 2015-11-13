@@ -54,8 +54,21 @@ BOOST_AUTO_TEST_CASE(filtered_graph_test)
   tie(e2, s) = add_edge(a, b, g);
   tie(e3, s) = add_edge(b, c, g);
 
-  x.insert(e1);
-
   fg_t::edge_iterator i, ie;
+
+  // Exclude e1 and make sure it's not one of the edges.
+  x.insert(e1);
+  for(tie(i, ie) = boost::edges(fg); i != ie; ++i)
+    BOOST_CHECK(*i != e1);
+
+  // Exclude e2 and make sure it's not one of the edges.
+  x.insert(e2);
+  for(tie(i, ie) = boost::edges(fg); i != ie; ++i)
+    BOOST_CHECK(*i != e2);
+
+  // Exclude e3 and make sure there are no edges left.
+  x.insert(e3);
+  // Now the edge set should be
   tie(i, ie) = boost::edges(fg);
+  BOOST_CHECK(i == ie);
 }
