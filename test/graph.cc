@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(filtered_graph_test)
   vertex c = *(vertices(g).first + 2);
 
   set<edge> x;
-  xe_filter<graph> f(x);
+  xe_filter<graph> f(&x);
   typedef boost::filtered_graph<graph, xe_filter<graph> > fg_t;
   fg_t fg(g, f);
   

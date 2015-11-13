@@ -2,8 +2,12 @@ cdijkstra.o: cdijkstra.cc ../cdijkstra.hpp ../graph.hpp ../routing.hpp \
  ../graph.hpp ../utils.hpp ../utils_netgen.hpp ../mypoint.hpp \
  ../sdi_args.hpp ../cdijkstra.hpp ../connection.hpp ../utils.hpp \
  ../teventqueue.hpp
-graph.o: graph.cc ../graph.hpp
+graph.o: graph.cc ../graph.hpp ../xe_filter.hpp
 ksp.o: ksp.cc ../graph.hpp ../ed_ksp.hpp
+routing.o: routing.cc ../cdijkstra.hpp ../graph.hpp ../routing.hpp \
+ ../graph.hpp ../utils.hpp ../utils_netgen.hpp ../mypoint.hpp \
+ ../sdi_args.hpp ../cdijkstra.hpp ../connection.hpp ../utils.hpp \
+ ../teventqueue.hpp
 sdi_args.o: sdi_args.cc ../sdi_args.hpp ../cdijkstra.hpp ../graph.hpp \
  ../routing.hpp ../connection.hpp ../cdijkstra.hpp ../utils.hpp \
  ../utils_netgen.hpp ../mypoint.hpp ../sdi_args.hpp ../utils.hpp \

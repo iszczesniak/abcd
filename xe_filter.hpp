@@ -15,14 +15,14 @@ struct xe_filter
   // The filter must be default-constructible, so it is.
   xe_filter() {};
 
-  xe_filter(const edge_set &excluded): m_excluded(excluded) {};
+  xe_filter(const edge_set *excluded): m_excluded(excluded) {};
 
   inline bool operator()(const edge &e) const
   {
-    return m_excluded.count(e) == 0;
+    return m_excluded->count(e) == 0;
   }
 
-  const edge_set &m_excluded;
+  const edge_set *m_excluded;
 };
 
 #endif /* XE_FILTER */
