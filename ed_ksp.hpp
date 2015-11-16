@@ -1,16 +1,35 @@
 #ifndef BOOST_GRAPH_ED_KSP
 #define BOOST_GRAPH_ED_KSP
 
-#include "xe_filter.hpp"
-
-#include <map>
 #include <list>
+#include <map>
+#include <set>
 
 #include <boost/graph/dijkstra_shortest_paths.hpp>
 #include <boost/graph/filtered_graph.hpp>
 #include <boost/property_map/property_map.hpp>
 
 namespace boost {
+
+  // Exclude edge filter
+  template <typename Graph>
+  struct edksp_filter
+  {
+    typedef typename Graph::edge_descriptor edge_descriptor;
+    typedef typename std::set<edge_descriptor> edge_set;
+
+    // The filter must be default-constructible, so it is.
+    edksp_filter() {};
+
+    edksp_filter(const edge_set *excluded): m_excluded(excluded) {};
+
+    inline bool operator()(const edge &e) const
+    {
+      return m_excluded->count(e) == 0;
+    }
+
+    const edge_set *m_excluded;
+  };
 
   template <typename Graph, typename Weight>
   std::multimap<typename Weight::value_type,
@@ -31,9 +50,9 @@ namespace boost {
     // The set of excluded edges.
     std::set<edge_descriptor> excluded;
     // The filter for excluding edges.
-    xe_filter<Graph> f(&excluded);
+    edksp_filter<Graph> f(&excluded);
     // The filtered graph type.
-    typedef boost::filtered_graph<Graph, xe_filter<Graph> > fg_type;
+    typedef boost::filtered_graph<Graph, edksp_filter<Graph> > fg_type;
     // The filtered graph.
     fg_type fg(g, f);
 
