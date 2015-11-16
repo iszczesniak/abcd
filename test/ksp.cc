@@ -1,8 +1,9 @@
 #define BOOST_TEST_MODULE ksp
 
 #include "graph.hpp"
-#include "ed_ksp.hpp"
+#include "edge_disjoint_ksp.hpp"
 
+#include <boost/graph/filtered_graph.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include <map>
@@ -76,19 +77,56 @@ BOOST_AUTO_TEST_CASE(ksp_1)
   tie(ce, ec) = aue(g, c, e, 3);
 
   std::multimap<int, path> r;
-  r = boost::ed_ksp(g, c, d);
+  r = boost::edge_disjoint_ksp(g, c, d);
   BOOST_CHECK(r.size() == 2);
   BOOST_CHECK(irek(r, 5, path{cd1}));
   BOOST_CHECK(irek(r, 7, path{cd2}));
 
-  r = boost::ed_ksp(g, b, d);
+  r = boost::edge_disjoint_ksp(g, b, d);
   BOOST_CHECK(r.size() == 2);
   BOOST_CHECK(irek(r, 9, path{be, ec, cd1}));
   BOOST_CHECK(irek(r, 17, path{ba, ac, cd2}));
 
-  r = boost::ed_ksp(g, a, e);
+  r = boost::edge_disjoint_ksp(g, a, e);
   BOOST_CHECK(r.size() == 3);
   BOOST_CHECK(irek(r, 2, path{ae}));
   BOOST_CHECK(irek(r, 5, path{ab, be}));
   BOOST_CHECK(irek(r, 9, path{ac, ce}));
+}
+
+BOOST_AUTO_TEST_CASE(filtered_graph_test)
+{
+  graph g(3);
+  vertex a = *(vertices(g).first);
+  vertex b = *(vertices(g).first + 1);
+  vertex c = *(vertices(g).first + 2);
+
+  set<edge> x;
+  boost::edksp_filter<graph> f(&x);
+  typedef boost::filtered_graph<graph, boost::edksp_filter<graph> > fg_t;
+  fg_t fg(g, f);
+  
+  edge e1, e2, e3;
+  bool s;
+  tie(e1, s) = add_edge(a, b, g);
+  tie(e2, s) = add_edge(a, b, g);
+  tie(e3, s) = add_edge(b, c, g);
+
+  fg_t::edge_iterator i, ie;
+
+  // Exclude e1 and make sure it's not one of the edges.
+  x.insert(e1);
+  for(tie(i, ie) = boost::edges(fg); i != ie; ++i)
+    BOOST_CHECK(*i != e1);
+
+  // Exclude e2 and make sure it's not one of the edges.
+  x.insert(e2);
+  for(tie(i, ie) = boost::edges(fg); i != ie; ++i)
+    BOOST_CHECK(*i != e2);
+
+  // Exclude e3 and make sure there are no edges left.
+  x.insert(e3);
+  // Now the edge set should be empty.
+  tie(i, ie) = boost::edges(fg);
+  BOOST_CHECK(i == ie);
 }

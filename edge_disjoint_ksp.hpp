@@ -4,6 +4,7 @@
 #include <list>
 #include <map>
 #include <set>
+#include <vector>
 
 #include <boost/graph/dijkstra_shortest_paths.hpp>
 #include <boost/graph/filtered_graph.hpp>
@@ -23,7 +24,7 @@ namespace boost {
 
     edksp_filter(const edge_set *excluded): m_excluded(excluded) {};
 
-    inline bool operator()(const edge &e) const
+    inline bool operator()(const edge_descriptor &e) const
     {
       return m_excluded->count(e) == 0;
     }
@@ -59,8 +60,8 @@ namespace boost {
     // In each iteration, we try to find a shortest path.
     do
       {
-        vector<weight_type> dist(num_vertices(g));
-        vector<vertex_descriptor> pred(num_vertices(g));
+        std::vector<weight_type> dist(num_vertices(g));
+        std::vector<vertex_descriptor> pred(num_vertices(g));
 
         boost::dijkstra_shortest_paths
           (fg, s, boost::predecessor_map(&pred[0]).distance_map(&dist[0]));
