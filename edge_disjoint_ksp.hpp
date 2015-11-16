@@ -34,7 +34,7 @@ namespace boost {
   template <typename Graph, typename Weight>
   std::multimap<typename Weight::value_type,
                 std::list<typename Graph::edge_descriptor>>
-  ed_ksp(const Graph& g,
+  edge_disjoint_ksp(const Graph& g,
          typename graph_traits<Graph>::vertex_descriptor s,
          typename graph_traits<Graph>::vertex_descriptor t,
          Weight wm)
@@ -109,11 +109,11 @@ namespace boost {
   template <typename Graph>
   std::multimap<typename property_map<Graph, edge_weight_t>::value_type,
                 std::list<typename Graph::edge_descriptor>>
-  ed_ksp(Graph& g,
+  edge_disjoint_ksp(Graph& g,
          typename graph_traits<Graph>::vertex_descriptor s,
          typename graph_traits<Graph>::vertex_descriptor t)
   {
-    return ed_ksp(g, s, t, get(edge_weight_t(), g));
+    return edge_disjoint_ksp(g, s, t, get(edge_weight_t(), g));
   }
 
 } // boost
