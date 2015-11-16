@@ -4,9 +4,11 @@ client.o: client.cc client.hpp connection.hpp graph.hpp module.hpp \
  routing.hpp traffic.hpp utils_netgen.hpp mypoint.hpp utils.hpp \
  teventqueue.hpp
 connection.o: connection.cc connection.hpp graph.hpp routing.hpp
+edksp.o: edksp.cc edksp.hpp graph.hpp routing.hpp
 event.o: event.cc event.hpp module.hpp simulation.hpp graph.hpp
 module.o: module.cc module.hpp simulation.hpp event.hpp graph.hpp
-routing.o: routing.cc routing.hpp graph.hpp cdijkstra.hpp utils.hpp
+routing.o: routing.cc routing.hpp graph.hpp cdijkstra.hpp edksp.hpp \
+ utils.hpp
 sdi.o: sdi.cc cdijkstra.hpp graph.hpp routing.hpp sdi_args.hpp \
  connection.hpp simulation.hpp event.hpp stats.hpp module.hpp traffic.hpp \
  client.hpp utils_netgen.hpp mypoint.hpp utils.hpp teventqueue.hpp

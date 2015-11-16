@@ -1,6 +1,7 @@
 #include "routing.hpp"
 
 #include "cdijkstra.hpp"
+#include "edksp.hpp"
 #include "utils.hpp"
 
 #include <climits>
@@ -37,6 +38,7 @@ routing::rt_interpret (const string &rt)
 {
   map <string, routing::rt_t> rt_map;
   rt_map["cdijkstra"] = rt_t::cdijkstra;
+  rt_map["edksp"] = rt_t::edksp;
   return interpret ("routing type", rt, rt_map);
 }
 
@@ -50,7 +52,11 @@ routing::set_rt(const string &rt)
     case rt_t::cdijkstra:
       singleton.reset(new cdijkstra());
       break;
-      
+
+    case rt_t::edksp:
+      singleton.reset(new edksp());
+      break;
+
     default:
       abort();
     }
