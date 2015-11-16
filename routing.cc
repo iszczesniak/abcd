@@ -92,7 +92,7 @@ routing::get_st()
   return m_st;
 }
 
-void
+bool
 routing::set_up_path(graph &g, const sscpath &p)
 {
   boost::property_map<graph, boost::edge_ssc_t>::type
@@ -110,11 +110,14 @@ routing::set_up_path(graph &g, const sscpath &p)
       SSC &e_ssc = sscm[e];
 
       // Make sure that the edge has the required subcarriers.
-      assert(includes(e_ssc, p_ssc));
+      if (!includes(e_ssc, p_ssc))
+        return false;
 
       // Remove the p_ssc subcarriers from e_ssc.
       exclude(e_ssc, p_ssc);
     }
+
+  return true;
 }
 
 void

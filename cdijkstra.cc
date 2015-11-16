@@ -16,7 +16,10 @@ cdijkstra::route_w(graph &g, const demand &d)
   V2C2S r = search(g, d);
   sscpath result = trace(g, r, d);
   if (!result.first.empty())
-    set_up_path(g, result);
+    {
+      bool status = set_up_path(g, result);
+      assert(status);
+    }
   return result;
 }
 

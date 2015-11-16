@@ -68,7 +68,7 @@ protected:
   /**
    * Set up the given path.
    */
-  void
+  bool
   set_up_path(graph &g, const sscpath &p);
   
   /**
