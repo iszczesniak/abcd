@@ -238,7 +238,7 @@ routing::select_fittest(const SSSC &sssc, int nsc)
 SSC
 routing::select_fittest(const SSC &ssc, int nsc)
 {
-  SSC result;
+  const SSC *result = NULL;
 
   SSSC sssc = split(ssc);
 
@@ -249,13 +249,13 @@ routing::select_fittest(const SSC &ssc, int nsc)
       // We only care about those fragments that can handle nsc.
       if (tmp.size() >= nsc)
         {
-          if (result.empty())
-            result = tmp;
+          if (result == NULL)
+            result = &tmp;
           else
-            if (tmp.size() < result.size())
-              result = tmp;
+            if (tmp.size() < result->size())
+              result = &tmp;
         }
     }
 
-  return result;
+  return *result;
 }
