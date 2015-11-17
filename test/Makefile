@@ -1,6 +1,7 @@
 TESTS = cdijkstra graph ksp routing sdi_args utils 
 
-OBJS = ../cdijkstra.o  ../routing.o ../sdi_args.o ../utils.o
+OBJS = ../cdijkstra.o ../edksp.o ../routing.o ../sdi_args.o	\
+../utils.o
 
 #CXXFLAGS = -g -Wno-deprecated -std=c++11
 CXXFLAGS = -O3 -Wno-deprecated -std=c++11
