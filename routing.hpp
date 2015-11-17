@@ -72,10 +72,19 @@ protected:
   set_up_path(graph &g, const sscpath &p);
 
   /**
-   * From the given SSSC, select the SSC according to the "select"
-   * field of the class.  The returned SSC has exactly nsc
+   * From the given SSC, select the SSC according to the selection
+   * policy of the class.  The returned SSC has exactly nsc
+   * subcarriers, even though the chosen contiguous fragment from SSC
+   * could have had more subcarriers.
+   */
+  static SSC
+  select_ssc(const SSC &ssc, int nsc);
+
+  /**
+   * From the given SSSC, select the SSC according to the selection
+   * policy of the class.  The returned SSC has exactly nsc
    * subcarriers, even though the chosen contiguous fragment from SSSC
-   * had more subcarriers.
+   * could have had more subcarriers.
    */
   static SSC
   select_ssc(const SSSC &sssc, int nsc);
