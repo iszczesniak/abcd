@@ -121,6 +121,12 @@ void
 include(SSC &ssc, const SSC &e);
 
 /**
+ * Find the SSC that is available along the path.
+ */
+SSC
+find_path_ssc(const graph &g, const path &p);
+
+/**
  * Calculates the shortests paths in the graph.
  */
 

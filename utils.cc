@@ -146,6 +146,24 @@ include(SSC &ssc, const SSC &e)
     ssc.insert(*i);
 }
 
+SSC
+find_path_ssc(const graph &g, const path &p)
+{
+  SSC ssc;
+  
+  path::const_iterator i = p.begin();
+
+  if (i != p.end())
+    {
+      ssc = boost::get(boost::edge_ssc, g, *i);
+
+      while(++i != p.end())
+        ssc = intersection(ssc, boost::get(boost::edge_ssc, g, *i));
+    }
+
+  return ssc;
+}
+
 // The function for sorting the list of sets.
 static bool stlos(const set<vertex> &s1, const set<vertex> &s2)
 {
