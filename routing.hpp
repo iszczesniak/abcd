@@ -70,7 +70,7 @@ protected:
    */
   bool
   set_up_path(graph &g, const sscpath &p);
-  
+
   /**
    * From the given SSSC, select the SSC according to the "select"
    * field of the class.  The returned SSC has exactly nsc
