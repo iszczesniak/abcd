@@ -1,4 +1,4 @@
-TESTS = cdijkstra graph ksp routing sdi_args utils 
+TESTS = cdijkstra graph edge_disjoint_ksp routing sdi_args utils 
 
 OBJS = ../cdijkstra.o ../edksp.o ../routing.o ../sdi_args.o	\
 ../utils.o

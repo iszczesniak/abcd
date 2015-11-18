@@ -2,8 +2,8 @@ cdijkstra.o: cdijkstra.cc ../cdijkstra.hpp ../graph.hpp ../routing.hpp \
  ../graph.hpp ../utils.hpp ../utils_netgen.hpp ../mypoint.hpp \
  ../sdi_args.hpp ../cdijkstra.hpp ../connection.hpp ../utils.hpp \
  ../teventqueue.hpp
+edge_disjoint_ksp.o: edge_disjoint_ksp.cc ../edge_disjoint_ksp.hpp
 graph.o: graph.cc ../graph.hpp
-ksp.o: ksp.cc ../graph.hpp ../edge_disjoint_ksp.hpp
 routing.o: routing.cc ../cdijkstra.hpp ../graph.hpp ../routing.hpp \
  ../graph.hpp ../utils.hpp ../utils_netgen.hpp ../mypoint.hpp \
  ../sdi_args.hpp ../cdijkstra.hpp ../connection.hpp ../utils.hpp \
