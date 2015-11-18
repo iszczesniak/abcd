@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_CASE(parallel_edge_test)
   BOOST_CHECK(e1 != e2);
   BOOST_CHECK(!(e1 == e2));
 
-  // Make sure that parallel edges are differently identifies by a
+  // Make sure that parallel edges are differently identified by a
   // map.
   std::map<edge, int> e2i;
   e2i[e1] = 1;
