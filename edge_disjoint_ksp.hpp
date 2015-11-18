@@ -7,8 +7,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 //=======================================================================
 
-#ifndef BOOST_GRAPH_ED_KSP
-#define BOOST_GRAPH_ED_KSP
+#ifndef BOOST_GRAPH_EDGE_DISJOINT_KSP
+#define BOOST_GRAPH_EDGE_DISJOINT_KSP
 
 #include <list>
 #include <map>
@@ -121,4 +121,4 @@ namespace boost {
 
 } // boost
 
-#endif /* BOOST_GRAPH_ED_KSP */
+#endif /* BOOST_GRAPH_EDGE_DISJOINT_KSP */
