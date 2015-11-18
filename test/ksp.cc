@@ -32,7 +32,7 @@ aue(graph &g, vertex s, vertex d, int w)
 }
 
 bool
-irek(const std::multimap<int, path> &r, int w, const path &p)
+check_path(const std::multimap<int, path> &r, int w, const path &p)
 {
   std::multimap<int, path>::const_iterator i = r.find(w);
   return i != r.end() && i->second == p;
@@ -79,19 +79,19 @@ BOOST_AUTO_TEST_CASE(ksp_1)
   std::multimap<int, path> r;
   r = boost::edge_disjoint_ksp(g, c, d);
   BOOST_CHECK(r.size() == 2);
-  BOOST_CHECK(irek(r, 5, path{cd1}));
-  BOOST_CHECK(irek(r, 7, path{cd2}));
+  BOOST_CHECK(check_path(r, 5, path{cd1}));
+  BOOST_CHECK(check_path(r, 7, path{cd2}));
 
   r = boost::edge_disjoint_ksp(g, b, d);
   BOOST_CHECK(r.size() == 2);
-  BOOST_CHECK(irek(r, 9, path{be, ec, cd1}));
-  BOOST_CHECK(irek(r, 17, path{ba, ac, cd2}));
+  BOOST_CHECK(check_path(r, 9, path{be, ec, cd1}));
+  BOOST_CHECK(check_path(r, 17, path{ba, ac, cd2}));
 
   r = boost::edge_disjoint_ksp(g, a, e);
   BOOST_CHECK(r.size() == 3);
-  BOOST_CHECK(irek(r, 2, path{ae}));
-  BOOST_CHECK(irek(r, 5, path{ab, be}));
-  BOOST_CHECK(irek(r, 9, path{ac, ce}));
+  BOOST_CHECK(check_path(r, 2, path{ae}));
+  BOOST_CHECK(check_path(r, 5, path{ab, be}));
+  BOOST_CHECK(check_path(r, 9, path{ac, ce}));
 }
 
 BOOST_AUTO_TEST_CASE(filtered_graph_test)
