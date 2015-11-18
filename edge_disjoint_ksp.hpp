@@ -8,8 +8,10 @@
 
 #include <boost/graph/dijkstra_shortest_paths.hpp>
 #include <boost/graph/filtered_graph.hpp>
-#include <boost/property_map/property_map.hpp>
-
+#include <boost/graph/visitors.hpp>
+#include <boost/property_map/vector_property_map.hpp>
+#include <boost/utility/value_init.hpp>
+ 
 namespace boost {
 
   // Exclude edge filter
@@ -20,8 +22,8 @@ namespace boost {
     typedef typename std::set<edge_descriptor> edge_set;
 
     // The filter must be default-constructible, so it is.
-    edksp_filter() {};
-
+    edksp_filter(): m_excluded() {};
+    
     edksp_filter(const edge_set *excluded): m_excluded(excluded) {};
 
     inline bool operator()(const edge_descriptor &e) const
@@ -60,48 +62,39 @@ namespace boost {
     // In each iteration, we try to find a shortest path.
     do
       {
-        std::vector<weight_type> dist(num_vertices(g));
-        std::vector<vertex_descriptor> pred(num_vertices(g));
+        boost::vector_property_map<edge_descriptor> pred(num_vertices(g));
 
         boost::dijkstra_shortest_paths
-          (fg, s, boost::predecessor_map(&pred[0]).distance_map(&dist[0]));
+          (fg, s,
+           visitor(make_dijkstra_visitor(record_edge_predecessors(pred, on_edge_relaxed()))));
 
         // Break the loop if no solution was found.
-        if (pred[t] == t)
+        if (pred[t] == edge_descriptor())
           break;
 
         // The cost of the shortest path.
-        weight_type cost = dist[t];
+        value_initialized<weight_type> cost;
         // The path found.
         path_type path;
 
         // Trace the solution to the source.
-        for (vertex_descriptor c = t; pred[c] != c; c = pred[c])
+        vertex_descriptor c = t;
+        while (c != s)
           {
-            vertex_descriptor p = pred[c];
-            weight_type ec = dist[c] - dist[p];
-
-            // We're looking for an edge of weight ec.
-            typename boost::graph_traits<Graph>::out_edge_iterator ei, eei;
-            for(boost::tie(ei, eei) = boost::out_edges(p, g); ei != eei; ++ei)
-            {
-              // The edge that we examine in this iteration.
-              const edge_descriptor &e = *ei;
-
-              // The weight of the edge.
-              if (ec == boost::get(boost::edge_weight, g, e))
-                {
-                  path.push_front(e);
-                  excluded.insert(e);
-                  break;
-                }
-            }
-
-            // Make sure we found an edge of weight ec.
-            assert(ei != eei);
+            const edge_descriptor &e = pred[c];
+            // Build the path.
+            path.push_front(e);
+            // Exclude the edge, so that it's not used in the next
+            // shortest paths.
+            excluded.insert(e);
+            // Calculate the cost of the path.
+            cost += get(wm, e);
+            // Find the predecessing vertex.
+            c = source(e, g);
           }
-
+        
         result.insert(make_pair(cost, path));
+
       } while(true);
       
     return result;
