@@ -146,41 +146,6 @@ routing::tear_down(graph &g, const sscpath &p)
 }
 
 SSC
-routing::select_ssc(const SSC &ssc, int nsc)
-{
-}
-
-SSC
-routing::select_ssc(const SSSC &sssc, int nsc)
-{
-  // This is the selected set.
-  SSC ssc;
-
-  switch (m_st)
-    {
-    case st_t::first:
-      ssc = select_first(sssc, nsc);
-      break;
-
-    case st_t::fittest:
-      ssc = select_fittest(sssc, nsc);
-      break;
-
-    default:
-      assert(false);
-    }
-
-  // Now in ssc we have got a fragment that has at least nsc
-  // subcarriers, but most likely it has more.  We need to select
-  // exactly nsc subcarriers.
-  SSC::const_iterator fin = ssc.begin();
-  advance(fin, nsc);
-  ssc.erase(fin, ssc.end());
-
-  return ssc;
-}
-
-SSC
 routing::select_first(const SSSC &sssc, int nsc)
 {
   SSC ssc;
