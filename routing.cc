@@ -146,6 +146,11 @@ routing::tear_down(graph &g, const sscpath &p)
 }
 
 SSC
+routing::select_ssc(const SSC &ssc, int nsc)
+{
+}
+
+SSC
 routing::select_ssc(const SSSC &sssc, int nsc)
 {
   // This is the selected set.
@@ -197,23 +202,18 @@ routing::select_first(const SSSC &sssc, int nsc)
 SSC
 routing::select_first(const SSC &ssc, int nsc)
 {
-  SSC result;
-
   SSSC sssc = split(ssc);
 
   for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
     {
       const SSC &tmp = *i;
 
-      // We only care about those fragments that can handle nsc.
+      // We take the first SSC that can handle nsc.
       if (tmp.size() >= nsc)
-        {
-          result = tmp;
-          break;
-        }
+        return tmp;
     }
 
-  return result;
+  return SSC();
 }
 
 SSC
@@ -249,13 +249,18 @@ routing::select_fittest(const SSC &ssc, int nsc)
       // We only care about those fragments that can handle nsc.
       if (tmp.size() >= nsc)
         {
+          // That that, because it's the first we have.
           if (result == NULL)
             result = &tmp;
           else
+            // Take tmp, only if it's tighter than the previous find.
             if (tmp.size() < result->size())
               result = &tmp;
         }
     }
 
-  return *result;
+  if (!result)
+    return SSC();
+  else
+    return *result;
 }
