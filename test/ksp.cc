@@ -1,20 +1,30 @@
-#define BOOST_TEST_MODULE ksp
+#define BOOST_TEST_MODULE edge_disjoint_ksp
 
-#include "graph.hpp"
 #include "edge_disjoint_ksp.hpp"
 
+#include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/filtered_graph.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include <map>
 
+typedef
+boost::adjacency_list<boost::vecS, boost::vecS, boost::bidirectionalS,
+                      boost::no_property,
+                      boost::property<boost::edge_weight_t, int> >
+Graph;
+
+typedef Graph::edge_descriptor Edge;
+typedef Graph::vertex_descriptor Vertex;
+typedef std::list<Edge> path;
+
 using namespace std;
 
 // Add an edge, test it, and set weight.
-edge
-ade(graph &g, vertex s, vertex d, int w)
+Edge
+ade(Graph &g, Vertex s, Vertex d, int w)
 {
-  edge e;
+  Edge e;
   bool success;
 
   boost::tie(e, success) = add_edge(s, d, g);
@@ -25,8 +35,8 @@ ade(graph &g, vertex s, vertex d, int w)
   return e;
 }
 
-pair<edge, edge>
-aue(graph &g, vertex s, vertex d, int w)
+pair<Edge, Edge>
+aue(Graph &g, Vertex s, Vertex d, int w)
 {
   return make_pair(ade(g, s, d, w), ade(g, d, s, w));  
 }
@@ -48,25 +58,25 @@ check_path(const std::multimap<int, path> &r, int w, const path &p)
 //      \|/
 //       e
 
-BOOST_AUTO_TEST_CASE(ksp_1)
+BOOST_AUTO_TEST_CASE(edge_disjoint_ksp_test)
 {
-  graph g(5);
+  Graph g(5);
 
   // Vertexes
-  vertex a = *(vertices(g).first + 0);
-  vertex b = *(vertices(g).first + 1);
-  vertex c = *(vertices(g).first + 2);
-  vertex d = *(vertices(g).first + 3);
-  vertex e = *(vertices(g).first + 4);
+  Vertex a = *(vertices(g).first + 0);
+  Vertex b = *(vertices(g).first + 1);
+  Vertex c = *(vertices(g).first + 2);
+  Vertex d = *(vertices(g).first + 3);
+  Vertex e = *(vertices(g).first + 4);
 
   // Edges
-  edge ab, ba;
-  edge ae, ea;
-  edge ac, ca;
-  edge be, eb;
-  edge cd1, dc1;
-  edge cd2, dc2;
-  edge ce, ec;
+  Edge ab, ba;
+  Edge ae, ea;
+  Edge ac, ca;
+  Edge be, eb;
+  Edge cd1, dc1;
+  Edge cd2, dc2;
+  Edge ce, ec;
 
   tie(ab, ba) = aue(g, a, b, 4);
   tie(ae, ea) = aue(g, a, e, 2);
@@ -94,19 +104,19 @@ BOOST_AUTO_TEST_CASE(ksp_1)
   BOOST_CHECK(check_path(r, 9, path{ac, ce}));
 }
 
-BOOST_AUTO_TEST_CASE(filtered_graph_test)
+BOOST_AUTO_TEST_CASE(edksp_filter_test)
 {
-  graph g(3);
-  vertex a = *(vertices(g).first);
-  vertex b = *(vertices(g).first + 1);
-  vertex c = *(vertices(g).first + 2);
+  Graph g(3);
+  Vertex a = *(vertices(g).first);
+  Vertex b = *(vertices(g).first + 1);
+  Vertex c = *(vertices(g).first + 2);
 
-  set<edge> x;
-  boost::edksp_filter<graph> f(&x);
-  typedef boost::filtered_graph<graph, boost::edksp_filter<graph> > fg_t;
+  set<Edge> x;
+  boost::edksp_filter<Graph> f(&x);
+  typedef boost::filtered_graph<Graph, boost::edksp_filter<Graph> > fg_t;
   fg_t fg(g, f);
   
-  edge e1, e2, e3;
+  Edge e1, e2, e3;
   bool s;
   tie(e1, s) = add_edge(a, b, g);
   tie(e2, s) = add_edge(a, b, g);
