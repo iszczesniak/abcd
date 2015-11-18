@@ -26,7 +26,7 @@ cdijkstra: cdijkstra.o $(OBJS)
 graph: graph.o $(OBJS)
 	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
-ksp: ksp.o $(OBJS)
+edge_disjoint_ksp: ksp.o $(OBJS)
 	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 routing: routing.o $(OBJS)
