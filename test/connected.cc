@@ -13,7 +13,8 @@ using namespace std;
 
 main(int argc, const char* argv[])
 {
-  sdi_args args = ;
+  sdi_args args;
+  args.nt = "random";
 
   for (int n = 2; n <= 100; ++n)
     for (int e = 1; e <= 100; ++e)
