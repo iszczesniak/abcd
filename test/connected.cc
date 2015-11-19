@@ -17,8 +17,8 @@ main(int argc, const char* argv[])
   args.nt = "random";
 
   for (int n = 2; n <= 100; ++n)
-    for (int e = 1; e <= 100; ++e)
-      for (int i = 0; i < 1000; ++i)
+    for (int e = 2; e <= 100; ++e)
+      for (int i = 1; i <= 1000; ++i)
         {
           cout << "n = " << n
                << ", e = " << e
@@ -29,7 +29,7 @@ main(int argc, const char* argv[])
           
           // Random number generator.
           boost::mt19937 rng(i);
-          
+
           // Generate the graph.
           graph g = generate_graph(args, rng);
           
