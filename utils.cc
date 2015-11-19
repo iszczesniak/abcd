@@ -5,7 +5,7 @@
 #include <list>
 #include <set>
 
-#include <boost/graph/connected_components.hpp>
+#include <boost/graph/strong_components.hpp>
 
 using namespace std;
 
@@ -177,7 +177,7 @@ get_components(const graph &g)
   // the component number that vertex v belongs to.
   std::vector<int> c(num_vertices(g));
   // "num" is the number of connected components.
-  int num = connected_components(g, &c[0]);
+  int num = strong_components(g, &c[0]);
 
   // Each element of the list is a set that contains vertexes
   // belonging to a component.
