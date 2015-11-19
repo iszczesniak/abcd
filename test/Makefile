@@ -1,7 +1,9 @@
 TESTS = cdijkstra graph edge_disjoint_ksp routing sdi_args utils 
 
+OTHER = connected
+
 OBJS = ../cdijkstra.o ../edksp.o ../routing.o ../sdi_args.o	\
-../utils.o
+../utils.o ../utils_netgen.o
 
 #CXXFLAGS = -g -Wno-deprecated -std=c++11
 CXXFLAGS = -O3 -Wno-deprecated -std=c++11
@@ -18,7 +20,10 @@ LDFLAGS := $(LDFLAGS) -l boost_program_options
 
 .PHONY: clean depend run
 
-all: $(TESTS)
+all: $(TESTS) $(OTHER)
+
+connected: connected.o $(OBJS)
+	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 cdijkstra: cdijkstra.o $(OBJS)
 	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
