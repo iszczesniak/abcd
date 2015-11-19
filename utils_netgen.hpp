@@ -110,7 +110,7 @@ add_random_edge(graph &g, std::set<vertex> &lonely,
                 std::set<vertex> &saturated,
                 T &gen)
 {
-  // The condition for the first edge.
+  // The condition for the first edge ever created in the graph.
   if (lonely.size() >= 2 && connected.empty() && saturated.empty())
     {
       // Select two lone vertexes, which will be the end nodes of the
