@@ -240,9 +240,6 @@ generate_graph(const sdi_args &args, T &gen)
       abort();
     }
   
-  // Make sure there is only one component.
-  assert(check_components(g));
-
   // Name the vertexes.
   name_vertices(g);
 
