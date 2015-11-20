@@ -44,7 +44,7 @@ net_stats(const sdi_args &args)
       // Generate the graph.
       graph g = generate_graph(args, rng);
 
-      assert(check_components(g));
+      assert(is_connected(g));
 
       // Calculate the mean value of the edge lengths.
       auto es = boost::edges(g);
@@ -126,7 +126,7 @@ simulate(const sdi_args &args)
   graph g = generate_graph(args, rng);
 
   // Make sure there is only one component.
-  assert(check_components(g));
+  assert(is_connected(g));
 
   // This simulation object.
   simulation sim(g, rng);

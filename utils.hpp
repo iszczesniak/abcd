@@ -7,6 +7,7 @@
 #include <boost/random/variate_generator.hpp>
 
 #include <boost/graph/dijkstra_shortest_paths.hpp>
+#include <boost/graph/connected_components.hpp>
 
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics/stats.hpp>
@@ -328,27 +329,20 @@ std::list<std::set<vertex> >
 get_components(const graph &g);
 
 /**
- * There must be only one connected component.  There could be other
- * components, but they can't be connected (i.e. they are lone
- * vertexes).
+ * True if the graph is connected.
  *
- * @return: true if only one component is connected, false otherwise.
+ * @return: true if the graph is connected, false otherwise.
  */
 template<typename G>
 bool
-check_components(const G &g)
+is_connected(const G &g)
 {
-  typedef typename boost::graph_traits<G>::vertex_descriptor vertex;
-  typedef typename std::list<std::set<vertex> > lsv;
+  std::vector<int> c(boost::num_vertices(g));
 
-  lsv l = get_components(g);
+  // "num" is the number of connected components.
+  int num = boost::connected_components(g, &c[0]);
 
-  int connected = 0;
-  // Count the number of connected components.
-  for (typename lsv::iterator i = l.begin(); i != l.end(); ++i)
-    connected += (i->size() >= 2);
-
-  return connected == 1;
+  return num == 1;
 }
 
 /**

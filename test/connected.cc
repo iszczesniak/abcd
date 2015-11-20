@@ -33,7 +33,7 @@ main(int argc, const char* argv[])
           // Generate the graph.
           graph g = generate_graph(args, rng);
           
-          if (check_components(g))
+          if (is_connected(g))
             {
               auto ns = boost::vertices(g);
 
