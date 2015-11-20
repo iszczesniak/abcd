@@ -15,9 +15,10 @@ main(int argc, const char* argv[])
 {
   sdi_args args;
   args.nt = "random";
-
+  args.nr_sc = 0;
+  
   for (int n = 2; n <= 100; ++n)
-    for (int e = 2; e <= 100; ++e)
+    for (int e = 2; e <= (n * (n - 1) / 2); ++e)
       for (int i = 1; i <= 1000; ++i)
         {
           cout << "n = " << n
