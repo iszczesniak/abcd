@@ -47,7 +47,7 @@ count:
 clean:
 	rm -rf *~
 	rm -rf *.o
-	rm -rf $(TESTS)
+	rm -rf $(TESTS) $(OTHER)
 
 depend:
 	g++ -MM -I../ *.cc > dependencies
