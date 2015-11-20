@@ -321,14 +321,6 @@ std::ostream &operator << (std::ostream &os, const std::list<T> &v)
 }
 
 /**
- * Make sure that the graph has only one connected component, and that
- * perhaps there are some lonely vertexes.  Sort the list in the
- * decreasing order of the number of elements in the sets.
- */
-std::list<std::set<vertex> >
-get_components(const graph &g);
-
-/**
  * True if the graph is connected.
  *
  * @return: true if the graph is connected, false otherwise.
