@@ -337,10 +337,10 @@ template<typename G>
 bool
 is_connected(const G &g)
 {
-  std::vector<int> c(boost::num_vertices(g));
+  int c[boost::num_vertices(g)];
 
   // "num" is the number of connected components.
-  int num = boost::connected_components(g, &c[0]);
+  int num = boost::connected_components(g, c);
 
   return num == 1;
 }
