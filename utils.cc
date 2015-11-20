@@ -5,7 +5,7 @@
 #include <list>
 #include <set>
 
-#include <boost/graph/connected_components.hpp>
+#include <boost/graph/strong_components.hpp>
 
 using namespace std;
 
@@ -146,6 +146,24 @@ include(SSC &ssc, const SSC &e)
     ssc.insert(*i);
 }
 
+SSC
+find_path_ssc(const graph &g, const path &p)
+{
+  SSC ssc;
+  
+  path::const_iterator i = p.begin();
+
+  if (i != p.end())
+    {
+      ssc = boost::get(boost::edge_ssc, g, *i);
+
+      while(++i != p.end())
+        ssc = intersection(ssc, boost::get(boost::edge_ssc, g, *i));
+    }
+
+  return ssc;
+}
+
 // The function for sorting the list of sets.
 static bool stlos(const set<vertex> &s1, const set<vertex> &s2)
 {
@@ -159,7 +177,7 @@ get_components(const graph &g)
   // the component number that vertex v belongs to.
   std::vector<int> c(num_vertices(g));
   // "num" is the number of connected components.
-  int num = connected_components(g, &c[0]);
+  int num = boost::strong_components(g, &c[0]);
 
   // Each element of the list is a set that contains vertexes
   // belonging to a component.

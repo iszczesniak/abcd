@@ -125,6 +125,9 @@ simulate(const sdi_args &args)
   // Generate the graph.
   graph g = generate_graph(args, rng);
 
+  // Make sure there is only one component.
+  assert(check_components(g));
+
   // This simulation object.
   simulation sim(g, rng);
   

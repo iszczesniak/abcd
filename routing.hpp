@@ -70,15 +70,47 @@ protected:
    */
   bool
   set_up_path(graph &g, const sscpath &p);
-  
+
   /**
-   * From the given SSSC, select the SSC according to the "select"
-   * field of the class.  The returned SSC has exactly nsc
-   * subcarriers, even though the chosen contiguous fragment from SSSC
-   * had more subcarriers.
+   * Make the template depend on the SCDT (subcarrier data type).  We
+   * make the function templated, because we use it for both SSC and
+   * SSSC.
+   *
+   * From the given SCDT, select the SSC according to the selection
+   * policy of the class.  The returned SSC has exactly nsc
+   * subcarriers, even though the chosen contiguous fragment from SSC
+   * could have had more subcarriers.
    */
+  template <typename SCDT>
   static SSC
-  select_ssc(const SSSC &sssc, int nsc);
+  select_ssc(const SCDT &scdt, int nsc)
+  {
+    // This is the selected set.
+    SSC ssc;
+
+    switch (m_st)
+      {
+      case st_t::first:
+        ssc = select_first(scdt, nsc);
+        break;
+
+      case st_t::fittest:
+        ssc = select_fittest(scdt, nsc);
+        break;
+
+      default:
+        assert(false);
+      }
+
+    // Now in ssc we have got a fragment that has at least nsc
+    // subcarriers, but most likely it has more.  We need to trim the
+    // result, so that it has exactly nsc subcarriers.
+    SSC::const_iterator fin = ssc.begin();
+    advance(fin, nsc);
+    ssc.erase(fin, ssc.end());
+
+    return ssc;
+  }
 
   // Select a contiguous ssc with the lowest subcarrier numbers from
   // SSSC.  It returns the whole available fragment, i.e. it can have

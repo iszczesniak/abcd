@@ -11,8 +11,8 @@
 #include <boost/graph/adjacency_list.hpp>
 
 // The set of subcarriers.  It's used to describe available
-// subcarriers.  are all avaiable along a single path.  Look at SSSC
-// below.
+// subcarriers, which are all avaiable along a single path.  Look at
+// SSSC below.
 typedef std::set<int> SSC;
 
 // The set of SSC.  It's used to describe the subcarriers that are
