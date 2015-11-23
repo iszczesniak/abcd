@@ -6,7 +6,7 @@
 #include <boost/graph/filtered_graph.hpp>
 #include <boost/test/unit_test.hpp>
 
-#include <map>
+#include <list>
 
 typedef
 boost::adjacency_list<boost::vecS, boost::vecS, boost::bidirectionalS,
@@ -16,7 +16,7 @@ Graph;
 
 typedef Graph::edge_descriptor Edge;
 typedef Graph::vertex_descriptor Vertex;
-typedef std::list<Edge> path;
+typedef std::list<Edge> Path;
 
 using namespace std;
 
@@ -42,10 +42,13 @@ aue(Graph &g, Vertex s, Vertex d, int w)
 }
 
 bool
-check_path(const std::multimap<int, path> &r, int w, const path &p)
+check_path(const std::list<std::pair<int, Path>> &r, int w, const Path &p)
 {
-  std::multimap<int, path>::const_iterator i = r.find(w);
-  return i != r.end() && i->second == p;
+  for(auto const &ele: r)
+    if (ele.first == w && ele.second == p)
+      return true;
+
+  return false;
 }
 
 //       a
@@ -86,22 +89,22 @@ BOOST_AUTO_TEST_CASE(edge_disjoint_ksp_test)
   tie(cd2, dc2) = aue(g, c, d, 7);
   tie(ce, ec) = aue(g, c, e, 3);
 
-  std::multimap<int, path> r;
+  std::list<std::pair<int, Path>> r;
   r = boost::edge_disjoint_ksp(g, c, d);
   BOOST_CHECK(r.size() == 2);
-  BOOST_CHECK(check_path(r, 5, path{cd1}));
-  BOOST_CHECK(check_path(r, 7, path{cd2}));
+  BOOST_CHECK(check_path(r, 5, Path{cd1}));
+  BOOST_CHECK(check_path(r, 7, Path{cd2}));
 
   r = boost::edge_disjoint_ksp(g, b, d);
   BOOST_CHECK(r.size() == 2);
-  BOOST_CHECK(check_path(r, 9, path{be, ec, cd1}));
-  BOOST_CHECK(check_path(r, 17, path{ba, ac, cd2}));
+  BOOST_CHECK(check_path(r, 9, Path{be, ec, cd1}));
+  BOOST_CHECK(check_path(r, 17, Path{ba, ac, cd2}));
 
   r = boost::edge_disjoint_ksp(g, a, e);
   BOOST_CHECK(r.size() == 3);
-  BOOST_CHECK(check_path(r, 2, path{ae}));
-  BOOST_CHECK(check_path(r, 5, path{ab, be}));
-  BOOST_CHECK(check_path(r, 9, path{ac, ce}));
+  BOOST_CHECK(check_path(r, 2, Path{ae}));
+  BOOST_CHECK(check_path(r, 5, Path{ab, be}));
+  BOOST_CHECK(check_path(r, 9, Path{ac, ce}));
 }
 
 BOOST_AUTO_TEST_CASE(edksp_filter_test)

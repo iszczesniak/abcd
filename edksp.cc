@@ -14,7 +14,7 @@ edksp::route_w(graph &g, const demand &d)
   vertex s = d.first.first;
   vertex t = d.first.second;
 
-  std::multimap<int, path> paths;
+  std::list<std::pair<int, path>> paths;
   paths = boost::edge_disjoint_ksp(g, s, t);
 
   for (auto const &p: paths)
