@@ -11,9 +11,7 @@
 #define BOOST_GRAPH_EDGE_DISJOINT_KSP
 
 #include <list>
-#include <map>
 #include <set>
-#include <vector>
 
 #include <boost/graph/dijkstra_shortest_paths.hpp>
 #include <boost/graph/filtered_graph.hpp>
@@ -44,8 +42,8 @@ namespace boost {
   };
 
   template <typename Graph, typename Weight>
-  std::multimap<typename Weight::value_type,
-                std::list<typename Graph::edge_descriptor>>
+  std::list<std::pair<typename Weight::value_type,
+                      std::list<typename Graph::edge_descriptor>>>
   edge_disjoint_ksp(const Graph& g,
          typename graph_traits<Graph>::vertex_descriptor s,
          typename graph_traits<Graph>::vertex_descriptor t,
@@ -57,7 +55,7 @@ namespace boost {
     typedef typename Weight::value_type weight_type;
 
     // The result.
-    std::multimap<weight_type, path_type> result;
+    std::list<std::pair<weight_type, path_type>> result;
 
     // The set of excluded edges.
     std::set<edge_descriptor> excluded;
@@ -101,8 +99,8 @@ namespace boost {
             // Find the predecessing vertex.
             c = source(e, g);
           }
-        
-        result.insert(make_pair(cost, path));
+
+        result.push_back(std::make_pair(cost, path));
 
       } while(true);
       
@@ -110,11 +108,11 @@ namespace boost {
   }
 
   template <typename Graph>
-  std::multimap<typename property_map<Graph, edge_weight_t>::value_type,
-                std::list<typename Graph::edge_descriptor>>
+  std::list<std::pair<typename property_map<Graph, edge_weight_t>::value_type,
+                      std::list<typename Graph::edge_descriptor>>>
   edge_disjoint_ksp(Graph& g,
-         typename graph_traits<Graph>::vertex_descriptor s,
-         typename graph_traits<Graph>::vertex_descriptor t)
+                    typename graph_traits<Graph>::vertex_descriptor s,
+                    typename graph_traits<Graph>::vertex_descriptor t)
   {
     return edge_disjoint_ksp(g, s, t, get(edge_weight_t(), g));
   }

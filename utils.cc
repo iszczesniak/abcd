@@ -170,34 +170,6 @@ static bool stlos(const set<vertex> &s1, const set<vertex> &s2)
   return s1.size() > s2.size();
 }
 
-list<set<vertex> >
-get_components(const graph &g)
-{
-  // An element of this vector corresponds to a vertex, i.e. c[v] is
-  // the component number that vertex v belongs to.
-  std::vector<int> c(num_vertices(g));
-  // "num" is the number of connected components.
-  int num = boost::connected_components(g, &c[0]);
-
-  // Each element of the list is a set that contains vertexes
-  // belonging to a component.
-  list<set<vertex> > l(num);
-  // In every iteration add one vertex to the appropriate set.
-  for (std::vector<int>::iterator i = c.begin(); i != c.end(); ++i)
-    {
-      list<set<vertex> >::iterator li = l.begin();
-      advance(li, *i);
-
-      // Iterator i refers to the element for vertex v.
-      vertex v = distance(c.begin(), i);
-      li->insert(v);
-    }
-
-  l.sort(stlos);
-
-  return l;
-}
-
 SSSC
 split(const SSC &ssc)
 {

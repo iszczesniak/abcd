@@ -55,3 +55,20 @@ BOOST_AUTO_TEST_CASE(connected_components_test)
   num = boost::connected_components(g, &c[0]);
   BOOST_CHECK(num == 1);
 }
+
+BOOST_AUTO_TEST_CASE(connected_components_test2)
+{
+  graph g(4);
+  vertex a = *(vertices(g).first);
+  vertex b = *(vertices(g).first + 1);
+  vertex c = *(vertices(g).first + 2);
+  vertex d = *(vertices(g).first + 3);
+      
+  add_edge(b, d, g);
+  add_edge(c, d, g);
+
+  std::vector<int> comp(num_vertices(g));
+  // "num" is the number of connected components.
+  int num = boost::connected_components(g, &comp[0]);
+  BOOST_CHECK(num == 2);
+}
