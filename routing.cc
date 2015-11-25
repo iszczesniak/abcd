@@ -214,7 +214,7 @@ routing::select_fittest(const SSC &ssc, int nsc)
       // We only care about those fragments that can handle nsc.
       if (tmp.size() >= nsc)
         {
-          // That that, because it's the first we have.
+          // Take that, because it's the first we got.
           if (result == NULL)
             result = &tmp;
           else
