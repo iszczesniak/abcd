@@ -26,11 +26,14 @@ edksp::route_w(graph &g, const demand &d)
         SSC ssc = find_path_ssc(g, p.second);
         // Select the right SSC.
         ssc = select_ssc(ssc, d.second);
-        // Candidate sscpath.
-        sscpath cp(p.second, ssc);
-        if (set_up_path(g, cp))
-          // The routing was successful, so return here.
-          return cp;
+        if (!ssc.empty())
+          {
+            // Candidate sscpath.
+            sscpath cp(p.second, ssc);
+            if (set_up_path(g, cp))
+              // The routing was successful, so return here.
+              return cp;
+          }
       }
 
   // Return here in the case of failure.
