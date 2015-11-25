@@ -102,12 +102,17 @@ protected:
         assert(false);
       }
 
-    // Now in ssc we have got a fragment that has at least nsc
-    // subcarriers, but most likely it has more.  We need to trim the
-    // result, so that it has exactly nsc subcarriers.
-    SSC::const_iterator fin = ssc.begin();
-    advance(fin, nsc);
-    ssc.erase(fin, ssc.end());
+    if (ssc.size() > nsc)
+      {
+        // Now in ssc we have got a fragment that has more than nsc
+        // subcarriers, and so we need to trim the result to have
+        // exactly nsc subcarriers.
+        SSC::const_iterator fin = ssc.begin();
+        advance(fin, nsc);
+        ssc.erase(fin, ssc.end());
+      }
+
+    assert(ssc.size() == nsc);
 
     return ssc;
   }
