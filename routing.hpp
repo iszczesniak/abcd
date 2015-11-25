@@ -112,7 +112,7 @@ protected:
         ssc.erase(fin, ssc.end());
       }
 
-    assert(ssc.size() == nsc);
+    assert(ssc.size() == nsc || ssc.empty());
 
     return ssc;
   }
