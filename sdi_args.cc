@@ -140,7 +140,10 @@ process_sdi_args(int argc, const char *argv[])
       // The network options.
       result.nt = vm[NT_S].as<string>();
       result.nr_nodes = vm[NODES_S].as<int>();
-      result.nr_edges = vm[EDGES_S].as<int>();
+
+      if (vm.count(EDGES_S))
+        result.nr_edges = vm[EDGES_S].as<int>();
+      
       result.nr_sc = vm["subcarriers"].as<int>();
 
       if (vm.count("ml"))

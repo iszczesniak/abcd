@@ -174,7 +174,7 @@ graph
 generate_random_graph(const sdi_args &args, T &gen)
 {
   assert(args.nr_nodes >= 2);
-  assert(args.nr_edges >= 0);
+  assert(args.nr_edges.get() >= 0);
 
   // Create a graph with the following number of nodes.
   graph g = graph(args.nr_nodes);
@@ -189,7 +189,7 @@ generate_random_graph(const sdi_args &args, T &gen)
   std::set<vertex> saturated;
 
   // In every iteration we add a new random edge.
-  for (int created = 0; created < args.nr_edges; ++created)
+  for (int created = 0; created < args.nr_edges.get(); ++created)
     if (!add_random_edge(g, lonely, connected, saturated, gen))
       {
         assert(lonely.empty());
@@ -200,7 +200,7 @@ generate_random_graph(const sdi_args &args, T &gen)
       }
 
   // Make sure we created the requested number of edges.
-  assert(num_edges (g) == args.nr_edges);
+  assert(num_edges (g) == args.nr_edges.get());
 
   // The distance for each edge.
   set_distances(g, 5, 30, gen);
