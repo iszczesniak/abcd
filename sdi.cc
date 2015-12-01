@@ -116,6 +116,9 @@ simulate(const sdi_args &args)
   // Set the maximal length of a path.
   routing::set_ml(args.ml);
 
+  // Set the K for the k-shortest paths.
+  routing::set_K(args.K);
+
   // Set the spectrum selection type.
   routing::set_st(args.st);
 

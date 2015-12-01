@@ -42,6 +42,9 @@ struct sdi_args
   /// The maximal length of a path we want.
   boost::optional<int> ml;
 
+  /// The K for the k-shortest paths.
+  boost::optional<int> K;
+
   /// The spectrum selection type.
   std::string st;
 

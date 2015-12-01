@@ -13,6 +13,8 @@
 
 // Option strings.
 #define NT_S "nt"
+#define RT_S "rt"
+#define K_S "K"
 #define EDGES_S "edges"
 #define NODES_S "nodes"
 
@@ -83,10 +85,13 @@ process_sdi_args(int argc, const char *argv[])
         ("ml", po::value<int>(),
          "the maximal length of a path")
 
+        (K_S, po::value<int>(),
+         "the K for the k-shortest paths")
+
         ("st", po::value<string>()->required(),
          "the spectrum selection type")
 
-        ("rt", po::value<string>()->required(),
+        (RT_S, po::value<string>()->required(),
          "the routing algorithm");
 
       // Traffic options.
@@ -122,6 +127,7 @@ process_sdi_args(int argc, const char *argv[])
       // Dependencies.
       requires(vm, NT_S, NODES_S);
       requires(vm, NT_S, string("random"), EDGES_S);
+      requires(vm, RT_S, string("yenksp"), K_S);
 
       if (vm.count("help"))
         {

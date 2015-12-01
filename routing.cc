@@ -15,6 +15,8 @@ routing::st_t routing::m_st = routing::st_t::none;
 
 boost::optional<int> routing::m_ml;
 
+boost::optional<int> routing::m_K;
+
 unique_ptr<routing> routing::singleton;
 
 sscpath
@@ -78,6 +80,18 @@ boost::optional<int>
 routing::get_ml()
 {
   return m_ml;
+}
+
+void
+routing::set_K(boost::optional<int> K)
+{
+  m_K = K;
+}
+
+boost::optional<int>
+routing::get_K()
+{
+  return m_K;
 }
 
 void

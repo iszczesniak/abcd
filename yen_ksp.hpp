@@ -23,7 +23,7 @@
 
 #include <list>
 #include <set>
-#include <multimap>
+#include <map>
 
 #include <boost/graph/dijkstra_shortest_paths.hpp>
 #include <boost/graph/filtered_graph.hpp>
@@ -79,7 +79,7 @@ namespace boost {
   yen_ksp(const Graph& g,
           typename graph_traits<Graph>::vertex_descriptor s,
           typename graph_traits<Graph>::vertex_descriptor t,
-          Weight wm)
+          Weight wm, int K)
   {
     typedef typename graph_traits<Graph>::vertex_descriptor vertex_descriptor;
     typedef typename graph_traits<Graph>::edge_descriptor edge_descriptor;
@@ -89,7 +89,7 @@ namespace boost {
     // The results.
     std::list<std::pair<weight_type, path_type>> A;
     // The tentative results.
-    std::multimap<std::pair<weight_type, path_type>> B;
+    std::multimap<weight_type, path_type> B;
 
     // The set of excluded edges.
     std::set<edge_descriptor> exe;
@@ -97,54 +97,18 @@ namespace boost {
     std::set<vertex_descriptor> exv;
    
     // The filter which excludes edges.
-    yenksp_efilter<Graph> f(&exe);
+    yenksp_efilter<Graph> ef(&exe);
     // The filter which excludes vertexes.
-    yenksp_vfilter<Graph> f(&exv);
+    yenksp_vfilter<Graph> vf(&exv);
 
     // The filtered graph type.
-    typedef boost::filtered_graph<Graph, yenksp_filter<Graph> > fg_type;
+    typedef boost::filtered_graph<Graph,
+                                  yenksp_efilter<Graph>,
+                                  yenksp_vfilter<Graph>> fg_type;
     // The filtered graph.
-    fg_type fg(g, f);
-
-    // In each iteration, we try to find a shortest path.
-    do
-      {
-        boost::vector_property_map<edge_descriptor> pred(num_vertices(g));
-
-        boost::dijkstra_shortest_paths
-          (fg, s,
-           visitor(make_dijkstra_visitor(record_edge_predecessors(pred, on_edge_relaxed()))));
-
-        // Break the loop if no solution was found.
-        if (pred[t] == edge_descriptor())
-          break;
-
-        // The cost of the shortest path.
-        value_initialized<weight_type> cost;
-        // The path found.
-        path_type path;
-
-        // Trace the solution to the source.
-        vertex_descriptor c = t;
-        while (c != s)
-          {
-            const edge_descriptor &e = pred[c];
-            // Build the path.
-            path.push_front(e);
-            // Exclude the edge, so that it's not used in the next
-            // shortest paths.
-            excluded.insert(e);
-            // Calculate the cost of the path.
-            cost += get(wm, e);
-            // Find the predecessing vertex.
-            c = source(e, g);
-          }
-
-        result.push_back(std::make_pair(cost, path));
-
-      } while(true);
+    fg_type fg(g, ef, vf);
       
-    return result;
+    return A;
   }
 
   template <typename Graph>
@@ -152,14 +116,17 @@ namespace boost {
                       std::list<typename Graph::edge_descriptor>>>
   yen_ksp(Graph& g,
           typename graph_traits<Graph>::vertex_descriptor s,
-          typename graph_traits<Graph>::vertex_descriptor t)
+          typename graph_traits<Graph>::vertex_descriptor t,
+          int K)
   {
-    return yen_ksp(g, s, t, get(edge_weight_t(), g));
+    return yen_ksp(g, s, t, get(edge_weight_t(), g), K);
   }
 
 } // boost
 
 #endif /* BOOST_GRAPH_YEN_KSP */
+
+/*
 
 function YenKSP(Graph, source, sink, K):
    // Determine the shortest path from the source to the sink.
@@ -209,3 +176,42 @@ function YenKSP(Graph, source, sink, K):
        B.pop();
    
    return A;
+
+    // In each iteration, we try to find a shortest path.
+    do
+      {
+        boost::vector_property_map<edge_descriptor> pred(num_vertices(g));
+
+        boost::dijkstra_shortest_paths
+          (fg, s,
+           visitor(make_dijkstra_visitor(record_edge_predecessors(pred, on_edge_relaxed()))));
+
+        // Break the loop if no solution was found.
+        if (pred[t] == edge_descriptor())
+          break;
+
+        // The cost of the shortest path.
+        value_initialized<weight_type> cost;
+        // The path found.
+        path_type path;
+
+        // Trace the solution to the source.
+        vertex_descriptor c = t;
+        while (c != s)
+          {
+            const edge_descriptor &e = pred[c];
+            // Build the path.
+            path.push_front(e);
+            // Exclude the edge, so that it's not used in the next
+            // shortest paths.
+            excluded.insert(e);
+            // Calculate the cost of the path.
+            cost += get(wm, e);
+            // Find the predecessing vertex.
+            c = source(e, g);
+          }
+
+        result.push_back(std::make_pair(cost, path));
+
+      } while(true);
+*/

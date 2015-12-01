@@ -32,13 +32,22 @@ public:
   tear_down(graph &g, const sscpath &p);
 
   /**
-   * Set the maximul length of a path.
+   * The maximum length of a path.
    */
   static void
   set_ml(boost::optional<int> ml);
 
   static boost::optional<int>
   get_ml();
+
+  /**
+   * The K for the k-shortest paths.
+   */
+  static void
+  set_K(boost::optional<int> K);
+
+  static boost::optional<int>
+  get_K();
 
   /**
    * Set the spectrum selection type.
@@ -156,6 +165,9 @@ protected:
 
   /// The maximal length of a path.
   static boost::optional<int> m_ml;
+
+  /// The K for the k-shortest paths.
+  static boost::optional<int> m_K;
 
   /// The routing algorithm.
   static rt_t m_rt;
