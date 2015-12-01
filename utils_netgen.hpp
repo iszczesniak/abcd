@@ -184,7 +184,7 @@ generate_random_graph(const sdi_args &args, T &gen)
   // The set of vertexes in the connected component that have not been
   // saturated yet.
   std::set<vertex> connected;
-  // The set of saturated vertexes.  A saturated edge is connected to
+  // The set of saturated vertexes.  A saturated node is connected to
   // every other node with a single edge.
   std::set<vertex> saturated;
 
