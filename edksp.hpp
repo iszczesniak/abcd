@@ -5,7 +5,7 @@
 #include "routing.hpp"
 
 /**
- * Constrained Dijkstra.
+ * Edge-disjoint k-shortest paths.
  */
 class edksp: public routing
 {
