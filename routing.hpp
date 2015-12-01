@@ -16,7 +16,7 @@ public:
 
   // The type of routing:
   // cdijkstra - constrained dijkstra
-  enum class rt_t {none, cdijkstra, edksp};
+  enum class rt_t {none, cdijkstra, edksp, yenksp};
   
   /**
    * Route the demand, i.e., find the path, and allocate resources.
