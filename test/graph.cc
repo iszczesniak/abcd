@@ -2,7 +2,7 @@
 
 #include "graph.hpp"
 
-#include <boost/graph/strong_components.hpp>
+#include <boost/graph/connected_components.hpp>
 #include <boost/test/unit_test.hpp>
 #include <set>
 
@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE(parallel_edge_test)
   BOOST_CHECK(e2i.size() == 2);
 }
 
-BOOST_AUTO_TEST_CASE(strong_components_test)
+BOOST_AUTO_TEST_CASE(connected_components_test)
 {
   graph g(2);
   vertex a = *(vertices(g).first);
@@ -46,12 +46,29 @@ BOOST_AUTO_TEST_CASE(strong_components_test)
 
   std::vector<int> c(num_vertices(g));
   // "num" is the number of connected components.
-  int num = boost::strong_components(g, &c[0]);
-  BOOST_CHECK(num == 2);
+  int num = boost::connected_components(g, &c[0]);
+  BOOST_CHECK(num == 1);
 
   tie(e, r) = add_edge(b, a, g);
 
   // "num" is the number of connected components.
-  num = boost::strong_components(g, &c[0]);
+  num = boost::connected_components(g, &c[0]);
   BOOST_CHECK(num == 1);
+}
+
+BOOST_AUTO_TEST_CASE(connected_components_test2)
+{
+  graph g(4);
+  vertex a = *(vertices(g).first);
+  vertex b = *(vertices(g).first + 1);
+  vertex c = *(vertices(g).first + 2);
+  vertex d = *(vertices(g).first + 3);
+      
+  add_edge(b, d, g);
+  add_edge(c, d, g);
+
+  std::vector<int> comp(num_vertices(g));
+  // "num" is the number of connected components.
+  int num = boost::connected_components(g, &comp[0]);
+  BOOST_CHECK(num == 2);
 }

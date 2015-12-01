@@ -34,7 +34,7 @@ struct sdi_args
   int nr_nodes;
 
   /// The number of edges in the graph.
-  int nr_edges;
+  boost::optional<int> nr_edges;
 
   /// The number of subcarriers.
   int nr_sc;
