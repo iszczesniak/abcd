@@ -8,6 +8,13 @@
 //=======================================================================
 
 //=======================================================================
+// This is the implementation of the Yen algorithm:
+//
+// Jin Y. Yen, Finding the k shortest loopless paths in a network,
+// Management Science, vol. 17, no. 11, July 1971, pages 712-716
+//
+// But actually, I found the following explanation better:
+//
 // https://en.wikipedia.org/wiki/Yen%27s_algorithm
 //=======================================================================
 
