@@ -5,7 +5,7 @@
 #include "routing.hpp"
 
 /**
- * Edge-disjoint k-shortest paths.
+ * Routing with the edge-disjoint k-shortest paths.
  */
 class edksp: public routing
 {
