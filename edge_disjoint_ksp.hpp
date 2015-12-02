@@ -32,7 +32,10 @@
 
 namespace boost {
 
+  //========================================================================
   // Exclude edge filter
+  //========================================================================
+  
   template <typename Graph>
   struct edksp_filter
   {
@@ -52,26 +55,57 @@ namespace boost {
     const edge_set *m_excluded;
   };
 
+  //========================================================================
+  // Finish the search when a given node is examined, i.e. when the
+  // shortest path to that node is found.
+  // ========================================================================
+
+  // The type of the exception thrown by the cdc_visitor.
+  struct cdc_exception {};
+
+  template <class Graph>
+  struct cdc_visitor
+  {
+    typedef typename Graph::vertex_descriptor vertex_descriptor;
+    typedef on_examine_vertex event_filter;
+    cdc_visitor(vertex_descriptor t): m_t(t) {}
+    void operator()(vertex_descriptor v, const Graph& g) {
+      if (v == m_t)
+        throw cdc_exception();
+    }
+    vertex_descriptor m_t;
+  };
+
+  //========================================================================
+  // The custom Dijkstra call, which returns the optional path as a
+  // list along with the cost of the path.  The search is stopped when
+  // the destination node is reached.
+  //=======================================================================+
+
   template <typename Graph, typename Weight>
   optional<std::pair<typename Weight::value_type,
                      std::list<typename Graph::edge_descriptor>>>
   custom_dijkstra_call(const Graph &g,
-                       typename graph_traits<Graph>::vertex_descriptor s,
-                       typename graph_traits<Graph>::vertex_descriptor t,
+                       typename Graph::vertex_descriptor s,
+                       typename Graph::vertex_descriptor t,
                        Weight wm)
   {
-    typedef typename graph_traits<Graph>::vertex_descriptor vertex_descriptor;
-    typedef typename graph_traits<Graph>::edge_descriptor edge_descriptor;
+    typedef typename Graph::vertex_descriptor vertex_descriptor;
+    typedef typename Graph::edge_descriptor edge_descriptor;
     typedef typename std::list<typename Graph::edge_descriptor> path_type;
     typedef typename Weight::value_type weight_type;
     typedef typename std::pair<weight_type, path_type> kr_type;
     
     vector_property_map<edge_descriptor> pred(num_vertices(g));
     auto rep = record_edge_predecessors(pred, on_edge_relaxed());
-    auto qat = record_edge_predecessors(pred, on_examine_vertex());
-    auto dv = make_dijkstra_visitor(rep);
+    auto qat = cdc_visitor<Graph>(t);
+    auto dv = make_dijkstra_visitor(std::make_pair(rep, qat));
 
-    dijkstra_shortest_paths(g, s, weight_map(wm).visitor(dv));
+    try
+      {
+        dijkstra_shortest_paths(g, s, weight_map(wm).visitor(dv));
+      }
+    catch (cdc_exception) {}
 
     optional<kr_type> result;
 
@@ -101,18 +135,22 @@ namespace boost {
 
     return result;
   }
-  
+
+  //========================================================================
+  // The implementation of the k-shortest paths algorithm.
+  // ========================================================================
+
   template <typename Graph, typename Weight>
   std::list<std::pair<typename Weight::value_type,
                       std::list<typename Graph::edge_descriptor>>>
   edge_disjoint_ksp(const Graph& g,
-                    typename graph_traits<Graph>::vertex_descriptor s,
-                    typename graph_traits<Graph>::vertex_descriptor t,
+                    typename Graph::vertex_descriptor s,
+                    typename Graph::vertex_descriptor t,
                     Weight wm,
                     optional<unsigned int> K)
   {
-    typedef typename graph_traits<Graph>::vertex_descriptor vertex_descriptor;
-    typedef typename graph_traits<Graph>::edge_descriptor edge_descriptor;
+    typedef typename Graph::vertex_descriptor vertex_descriptor;
+    typedef typename Graph::edge_descriptor edge_descriptor;
     typedef typename std::list<typename Graph::edge_descriptor> path_type;
     typedef typename Weight::value_type weight_type;
     typedef typename std::pair<weight_type, path_type> kr_type;
@@ -156,12 +194,16 @@ namespace boost {
     return result;
   }
 
+  //========================================================================
+  // A helper function to figure out the default weight map of the graph.
+  // ========================================================================
+
   template <typename Graph>
   std::list<std::pair<typename property_map<Graph, edge_weight_t>::value_type,
                       std::list<typename Graph::edge_descriptor>>>
   edge_disjoint_ksp(const Graph& g,
-                    typename graph_traits<Graph>::vertex_descriptor s,
-                    typename graph_traits<Graph>::vertex_descriptor t,
+                    typename Graph::vertex_descriptor s,
+                    typename Graph::vertex_descriptor t,
                     optional<unsigned int> K = optional<unsigned int>())
   {
     return edge_disjoint_ksp(g, s, t, get(edge_weight_t(), g), K);
