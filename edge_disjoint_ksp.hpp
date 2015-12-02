@@ -11,10 +11,11 @@
 // Function edge_disjoint_ksp finds the k-shortest paths which are
 // edge-disjoint, i.e. the paths do not have common edges.  The graph
 // can have parallel edges.  The algorithm employs the Dijkstra
-// algorithm to find the shortest path, then its edges are disabled,
-// and Dijkstra finds the second shortest path, and so on until k
-// paths are found or there are no more paths.
-//=======================================================================
+// algorithm to find the shortest path.  Next the edges of the found
+// path are disabled, and Dijkstra finds the second shortest path.
+// This process is repeated until k paths are found or there are no
+// more paths to be found.
+// =======================================================================
 
 #ifndef BOOST_GRAPH_EDGE_DISJOINT_KSP
 #define BOOST_GRAPH_EDGE_DISJOINT_KSP
@@ -104,9 +105,10 @@ namespace boost {
   std::list<std::pair<typename Weight::value_type,
                       std::list<typename Graph::edge_descriptor>>>
   edge_disjoint_ksp(const Graph& g,
-         typename graph_traits<Graph>::vertex_descriptor s,
-         typename graph_traits<Graph>::vertex_descriptor t,
-         Weight wm)
+                    typename graph_traits<Graph>::vertex_descriptor s,
+                    typename graph_traits<Graph>::vertex_descriptor t,
+                    Weight wm,
+                    optional<unsigned int> K)
   {
     typedef typename graph_traits<Graph>::vertex_descriptor vertex_descriptor;
     typedef typename graph_traits<Graph>::edge_descriptor edge_descriptor;
@@ -129,6 +131,10 @@ namespace boost {
     // In each iteration, we try to find a shortest path.
     do
       {
+        // If required, stop at the K-th shortest path.
+        if (K && result.size() == K.get())
+          break;
+          
         // This is the optional k-th result.
         optional<kr_type> okr = custom_dijkstra_call(g, s, t, wm);
 
@@ -152,11 +158,12 @@ namespace boost {
   template <typename Graph>
   std::list<std::pair<typename property_map<Graph, edge_weight_t>::value_type,
                       std::list<typename Graph::edge_descriptor>>>
-  edge_disjoint_ksp(Graph& g,
+  edge_disjoint_ksp(const Graph& g,
                     typename graph_traits<Graph>::vertex_descriptor s,
-                    typename graph_traits<Graph>::vertex_descriptor t)
+                    typename graph_traits<Graph>::vertex_descriptor t,
+                    optional<unsigned int> K = optional<unsigned int>())
   {
-    return edge_disjoint_ksp(g, s, t, get(edge_weight_t(), g));
+    return edge_disjoint_ksp(g, s, t, get(edge_weight_t(), g), K);
   }
 
 } // boost
