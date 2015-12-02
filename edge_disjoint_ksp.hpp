@@ -68,8 +68,10 @@ namespace boost {
     
     vector_property_map<edge_descriptor> pred(num_vertices(g));
     auto rep = record_edge_predecessors(pred, on_edge_relaxed());
-    auto mdv = make_dijkstra_visitor(rep);
-    dijkstra_shortest_paths(g, s, weight_map(wm).visitor(mdv));
+    auto qat = record_edge_predecessors(pred, on_examine_vertex());
+    auto dv = make_dijkstra_visitor(rep);
+
+    dijkstra_shortest_paths(g, s, weight_map(wm).visitor(dv));
 
     optional<kr_type> result;
 
