@@ -62,17 +62,18 @@ namespace boost {
     // The filter for excluding edges.
     edksp_filter<Graph> f(&excluded);
     // The filtered graph type.
-    typedef boost::filtered_graph<Graph, edksp_filter<Graph> > fg_type;
+    typedef filtered_graph<Graph, edksp_filter<Graph> > fg_type;
     // The filtered graph.
     fg_type fg(g, f);
 
     // In each iteration, we try to find a shortest path.
     do
       {
-        boost::vector_property_map<edge_descriptor> pred(num_vertices(g));
+        vector_property_map<edge_descriptor> pred(num_vertices(g));
 
-        boost::dijkstra_shortest_paths
+        dijkstra_shortest_paths
           (fg, s,
+           weight_map(wm).
            visitor(make_dijkstra_visitor(record_edge_predecessors(pred, on_edge_relaxed()))));
 
         // Break the loop if no solution was found.
