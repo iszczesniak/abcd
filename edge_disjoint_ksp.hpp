@@ -136,7 +136,7 @@ namespace boost {
           break;
           
         // This is the optional k-th result.
-        optional<kr_type> okr = custom_dijkstra_call(g, s, t, wm);
+        optional<kr_type> okr = custom_dijkstra_call(fg, s, t, wm);
 
         if (!okr)
           break;
