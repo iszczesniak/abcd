@@ -67,10 +67,9 @@ namespace boost {
     typedef typename std::pair<weight_type, path_type> kr_type;
     
     vector_property_map<edge_descriptor> pred(num_vertices(g));
-  
-    dijkstra_shortest_paths
-      (g, s, weight_map(wm).
-       visitor(make_dijkstra_visitor(record_edge_predecessors(pred, on_edge_relaxed()))));
+    auto rep = record_edge_predecessors(pred, on_edge_relaxed());
+    auto mdv = make_dijkstra_visitor(rep);
+    dijkstra_shortest_paths(g, s, weight_map(wm).visitor(mdv));
 
     optional<kr_type> result;
 
