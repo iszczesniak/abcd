@@ -1,9 +1,10 @@
-TESTS = cdijkstra graph edge_disjoint_ksp routing sdi_args utils 
+TESTS = cdijkstra graph edge_disjoint_ksp routing sdi_args utils
 
 OTHER = connected
 
 OBJS = ../cdijkstra.o ../edksp.o ../mypoint.o ../routing.o	\
-../sdi_args.o ../teventqueue.o ../utils.o ../utils_netgen.o
+../sdi_args.o ../teventqueue.o ../utils.o ../utils_netgen.o	\
+../yenksp.o
 
 CXXFLAGS = -g -Wno-deprecated -std=c++11
 #CXXFLAGS = -O3 -Wno-deprecated -std=c++11
