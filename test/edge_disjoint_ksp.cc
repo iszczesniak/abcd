@@ -90,6 +90,7 @@ BOOST_AUTO_TEST_CASE(edge_disjoint_ksp_test)
   tie(ce, ec) = aue(g, c, e, 3);
 
   std::list<std::pair<int, Path>> r;
+
   r = boost::edge_disjoint_ksp(g, c, d);
   BOOST_CHECK(r.size() == 2);
   BOOST_CHECK(check_path(r, 5, Path{cd1}));
@@ -100,6 +101,18 @@ BOOST_AUTO_TEST_CASE(edge_disjoint_ksp_test)
   BOOST_CHECK(check_path(r, 9, Path{be, ec, cd1}));
   BOOST_CHECK(check_path(r, 17, Path{ba, ac, cd2}));
 
+  // Limit the search to 1 path.
+  r = boost::edge_disjoint_ksp(g, a, e, 1);
+  BOOST_CHECK(r.size() == 1);
+  BOOST_CHECK(check_path(r, 2, Path{ae}));
+
+  // Limit the search to 2 paths.
+  r = boost::edge_disjoint_ksp(g, a, e, 2);
+  BOOST_CHECK(r.size() == 2);
+  BOOST_CHECK(check_path(r, 2, Path{ae}));
+  BOOST_CHECK(check_path(r, 5, Path{ab, be}));
+
+  // Don't limit the search, and get 3 paths.
   r = boost::edge_disjoint_ksp(g, a, e);
   BOOST_CHECK(r.size() == 3);
   BOOST_CHECK(check_path(r, 2, Path{ae}));
