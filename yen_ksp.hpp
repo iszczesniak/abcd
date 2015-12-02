@@ -177,41 +177,4 @@ function YenKSP(Graph, source, sink, K):
    
    return A;
 
-    // In each iteration, we try to find a shortest path.
-    do
-      {
-        boost::vector_property_map<edge_descriptor> pred(num_vertices(g));
-
-        boost::dijkstra_shortest_paths
-          (fg, s,
-           visitor(make_dijkstra_visitor(record_edge_predecessors(pred, on_edge_relaxed()))));
-
-        // Break the loop if no solution was found.
-        if (pred[t] == edge_descriptor())
-          break;
-
-        // The cost of the shortest path.
-        value_initialized<weight_type> cost;
-        // The path found.
-        path_type path;
-
-        // Trace the solution to the source.
-        vertex_descriptor c = t;
-        while (c != s)
-          {
-            const edge_descriptor &e = pred[c];
-            // Build the path.
-            path.push_front(e);
-            // Exclude the edge, so that it's not used in the next
-            // shortest paths.
-            excluded.insert(e);
-            // Calculate the cost of the path.
-            cost += get(wm, e);
-            // Find the predecessing vertex.
-            c = source(e, g);
-          }
-
-        result.push_back(std::make_pair(cost, path));
-
-      } while(true);
 */
