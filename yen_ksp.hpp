@@ -30,48 +30,10 @@
 #include <boost/graph/visitors.hpp>
 #include <boost/property_map/vector_property_map.hpp>
 #include <boost/utility/value_init.hpp>
- 
+
+#include "exclude_filter.hpp"
+
 namespace boost {
-
-  // This filter excludes the given vertexes.
-  template <typename Graph>
-  struct yenksp_vfilter
-  {
-    typedef typename Graph::vertex_descriptor vertex_descriptor;
-    typedef typename std::set<vertex_descriptor> vertex_set;
-
-    // The filter must be default-constructible, so it is.
-    yenksp_vfilter(): m_excluded() {};
-    
-    yenksp_vfilter(const vertex_set *excluded): m_excluded(excluded) {};
-
-    inline bool operator()(const vertex_descriptor &e) const
-    {
-      return m_excluded->count(e) == 0;
-    }
-
-    const vertex_set *m_excluded;
-  };
-
-  // This filter excludes the given edges.
-  template <typename Graph>
-  struct yenksp_efilter
-  {
-    typedef typename Graph::edge_descriptor edge_descriptor;
-    typedef typename std::set<edge_descriptor> edge_set;
-
-    // The filter must be default-constructible, so it is.
-    yenksp_efilter(): m_excluded() {};
-    
-    yenksp_efilter(const edge_set *excluded): m_excluded(excluded) {};
-
-    inline bool operator()(const edge_descriptor &e) const
-    {
-      return m_excluded->count(e) == 0;
-    }
-
-    const edge_set *m_excluded;
-  };
 
   template <typename Graph, typename Weight>
   std::list<std::pair<typename Weight::value_type,
@@ -84,6 +46,8 @@ namespace boost {
     typedef typename graph_traits<Graph>::vertex_descriptor vertex_descriptor;
     typedef typename graph_traits<Graph>::edge_descriptor edge_descriptor;
     typedef typename std::list<typename Graph::edge_descriptor> path_type;
+    typedef typename exclude_filter<Graph, vertex_descriptor> evf_type;
+    typedef typename exclude_filter<Graph, edge_descriptor> eef_type;
     typedef typename Weight::value_type weight_type;
 
     // The results.
@@ -97,14 +61,13 @@ namespace boost {
     std::set<vertex_descriptor> exv;
    
     // The filter which excludes edges.
-    yenksp_efilter<Graph> ef(&exe);
+    eef_type ef(&exe);
     // The filter which excludes vertexes.
-    yenksp_vfilter<Graph> vf(&exv);
+    evf_type vf(&exv);
 
     // The filtered graph type.
-    typedef boost::filtered_graph<Graph,
-                                  yenksp_efilter<Graph>,
-                                  yenksp_vfilter<Graph>> fg_type;
+    typedef boost::filtered_graph<Graph, eef_type, evf_type> fg_type;
+
     // The filtered graph.
     fg_type fg(g, ef, vf);
       
