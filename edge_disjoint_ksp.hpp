@@ -59,7 +59,7 @@ namespace boost {
 
   //========================================================================
   // The implementation of the k-shortest paths algorithm.
-  // ========================================================================
+  //========================================================================
 
   template <typename Graph, typename Weight>
   std::list<std::pair<typename Weight::value_type,
@@ -117,7 +117,7 @@ namespace boost {
 
   //========================================================================
   // A helper function to figure out the default weight map of the graph.
-  // ========================================================================
+  //========================================================================
 
   template <typename Graph>
   std::list<std::pair<typename property_map<Graph, edge_weight_t>::value_type,
