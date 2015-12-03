@@ -5,7 +5,7 @@ client.o: client.cc client.hpp connection.hpp graph.hpp module.hpp \
  teventqueue.hpp
 connection.o: connection.cc connection.hpp graph.hpp routing.hpp
 edksp.o: edksp.cc edksp.hpp graph.hpp routing.hpp edge_disjoint_ksp.hpp \
- utils.hpp
+ custom_dijkstra_call.hpp utils.hpp
 event.o: event.cc event.hpp module.hpp simulation.hpp graph.hpp
 module.o: module.cc module.hpp simulation.hpp event.hpp graph.hpp
 routing.o: routing.cc routing.hpp graph.hpp cdijkstra.hpp edksp.hpp \

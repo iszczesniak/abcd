@@ -30,6 +30,8 @@
 #include <boost/property_map/vector_property_map.hpp>
 #include <boost/utility/value_init.hpp>
 
+#include "custom_dijkstra_call.hpp"
+
 namespace boost {
 
   //========================================================================
@@ -54,87 +56,6 @@ namespace boost {
 
     const edge_set *m_excluded;
   };
-
-  //========================================================================
-  // Finish the search when a given node is examined, i.e. when the
-  // shortest path to that node is found.
-  // ========================================================================
-
-  // The type of the exception thrown by the cdc_visitor.
-  struct cdc_exception {};
-
-  template <class Graph>
-  struct cdc_visitor
-  {
-    typedef typename Graph::vertex_descriptor vertex_descriptor;
-    typedef on_examine_vertex event_filter;
-    cdc_visitor(vertex_descriptor t): m_t(t) {}
-    void operator()(vertex_descriptor v, const Graph& g) {
-      if (v == m_t)
-        throw cdc_exception();
-    }
-    vertex_descriptor m_t;
-  };
-
-  //========================================================================
-  // The custom Dijkstra call, which returns the optional path as a
-  // list along with the cost of the path.  The search is stopped when
-  // the destination node is reached.
-  //=======================================================================+
-
-  template <typename Graph, typename Weight>
-  optional<std::pair<typename Weight::value_type,
-                     std::list<typename Graph::edge_descriptor>>>
-  custom_dijkstra_call(const Graph &g,
-                       typename Graph::vertex_descriptor s,
-                       typename Graph::vertex_descriptor t,
-                       Weight wm)
-  {
-    typedef typename Graph::vertex_descriptor vertex_descriptor;
-    typedef typename Graph::edge_descriptor edge_descriptor;
-    typedef typename std::list<typename Graph::edge_descriptor> path_type;
-    typedef typename Weight::value_type weight_type;
-    typedef typename std::pair<weight_type, path_type> kr_type;
-    
-    vector_property_map<edge_descriptor> pred(num_vertices(g));
-    auto rep = record_edge_predecessors(pred, on_edge_relaxed());
-    auto qat = cdc_visitor<Graph>(t);
-    auto dv = make_dijkstra_visitor(std::make_pair(rep, qat));
-
-    try
-      {
-        dijkstra_shortest_paths(g, s, weight_map(wm).visitor(dv));
-      }
-    catch (cdc_exception) {}
-
-    optional<kr_type> result;
-
-    // Was the solution found?
-    if (pred[t] != edge_descriptor())
-      {
-        // The cost of the shortest path.
-        value_initialized<weight_type> cost;
-        // The path found.
-        path_type path;
-
-        // Trace the solution to the source.
-        vertex_descriptor c = t;
-        while (c != s)
-          {
-            const edge_descriptor &e = pred[c];
-            // Build the path.
-            path.push_front(e);
-            // Calculate the cost of the path.
-            cost += get(wm, e);
-            // Find the predecessing vertex.
-            c = source(e, g);
-          }
-
-        result = std::make_pair(cost, path);
-      }
-
-    return result;
-  }
 
   //========================================================================
   // The implementation of the k-shortest paths algorithm.
