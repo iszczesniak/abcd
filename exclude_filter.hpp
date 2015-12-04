@@ -11,26 +11,27 @@
 #define BOOST_GRAPH_EXCLUDE_FILTER
 
 #include <set>
- 
+
 namespace boost {
 
-  // This filter excludes the given vertexes.
-  template <typename Graph, typename Descriptor>
+  // This filter excludes the given descriptors (edges or vertexes).
+  template <typename Descriptor>
   struct exclude_filter
   {
+    // The data set type.
     typedef typename std::set<Descriptor> ds_type;
 
     // The filter must be default-constructible, so it is.
     exclude_filter(): m_excluded() {};
-    
-    ev_filter(const vertex_set *excluded): m_excluded(excluded) {};
 
-    inline bool operator()(const vertex_descriptor &e) const
+    exclude_filter(const ds_type *excluded): m_excluded(excluded) {};
+
+    inline bool operator()(const Descriptor &e) const
     {
       return m_excluded->count(e) == 0;
     }
 
-    const vertex_set *m_excluded;
+    const ds_type *m_excluded;
   };
 
 } // boost

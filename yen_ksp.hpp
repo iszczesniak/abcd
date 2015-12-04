@@ -46,8 +46,8 @@ namespace boost {
     typedef typename graph_traits<Graph>::vertex_descriptor vertex_descriptor;
     typedef typename graph_traits<Graph>::edge_descriptor edge_descriptor;
     typedef typename std::list<typename Graph::edge_descriptor> path_type;
-    typedef typename exclude_filter<Graph, vertex_descriptor> evf_type;
-    typedef typename exclude_filter<Graph, edge_descriptor> eef_type;
+    typedef exclude_filter<vertex_descriptor> evf_type;
+    typedef exclude_filter<edge_descriptor> eef_type;
     typedef typename Weight::value_type weight_type;
 
     // The results.
@@ -59,7 +59,7 @@ namespace boost {
     std::set<edge_descriptor> exe;
     // The set of excluded vertexes.
     std::set<vertex_descriptor> exv;
-   
+
     // The filter which excludes edges.
     eef_type ef(&exe);
     // The filter which excludes vertexes.
@@ -70,7 +70,7 @@ namespace boost {
 
     // The filtered graph.
     fg_type fg(g, ef, vf);
-      
+    
     return A;
   }
 
