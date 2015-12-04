@@ -1,6 +1,7 @@
 #define BOOST_TEST_MODULE edge_disjoint_ksp
 
 #include "edge_disjoint_ksp.hpp"
+#include "exclude_filter.hpp"
 
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/filtered_graph.hpp>
@@ -17,6 +18,7 @@ Graph;
 typedef Graph::edge_descriptor Edge;
 typedef Graph::vertex_descriptor Vertex;
 typedef std::list<Edge> Path;
+typedef boost::exclude_filter<Edge> eef_type;
 
 using namespace std;
 
@@ -128,8 +130,8 @@ BOOST_AUTO_TEST_CASE(edksp_filter_test)
   Vertex c = *(vertices(g).first + 2);
 
   set<Edge> x;
-  boost::edksp_filter<Graph> f(&x);
-  typedef boost::filtered_graph<Graph, boost::edksp_filter<Graph> > fg_t;
+  eef_type f(&x);
+  typedef boost::filtered_graph<Graph, eef_type> fg_t;
   fg_t fg(g, f);
   
   Edge e1, e2, e3;
