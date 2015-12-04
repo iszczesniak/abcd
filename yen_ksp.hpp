@@ -39,16 +39,16 @@ namespace boost {
   std::list<std::pair<typename Weight::value_type,
                       std::list<typename Graph::edge_descriptor>>>
   yen_ksp(const Graph& g,
-          typename graph_traits<Graph>::vertex_descriptor s,
-          typename graph_traits<Graph>::vertex_descriptor t,
+          typename Graph::vertex_descriptor s,
+          typename Graph::vertex_descriptor t,
           Weight wm, int K)
   {
-    typedef typename graph_traits<Graph>::vertex_descriptor vertex_descriptor;
-    typedef typename graph_traits<Graph>::edge_descriptor edge_descriptor;
-    typedef typename std::list<typename Graph::edge_descriptor> path_type;
+    typedef typename Graph::vertex_descriptor vertex_descriptor;
+    typedef typename Graph::edge_descriptor edge_descriptor;
+    typedef typename Weight::value_type weight_type;
     typedef exclude_filter<vertex_descriptor> evf_type;
     typedef exclude_filter<edge_descriptor> eef_type;
-    typedef typename Weight::value_type weight_type;
+    typedef std::list<edge_descriptor> path_type;
 
     // The results.
     std::list<std::pair<weight_type, path_type>> A;
@@ -78,8 +78,8 @@ namespace boost {
   std::list<std::pair<typename property_map<Graph, edge_weight_t>::value_type,
                       std::list<typename Graph::edge_descriptor>>>
   yen_ksp(Graph& g,
-          typename graph_traits<Graph>::vertex_descriptor s,
-          typename graph_traits<Graph>::vertex_descriptor t,
+          typename Graph::vertex_descriptor s,
+          typename Graph::vertex_descriptor t,
           int K)
   {
     return yen_ksp(g, s, t, get(edge_weight_t(), g), K);
