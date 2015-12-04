@@ -118,7 +118,7 @@ cdijkstra::search(const graph &g, const demand &d)
   vertex src = d.first.first;
 
   // Itereate over the out edges of the vertex.
-  boost::graph_traits<graph>::out_edge_iterator ei, eei;
+  graph::out_edge_iterator ei, eei;
   for(boost::tie(ei, eei) = boost::out_edges(src, g); ei != eei; ++ei)
     {
       // The edge that we examine in this iteration.
@@ -210,7 +210,7 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
           const SSSC &v_sssc = j->second;
 
           // Itereate over the out edges of the vertex.
-          boost::graph_traits<graph>::out_edge_iterator ei, eei;
+          graph::out_edge_iterator ei, eei;
           for(boost::tie(ei, eei) = boost::out_edges(v, g); ei != eei; ++ei)
             {
               // The edge that we examine in this iteration.
