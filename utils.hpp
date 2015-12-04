@@ -144,10 +144,10 @@ void complete_graph(G &g)
   std::vector<int> dist(num_vertices(g));
   std::vector<vertex> pred(num_vertices(g));
 
-  typename boost::graph_traits<G>::vertex_iterator vi, ve;
+  typename G::vertex_iterator vi, ve;
   for (tie(vi, ve) = vertices(g); vi != ve; ++vi)
     {
-      typename boost::graph_traits<G>::vertex_descriptor v = *vi;
+      typename G::vertex_descriptor v = *vi;
 
       boost::dijkstra_shortest_paths
         (g, v, boost::predecessor_map(&pred[0]).distance_map(&dist[0]));
@@ -163,8 +163,8 @@ void complete_graph(G &g)
 
 template<typename G>
 std::string
-path_to_string(typename boost::graph_traits<G>::vertex_descriptor i,
-               typename boost::graph_traits<G>::vertex_descriptor j,
+path_to_string(typename G::vertex_descriptor i,
+               typename G::vertex_descriptor j,
                const G &g)
 {
   std::ostringstream str;
@@ -176,7 +176,7 @@ path_to_string(typename boost::graph_traits<G>::vertex_descriptor i,
   if (i == j || boost::get(boost::vertex_predecessor, g, j)[i] != i)
     {
       int hops = 0;
-      typename boost::graph_traits<G>::vertex_descriptor curr = i;
+      typename G::vertex_descriptor curr = i;
 
       str << ": " << boost::get(boost::vertex_name, g, i);
 
@@ -211,8 +211,8 @@ print_sp(const G &g, std::ostream &os)
 
   // Lists the path from i to j.
 
-  typename boost::graph_traits<G>::vertex_iterator i, ie;
-  typename boost::graph_traits<G>::vertex_iterator j, je;
+  typename G::vertex_iterator i, ie;
+  typename G::vertex_iterator j, je;
   
   for (tie(i, ie) = vertices(g); i != ie; ++i)
     for (tie(j, je) = vertices(g); j != je; ++j)
@@ -342,12 +342,12 @@ is_connected(const G &g)
  */
 
 template<typename G, typename R>
-std::pair<typename boost::graph_traits<G>::vertex_descriptor,
-	  typename boost::graph_traits<G>::vertex_descriptor>
+std::pair<typename G::vertex_descriptor,
+	  typename G::vertex_descriptor>
 random_node_pair(const G &g, R &gen)
 {
-  typedef typename boost::graph_traits<G>::vertex_descriptor vertex;
-  typedef typename boost::graph_traits<G>::vertex_iterator vertex_i;
+  typedef typename G::vertex_descriptor vertex;
+  typedef typename G::vertex_iterator vertex_i;
 
   vertex_i begin = vertices(g).first;
   int n = num_vertices(g);
@@ -374,7 +374,7 @@ calculate_load(const G &g)
 {
   ba::accumulator_set<double, ba::stats<ba::tag::mean> > load_acc;
 
-  typename boost::graph_traits<G>::edge_iterator ei, ee;
+  typename G::edge_iterator ei, ee;
   for (tie(ei, ee) = edges(g); ei != ee; ++ei)
     {
       // Available subcarriers.
