@@ -31,31 +31,9 @@
 #include <boost/utility/value_init.hpp>
 
 #include "custom_dijkstra_call.hpp"
+#include "exclude_filter.hpp"
 
 namespace boost {
-
-  //========================================================================
-  // Exclude edge filter
-  //========================================================================
-  
-  template <typename Graph>
-  struct edksp_filter
-  {
-    typedef typename Graph::edge_descriptor edge_descriptor;
-    typedef typename std::set<edge_descriptor> edge_set;
-
-    // The filter must be default-constructible, so it is.
-    edksp_filter(): m_excluded() {};
-    
-    edksp_filter(const edge_set *excluded): m_excluded(excluded) {};
-
-    inline bool operator()(const edge_descriptor &e) const
-    {
-      return m_excluded->count(e) == 0;
-    }
-
-    const edge_set *m_excluded;
-  };
 
   //========================================================================
   // The implementation of the k-shortest paths algorithm.
@@ -75,6 +53,7 @@ namespace boost {
     typedef typename std::list<typename Graph::edge_descriptor> path_type;
     typedef typename Weight::value_type weight_type;
     typedef typename std::pair<weight_type, path_type> kr_type;
+    typedef exclude_filter<edge_descriptor> eef_type;
 
     // The result.
     std::list<std::pair<weight_type, path_type>> result;
@@ -82,9 +61,9 @@ namespace boost {
     // The set of excluded edges.
     std::set<edge_descriptor> excluded;
     // The filter for excluding edges.
-    edksp_filter<Graph> f(&excluded);
+    eef_type f(&excluded);
     // The filtered graph type.
-    typedef filtered_graph<Graph, edksp_filter<Graph> > fg_type;
+    typedef filtered_graph<Graph, eef_type> fg_type;
     // The filtered graph.
     fg_type fg(g, f);
 
