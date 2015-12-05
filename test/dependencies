@@ -8,7 +8,7 @@ connected.o: connected.cc ../cdijkstra.hpp ../graph.hpp ../routing.hpp \
  ../simulation.hpp ../sdi_args.hpp ../traffic.hpp ../client.hpp \
  ../utils_netgen.hpp ../mypoint.hpp ../utils.hpp ../teventqueue.hpp
 edge_disjoint_ksp.o: edge_disjoint_ksp.cc ../edge_disjoint_ksp.hpp \
- ../custom_dijkstra_call.hpp
+ ../custom_dijkstra_call.hpp ../exclude_filter.hpp ../exclude_filter.hpp
 graph.o: graph.cc ../graph.hpp
 routing.o: routing.cc ../cdijkstra.hpp ../graph.hpp ../routing.hpp \
  ../graph.hpp ../utils.hpp ../utils_netgen.hpp ../mypoint.hpp \
