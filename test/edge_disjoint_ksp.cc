@@ -68,11 +68,12 @@ BOOST_AUTO_TEST_CASE(edge_disjoint_ksp_test)
   Graph g(5);
 
   // Vertexes
-  Vertex a = *(vertices(g).first + 0);
-  Vertex b = *(vertices(g).first + 1);
-  Vertex c = *(vertices(g).first + 2);
-  Vertex d = *(vertices(g).first + 3);
-  Vertex e = *(vertices(g).first + 4);
+  auto i = vertices(g).first;
+  Vertex a = *i++;
+  Vertex b = *i++;
+  Vertex c = *i++;
+  Vertex d = *i++;
+  Vertex e = *i;
 
   // Edges
   Edge ab, ba;
@@ -125,9 +126,10 @@ BOOST_AUTO_TEST_CASE(edge_disjoint_ksp_test)
 BOOST_AUTO_TEST_CASE(edksp_filter_test)
 {
   Graph g(3);
-  Vertex a = *(vertices(g).first);
-  Vertex b = *(vertices(g).first + 1);
-  Vertex c = *(vertices(g).first + 2);
+  auto vi = vertices(g).first;
+  Vertex a = *vi++;
+  Vertex b = *vi++;
+  Vertex c = *vi;
 
   set<Edge> x;
   eef_type f(&x);
