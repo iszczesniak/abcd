@@ -50,9 +50,9 @@ namespace boost {
   {
     typedef typename Graph::vertex_descriptor vertex_descriptor;
     typedef typename Graph::edge_descriptor edge_descriptor;
-    typedef typename std::list<typename Graph::edge_descriptor> path_type;
     typedef typename Weight::value_type weight_type;
-    typedef typename std::pair<weight_type, path_type> kr_type;
+    typedef std::list<edge_descriptor> path_type;
+    typedef std::pair<weight_type, path_type> kr_type;
     typedef exclude_filter<edge_descriptor> eef_type;
 
     // The result.
