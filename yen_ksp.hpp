@@ -30,7 +30,9 @@
 #include <boost/graph/visitors.hpp>
 #include <boost/property_map/vector_property_map.hpp>
 #include <boost/utility/value_init.hpp>
+#include <boost/optional.hpp>
 
+#include "custom_dijkstra_call.hpp"
 #include "exclude_filter.hpp"
 
 namespace boost {
@@ -41,7 +43,7 @@ namespace boost {
   yen_ksp(const Graph& g,
           typename Graph::vertex_descriptor s,
           typename Graph::vertex_descriptor t,
-          Weight wm, int K)
+          Weight wm, optional<unsigned> K)
   {
     typedef typename Graph::vertex_descriptor vertex_descriptor;
     typedef typename Graph::edge_descriptor edge_descriptor;
@@ -49,9 +51,10 @@ namespace boost {
     typedef exclude_filter<vertex_descriptor> evf_type;
     typedef exclude_filter<edge_descriptor> eef_type;
     typedef std::list<edge_descriptor> path_type;
+    typedef std::pair<weight_type, path_type> kr_type;
 
     // The results.
-    std::list<std::pair<weight_type, path_type>> A;
+    std::list<kr_type> A;
     // The tentative results.
     std::multimap<weight_type, path_type> B;
 
@@ -70,7 +73,18 @@ namespace boost {
 
     // The filtered graph.
     fg_type fg(g, ef, vf);
-    
+
+    optional<kr_type> okr = custom_dijkstra_call(g, s, t, wm);
+
+    if (okr)
+      {
+        A.push_back(okr.get());
+        
+        for (int k = 1; !K || k < K.get(); ++k)
+          {
+          }
+      }
+
     return A;
   }
 
@@ -80,7 +94,7 @@ namespace boost {
   yen_ksp(Graph& g,
           typename Graph::vertex_descriptor s,
           typename Graph::vertex_descriptor t,
-          int K)
+          optional<unsigned> K)
   {
     return yen_ksp(g, s, t, get(edge_weight_t(), g), K);
   }
