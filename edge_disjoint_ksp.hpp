@@ -46,7 +46,7 @@ namespace boost {
                     typename Graph::vertex_descriptor s,
                     typename Graph::vertex_descriptor t,
                     Weight wm,
-                    optional<unsigned int> K)
+                    optional<unsigned> K)
   {
     typedef typename Graph::vertex_descriptor vertex_descriptor;
     typedef typename Graph::edge_descriptor edge_descriptor;
@@ -104,7 +104,7 @@ namespace boost {
   edge_disjoint_ksp(const Graph& g,
                     typename Graph::vertex_descriptor s,
                     typename Graph::vertex_descriptor t,
-                    optional<unsigned int> K = optional<unsigned int>())
+                    optional<unsigned> K = optional<unsigned>())
   {
     return edge_disjoint_ksp(g, s, t, get(edge_weight_t(), g), K);
   }
