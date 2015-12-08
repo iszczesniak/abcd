@@ -23,7 +23,8 @@
 #include <list>
 #include <set>
 
-#include <boost/optional.hpp>   
+#include <boost/graph/filtered_graph.hpp>
+#include <boost/optional.hpp>
 
 #include "custom_dijkstra_call.hpp"
 #include "exclude_filter.hpp"
