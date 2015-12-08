@@ -37,17 +37,17 @@
 
 namespace boost {
 
-  template <typename Graph, typename Weight>
-  std::list<std::pair<typename Weight::value_type,
+  template <typename Graph, typename WeightMap, typename IndexMap>
+  std::list<std::pair<typename WeightMap::value_type,
                       std::list<typename Graph::edge_descriptor>>>
   yen_ksp(const Graph& g,
           typename Graph::vertex_descriptor s,
           typename Graph::vertex_descriptor t,
-          Weight wm, optional<unsigned> K)
+          WeightMap wm, IndexMap im, optional<unsigned> K)
   {
     typedef typename Graph::vertex_descriptor vertex_descriptor;
     typedef typename Graph::edge_descriptor edge_descriptor;
-    typedef typename Weight::value_type weight_type;
+    typedef typename WeightMap::value_type weight_type;
     typedef exclude_filter<vertex_descriptor> evf_type;
     typedef exclude_filter<edge_descriptor> eef_type;
     typedef std::list<edge_descriptor> path_type;
@@ -74,7 +74,7 @@ namespace boost {
     // The filtered graph.
     fg_type fg(g, ef, vf);
 
-    optional<kr_type> okr = custom_dijkstra_call(g, s, t, wm);
+    optional<kr_type> okr = custom_dijkstra_call(g, s, t, wm, im);
 
     if (okr)
       {
@@ -96,7 +96,8 @@ namespace boost {
           typename Graph::vertex_descriptor t,
           optional<unsigned> K)
   {
-    return yen_ksp(g, s, t, get(edge_weight_t(), g), K);
+    return yen_ksp(g, s, t, get(edge_weight_t(), g),
+                   get(vertex_index_t(), g), K);
   }
 
 } // boost

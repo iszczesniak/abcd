@@ -52,28 +52,31 @@ namespace boost {
   // The function.
   //=======================================================================+
 
-  template <typename Graph, typename Weight>
-  optional<std::pair<typename Weight::value_type,
+  template <typename Graph, typename WeightMap, typename IndexMap>
+  optional<std::pair<typename WeightMap::value_type,
                      std::list<typename Graph::edge_descriptor>>>
   custom_dijkstra_call(const Graph &g,
                        typename Graph::vertex_descriptor s,
                        typename Graph::vertex_descriptor t,
-                       Weight wm)
+                       WeightMap wm, IndexMap im)
   {
     typedef typename Graph::vertex_descriptor vertex_descriptor;
     typedef typename Graph::edge_descriptor edge_descriptor;
     typedef typename std::list<typename Graph::edge_descriptor> path_type;
-    typedef typename Weight::value_type weight_type;
+    typedef typename WeightMap::value_type weight_type;
     typedef typename std::pair<weight_type, path_type> kr_type;
-    
-    vector_property_map<edge_descriptor> pred(num_vertices(g));
+
+    std::vector<edge_descriptor> pred_vec(num_vertices(g));
+    auto pred = make_iterator_property_map(pred_vec.begin(), im);
     auto rep = record_edge_predecessors(pred, on_edge_relaxed());
     auto qat = cdc_visitor<Graph>(t);
     auto dv = make_dijkstra_visitor(std::make_pair(rep, qat));
 
     try
       {
-        dijkstra_shortest_paths(g, s, weight_map(wm).visitor(dv));
+        dijkstra_shortest_paths(g, s,
+                                weight_map(wm).vertex_index_map(im).
+                                visitor(dv));
       }
     catch (cdc_exception) {}
 
