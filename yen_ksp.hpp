@@ -79,9 +79,20 @@ namespace boost {
     if (okr)
       {
         A.push_back(okr.get());
-        
+
         for (int k = 1; !K || k < K.get(); ++k)
           {
+            // The previous shortest path.
+            const kr_type &psp = A.back();
+
+            // Stop searching when there are no tentative paths.
+            if (B.empty())
+              break;
+
+            // Take the shortest tentative path and make it the next
+            // shortest path.
+            A.push_back(*B.begin());
+            B.erase(B.begin());
           }
       }
 
@@ -105,13 +116,6 @@ namespace boost {
 #endif /* BOOST_GRAPH_YEN_KSP */
 
 /*
-
-function YenKSP(Graph, source, sink, K):
-   // Determine the shortest path from the source to the sink.
-   A[0] = Dijkstra(Graph, source, sink);
-   // Initialize the heap to store the potential kth shortest path.
-   B = [];
-   
    for k from 1 to K:
        // The spur node ranges from the first node to the next to last node in the previous k-shortest path.
        for i from 0 to size(A[k − 1]) − 1:
@@ -154,5 +158,4 @@ function YenKSP(Graph, source, sink, K):
        B.pop();
    
    return A;
-
 */
