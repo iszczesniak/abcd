@@ -82,9 +82,32 @@ namespace boost {
 
         for (int k = 1; !K || k < K.get(); ++k)
           {
-            // The previous shortest path.
-            const kr_type &psp = A.back();
+            // The previous shortest result.
+            const kr_type &psr = A.back();
+            const path_type &psp = psr.second;
 
+            // Iterate over the edges of the previous shortest path.
+            for(auto i = psp.begin(); i != psp.end(); ++i)
+              {
+                // The spur vertex.
+                vertex_descriptor sv = source(*i, g);
+                // The root path.
+                path_type rp = path_type(psp.begin(), i);
+
+                // Iterate over the previous shortest paths.
+                for(const auto &kr: A)
+                  {
+                    const path_type &kp = kr.second;
+                    typename path_type::const_iterator i1, i2;
+
+                    // Iterate as long as possible and as long as
+                    // paths are equal.
+                    for(tie(i1, i2) = std::make_pair(kp.begin(), rp.begin());
+                        i1 != kp.end() && i2 != rp.end() && *i1 == *i2;
+                        ++i1, ++i2);
+                  }
+              }
+            
             // Stop searching when there are no tentative paths.
             if (B.empty())
               break;
@@ -93,6 +116,10 @@ namespace boost {
             // shortest path.
             A.push_back(*B.begin());
             B.erase(B.begin());
+
+            // Clear the excluded edges and vertexes.
+            exe.clear();
+            exv.clear();
           }
       }
 
@@ -126,8 +153,8 @@ namespace boost {
            rootPath = A[k-1].nodes(0, i);
            
            for each path p in A:
-               if rootPath == p.nodes(0, i):
-                   // Remove the links that are part of the previous shortest paths which share the same root path.
+           if p begins with rootPath:
+           // Remove the links that are part of the previous shortest paths which share the same root path.
                    remove p.edge(i, i + 1) from Graph;
            
            for each node rootPathNode in rootPath except spurNode:
