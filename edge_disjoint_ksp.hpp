@@ -23,12 +23,7 @@
 #include <list>
 #include <set>
 
-#include <boost/graph/dijkstra_shortest_paths.hpp>
-#include <boost/graph/filtered_graph.hpp>
-#include <boost/graph/visitors.hpp>
 #include <boost/optional.hpp>   
-#include <boost/property_map/vector_property_map.hpp>
-#include <boost/utility/value_init.hpp>
 
 #include "custom_dijkstra_call.hpp"
 #include "exclude_filter.hpp"

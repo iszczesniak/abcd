@@ -9,20 +9,19 @@
 
 //=======================================================================
 // The custom Dijkstra call, which returns the optional path as a list
-// along with the cost of the path.  The search is stopped when the
-// destination node is reached.
+// of edges along with the cost of the path.  The search is stopped
+// when the destination node is reached.
 //=======================================================================
 
 #ifndef BOOST_GRAPH_CUSTOM_DIJKSTRA_CALL
 #define BOOST_GRAPH_CUSTOM_DIJKSTRA_CALL
 
 #include <list>
-#include <set>
 
 #include <boost/graph/dijkstra_shortest_paths.hpp>
 #include <boost/graph/visitors.hpp>
-#include <boost/optional.hpp>   
-#include <boost/property_map/vector_property_map.hpp>
+#include <boost/optional.hpp>
+#include <boost/property_map/property_map.hpp>
 #include <boost/utility/value_init.hpp>
 
 namespace boost {
