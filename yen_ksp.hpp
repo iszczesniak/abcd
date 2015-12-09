@@ -112,13 +112,11 @@ namespace boost {
                       exe.insert(*i1);
                   }
 
-                // Remove the nodes that belong to the root path.
-                for (const auto &e: rp)
-                  {
-                    vertex_descriptor v = source(e, g);
-                    if (v != s)
-                      exv.insert(v);
-                  }
+                // Remove the vertexes that belong to the root path,
+                // except the first and the last vertex.
+                if (rp.size() >= 2)
+                  for (auto i = rp.begin(); ++i != rp.end();)
+                    exv.insert(source(*i, g));
               }
 
             // Stop searching when there are no tentative paths.
