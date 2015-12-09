@@ -117,6 +117,19 @@ namespace boost {
                 if (rp.size() >= 2)
                   for (auto i = rp.begin(); ++i != rp.end();)
                     exv.insert(source(*i, g));
+
+                // Optional spur path.
+                optional<kr_type> osp = custom_dijkstra_call(g, sv, t, wm, im);
+
+                if (osp)
+                  {
+                    path_type sp = osp.get();
+                    
+                  }
+                
+                // Clear the excluded edges and vertexes.
+                exe.clear();
+                exv.clear();
               }
 
             // Stop searching when there are no tentative paths.
@@ -128,9 +141,6 @@ namespace boost {
             A.push_back(*B.begin());
             B.erase(B.begin());
 
-            // Clear the excluded edges and vertexes.
-            exe.clear();
-            exv.clear();
           }
       }
 
