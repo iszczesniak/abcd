@@ -118,13 +118,17 @@ namespace boost {
                   for (auto i = rp.begin(); ++i != rp.end();)
                     exv.insert(source(*i, g));
 
-                // Optional spur path.
-                optional<kr_type> osp = custom_dijkstra_call(g, sv, t, wm, im);
+                // Optional spur result.
+                optional<kr_type> osr = custom_dijkstra_call(g, sv, t, wm, im);
 
-                if (osp)
+                if (osr)
                   {
-                    path_type sp = osp.get();
-                    
+                    // The tentative result.
+                    kr_type tr = osr.get();
+                    tr.second.insert(tr.second.begin(), rp.begin(), rp.end());
+                    for(auto const &e: rp)
+                      tr.first += get(wm, e);
+                    B.insert(tr);
                   }
                 
                 // Clear the excluded edges and vertexes.
@@ -140,7 +144,6 @@ namespace boost {
             // shortest path.
             A.push_back(*B.begin());
             B.erase(B.begin());
-
           }
       }
 
