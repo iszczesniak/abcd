@@ -98,14 +98,29 @@ namespace boost {
                     const path_type &kp = kr.second;
                     typename path_type::const_iterator i1, i2;
 
-                    // Iterate as long as possible and as long as
+                    // Iterate as long as possible, and as long as
                     // paths are equal.
                     for(tie(i1, i2) = std::make_pair(kp.begin(), rp.begin());
                         i1 != kp.end() && i2 != rp.end() && *i1 == *i2;
                         ++i1, ++i2);
+
+                    // Make sure we didn't reach the end of kp.  If we
+                    // did, there is no next edge in kp, which we
+                    // could exclude.  Also, make sure we reached the
+                    // end of rp, i.e., the kp begins with rp.
+                    if (i1 != kp.end() && i2 == rp.end())
+                      exe.insert(*i1);
+                  }
+
+                // Remove the nodes that belong to the root path.
+                for (const auto &e: rp)
+                  {
+                    vertex_descriptor v = source(e, g);
+                    if (v != s)
+                      exv.insert(v);
                   }
               }
-            
+
             // Stop searching when there are no tentative paths.
             if (B.empty())
               break;
