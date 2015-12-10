@@ -19,3 +19,5 @@ sdi_args.o: sdi_args.cc ../sdi_args.hpp ../cdijkstra.hpp ../graph.hpp \
  ../utils_netgen.hpp ../mypoint.hpp ../sdi_args.hpp ../utils.hpp \
  ../teventqueue.hpp
 utils.o: utils.cc ../utils.hpp ../graph.hpp
+yen_ksp.o: yen_ksp.cc ../yen_ksp.hpp ../custom_dijkstra_call.hpp \
+ ../exclude_filter.hpp
