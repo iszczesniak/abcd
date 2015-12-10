@@ -16,7 +16,7 @@ routing::st_t routing::m_st = routing::st_t::none;
 
 boost::optional<int> routing::m_ml;
 
-boost::optional<int> routing::m_K;
+boost::optional<unsigned> routing::m_K;
 
 unique_ptr<routing> routing::singleton;
 
@@ -89,12 +89,12 @@ routing::get_ml()
 }
 
 void
-routing::set_K(boost::optional<int> K)
+routing::set_K(boost::optional<unsigned> K)
 {
   m_K = K;
 }
 
-boost::optional<int>
+boost::optional<unsigned>
 routing::get_K()
 {
   return m_K;

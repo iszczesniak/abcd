@@ -14,7 +14,7 @@ yenksp::route_w(graph &g, const demand &d)
   vertex s = d.first.first;
   vertex t = d.first.second;
 
-  std::list<std::pair<int, path>> paths = boost::yen_ksp(g, s, t, m_K.get());
+  std::list<std::pair<int, path>> paths = boost::yen_ksp(g, s, t, m_K);
 
   for (auto const &p: paths)
     // Consider that path when there is no maximal length given or

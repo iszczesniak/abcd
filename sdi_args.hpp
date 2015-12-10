@@ -43,7 +43,7 @@ struct sdi_args
   boost::optional<int> ml;
 
   /// The K for the k-shortest paths.
-  boost::optional<int> K;
+  boost::optional<unsigned> K;
 
   /// The spectrum selection type.
   std::string st;

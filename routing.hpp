@@ -44,9 +44,9 @@ public:
    * The K for the k-shortest paths.
    */
   static void
-  set_K(boost::optional<int> K);
+  set_K(boost::optional<unsigned> K);
 
-  static boost::optional<int>
+  static boost::optional<unsigned>
   get_K();
 
   /**
@@ -167,7 +167,7 @@ protected:
   static boost::optional<int> m_ml;
 
   /// The K for the k-shortest paths.
-  static boost::optional<int> m_K;
+  static boost::optional<unsigned> m_K;
 
   /// The routing algorithm.
   static rt_t m_rt;
