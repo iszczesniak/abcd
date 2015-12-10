@@ -95,9 +95,6 @@ BOOST_AUTO_TEST_CASE(yen_ksp_test)
 
   r = boost::yen_ksp(g, b, d);
 
-  for(auto a: r)      
-    cout << a.first << " " << a.second << endl;
-
   BOOST_CHECK(check_path(r, 3, Path{ba, ac, cd1}));
   BOOST_CHECK(check_path(r, 12, Path{ba, ac, cd2}));
 
