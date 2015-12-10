@@ -133,7 +133,7 @@ namespace boost {
                       }
                     B.insert(tr);
                   }
-                
+
                 // Clear the excluded edges and vertexes.
                 exe.clear();
                 exv.clear();
