@@ -27,8 +27,9 @@
 
 #include <boost/graph/dijkstra_shortest_paths.hpp>
 #include <boost/graph/filtered_graph.hpp>
-#include <boost/utility/value_init.hpp>
 #include <boost/optional.hpp>
+#include <boost/range/adaptor/reversed.hpp>
+#include <boost/utility/value_init.hpp>
 
 #include "custom_dijkstra_call.hpp"
 #include "exclude_filter.hpp"
@@ -125,9 +126,11 @@ namespace boost {
                   {
                     // The tentative result.
                     kr_type tr = osr.get();
-                    tr.second.insert(tr.second.begin(), rp.begin(), rp.end());
-                    for(auto const &e: rp)
-                      tr.first += get(wm, e);
+                    for(const auto &e: boost::adaptors::reverse(rp))
+                      {
+                        tr.second.push_front(e);
+                        tr.first += get(wm, e);
+                      }
                     B.insert(tr);
                   }
                 
