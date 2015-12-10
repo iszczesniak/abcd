@@ -159,7 +159,7 @@ namespace boost {
   yen_ksp(Graph& g,
           typename Graph::vertex_descriptor s,
           typename Graph::vertex_descriptor t,
-          optional<unsigned> K)
+          optional<unsigned> K = optional<unsigned>())
   {
     return yen_ksp(g, s, t, get(edge_weight_t(), g),
                    get(vertex_index_t(), g), K);

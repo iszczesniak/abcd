@@ -1,4 +1,5 @@
-TESTS = cdijkstra graph edge_disjoint_ksp routing sdi_args utils
+TESTS = cdijkstra graph edge_disjoint_ksp routing sdi_args utils	\
+yen_ksp
 
 OTHER = connected
 
@@ -42,6 +43,9 @@ sdi_args: sdi_args.o $(OBJS)
 	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 utils: utils.o $(OBJS)
+	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
+
+yen_ksp: yen_ksp.o $(OBJS)
 	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 # run the tests
