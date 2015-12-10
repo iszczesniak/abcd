@@ -127,7 +127,6 @@ process_sdi_args(int argc, const char *argv[])
       // Dependencies.
       requires(vm, NT_S, NODES_S);
       requires(vm, NT_S, string("random"), EDGES_S);
-      requires(vm, RT_S, string("yenksp"), K_S);
 
       if (vm.count("help"))
         {
