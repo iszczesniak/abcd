@@ -154,6 +154,9 @@ process_sdi_args(int argc, const char *argv[])
       if (vm.count("ml"))
         result.ml = vm["ml"].as<int>();
 
+      if (vm.count(K_S))
+        result.K = vm[K_S].as<int>();
+
       result.st = vm["st"].as<string>();
       result.rt = vm["rt"].as<string>();
 
