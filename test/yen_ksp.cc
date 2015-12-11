@@ -3,7 +3,6 @@
 #include "yen_ksp.hpp"
 
 #include <boost/graph/adjacency_list.hpp>
-#include <boost/graph/filtered_graph.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include <list>
