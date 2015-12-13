@@ -115,27 +115,21 @@ routing::get_st()
 bool
 routing::set_up_path(graph &g, const sscpath &p)
 {
+  // The SSC map.
   boost::property_map<graph, boost::edge_ssc_t>::type
-    sscm = get(boost::edge_ssc_t(), g);
+    sm = get(boost::edge_ssc_t(), g);
   
   const path &l = p.first;
   const SSC &p_ssc = p.second;
 
-  // Iterate over the edges of the path.
-  for(path::const_iterator i = l.begin(); i != l.end(); ++i)
-    {
-      const edge e = *i;
+  // Make sure the edges have the required SSC.
+  for(const auto &e: l)
+    if (!includes(sm[e], p_ssc))
+      return false;
 
-      // The SSC for edge e.
-      SSC &e_ssc = sscm[e];
-
-      // Make sure that the edge has the required subcarriers.
-      if (!includes(e_ssc, p_ssc))
-        return false;
-
-      // Remove the p_ssc subcarriers from e_ssc.
-      exclude(e_ssc, p_ssc);
-    }
+  // Remove the p_ssc subcarriers from the path edges.
+  for(const auto &e: l)
+    exclude(sm[e], p_ssc);
 
   return true;
 }
