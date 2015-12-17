@@ -22,6 +22,8 @@ client::client(double mht, double mnsc, traffic &tra):
       tdt = now() + htg();
       schedule(tdt);
     }
+  else
+    tra.delete_me_later(this);
 }
 
 void client::operator()(double t)
@@ -62,5 +64,5 @@ void client::tear_down()
 void client::destroy()
 {
   tra.erase(this);
-  delete this;
+  tra.delete_me_later(this);
 }

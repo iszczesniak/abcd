@@ -1,6 +1,7 @@
 #ifndef TRAFFIC_HPP
 #define TRAFFIC_HPP
 
+#include <queue>
 #include <set>
 
 #include <boost/random.hpp>
@@ -11,8 +12,11 @@
 
 class traffic: public module
 {
-  // The set of clients.
+  // The set of active clients.
   std::set<client *> cs;
+
+  // The queue of clients to delete later.
+  std::queue<client *> dl;
 
   // The ID counter.
   int idc;
@@ -44,8 +48,13 @@ public:
   // Remote the client from the traffic.
   void erase(client *);
 
+  // Delete this client later.
+  void delete_me_later(client *);
+
 private:
   void schedule_next(double);
+
+  void delete_clients(bool active);
 };
 
 #endif /* TRAFFIC_HPP */
