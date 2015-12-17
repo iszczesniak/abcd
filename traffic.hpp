@@ -53,8 +53,7 @@ public:
 
 private:
   void schedule_next(double);
-
-  void delete_clients(bool active);
+  void delete_clients();
 };
 
 #endif /* TRAFFIC_HPP */
