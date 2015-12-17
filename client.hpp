@@ -60,9 +60,6 @@ public:
 private:
   bool set_up();
   void tear_down();
-
-  // Self_destruction: report this to the traffic, and delete itself.
-  void destroy();
 };
 
 #endif /* CLIENT_HPP */

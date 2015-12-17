@@ -47,8 +47,6 @@ bool client::set_up()
 
   if (result.first)
     st.established_length(result.second);
-  else
-    destroy();
 
   return result.first;
 }
@@ -58,11 +56,6 @@ void client::tear_down()
   assert(conn.is_established());
   conn.tear_down();
   st.completed(true);
-  destroy();
-}
-
-void client::destroy()
-{
   tra.erase(this);
   tra.delete_me_later(this);
 }
