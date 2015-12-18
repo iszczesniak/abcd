@@ -9,8 +9,6 @@
 
 using namespace std;
 
-int irek = 0;
-
 sscpath
 cdijkstra::route_w(graph &g, const demand &d)
 {
@@ -20,12 +18,7 @@ cdijkstra::route_w(graph &g, const demand &d)
   if (!result.first.empty())
     {
       bool status = set_up_path(g, result);
-      if (!status)
-        {
-          std::cout << "irek = " << irek << endl;
-          abort();
-        }
-      ++irek;
+      assert(status);
     }
   return result;
 }
