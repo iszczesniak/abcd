@@ -15,6 +15,10 @@ class connection
   demand m_d;
   sscpathws m_p;
 
+  int m_id;
+
+  static int counter;
+
 public:
   connection(graph &g);
   ~connection();

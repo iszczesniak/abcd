@@ -7,7 +7,9 @@
 
 using namespace std;
 
-connection::connection(graph &g): m_g(g)
+int connection::counter = 0;
+
+connection::connection(graph &g): m_g(g), m_id(counter++)
 {
 }
 
