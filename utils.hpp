@@ -425,10 +425,6 @@ template<typename G>
 void
 print_edges(G &g, std::ostream &os)
 {
-  os << "******************************************************\n";
-  os << "EDGES\n";
-  os << "******************************************************\n";
-
   typename boost::property_map<G, boost::edge_weight_t>::type
     wm = boost::get(boost::edge_weight_t(), g);
 
