@@ -395,4 +395,32 @@ split(const SSC &ssc);
 int
 calculate_fragments(const SSC &ssc);
 
+/**
+ * Prints the info on edges.
+ */
+template<typename G>
+void
+print_edges(G &g, std::ostream &os)
+{
+  os << "******************************************************\n";
+  os << "EDGES\n";
+  os << "******************************************************\n";
+
+  typename boost::property_map<G, boost::edge_weight_t>::type
+    wm = boost::get(boost::edge_weight_t(), g);
+
+  typename boost::property_map<G, boost::edge_ssc_t>::type
+    sm = boost::get(boost::edge_ssc_t(), g);
+  
+  typename G::edge_iterator ei, ee;
+  for (boost::tie(ei, ee) = boost::edges(g); ei != ee; ++ei)
+    {
+      const edge &e = *ei;
+      os << "Edge " << e << std::endl;
+      os << "Weight " << wm[e] << std::endl;
+      os << "Subcarriers " << sm[e] << std::endl;
+      os << std::endl;
+    }
+}
+
 #endif /* UTILS_HPP */

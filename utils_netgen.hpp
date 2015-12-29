@@ -70,20 +70,6 @@ set_subcarriers(G &g, int subcarriers)
 }
 
 /**
- * Prints the subcarriers property of edges.
- */
-template<typename G>
-void
-print_subcarriers(G &g)
-{
-  typename boost::property_map<G, boost::edge_ssc_t>::type
-    pm = boost::get(boost::edge_ssc_t(), g);
-  typename G::edge_iterator ei, ee;
-  for (boost::tie(ei, ee) = boost::edges(g); ei != ee; ++ei)
-    std::cout << pm[*ei] << "\n";
-}
-
-/**
  * Move the vertex from the lonely group to either the set of
  * connected or saturated vertexes.
  */
