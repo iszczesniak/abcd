@@ -200,6 +200,14 @@ calculate_fragments(const SSC &ssc)
 }
 
 /**
+ * This is the << operator for a sscpath.
+ */
+std::ostream &operator << (std::ostream &os, const sscpath &p)
+{
+  os << "sscpath(" << p.first << ", " << p.second << ")";
+}
+
+/**
  * This is the << operator for a COST.
  */
 std::ostream &operator << (std::ostream &os, const COST &cost)

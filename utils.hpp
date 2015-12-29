@@ -256,6 +256,11 @@ get_random_element(const C &c, T &gen)
 }
 
 /**
+ * This is the << operator for a sscpath.
+ */
+std::ostream &operator << (std::ostream &os, const sscpath &p);
+
+/**
  * This is the << operator for a CEP.
  */
 std::ostream &operator << (std::ostream &os, const CEP &cep);
