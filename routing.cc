@@ -7,6 +7,7 @@
 
 #include <climits>
 #include <iostream>
+#include <list>
 
 using namespace std;
 
@@ -122,14 +123,34 @@ routing::set_up_path(graph &g, const sscpath &p)
   const path &l = p.first;
   const SSC &p_ssc = p.second;
 
+  // The list of edges on which the p_ssc was allocated.
+  list<edge> le;
+  
   // Make sure the edges have the required SSC.
   for(const auto &e: l)
-    if (!includes(sm[e], p_ssc))
-      return false;
+    if (includes(sm[e], p_ssc))
+      {
+        exclude(sm[e], p_ssc);
+        le.push_back(e);
+      }
+    else
+      {
+        // We failed to allocate the SSC along the whole path, and so
+        // we free up those SSCs already allocated.
+        for(const auto &e: le)
+          {
+            // The SSC for edge e.
+            SSC &e_ssc = sm[e];
 
-  // Remove the p_ssc subcarriers from the path edges.
-  for(const auto &e: l)
-    exclude(sm[e], p_ssc);
+            // Make sure that the edge has these subcarriers taken.
+            assert(excludes(e_ssc, p_ssc));
+
+            // Put back the p_ssc subcarriers to e_ssc.
+            include(e_ssc, p_ssc);
+          }
+
+        return false;
+      }
 
   return true;
 }
