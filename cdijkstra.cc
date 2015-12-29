@@ -305,6 +305,8 @@ cdijkstra::trace(const graph &g, const V2C2S &r, const demand &d)
               assert(j != c2s.end());
 
               const edge &e = j->first.second;
+              const SSC &essc = boost::get(boost::edge_ssc, g, e);
+              assert(includes(essc, ssc));
               p.first.push_front(e);
               c.first -= boost::get(boost::edge_weight, g, e);
               --c.second;
