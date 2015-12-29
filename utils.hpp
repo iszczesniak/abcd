@@ -16,6 +16,7 @@
 #include <cassert>
 #include <iostream>
 #include <list>
+#include <map>
 #include <set>
 #include <string>
 #include <vector>
@@ -255,6 +256,16 @@ get_random_element(const C &c, T &gen)
 }
 
 /**
+ * This is the << operator for a CEP.
+ */
+std::ostream &operator << (std::ostream &os, const CEP &cep);
+
+/**
+ * This is the << operator for a COST.
+ */
+std::ostream &operator << (std::ostream &os, const COST &cost);
+
+/**
  * This is the << operator for a vector.
  */
 template <typename T>
@@ -316,6 +327,18 @@ std::ostream &operator << (std::ostream &os, const std::list<T> &v)
     }
 
   os << ")";
+
+  return os;
+}
+
+/**
+ * This is the << operator for a map.
+ */
+template <typename K, typename V>
+std::ostream &operator << (std::ostream &os, const std::map<K, V> &m)
+{
+  for(auto const &e: m)
+    os << e.first << " -> " << e.second << std::endl;
 
   return os;
 }

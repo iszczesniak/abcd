@@ -198,3 +198,19 @@ calculate_fragments(const SSC &ssc)
 {
   return split(ssc).size();
 }
+
+/**
+ * This is the << operator for a COST.
+ */
+std::ostream &operator << (std::ostream &os, const COST &cost)
+{
+  os << "COST(" << cost.first << ", " << cost.second << ")";
+}
+
+/**
+ * This is the << operator for a CEP.
+ */
+std::ostream &operator << (std::ostream &os, const CEP &cep)
+{
+  os << "CEP(" << cep.first << ", " << cep.second << ")";
+}
