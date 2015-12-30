@@ -79,6 +79,8 @@ cdijkstra::purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc)
 {
   C2S::iterator i = c2s.begin();
 
+  // We don't care about the results with the cost smaller than
+  // "cost".
   while(i != c2s.end() && i->first.first < cost)
     ++i;
 
@@ -122,6 +124,8 @@ cdijkstra::relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v,
       c2s[cep].insert(ssc);
     }
 }
+
+// Deal with the new solution.
 
 void
 cdijkstra::relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v,
@@ -263,6 +267,7 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
                       // The target vertex of the edge.
                       vertex t = boost::target(e, g);
 
+                      // Deal with the new solution.
                       relaks(q, r[t], c_cep, t, c_sssc);
                     }
                 }
