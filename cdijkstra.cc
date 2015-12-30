@@ -208,7 +208,6 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
           vertex v = i->second;
           int c = cep.first.first;
           int h = cep.first.second;
-          edge e = cep.second;
           q.erase(i);
 
           // Stop searching when we reach the destination node.
