@@ -8,6 +8,31 @@
 
 using namespace std;
 
+BOOST_AUTO_TEST_CASE(undirected_edge_test)
+{
+  graph g(2);
+  vertex a = *(vertices(g).first);
+  vertex b = *(vertices(g).first + 1);
+  edge e1, e2;
+  bool r1, r2;
+
+  // Create the edge.  This is an undirected edge.
+  add_edge(a, b, g);
+
+  tie(e1, r1) = boost::edge(a, b, g);
+  tie(e2, r2) = boost::edge(b, a, g);
+  BOOST_CHECK(r1);
+  BOOST_CHECK(r2);
+  // Edges e1 and e2 are the same.
+  BOOST_CHECK(e1 == e2);
+  // Yet, BGL can tell what the source and target nodes are are, and
+  // they are different for e1 and e2.
+  BOOST_CHECK(boost::source(e1, g) == a);
+  BOOST_CHECK(boost::target(e1, g) == b);
+  BOOST_CHECK(boost::source(e2, g) == b);
+  BOOST_CHECK(boost::target(e2, g) == a);
+}
+
 BOOST_AUTO_TEST_CASE(parallel_edge_test)
 {
   graph g(2);
