@@ -30,13 +30,11 @@ cdijkstra::has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
 {
   // We examine the existing results with the cost lower or equal to
   // "cost".
-  for (C2S::const_iterator i = c2s.begin(); i != c2s.end(); ++i)
+  for (auto const &e: c2s)
     {
-      const C2S::value_type &e = *i;
-
       // Stop searching when we reach a result with the cost higher
       // than cost.
-      if (e.first.first > cost)
+      if (get<0>(e.first) > cost)
         break;
 
       // Check whether the existing result includes "ssc".

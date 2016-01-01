@@ -4,14 +4,17 @@
 #include "graph.hpp"
 #include "routing.hpp"
 
-#include <map>
+#include <set>
 
 /**
  * Constrained Dijkstra.
  */
 class cdijkstra: public routing
 {
-  typedef std::map<CEP, vertex> pqueue;
+  // We implement the priority queue with the set.  We ain't using the
+  // priority_queue, becasue it doesn't support element removal, which
+  // we need.
+  typedef std::set<CEV> pqueue;
 
   // The following map implements the priority queue.  The key is a
   // CEP, and the value is the vertex we are reaching.  The maps works
