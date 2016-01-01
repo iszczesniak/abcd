@@ -13,6 +13,25 @@ class cdijkstra: public routing
 {
   typedef std::map<CEP, vertex> pqueue;
 
+  // The following map implements the priority queue.  The key is a
+  // CEP, and the value is the vertex we are reaching.  The maps works
+  // as the priority queue since the first element in the key is the
+  // cost, and since the map sorts its elements in the ascending
+  // order.  The value is the vertex.  The value could be null as
+  // well, but we want to use CEP as a key, and need to store the
+  // vertex as well.
+  //
+  // We need to know not only the vertex, but the edge too, because we
+  // allow for multigraphs (i.e. with parallel edges), and so we need
+  // to know what edge was used to reach the vertex.
+  // 
+  // We could pass only the edge and figure out the vertex from the
+  // edge, but there is one special case that prevents us from doing
+  // that: the source node, for which the null edge is used.
+  // Furthermore, figuring out the end node might be problematic for
+  // undirected graphs.
+  pqueue q;
+
 protected:
   sscpath
   route_w(graph &g, const demand &d);
@@ -48,19 +67,18 @@ private:
   has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc);
 
   /**
-   * Check whether there is a worse or equal result in c2s, i.e. of a
-   * larger or equal cost and with a SSC that is included in "ssc".
+   * Purge a worse or equal result in c2s, i.e., of a larger or equal
+   * cost and with a SSC that is included in "ssc".
    */
   void
-  purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc);
+  purge_worse(C2S &c2s, const COST &cost, const SSC &ssc);
 
   void
-  relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v,
-         const SSC &ssc);
+  relax(C2S &c2s, const CEV &cev, const SSC &ssc);
 
+  
   void
-  relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v,
-         const SSSC &sssc);
+  relax(C2S &c2s, const CEV &cev, const SSSC &sssc);
 };
 
 #endif /* CDIJKSTRA_HPP */

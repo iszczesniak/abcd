@@ -43,11 +43,6 @@ cdijkstra::route_w(graph &g, const demand &d)
   return result;
 }
 
-/**
- * Check whether there is a better or equal result in c2s than the new
- * result, i.e. of a lower or equal cost and with a SSC that includes
- * "ssc".
- */
 bool
 cdijkstra::has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
 {
@@ -70,12 +65,8 @@ cdijkstra::has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
   return false;
 }
 
-/**
- * Check whether there is a worse or equal result in c2s, i.e. of a
- * larger or equal cost and with a SSC that is included in "ssc".
- */
 void
-cdijkstra::purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc)
+cdijkstra::purge_worse(C2S &c2s, const COST &cost, const SSC &ssc)
 {
   C2S::iterator i = c2s.begin();
 
@@ -96,7 +87,7 @@ cdijkstra::purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc)
             sssc.erase(j2);
         }
 
-      // Discard the CEP for which SSSC is empty.
+      // Discard the CEV for which SSSC is empty.
       if (sssc.empty())
         {
           q.erase(i2->first);
@@ -106,8 +97,7 @@ cdijkstra::purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc)
 }
 
 void
-cdijkstra::relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v,
-                 const SSC &ssc)
+cdijkstra::relax(C2S &c2s, const CEV &cev, const SSC &ssc)
 {
   // Check whether there is an SSC in c2s that includes c_ssc at the
   // same or lower cost then c_cep.  If yes, then we can ignore this
@@ -120,19 +110,18 @@ cdijkstra::relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v,
 
       // Since there was no better or equal result, we use the new
       // result.
-      q[cep] = v;
-      c2s[cep].insert(ssc);
+      q.insert(cev);
+      c2s[cev].insert(ssc);
     }
 }
 
-// Deal with the new solution.
-
 void
-cdijkstra::relaks(pqueue &q, C2S &c2s, const CEP &cep, vertex v,
-                 const SSSC &sssc)
+cdijkstra::relax(pqueue &q, C2S &c2s, const CEV &cev, const SSSC &sssc)
 {
-  for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
-    relaks(q, c2s, cep, v, *i);
+  // We process every SSC separately, because each SSC corresponds to
+  // a different solution.
+  for(auto const &ssc: sssc)
+    relax(c2s, cev, ssc);
 }
 
 V2C2S
@@ -168,6 +157,8 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
 
   // The null edge.
   const edge &ne = *(boost::edges(g).second);
+  // The null node.
+  const vertex &nn = *(boost::edges(g).second);
 
   // We have to filter ssc to exclude subcarriers that can't support
   // the signal with p subcarriers.
@@ -180,28 +171,8 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
       // source node with cost 0 on the subcarriers passed in the ssc
       // argument along the null edge.  The null edge signals the
       // beginning of the path.
-      r[src][CEP(COST(0, 0), ne)].insert(src_ssc_nsc);
-
-      // The following map implements the priority queue.  The key is
-      // a CEP, and the value is the vertex we are reaching.  The maps
-      // works as the priority queue since the first element in the
-      // key is the cost, and since the map sorts its elements in the
-      // ascending order.  The value is the vertex.  The value could
-      // be null as well, but we want to use CEP as a key, and need to
-      // store the vertex as well.
-      //
-      // We need to know not only the vertex, but the edge too,
-      // because we allow for multigraphs (i.e. with parallel edges),
-      // and so we need to know what edge was used to reach the
-      // vertex.
-      // 
-      // We could pass only the edge and figure out the vertex from
-      // the edge, but there is one special case that prevents us from
-      // doing that: the source node, for which the null edge is used.
-      // Furthermore, figuring out the end node might be problematic
-      // for undirected graphs.
-      pqueue q;
-
+      r[src][CEV(COST(0, 0), ne, nn)].insert(src_ssc_nsc);
+      
       // We reach vertex src with null cost along the null edge.
       q[make_pair(COST(0, 0), ne)] = src;
 
@@ -242,12 +213,12 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
               // The cost of the edge.
               int ec = boost::get(boost::edge_weight, g, e);
               // Candidate cost.
-              int new_c = c + ec;
+              int c_c = c + ec;
 
               // Consider that path when there is no maximal length
               // given or when the new lenght is not greater than the
               // limit.
-              if (!m_ml || new_c <= m_ml.get())
+              if (!m_ml || c_c <= m_ml.get())
                 {
                   // The subcarriers available on the edge.
                   const SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
@@ -259,16 +230,16 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
                   if (!c_sssc.empty())
                     {
                       // Candidate number of hops.
-                      int new_h = h + 1;
+                      int c_h = h + 1;
                       // Candidate COST.
-                      COST new_cost = COST(new_c, new_h);
-                      // Candidate CEP.
-                      CEP c_cep = make_pair(new_cost, e);
+                      COST c_cost = COST(c_c, c_h);
                       // The target vertex of the edge.
                       vertex t = boost::target(e, g);
+                      // Candidate CEP.
+                      CEV c_cev = CEV(c_cost, e, t);
 
                       // Deal with the new solution.
-                      relaks(q, r[t], c_cep, t, c_sssc);
+                      relax(q, r[t], c_cev, c_sssc);
                     }
                 }
             }

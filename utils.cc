@@ -216,9 +216,12 @@ std::ostream &operator << (std::ostream &os, const COST &cost)
 }
 
 /**
- * This is the << operator for a CEP.
+ * This is the << operator for a CEV.
  */
-std::ostream &operator << (std::ostream &os, const CEP &cep)
+std::ostream &operator << (std::ostream &os, const CEV &cev)
 {
-  os << "CEP(" << cep.first << ", " << cep.second << ")";
+  os << "CEV("
+     << get<0>(cev) << ", "
+     << get<1>(cev) << ", "
+     << get<2>(cev) << ")";
 }

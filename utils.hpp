@@ -261,9 +261,9 @@ get_random_element(const C &c, T &gen)
 std::ostream &operator << (std::ostream &os, const sscpath &p);
 
 /**
- * This is the << operator for a CEP.
+ * This is the << operator for a CEV.
  */
-std::ostream &operator << (std::ostream &os, const CEP &cep);
+std::ostream &operator << (std::ostream &os, const CEV &cev);
 
 /**
  * This is the << operator for a COST.

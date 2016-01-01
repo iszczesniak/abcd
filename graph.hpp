@@ -5,6 +5,7 @@
 #include <map>
 #include <set>
 #include <string>
+#include <tuple>
 #include <utility>
 #include <vector>
 
@@ -53,13 +54,18 @@ typedef graph::vertex_descriptor vertex;
 // the path with the least number of hops, otherwise we risk looping.
 typedef std::pair<int, int> COST;
 
-// The cost and edge pair.  It is used to store the cost of reaching a
-// node along the given edge.
-typedef std::pair<COST, edge> CEP;
+// The cost, edge and vertex tuple.  Tuple (c, e, v) stores cost c of
+// reaching target vertex v along edge e.  You could get the target
+// vertex for the given edge with target(e, g), but I'm not sure it's
+// always gonna work for undirected edges.  Furthermore, we cannot
+// have std::pair<COST, edge> only (i.e., without the vertex), because
+// for undirected edges (c, v) and (cep, r) are the same, where r is
+// the reverse edge of v.
+typedef std::tuple<COST, edge, vertex> CEV;
 
-// The mapping from CEP to SSSC.  This mapping tells what SSSC is
-// available at a node provided a given CEP was used.
-typedef std::map<CEP, SSSC> C2S;
+// The mapping from CEV to SSSC.  This mapping tells what SSSC is
+// available at a node provided a given CEV was used.
+typedef std::map<CEV, SSSC> C2S;
 
 // A map of vertexes to C2S.  It's used to store the complete
 // information for a given vertex.
