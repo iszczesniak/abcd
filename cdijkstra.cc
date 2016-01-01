@@ -65,7 +65,7 @@ cdijkstra::purge_worse(C2S &c2s, const COST &cost, const SSC &ssc)
 
       // Remove those SSCs that are included in ssc.
       remove_if(sssc.begin(), sssc.end(),
-                [&ssc](SSC &e) {return includes(ssc, e);});
+                [&ssc](const SSC &e) {return includes(ssc, e);});
 
       // Discard the CEV for which SSSC is empty.
       if (sssc.empty())
@@ -79,14 +79,16 @@ cdijkstra::purge_worse(C2S &c2s, const COST &cost, const SSC &ssc)
 void
 cdijkstra::relax(C2S &c2s, const CEV &cev, const SSC &ssc)
 {
-  // Check whether there is an SSC in c2s that includes c_ssc at the
-  // same or lower cost then c_cep.  If yes, then we can ignore this
-  // new result.
-  if (!has_better_or_equal(c2s, cep.first, ssc))
+  const COST &cost = get<0>(cev);
+
+  // Check whether there is an SSC in c2s that includes ssc at the
+  // same or lower cost then "cost".  If so, then we can skip this new
+  // result.
+  if (!has_better_or_equal(c2s, cost, ssc))
     {
       // There are no better or equal results than the new result.
       // There might be worse results, and so we need to remove them.
-      purge_worse(q, c2s, cep.first, ssc);
+      purge_worse(c2s, cost, ssc);
 
       // Since there was no better or equal result, we use the new
       // result.
@@ -96,7 +98,7 @@ cdijkstra::relax(C2S &c2s, const CEV &cev, const SSC &ssc)
 }
 
 void
-cdijkstra::relax(pqueue &q, C2S &c2s, const CEV &cev, const SSSC &sssc)
+cdijkstra::relax(C2S &c2s, const CEV &cev, const SSSC &sssc)
 {
   // We process every SSC separately, because each SSC corresponds to
   // a different solution.
@@ -138,7 +140,7 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
   // The null edge.
   const edge &ne = *(boost::edges(g).second);
   // The null node.
-  const vertex &nn = *(boost::edges(g).second);
+  const vertex &nn = *(boost::vertices(g).second);
 
   // We have to filter ssc to exclude subcarriers that can't support
   // the signal with p subcarriers.
@@ -152,18 +154,20 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
       // argument along the null edge.  The null edge signals the
       // beginning of the path.
       r[src][CEV(COST(0, 0), ne, nn)].insert(src_ssc_nsc);
-      
+
+      // Clear the queue.
+      q.clear();
       // We reach vertex src with null cost along the null edge.
-      q[make_pair(COST(0, 0), ne)] = src;
+      q.insert(CEV(COST(0, 0), ne, nn));
 
       while(!q.empty())
         {
-          pqueue::iterator i = q.begin();
-          CEP cep = i->first;
-          vertex v = i->second;
-          int c = cep.first.first;
-          int h = cep.first.second;
-          q.erase(i);
+          const CEV &cev = *(q.begin());
+          const COST &cost = get<0>(cev);
+          int c = cost.first;
+          int h = cost.second;
+          vertex v = get<2>(cev);
+          q.erase(q.begin());
 
           // Stop searching when we reach the destination node.
           if (v == dst)
@@ -172,9 +176,9 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
           // C2S for node v.
           const C2S &c2s = r[v];
 
-          // The CEP that we process in this loop has to be in the
+          // The CEV that we process in this loop has to be in the
           // C2S.
-          C2S::const_iterator j = c2s.find(cep);
+          C2S::const_iterator j = c2s.find(cev);
           assert(j != c2s.end());
 
           // This SSSC is now available at node v for further search.
@@ -215,11 +219,11 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
                       COST c_cost = COST(c_c, c_h);
                       // The target vertex of the edge.
                       vertex t = boost::target(e, g);
-                      // Candidate CEP.
+                      // Candidate CEV.
                       CEV c_cev = CEV(c_cost, e, t);
 
                       // Deal with the new solution.
-                      relax(q, r[t], c_cev, c_sssc);
+                      relax(r[t], c_cev, c_sssc);
                     }
                 }
             }
@@ -254,7 +258,7 @@ cdijkstra::trace(const graph &g, const V2C2S &r, const demand &d)
           C2S::const_iterator bri = dst_c2s.begin();
 
           // This is the cost of the whole path.
-          COST c = bri->first.first;
+          COST c = get<0>(bri->first);
 
           // This is the path SSC.
           const SSC ssc = select_ssc(bri->second, nsc);
@@ -273,13 +277,13 @@ cdijkstra::trace(const graph &g, const V2C2S &r, const demand &d)
               // contains SSC.
               C2S::const_iterator j;
               for(j = c2s.begin(); j != c2s.end(); ++j)
-                if (j->first.first == c && includes(j->second, ssc))
+                if (get<0>(j->first) == c && includes(j->second, ssc))
                   break;
 
-              // Make sure we found the right CEP.
+              // Make sure we found the right CEV.
               assert(j != c2s.end());
 
-              const edge &e = j->first.second;
+              const edge &e = get<1>(j->first);
               const SSC &essc = boost::get(boost::edge_ssc, g, e);
               assert(includes(essc, ssc));
               p.first.push_front(e);
