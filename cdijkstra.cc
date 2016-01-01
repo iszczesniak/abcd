@@ -64,8 +64,12 @@ cdijkstra::purge_worse(C2S &c2s, const COST &cost, const SSC &ssc)
         break;
 
       // Remove those SSCs that are included in ssc.
-      remove_if(sssc.begin(), sssc.end(),
-                [&ssc](const SSC &e) {return includes(ssc, e);});
+      for (SSSC::iterator j = sssc.begin(); j != sssc.end();)
+        {
+          SSSC::iterator j2 = j++;
+          if (includes(ssc, *j2))
+            sssc.erase(j2);
+        }
 
       // Discard the CEV for which SSSC is empty.
       if (sssc.empty())
