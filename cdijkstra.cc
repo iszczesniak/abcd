@@ -2,6 +2,7 @@
 #include "graph.hpp"
 #include "utils.hpp"
 
+#include <algorithm>
 #include <iostream>
 #include <iterator>
 #include <queue>
@@ -48,30 +49,29 @@ cdijkstra::has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
 void
 cdijkstra::purge_worse(C2S &c2s, const COST &cost, const SSC &ssc)
 {
-  C2S::iterator i = c2s.begin();
-
-  // We don't care about the results with the cost smaller than
-  // "cost".
-  while(i != c2s.end() && i->first.first < cost)
-    ++i;
-
-  while (i != c2s.end())
+  // We iterate from the end, because there are the highest costs.
+  C2S::reverse_iterator i = c2s.rbegin();
+  
+  while (i != c2s.rend())
     {
-      C2S::iterator i2 = i++;
+      C2S::reverse_iterator i2 = i++;
+      const CEV &cev = i2->first;
       SSSC &sssc = i2->second;
 
-      for (SSSC::iterator j = sssc.begin(); j != sssc.end();)
-        {
-          SSSC::iterator j2 = j++;
-          if (includes(ssc, *j2))
-            sssc.erase(j2);
-        }
+      // Break the loop when we reach a solution with the cost lower
+      // than "cost".
+      if (get<0>(cev) < cost)
+        break;
+
+      // Remove those SSCs that are included in ssc.
+      remove_if(sssc.begin(), sssc.end(),
+                [&ssc](SSC &e) {return includes(ssc, e);});
 
       // Discard the CEV for which SSSC is empty.
       if (sssc.empty())
         {
-          q.erase(i2->first);
-          c2s.erase(i2);
+          q.erase(cev);
+          c2s.erase(i2.base());
         }
     }
 }
