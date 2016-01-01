@@ -61,6 +61,6 @@ clean:
 	rm -rf $(TESTS) $(OTHER)
 
 depend:
-	g++ -MM -I../ *.cc > dependencies
+	g++ -std=c++11 -MM -I../ *.cc > dependencies
 
 include dependencies
