@@ -36,6 +36,6 @@ count:
 	wc -l *.hpp *.cc
 
 depend:
-	g++ -MM *.cc > dependencies
+	g++ -std=c++11 -MM *.cc > dependencies
 
 include dependencies
