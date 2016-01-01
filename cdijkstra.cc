@@ -19,25 +19,7 @@ cdijkstra::route_w(graph &g, const demand &d)
   if (!result.first.empty())
     {
       bool status = set_up_path(g, result);
-      if (!status)
-        {
-          cout << "*****************************************" << endl;
-          cout << "FAILING PATH" << endl;
-          cout << "*****************************************" << endl;
-          cout << result << endl;
-
-          cout << "*****************************************" << endl;
-          cout << "EDGES" << endl;
-          cout << "*****************************************" << endl;
-          print_edges(g, cout);
-
-          cout << "*****************************************" << endl;
-          cout << "V2C2S" << endl;
-          cout << "*****************************************" << endl;
-          cout << r;
-
-          abort();
-        }
+      assert(status);
     }
 
   return result;
