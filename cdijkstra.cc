@@ -143,8 +143,6 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
 
   // The null edge.
   const edge &ne = *(boost::edges(g).second);
-  // The null node.
-  const vertex &nn = *(boost::vertices(g).second);
 
   // We have to filter ssc to exclude subcarriers that can't support
   // the signal with p subcarriers.
@@ -157,12 +155,12 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
       // source node with cost 0 on the subcarriers passed in the ssc
       // argument along the null edge.  The null edge signals the
       // beginning of the path.
-      r[src][CEV(COST(0, 0), ne, nn)].insert(src_ssc_nsc);
+      r[src][CEV(COST(0, 0), ne, src)].insert(src_ssc_nsc);
 
       // Clear the queue.
       q.clear();
       // We reach vertex src with null cost along the null edge.
-      q.insert(CEV(COST(0, 0), ne, nn));
+      q.insert(CEV(COST(0, 0), ne, src));
 
       while(!q.empty())
         {
