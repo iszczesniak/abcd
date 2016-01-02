@@ -50,13 +50,10 @@ void
 cdijkstra::purge_worse(C2S &c2s, const COST &cost, const SSC &ssc)
 {
   // We iterate from the end, because there are the highest costs.
-  C2S::reverse_iterator i = c2s.rbegin();
-  
-  while (i != c2s.rend())
+  for(auto r = c2s.rbegin(); r != c2s.rend();)
     {
-      C2S::reverse_iterator i2 = i++;
-      const CEV &cev = i2->first;
-      SSSC &sssc = i2->second;
+      const CEV &cev = r->first;
+      SSSC &sssc = r->second;
 
       // Break the loop when we reach a solution with the cost lower
       // than "cost".
@@ -71,11 +68,29 @@ cdijkstra::purge_worse(C2S &c2s, const COST &cost, const SSC &ssc)
             sssc.erase(j2);
         }
 
+      // The location of this incrementation is tricky, so watch out!
+      // We have to increment the iterator, but there are two reasons
+      // why we do it right here:
+      // 
+      // 1) Iterator r points to element cev that we may erase below,
+      // and so incrementing r now will prevent r from being
+      // invalidated by the erasure.
+      //
+      // 2) After incrementing r now, the base iterator, r.base(),
+      // points to element cev that we may erase below.
+      ++r;
+      
       // Discard the CEV for which SSSC is empty.
       if (sssc.empty())
         {
           q.erase(cev);
-          c2s.erase(i2.base());
+          // Delete element cev processed in this iteration, which was
+          // pointed to by r.  Usually, we would have to
+          // erase(--(r.base())), because the base of r points
+          // actually to the next element in the container.  But we
+          // incremented r above, which decremented the base for us,
+          // and so we don't have to do it below.
+          c2s.erase(r.base());
         }
     }
 }
