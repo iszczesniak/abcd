@@ -53,6 +53,8 @@ cdijkstra::purge_worse(C2S &c2s, const COST &cost, const SSC &ssc)
 
   while (i != c2s.end())
     {
+      // We're advancing the iterator, because we might invalidate it
+      // at the end of the loop.
       auto i2 = i++;
 
       if (get<0>(i2->first) >= cost)
