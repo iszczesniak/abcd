@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "cdijkstra.hpp"
 #include "graph.hpp"
 #include "sdi_args.hpp"
@@ -7,21 +5,36 @@
 #include "stats.hpp"
 #include "utils_netgen.hpp"
 
-#include <boost/random.hpp>
-
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
 #include <boost/accumulators/statistics/variance.hpp>
+#include <boost/random.hpp>
+
+#include <iostream>
+#include <string>
 
 namespace ba = boost::accumulators;
 
 using namespace std;
 
+template<typename T>
+void
+print_stats(const string &s, const T &t)
+{
+  cout << s << ": "
+       << "min = " << ba::min(t) << ", "
+       << "mean = " << ba::mean(t) << ", "
+       << "max = " << ba::max(t) << ", "
+       << "variance = " << ba::variance(t) << endl;
+}
+
 void
 net_stats(const sdi_args &args)
 {
   // The accumulator with double values.
-  typedef ba::accumulator_set<double, ba::stats<ba::tag::mean,
+  typedef ba::accumulator_set<double, ba::stats<ba::tag::min,
+                                                ba::tag::mean,
+                                                ba::tag::max,
                                                 ba::tag::variance> > dbl_acc;
 
   // Link lengths.
@@ -90,21 +103,10 @@ net_stats(const sdi_args &args)
         }
     }
 
-  cout << "Link length: "
-       << "mean = " << ba::mean(lls) << ", "
-       << "variance = " << ba::variance(lls) << endl;
-
-  cout << "Node degree: "
-       << "mean = " << ba::mean(nds) << ", "
-       << "variance = " << ba::variance(nds) << endl;
-
-  cout << "Shortest path length: "
-       << "mean = " << ba::mean(spls) << ", "
-       << "variance = " << ba::variance(spls) << endl;
-
-  cout << "Shortest path hops: "
-       << "mean = " << ba::mean(sphs) << ", "
-       << "variance = " << ba::variance(sphs) << endl;
+  print_stats("Link length", lls);
+  print_stats("Node degree", nds);
+  print_stats("Shortest path length", spls);
+  print_stats("Shortest path hops", sphs);
 }
 
 void
