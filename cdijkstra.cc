@@ -53,10 +53,11 @@ cdijkstra::purge_worse(C2S &c2s, const COST &cost, const SSC &ssc)
 
   while (i != c2s.end())
     {
-      // We're advancing the iterator now, because we might invalidate
-      // it at the end of the loop.
+      // We're advancing the iterator now, because at the end of the
+      // loop it already can be invalid because of the erasure.
       auto i2 = i++;
 
+      // We consider only worse results.
       if (get<0>(i2->first) >= cost)
         {
           const CEV &cev = i2->first;
@@ -70,7 +71,7 @@ cdijkstra::purge_worse(C2S &c2s, const COST &cost, const SSC &ssc)
                 sssc.erase(j2);
             }
 
-          // Discard the CEV for which SSSC is empty.
+          // Discard the CEV for which SSSC is empty, from both q and c2s.
           if (sssc.empty())
             {
               q.erase(cev);
