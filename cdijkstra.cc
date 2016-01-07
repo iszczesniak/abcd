@@ -57,10 +57,11 @@ cdijkstra::purge_worse(C2S &c2s, const COST &cost, const SSC &ssc)
       // loop it already can be invalid because of the erasure.
       auto i2 = i++;
 
+      const CEV &cev = i2->first;
+
       // We consider only worse results.
-      if (get<0>(i2->first) >= cost)
+      if (get<0>(cev) > cost)
         {
-          const CEV &cev = i2->first;
           SSSC &sssc = i2->second;
 
           // Remove those SSCs that are included in ssc.
