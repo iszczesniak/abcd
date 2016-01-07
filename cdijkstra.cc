@@ -46,6 +46,11 @@ cdijkstra::has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
   return false;
 }
 
+// I tried implementing this function with the reverse iterators and
+// with regular iterators iterated backwards, but it was a mess, so I
+// stuck to regular iterators iterated forward.  I was also thinking
+// about using upper_bound to locate the first element to consider,
+// but it actually might turn out less effective.
 void
 cdijkstra::purge_worse(C2S &c2s, const COST &cost, const SSC &ssc)
 {
