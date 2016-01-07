@@ -85,19 +85,17 @@ cdijkstra::relax(C2S &c2s, const CEV &cev, const SSC &ssc)
 {
   const COST &cost = get<0>(cev);
 
-  // Check whether there is an SSC in c2s that includes ssc at the
-  // same or lower cost then "cost".  If so, then we can skip this new
-  // result.
+  // We can ignore the new result (given as arguments cev and ssc) if
+  // in c2s there is already a better or equal result.
   if (!has_better_or_equal(c2s, cost, ssc))
     {
-      // There are no better or equal results than the new result.
-      // There might be worse results, and so we need to remove them.
-      purge_worse(c2s, cost, ssc);
-
-      // Since there was no better or equal result, we use the new
-      // result.
+      // OK, this is the best result so far, so let's use it.
       q.insert(cev);
       c2s[cev].insert(ssc);
+
+      // There might be worse results from previous relaxations, and
+      // so we need to remove them, because they are useless.
+      purge_worse(c2s, cost, ssc);
     }
 }
 
@@ -105,7 +103,7 @@ void
 cdijkstra::relax(C2S &c2s, const CEV &cev, const SSSC &sssc)
 {
   // We process every SSC separately, because each SSC corresponds to
-  // a different solution.
+  // an independent solution.
   for(auto const &ssc: sssc)
     relax(c2s, cev, ssc);
 }
