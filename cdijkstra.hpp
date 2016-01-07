@@ -62,16 +62,17 @@ protected:
 
 private:
   /**
-   * Check whether there is a better or equal result in c2s than the
-   * new result, i.e. of a lower or equal cost and with a SSC that
-   * includes "ssc".
+   * Check whether in c2s there is a better or equal result than the
+   * new result (given as arguments cost and ssc), i.e. of a lower or
+   * equal cost than "cost" and with a SSC that includes "ssc".
    */
   bool
   has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc);
 
   /**
-   * Purge a worse or equal result in c2s, i.e., of a larger or equal
-   * cost and with a SSC that is included in "ssc".
+   * Purge from c2s those results that are worse than the new result
+   * (given as arguments cost and ssc), i.e., of a larger cost and
+   * with a SSC that is included in "ssc".
    */
   void
   purge_worse(C2S &c2s, const COST &cost, const SSC &ssc);
