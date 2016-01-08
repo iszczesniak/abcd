@@ -11,29 +11,25 @@
  */
 class cdijkstra: public routing
 {
-  // We implement the priority queue with the set.  We ain't using the
-  // priority_queue, becasue it doesn't support element removal, which
-  // we need.
-  typedef std::set<CEV> pqueue;
-
-  // The following map implements the priority queue.  The key is a
-  // CEP, and the value is the vertex we are reaching.  The maps works
-  // as the priority queue since the first element in the key is the
-  // cost, and since the map sorts its elements in the ascending
-  // order.  The value is the vertex.  The value could be null as
-  // well, but we want to use CEP as a key, and need to store the
-  // vertex as well.
+  // We implement the priority queue with the set, since it's a sorted
+  // container.  We ain't using the std::priority_queue, becasue it
+  // doesn't support the element removal, which we need.
   //
-  // We need to know not only the vertex, but the edge too, because we
-  // allow for multigraphs (i.e. with parallel edges), and so we need
-  // to know what edge was used to reach the vertex.
+  // The queue element is of type CEV, i.e., a tuple of COST, edge and
+  // vertex.  We need to know not only the target vertex, but the edge
+  // too, because we allow for multigraphs (i.e. with parallel edges),
+  // and so we need to know what edge was used to reach the target
+  // vertex.
   // 
-  // We could pass only the edge and figure out the vertex from the
-  // edge, but there is one special case that prevents us from doing
-  // that: the source node, for which the null edge is used.
-  // Furthermore, figuring out the end node might be problematic for
-  // undirected graphs.
-  pqueue q;
+  // We cannot store only the edge and figure out the target vertex
+  // from that edge for two reasons. 1) There is one special case for
+  // which we cannot figure out the target vertex from the edge: the
+  // source node, for which the null edge is used.  2) Having only a
+  // pair of COST and edge is wrong for undirected edges, because a
+  // pair of (cost, edge) and (cost, redge) is the same, where redge
+  // is the edge reverse to edge.  To make an element unique, we need
+  // a tuple of (cost, edge, target vertex).
+  typedef std::set<CEV> pqueue;
 
 protected:
   sscpath
@@ -75,14 +71,13 @@ private:
    * with a SSC that is included in "ssc".
    */
   void
-  purge_worse(C2S &c2s, const COST &cost, const SSC &ssc);
+  purge_worse(pqueue &p, C2S &c2s, const COST &cost, const SSC &ssc);
 
   void
-  relax(C2S &c2s, const CEV &cev, const SSC &ssc);
+  relax(pqueue &q, C2S &c2s, const CEV &cev, const SSC &ssc);
 
-  
   void
-  relax(C2S &c2s, const CEV &cev, const SSSC &sssc);
+  relax(pqueue &q, C2S &c2s, const CEV &cev, const SSSC &sssc);
 };
 
 #endif /* CDIJKSTRA_HPP */

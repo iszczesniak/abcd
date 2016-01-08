@@ -52,7 +52,7 @@ cdijkstra::has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
 // about using upper_bound to locate the first element to consider,
 // but it actually might turn out less effective.
 void
-cdijkstra::purge_worse(C2S &c2s, const COST &cost, const SSC &ssc)
+cdijkstra::purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc)
 {
   auto i = c2s.begin();
 
@@ -88,7 +88,7 @@ cdijkstra::purge_worse(C2S &c2s, const COST &cost, const SSC &ssc)
 }
 
 void
-cdijkstra::relax(C2S &c2s, const CEV &cev, const SSC &ssc)
+cdijkstra::relax(pqueue &q, C2S &c2s, const CEV &cev, const SSC &ssc)
 {
   const COST &cost = get<0>(cev);
 
@@ -102,17 +102,17 @@ cdijkstra::relax(C2S &c2s, const CEV &cev, const SSC &ssc)
 
       // There might be worse results from previous relaxations, and
       // so we need to remove them, because they are useless.
-      purge_worse(c2s, cost, ssc);
+      purge_worse(q, c2s, cost, ssc);
     }
 }
 
 void
-cdijkstra::relax(C2S &c2s, const CEV &cev, const SSSC &sssc)
+cdijkstra::relax(pqueue &q, C2S &c2s, const CEV &cev, const SSSC &sssc)
 {
   // We process every SSC separately, because each SSC corresponds to
   // an independent solution.
   for(auto const &ssc: sssc)
-    relax(c2s, cev, ssc);
+    relax(q, c2s, cev, ssc);
 }
 
 V2C2S
@@ -156,14 +156,14 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
   if (!src_ssc_nsc.empty())
     {
       // We put here the information that allows us to process the
-      // source node in the loop below.  We say that we reach the
-      // source node with cost 0 on the subcarriers passed in the ssc
-      // argument along the null edge.  The null edge signals the
+      // source node in the loop below.  We say that we reach source
+      // node src with cost (0, 0) on the subcarriers passed in the
+      // ssc argument along the null edge.  The null edge signals the
       // beginning of the path.
       r[src][CEV(COST(0, 0), ne, src)].insert(src_ssc_nsc);
 
-      // Clear the queue.
-      q.clear();
+      // The priority queue.
+      pqueue q;
       // We reach vertex src with null cost along the null edge.
       q.insert(CEV(COST(0, 0), ne, src));
 
@@ -230,7 +230,7 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
                       CEV c_cev = CEV(c_cost, e, t);
 
                       // Deal with the new solution.
-                      relax(r[t], c_cev, c_sssc);
+                      relax(q, r[t], c_cev, c_sssc);
                     }
                 }
             }
