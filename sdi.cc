@@ -37,6 +37,12 @@ net_stats(const sdi_args &args)
                                                 ba::tag::max,
                                                 ba::tag::variance> > dbl_acc;
 
+  // Number of nodes.
+  dbl_acc nns;
+
+  // Number of links.
+  dbl_acc nls;
+
   // Link lengths.
   dbl_acc lls;
 
@@ -59,6 +65,10 @@ net_stats(const sdi_args &args)
 
       assert(is_connected(g));
 
+      // Record the number of nodes and links.
+      nns(num_vertices(g));
+      nls(num_edges(g));
+      
       // Calculate the mean value of the edge lengths.
       auto es = boost::edges(g);
       for (auto ei = es.first; ei != es.second; ++ei)
@@ -103,6 +113,8 @@ net_stats(const sdi_args &args)
         }
     }
 
+  print_stats("Number of nodes", nns);
+  print_stats("Number of links", nls);
   print_stats("Link length", lls);
   print_stats("Node degree", nds);
   print_stats("Shortest path length", spls);
