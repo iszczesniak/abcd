@@ -189,7 +189,7 @@ generate_random_graph(const sdi_args &args, T &gen)
   assert(num_edges (g) == args.nr_edges.get());
 
   // The distance for each edge.
-  set_distances(g, 150, 450, gen);
+  set_distances(g, 100, 200, gen);
 
   return g;
 }
