@@ -29,7 +29,7 @@ print_stats(const string &s, const T &t)
 }
 
 void
-net_stats(const sdi_args &args)
+net_stats(const sdi_args &args_orig)
 {
   // The accumulator with double values.
   typedef ba::accumulator_set<double, ba::stats<ba::tag::min,
@@ -57,8 +57,12 @@ net_stats(const sdi_args &args)
   
   for (int i = 0; i < 100; ++i)
     {
+      sdi_args args = args_orig;
+      
+      args.seed += i;
+      
       // Random number generator.
-      boost::mt19937 rng(args.seed + i);
+      boost::mt19937 rng(args.seed);
 
       // Generate the graph.
       graph g = generate_graph(args, rng);
