@@ -41,12 +41,12 @@ bool client::set_up()
   d.second = nscdg() + 1;
 
   // Set up the connection.
-  pair<bool, int> result = conn.establish(d);
+  bool status = conn.establish(d);
 
-  st.established(result.first);
+  st.established(status);
 
-  if (result.first)
-    st.established_length(result.second);
+  if (status)
+    st.established_info(conn.length, conn.hops, conn.nsc);
 
   return result.first;
 }
