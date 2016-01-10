@@ -20,7 +20,7 @@ stats::stats(const sdi_args &args, const traffic &tra):
     // The network load.
        << "utilization" << " "
     // The probability of establishing a connection.
-       << "estab" << " "
+       << "pec" << " "
     // The mean length of an established connection.
        << "lenec" << " "
     // The mean number of hops of an established connection.
@@ -50,24 +50,24 @@ stats::operator()(double t)
   cout << calculate_utilization(g) << " ";
 
   // The probability of establishing a connection.
-  cout << ba::mean(cea) << " ";
+  cout << ba::mean(pec) << " ";
   // We reset the accumulator to get new means in the next interval.
-  cea = dbl_acc();
+  pec = dbl_acc();
 
   // The mean length of an established connection.
   cout << ba::mean(lenec) << " ";
   // We reset the accumulator to get new means in the next interval.
-  lea = dbl_acc();
+  lenec = dbl_acc();
 
   // The mean number of hops of an established connection.
   cout << ba::mean(hopec) << " ";
   // We reset the accumulator to get new means in the next interval.
-  lea = dbl_acc();
+  hopec = dbl_acc();
 
   // The mean numnber of subcarriers of an established connection.
   cout << ba::mean(nscec) << " ";
   // We reset the accumulator to get new means in the next interval.
-  lea = dbl_acc();
+  nscec = dbl_acc();
 
   // The number of active connections.
   cout << tra.nr_clients() << " ";
@@ -92,13 +92,7 @@ stats::schedule(double t)
 void
 stats::established(bool status)
 {
-  cea(status);
-}
-
-void
-stats::completed(bool status)
-{
-  cca(status);
+  pec(status);
 }
 
 void

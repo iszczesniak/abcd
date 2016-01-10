@@ -29,16 +29,16 @@ class stats: public module
   typedef ba::accumulator_set<double, ba::stats<ba::tag::mean> > dbl_acc;
 
   // The probability of establishing a connection in the interval.
-  dbl_acc cea;
+  dbl_acc pec;
 
   // The length of the established connection.
-  dbl_acc lenea;
+  dbl_acc lenec;
 
   // The number of hops of the established connection.
-  dbl_acc hopea;
+  dbl_acc hopec;
 
   // The number of subcarriers of the established connection.
-  dbl_acc nsclea;
+  dbl_acc nscec;
 
   // The arguments of the run.
   sdi_args args;

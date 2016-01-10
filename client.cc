@@ -43,19 +43,20 @@ bool client::set_up()
   // Set up the connection.
   bool status = conn.establish(d);
 
+  // Report whether the connection was established or not.
   st.established(status);
 
+  // If established, report more info.
   if (status)
-    st.established_info(conn.length, conn.hops, conn.nsc);
+    st.established_info(conn.get_length(), conn.get_hops(), conn.get_nsc());
 
-  return result.first;
+  return status;
 }
 
 void client::tear_down()
 {
   assert(conn.is_established());
   conn.tear_down();
-  st.completed(true);
   tra.erase(this);
   tra.delete_me_later(this);
 }

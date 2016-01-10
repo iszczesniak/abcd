@@ -31,22 +31,21 @@ connection::is_established() const
   return m_p.first;
 }
 
-pair<bool, int>
+bool
 connection::establish(const demand &d)
 {
-  pair<bool, int> result;
-
   // Make sure the connection is not established.
   assert(!is_established());
 
+  // Remember the demand.
   m_d = d;
 
+  // If the source and destination nodes are different, do real
+  // routing.
   if (m_d.first.first != m_d.first.second)
     {
       sscpath sp = routing::route(m_g, m_d);
-      result.first = !sp.first.empty();
-      result.second = sp.first.size();
-      m_p.first = result.first;
+      m_p.first = !sp.first.empty();
       m_p.second = sp;
     }
   else
@@ -54,7 +53,7 @@ connection::establish(const demand &d)
     // destination nodes.  In this case the path is empty.
     m_p = make_pair(true, sscpath());
 
-  return result;
+  return m_p.first;
 }
 
 void

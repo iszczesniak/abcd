@@ -29,10 +29,8 @@ public:
   bool
   is_established() const;
 
-  // Establish the connection:
-  // @return .first - true if successfull
-  // @return .second - the number of links of the established connection
-  std::pair<bool, int>
+  // Establish the connection for the given demand.  True is successfull.
+  bool
   establish(const demand &d);
 
   // Return the length of the established connection.  The connection
