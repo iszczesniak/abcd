@@ -35,6 +35,18 @@ public:
   std::pair<bool, int>
   establish(const demand &d);
 
+  // Return the length of the established connection.  The connection
+  // must be established.
+  get_length();
+
+  // Return the number of hops of the established connection.  The
+  // connection must be established.
+  get_hops();
+
+  // Return the number of subscribers of the established connection.
+  // The connection must be established.
+  get_nsc();
+  
   void
   tear_down();
 };
