@@ -18,20 +18,19 @@ stats::stats(const sdi_args &args, const traffic &tra):
 
   cout << "time seed hash "
     // The network load.
-       << "load" << " "
+       << "utilization" << " "
     // The probability of establishing a connection.
        << "estab" << " "
-    // The probability of completing a connection.
-       << "compl" << " "
+    // The mean length of an established connection.
+       << "lenec" << " "
+    // The mean number of hops of an established connection.
+       << "hopec" << " "
+    // The mean number of subcarriers of an established connection.
+       << "nscec" << " "
     // The number of currently active connections.
        << "conns" << " "
     // The mean number of fragments on links.
-       << "frags" << " "
-    // The mean number of links to configure in order to reconfigure a
-    // connection
-       << "nltoc" << " "
-    // The mean length of an established connection.
-       << "lofec"
+       << "frags"
     // That's it.  Thank you.
        << endl;
 }
@@ -47,36 +46,36 @@ stats::operator()(double t)
 {
   cout << t << " " << args.seed << " " << args.hash << " ";
 
-  // The network load.
-  cout << calculate_load(g) << " ";
+  // The network utilization.
+  cout << calculate_utilization(g) << " ";
 
   // The probability of establishing a connection.
   cout << ba::mean(cea) << " ";
   // We reset the accumulator to get new means in the next interval.
   cea = dbl_acc();
 
-  // The probability of completing a connection.
-  cout << ba::mean(cca) << " ";
+  // The mean length of an established connection.
+  cout << ba::mean(lenec) << " ";
   // We reset the accumulator to get new means in the next interval.
-  cca = dbl_acc();
+  lea = dbl_acc();
+
+  // The mean number of hops of an established connection.
+  cout << ba::mean(hopec) << " ";
+  // We reset the accumulator to get new means in the next interval.
+  lea = dbl_acc();
+
+  // The mean numnber of subcarriers of an established connection.
+  cout << ba::mean(nscec) << " ";
+  // We reset the accumulator to get new means in the next interval.
+  lea = dbl_acc();
 
   // The number of active connections.
   cout << tra.nr_clients() << " ";
 
   // The mean number of fragments of links.
-  cout << calculate_frags() << " ";
+  cout << calculate_frags();
 
-  // The mean number of links to configure in order to reconfigure a
-  // connection.
-  cout << ba::mean(nla) << " ";
-  // We reset the accumulator to get new means in the next interval.
-  nla = dbl_acc();
-
-  // The mean length of an established connection.
-  cout << ba::mean(lea);
-  // We reset the accumulator to get new means in the next interval.
-  lea = dbl_acc();
-
+  // That's it.
   cout << endl;
 
   schedule(t);
@@ -103,15 +102,11 @@ stats::completed(bool status)
 }
 
 void
-stats::reconfigured_links(int nl)
+stats::established_info(int length, int hops, int nsc)
 {
-  nla(nl);
-}
-
-void
-stats::established_length(int len)
-{
-  lea(len);
+  lenec(length);
+  hopec(hops);
+  nscec(nsc);
 }
 
 double

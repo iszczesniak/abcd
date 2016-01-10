@@ -25,21 +25,20 @@ class stats: public module
   // The traffic of the run.
   const traffic &tra;
 
-  // The accumulator with double values.
+  // The accumulator type with double values.
   typedef ba::accumulator_set<double, ba::stats<ba::tag::mean> > dbl_acc;
 
   // The probability of establishing a connection in the interval.
   dbl_acc cea;
 
-  // The probability of completing a connection in the interval.
-  dbl_acc cca;
+  // The length of the established connection.
+  dbl_acc lenea;
 
-  // The accummulator for the mean number of links to configure in
-  // order to reconfigure a connection.
-  dbl_acc nla;
+  // The number of hops of the established connection.
+  dbl_acc hopea;
 
-  // The accumulator for the length of the established connection.
-  dbl_acc lea;
+  // The number of subcarriers of the established connection.
+  dbl_acc nsclea;
 
   // The arguments of the run.
   sdi_args args;
@@ -60,18 +59,9 @@ public:
   void
   established(bool status);
 
-  // Report succes if the connection was completed successfully.
-  void
-  completed(bool status);
-
   // Report the length of the established connection.
   void
-  established_length(int len);
-
-  // Report the number of links that have to be reconfigured when a
-  // connection is to be reconfigured.
-  void
-  reconfigured_links(int nl);
+  established_info(int length, int hops, int nsc);
 
 private:
   // Calculate the average number of fragments on a link.
