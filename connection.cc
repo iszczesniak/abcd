@@ -33,9 +33,19 @@ connection::is_established() const
 
 int
 connection::get_length() const
-{ 
+{
   assert(is_established());
-  return;
+
+  boost::property_map<graph, boost::edge_weight_t>::type
+    wm = get(boost::edge_weight_t(), m_g);
+
+  int length = 0;
+  const path &p = m_p.second.first;
+  
+  for(const edge &e: p)
+    length += get(wm, e);
+
+  return length;
 }
 
 int
