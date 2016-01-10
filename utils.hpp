@@ -405,9 +405,9 @@ calculate_load(const G &g)
   typename G::edge_iterator ei, ee;
   for (tie(ei, ee) = edges(g); ei != ee; ++ei)
     {
-      // Available subcarriers.
+      // Total available subcarriers.
       int tsc = boost::get(boost::edge_nosc, g, *ei);
-      // Available subcarriers.
+      // Currenlty available subcarriers.
       int asc = boost::get(boost::edge_ssc, g, *ei).size();
       // The link load.
       double load = double(tsc - asc) / tsc;
