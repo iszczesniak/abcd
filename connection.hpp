@@ -37,14 +37,17 @@ public:
 
   // Return the length of the established connection.  The connection
   // must be established.
+  int
   get_length();
 
   // Return the number of hops of the established connection.  The
   // connection must be established.
+  int
   get_hops();
 
   // Return the number of subscribers of the established connection.
   // The connection must be established.
+  int
   get_nsc();
   
   void
