@@ -398,7 +398,7 @@ random_node_pair(const G &g, R &gen)
 
 template<typename G>
 double
-calculate_load(const G &g)
+calculate_utilization(const G &g)
 {
   ba::accumulator_set<double, ba::stats<ba::tag::mean> > load_acc;
 
