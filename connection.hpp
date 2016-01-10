@@ -36,17 +36,17 @@ public:
   // Return the length of the established connection.  The connection
   // must be established.
   int
-  get_length();
+  get_length() const;
 
   // Return the number of hops of the established connection.  The
   // connection must be established.
   int
-  get_hops();
+  get_hops() const;
 
   // Return the number of subscribers of the established connection.
   // The connection must be established.
   int
-  get_nsc();
+  get_nsc() const;
   
   void
   tear_down();

@@ -31,6 +31,27 @@ connection::is_established() const
   return m_p.first;
 }
 
+int
+connection::get_length() const
+{ 
+  assert(is_established());
+  return;
+}
+
+int
+connection::get_hops() const
+{
+  assert(is_established());
+  return m_p.second.first.size();
+}
+
+int
+connection::get_nsc() const
+{
+  assert(is_established());
+  return m_p.second.second.size();
+}
+
 bool
 connection::establish(const demand &d)
 {
