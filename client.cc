@@ -11,15 +11,17 @@ using namespace std;
 
 client::client(double mht, double mnsc, traffic &tra):
   mht(mht), htd(1 / mht), htg(rng, htd),
-  mnsc(mnsc - 1), nscd(1 / mnsc), nscdg(rng, nscd),
+  mnsc(mnsc), nscd(mnsc - 1), nscdg(rng, nscd),
   conn(g), st(stats::get()), tra(tra)
 {
   if (set_up())
     {
       // Register the client with the traffic.
       tra.insert(this);
+      // Holding time.
+      double ht = htg();
       // Tear down time.
-      tdt = now() + htg();
+      tdt = now() + ht;
       schedule(tdt);
     }
   else
