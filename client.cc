@@ -55,6 +55,12 @@ bool client::set_up()
   return status;
 }
 
+const connection &
+client::get_connection() const
+{
+  return conn;
+}
+
 void client::tear_down()
 {
   assert(conn.is_established());

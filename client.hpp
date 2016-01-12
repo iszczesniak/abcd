@@ -57,6 +57,9 @@ public:
   // Processes the event and changes the state of the client.
   void operator()(double t);
 
+  const connection &
+  get_connection() const;
+
 private:
   bool set_up();
   void tear_down();

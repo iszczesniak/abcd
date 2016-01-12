@@ -69,6 +69,8 @@ traffic::capacity_served() const
   // Iterate over all clients.
   for(const client *cli: cs)
     {
+      const connection &conn = cli->get_connection();
+      
     }
 }
 

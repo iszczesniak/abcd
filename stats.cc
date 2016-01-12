@@ -29,6 +29,8 @@ stats::stats(const sdi_args &args, const traffic &tra):
        << "nscec" << " "
     // The number of currently active connections.
        << "conns" << " "
+    // The capacity served.
+       << "capser" << " "
     // The mean number of fragments on links.
        << "frags"
     // That's it.  Thank you.
@@ -71,6 +73,9 @@ stats::operator()(double t)
 
   // The number of active connections.
   cout << tra.nr_clients() << " ";
+
+  // The capacity served.
+  cout << tra.capacity_served() << " ";
 
   // The mean number of fragments of links.
   cout << calculate_frags();
