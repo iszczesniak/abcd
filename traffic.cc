@@ -2,7 +2,8 @@
 
 using namespace std;
 
-traffic::traffic(double mcat, double mht, double mnsc):
+traffic::traffic(graph &g, double mcat, double mht, double mnsc):
+  m_g(g),
   mcat(mcat), catd(1 / mcat), catg(rng, catd),
   mht(mht), mnsc(mnsc), idc()
 {
@@ -60,6 +61,15 @@ void
 traffic::delete_me_later(client *c)
 {
   dl.push(c);
+}
+
+int
+traffic::capacity_served() const
+{
+  // Iterate over all clients.
+  for(const client *cli: cs)
+    {
+    }
 }
 
 void

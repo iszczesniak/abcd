@@ -12,6 +12,9 @@
 
 class traffic: public module
 {
+  // The graph.
+  graph &m_g;
+
   // The set of active clients.
   std::set<client *> cs;
 
@@ -29,10 +32,17 @@ class traffic: public module
   boost::variate_generator<boost::mt19937 &,
                            boost::exponential_distribution<> > catg;
 
-  double mht, mnsc;
+  // The mean holding time.
+  double mht;
+
+  // The mean number of subcarriers.
+  double mnsc;
+
+  // Shortest distances.
+  std::map<std::pair<vertex, vertex>, int> sd;
 
 public:
-  traffic(double mcat, double mht, double mnsc);
+  traffic(graph &g, double mcat, double mht, double mnsc);
 
   ~traffic();
 
@@ -50,6 +60,13 @@ public:
 
   // Delete this client later.
   void delete_me_later(client *);
+
+  // Calculate the capacity currently served, which is defined as
+  // \sum_{i = connections} nsc_i * sp_i, where nsc_i is the number of
+  // subcarriers of connection i, and sp_i is the length of the
+  // shortest path between end nodes of connection i.
+  int
+  capacity_served() const;
 
 private:
   void schedule_next(double);

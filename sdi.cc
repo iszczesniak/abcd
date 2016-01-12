@@ -153,7 +153,7 @@ simulate(const sdi_args &args)
   simulation sim(g, rng);
   
   // The traffic module.
-  traffic t(args.mcat, args.mht, args.mnsc);
+  traffic t(g, args.mcat, args.mht, args.mnsc);
 
   // The stats module.
   stats s(args, t);
