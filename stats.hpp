@@ -43,6 +43,9 @@ class stats: public module
   // The arguments of the run.
   sdi_args args;
 
+  // Shortest distances.
+  std::map<std::pair<vertex, vertex>, int> sd;
+
 public:
   stats(const sdi_args &, const traffic &);
 
@@ -59,9 +62,9 @@ public:
   void
   established(bool status);
 
-  // Report the length of the established connection.
+  // Report the established connection.
   void
-  established_info(int length, int hops, int nsc);
+  established_conn(const connection &conn);
 
 private:
   // Calculate the average number of fragments on a link.

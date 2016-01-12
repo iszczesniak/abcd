@@ -96,8 +96,12 @@ stats::established(bool status)
 }
 
 void
-stats::established_info(int length, int hops, int nsc)
+stats::established_conn(const connection &conn)
 {
+  int length = conn.get_length();
+  int hops = conn.get_hops();
+  int nsc = conn.get_nsc();
+
   lenec(length);
   hopec(hops);
   nscec(nsc);
