@@ -43,9 +43,6 @@ class stats: public module
   // The arguments of the run.
   sdi_args args;
 
-  // Shortest distances.
-  std::map<std::pair<vertex, vertex>, int> sd;
-
 public:
   stats(const sdi_args &, const traffic &);
 
