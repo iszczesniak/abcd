@@ -39,7 +39,7 @@ class traffic: public module
   double mnsc;
 
   // Shortest distances.
-  std::map<std::pair<vertex, vertex>, int> sd;
+  mutable std::map<npair, int> sd;
 
 public:
   traffic(graph &g, double mcat, double mht, double mnsc);

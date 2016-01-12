@@ -1,5 +1,9 @@
 #include "traffic.hpp"
 
+#include "custom_dijkstra_call.hpp"
+#include <boost/optional.hpp>
+#include <list>
+
 using namespace std;
 
 traffic::traffic(graph &g, double mcat, double mht, double mnsc):
@@ -66,12 +70,40 @@ traffic::delete_me_later(client *c)
 int
 traffic::capacity_served() const
 {
+  int capacity = 0;
+
   // Iterate over all clients.
   for(const client *cli: cs)
     {
-      const connection &conn = cli->get_connection();
-      
+      const connection &c = cli->get_connection();
+      const demand &d = c.get_demand();
+      const npair &p = d.first;
+      int nsc = c.get_nsc();
+
+      // Did we computer the shortest path before?
+      auto i = sd.find(d.first);
+      // If not, do it now
+      if (i == sd.end())
+        {
+          boost::optional<pair<int, list<edge>>> osp;
+          osp = custom_dijkstra_call(g, p.first, p.second,
+                                     get(boost::edge_weight_t(), g),
+                                     get(boost::vertex_index_t(), g));
+          // Make sure the shortest path was found.
+          assert(osp);
+          // This is the length of the shortest path.
+          int len = osp.get().first;
+          bool s;
+          // Insert the results into the cache.
+          tie(i, s) = sd.insert(make_pair(p, len));
+          // Make sure there was no problem inserting the result.
+          assert(s);
+        }
+
+      capacity += i->second * nsc;
     }
+
+  return capacity;
 }
 
 void
