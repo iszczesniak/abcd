@@ -12,7 +12,6 @@
 
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
-#include <boost/accumulators/statistics/count.hpp>
 #include <boost/timer/timer.hpp>
 
 namespace ba = boost::accumulators;
@@ -30,8 +29,8 @@ class stats: public module
   const traffic &tra;
 
   // The accumulator type with double values.
-  typedef ba::accumulator_set<double, ba::stats<ba::tag::mean,
-                                                ba::tag::count> > dbl_acc;
+  typedef ba::accumulator_set<double, ba::features<ba::tag::count,
+                                                   ba::tag::mean>> dbl_acc;
 
   // The probability of establishing a connection in the interval.
   dbl_acc pec;

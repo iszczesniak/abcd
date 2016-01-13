@@ -50,8 +50,6 @@ stats::operator()(double st)
 {
   cpu_times ttime = ttimer.elapsed();
   cpu_times dtime = dtimer.elapsed();
-  // Start again to get next delta time.
-  dtimer.start();
 
   // Total user time.
   double tut = ttime.user / 1e+9;
@@ -63,41 +61,33 @@ stats::operator()(double st)
 
   // The network utilization.
   cout << calculate_utilization(g) << " ";
-
   // The probability of establishing a connection.
   cout << ba::mean(pec) << " ";
-  // We reset the accumulator to get new means in the next interval.
-  pec = dbl_acc();
-
   // The mean length of an established connection.
   cout << ba::mean(lenec) << " ";
-  // We reset the accumulator to get new means in the next interval.
-  lenec = dbl_acc();
-
   // The mean number of hops of an established connection.
   cout << ba::mean(hopec) << " ";
-  // We reset the accumulator to get new means in the next interval.
-  hopec = dbl_acc();
-
   // The mean numnber of subcarriers of an established connection.
   cout << ba::mean(nscec) << " ";
-  // We reset the accumulator to get new means in the next interval.
-  nscec = dbl_acc();
-
   // The number of active connections.
   cout << tra.nr_clients() << " ";
-
   // The capacity served.
   cout << tra.capacity_served() << " ";
-
   // The mean number of fragments of links.
   cout << calculate_frags() << " ";
-
   // The time spend per search, either successfull or nor.
   cout << dut / ba::count(pec);
-      
   // That's it.
   cout << endl;
+
+  // We reset the accumulators to get new means in the next interval.
+  pec = dbl_acc();
+  lenec = dbl_acc();
+  hopec = dbl_acc();
+  nscec = dbl_acc();
+
+  // Start again to get next delta time.
+  dtimer.start();
 
   schedule(st);
 }
