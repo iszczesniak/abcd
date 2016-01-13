@@ -16,6 +16,7 @@
 
 namespace ba = boost::accumulators;
 using boost::timer::cpu_timer;
+using boost::timer::cpu_times;
 
 class client;
 

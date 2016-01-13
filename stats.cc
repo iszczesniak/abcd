@@ -16,7 +16,7 @@ stats::stats(const sdi_args &args, const traffic &tra):
   singleton = this;
   schedule(0);
 
-  cout << "time seed hash "
+  cout << "usertime simtime seed hash "
     // The network load.
        << "utilization" << " "
     // The probability of establishing a connection.
@@ -44,9 +44,13 @@ stats::get()
 }
 
 void
-stats::operator()(double t)
+stats::operator()(double st)
 {
-  cout << t << " " << args.seed << " " << args.hash << " ";
+  cpu_times cts = timer.elapsed();
+  double wt = cts.user / 1e+9;
+  
+  cout << wt << " " << st << " "
+       << args.seed << " " << args.hash << " ";
 
   // The network utilization.
   cout << calculate_utilization(g) << " ";
@@ -83,7 +87,7 @@ stats::operator()(double t)
   // That's it.
   cout << endl;
 
-  schedule(t);
+  schedule(st);
 }
 
 // Schedule the next event based on the current time 0.
