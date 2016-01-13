@@ -17,6 +17,8 @@ ifdef BOOST_ROOT
 endif
 
 LDFLAGS := $(LDFLAGS) -l boost_program_options
+LDFLAGS := $(LDFLAGS) -l boost_timer
+LDFLAGS := $(LDFLAGS) -l boost_system
 
 all: $(TARGETS)
 

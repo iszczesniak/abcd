@@ -12,8 +12,10 @@
 
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
+#include <boost/timer/timer.hpp>
 
 namespace ba = boost::accumulators;
+using boost::timer::cpu_timer;
 
 class client;
 
@@ -43,6 +45,9 @@ class stats: public module
   // The arguments of the run.
   sdi_args args;
 
+  // The timer.
+  cpu_timer timer;
+  
 public:
   stats(const sdi_args &, const traffic &);
 
