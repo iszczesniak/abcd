@@ -12,6 +12,7 @@
 
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
+#include <boost/accumulators/statistics/count.hpp>
 #include <boost/timer/timer.hpp>
 
 namespace ba = boost::accumulators;
@@ -29,7 +30,8 @@ class stats: public module
   const traffic &tra;
 
   // The accumulator type with double values.
-  typedef ba::accumulator_set<double, ba::stats<ba::tag::mean> > dbl_acc;
+  typedef ba::accumulator_set<double, ba::stats<ba::tag::mean,
+                                                ba::tag::count> > dbl_acc;
 
   // The probability of establishing a connection in the interval.
   dbl_acc pec;
@@ -46,8 +48,10 @@ class stats: public module
   // The arguments of the run.
   sdi_args args;
 
-  // The timer.
-  cpu_timer timer;
+  // The total timer, i.e., keeps track from the beginning of the run.
+  cpu_timer ttimer;
+  // The delta timer, i.e., keeps track from the last report time.
+  cpu_timer dtimer;
   
 public:
   stats(const sdi_args &, const traffic &);

@@ -32,7 +32,9 @@ stats::stats(const sdi_args &args, const traffic &tra):
     // The capacity served.
        << "capser" << " "
     // The mean number of fragments on links.
-       << "frags"
+       << "frags" << " "
+    // The average time a shortest path search takes.
+       << "spsat"
     // That's it.  Thank you.
        << endl;
 }
@@ -46,10 +48,17 @@ stats::get()
 void
 stats::operator()(double st)
 {
-  cpu_times cts = timer.elapsed();
-  double wt = cts.user / 1e+9;
-  
-  cout << wt << " " << st << " "
+  cpu_times ttime = ttimer.elapsed();
+  cpu_times dtime = dtimer.elapsed();
+  // Start again to get next delta time.
+  dtimer.start();
+
+  // Total user time.
+  double tut = ttime.user / 1e+9;
+  // Delta of the user time.
+  double dut = dtime.user / 1e+9;
+
+  cout << tut << " " << st << " "
        << args.seed << " " << args.hash << " ";
 
   // The network utilization.
@@ -82,8 +91,11 @@ stats::operator()(double st)
   cout << tra.capacity_served() << " ";
 
   // The mean number of fragments of links.
-  cout << calculate_frags();
+  cout << calculate_frags() << " ";
 
+  // The time spend per search, either successfull or nor.
+  cout << dut / ba::count(pec);
+      
   // That's it.
   cout << endl;
 
