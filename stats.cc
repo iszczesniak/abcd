@@ -36,7 +36,9 @@ stats::stats(const sdi_args &args, const traffic &tra):
     // The average time a shortest path search takes.
        << "spsat" << " "
     // The mean connection arrival time.
-       << "mcat"
+       << "mcat" << " "
+    // The offerred load.
+       << "oload"
     // That's it.  Thank you.
        << endl;
 }
@@ -80,7 +82,9 @@ stats::operator()(double st)
   // The time spend per search, either successfull or nor.
   cout << dut / ba::count(pec) << " ";
   // The mean connection arrival time.
-  cout << args.mcat;
+  cout << args.mcat << " ";
+  // The offerred load.
+  cout << 1.0 / args.mcat;
   // That's it.
   cout << endl;
 
