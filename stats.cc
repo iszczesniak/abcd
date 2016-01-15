@@ -34,7 +34,9 @@ stats::stats(const sdi_args &args, const traffic &tra):
     // The mean number of fragments on links.
        << "frags" << " "
     // The average time a shortest path search takes.
-       << "spsat"
+       << "spsat" << " "
+    // The mean connection arrival time.
+       << "mcat"
     // That's it.  Thank you.
        << endl;
 }
@@ -76,7 +78,9 @@ stats::operator()(double st)
   // The mean number of fragments of links.
   cout << calculate_frags() << " ";
   // The time spend per search, either successfull or nor.
-  cout << dut / ba::count(pec);
+  cout << dut / ba::count(pec) << " ";
+  // The mean connection arrival time.
+  cout << args.mcat;
   // That's it.
   cout << endl;
 
