@@ -89,8 +89,8 @@ exclude(const SSC &ssc, int nsc)
       SSC partial;
 
       // This loop builds the "partial" set with contiguous
-      // subcarriers.  In an interation we examine a single
-      // subcarrier.
+      // slices.  In an interation we examine a single
+      // slice.
       while(i != ssc.end())
         {
           int sc = *i;
@@ -108,7 +108,7 @@ exclude(const SSC &ssc, int nsc)
           ++i;
         }
 
-      // Add the partial set only if has at least p subcarriers.
+      // Add the partial set only if has at least p slices.
       // Otherwise just ignore it.
       if (partial.size() >= nsc)
         result.insert(partial.begin(), partial.end());

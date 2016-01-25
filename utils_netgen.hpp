@@ -43,28 +43,28 @@ set_distances(graph &g, int min, int max, T &gen)
 }
 
 /**
- * Sets the subcarriers property on edges.
+ * Sets the slices property on edges.
  */
 template<typename G>
 void
-set_subcarriers(G &g, int subcarriers)
+set_slices(G &g, int slices)
 {
-  // This is the set of contiguous subcarriers, from 0 to (subcarriers
+  // This is the set of contiguous slices, from 0 to (slices
   // - 1).
   SSC ssc(boost::counting_iterator<int>(0),
-          boost::counting_iterator<int>(subcarriers));
+          boost::counting_iterator<int>(slices));
 
-  // Total subcarriers property map.
+  // Total slices property map.
   typename boost::property_map<G, boost::edge_nosc_t>::type
     tpm = get(boost::edge_nosc_t(), g);
-  // Available subcarriers property map.
+  // Available slices property map.
   typename boost::property_map<G, boost::edge_ssc_t>::type
     apm = get(boost::edge_ssc_t(), g);
 
   typename G::edge_iterator ei, ee;
   for (tie(ei, ee) = edges(g); ei != ee; ++ei)
     {
-      tpm[*ei] = subcarriers;
+      tpm[*ei] = slices;
       apm[*ei] = ssc;
     }
 }
@@ -229,8 +229,8 @@ generate_graph(const sdi_args &args, T &gen)
   // Name the vertexes.
   name_vertices(g);
 
-  // The number of subcarriers for each edge.
-  set_subcarriers(g, args.nr_sc);
+  // The number of slices for each edge.
+  set_slices(g, args.nr_sc);
 
   return g;
 }

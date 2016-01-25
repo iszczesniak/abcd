@@ -10,8 +10,8 @@ class routing
 {  
 public:
   // The type of specturm selection:
-  // first - the first subcarriers that fit the demand are chosen
-  // smallest - the smallest set of contiguous subcarriers are chosen
+  // first - the first slices that fit the demand are chosen
+  // smallest - the smallest set of contiguous slices are chosen
   enum class st_t {none, first, fittest};
 
   // The type of routing:
@@ -26,7 +26,7 @@ public:
   
   /**
    * Tear down the path in the graph.  This process puts back the
-   * subcarriers on the edges that are used by the path.
+   * slices on the edges that are used by the path.
    */
   static void
   tear_down(graph &g, const sscpath &p);
@@ -81,14 +81,14 @@ protected:
   set_up_path(graph &g, const sscpath &p);
 
   /**
-   * Make the template depend on the SCDT (subcarrier data type).  We
+   * Make the template depend on the SCDT (slice data type).  We
    * make the function templated, because we use it for both SSC and
    * SSSC.
    *
    * From the given SCDT, select the SSC according to the selection
    * policy of the class.  The returned SSC has exactly nsc
-   * subcarriers, even though the chosen contiguous fragment from SSC
-   * could have had more subcarriers.
+   * slices, even though the chosen contiguous fragment from SSC
+   * could have had more slices.
    */
   template <typename SCDT>
   static SSC
@@ -114,8 +114,8 @@ protected:
     if (ssc.size() > nsc)
       {
         // Now in ssc we have got a fragment that has more than nsc
-        // subcarriers, and so we need to trim the result to have
-        // exactly nsc subcarriers.
+        // slices, and so we need to trim the result to have
+        // exactly nsc slices.
         SSC::const_iterator fin = ssc.begin();
         advance(fin, nsc);
         ssc.erase(fin, ssc.end());
@@ -126,29 +126,29 @@ protected:
     return ssc;
   }
 
-  // Select a contiguous ssc with the lowest subcarrier numbers from
+  // Select a contiguous ssc with the lowest slice numbers from
   // SSSC.  It returns the whole available fragment, i.e. it can have
-  // more subcarriers than nsc.
+  // more slices than nsc.
   static SSC
   select_first(const SSSC &sssc, int nsc);
 
-  // Select a contiguous ssc with the lowest subcarrier numbers from
+  // Select a contiguous ssc with the lowest slice numbers from
   // SSC.  It returns the whole available fragment, i.e. it can have
-  // more subcarriers than nsc.
+  // more slices than nsc.
   static SSC
   select_first(const SSC &ssc, int nsc);
 
-  // Select the fittest subcarriers, i.e. the smallest subcarrier
-  // fragment that fits the required subcarriers from SSSC.  It
+  // Select the fittest slices, i.e. the smallest slice
+  // fragment that fits the required slices from SSSC.  It
   // returns the whole available fragment, i.e. it can have more
-  // subcarriers than nsc.
+  // slices than nsc.
   static SSC
   select_fittest(const SSSC &sssc, int nsc);
 
-  // Select the fittest subcarriers, i.e. the smallest subcarrier
-  // fragment from SSC that fits the required number of subcarriers.
+  // Select the fittest slices, i.e. the smallest slice
+  // fragment from SSC that fits the required number of slices.
   // It returns the whole available fragment, i.e. it can have more
-  // subcarriers than nsc.
+  // slices than nsc.
   static SSC
   select_fittest(const SSC &ssc, int nsc);
 

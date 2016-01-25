@@ -14,7 +14,7 @@ using namespace std;
 sscpath
 cdijkstra::route_w(graph &g, const demand &d)
 {
-  // We allow to allocate the signal on any of the subcarriers.
+  // We allow to allocate the signal on any of the slices.
   V2C2S r = search(g, d);
   sscpath result = trace(g, r, d);
   if (!result.first.empty())
@@ -127,7 +127,7 @@ cdijkstra::search(const graph &g, const demand &d)
     {
       // The edge that we examine in this iteration.
       const edge &e = *ei;
-      // The subcarriers available on the edge.
+      // The slices available on the edge.
       const SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
 
       // Add e_ssc to ssc.
@@ -149,15 +149,15 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
   // The null edge.
   const edge &ne = *(boost::edges(g).second);
 
-  // We have to filter ssc to exclude subcarriers that can't support
-  // the signal with p subcarriers.
+  // We have to filter ssc to exclude slices that can't support
+  // the signal with p slices.
   SSC src_ssc_nsc = exclude(src_ssc, nsc);
 
   if (!src_ssc_nsc.empty())
     {
       // We put here the information that allows us to process the
       // source node in the loop below.  We say that we reach source
-      // node src with cost (0, 0) on the subcarriers passed in the
+      // node src with cost (0, 0) on the slices passed in the
       // ssc argument along the null edge.  The null edge signals the
       // beginning of the path.
       r[src][CEV(COST(0, 0), ne, src)].insert(src_ssc_nsc);
@@ -189,7 +189,7 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
           assert(j != c2s.end());
 
           // This SSSC is now available at node v for further search.
-          // There might be other subcarriers available in the c2s,
+          // There might be other slices available in the c2s,
           // but we care only about the one that we got with edge e at
           // cost c.
           const SSSC &v_sssc = j->second;
@@ -211,11 +211,11 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
               // limit.
               if (!m_ml || c_c <= m_ml.get())
                 {
-                  // The subcarriers available on the edge.
+                  // The slices available on the edge.
                   const SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
                   // Candidate SSC: the ssc available at node v that
                   // can be carried by edge e, and that has at least
-                  // nsc contiguous subcarriers.
+                  // nsc contiguous slices.
                   SSSC c_sssc = exclude(intersection(v_sssc, e_ssc), nsc);
 
                   if (!c_sssc.empty())

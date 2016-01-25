@@ -36,7 +36,7 @@ struct sdi_args
   /// The number of edges in the graph.
   boost::optional<int> nr_edges;
 
-  /// The number of subcarriers.
+  /// The number of slices.
   int nr_sc;
 
   /// The maximal length of a path we want.
@@ -61,7 +61,7 @@ struct sdi_args
   /// The mean holding time.
   double mht;
 
-  /// The mean number of subcarriers.
+  /// The mean number of slices.
   double mnsc;
 
   /// -----------------------------------------------------------------

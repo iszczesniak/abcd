@@ -25,7 +25,7 @@ stats::stats(const sdi_args &args, const traffic &tra):
        << "lenec" << " "
     // The mean number of hops of an established connection.
        << "hopec" << " "
-    // The mean number of subcarriers of an established connection.
+    // The mean number of slices of an established connection.
        << "nscec" << " "
     // The number of currently active connections.
        << "conns" << " "
@@ -71,7 +71,7 @@ stats::operator()(double st)
   cout << ba::mean(lenec) << " ";
   // The mean number of hops of an established connection.
   cout << ba::mean(hopec) << " ";
-  // The mean numnber of subcarriers of an established connection.
+  // The mean numnber of slices of an established connection.
   cout << ba::mean(nscec) << " ";
   // The number of active connections.
   cout << tra.nr_clients() << " ";

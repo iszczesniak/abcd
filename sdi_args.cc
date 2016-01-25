@@ -79,8 +79,8 @@ process_sdi_args(int argc, const char *argv[])
         (EDGES_S, po::value<int>(),
          "the number of edges to generate")
 
-        ("subcarriers", po::value<int>()->required(),
-         "the number of subcarriers")
+        ("slices", po::value<int>()->required(),
+         "the number of slices")
 
         ("ml", po::value<int>(),
          "the maximal length of a path")
@@ -104,7 +104,7 @@ process_sdi_args(int argc, const char *argv[])
          "the mean holding time")
 
         ("mnsc", po::value<double>()->required(),
-         "the mean number of subcarriers");
+         "the mean number of slices");
 
       // Simulation options.
       po::options_description sim("Simulation options");
@@ -149,7 +149,7 @@ process_sdi_args(int argc, const char *argv[])
       if (vm.count(EDGES_S))
         result.nr_edges = vm[EDGES_S].as<int>();
       
-      result.nr_sc = vm["subcarriers"].as<int>();
+      result.nr_sc = vm["slices"].as<int>();
 
       if (vm.count("ml"))
         result.ml = vm["ml"].as<int>();

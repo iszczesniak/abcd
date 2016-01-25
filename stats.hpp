@@ -41,7 +41,7 @@ class stats: public module
   // The number of hops of the established connection.
   dbl_acc hopec;
 
-  // The number of subcarriers of the established connection.
+  // The number of slices of the established connection.
   dbl_acc nscec;
 
   // The arguments of the run.

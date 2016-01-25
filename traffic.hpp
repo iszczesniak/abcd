@@ -35,7 +35,7 @@ class traffic: public module
   // The mean holding time.
   double mht;
 
-  // The mean number of subcarriers.
+  // The mean number of slices.
   double mnsc;
 
   // Shortest distances.
@@ -63,7 +63,7 @@ public:
 
   // Calculate the capacity currently served, which is defined as
   // \sum_{i = connections} nsc_i * sp_i, where nsc_i is the number of
-  // subcarriers of connection i, and sp_i is the length of the
+  // slices of connection i, and sp_i is the length of the
   // shortest path between end nodes of connection i.
   int
   capacity_served() const;

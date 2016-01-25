@@ -142,10 +142,10 @@ routing::set_up_path(graph &g, const sscpath &p)
             // The SSC for edge e.
             SSC &e_ssc = sm[e];
 
-            // Make sure that the edge has these subcarriers taken.
+            // Make sure that the edge has these slices taken.
             assert(excludes(e_ssc, p_ssc));
 
-            // Put back the p_ssc subcarriers to e_ssc.
+            // Put back the p_ssc slices to e_ssc.
             include(e_ssc, p_ssc);
           }
 
@@ -172,10 +172,10 @@ routing::tear_down(graph &g, const sscpath &p)
       // The SSC for edge e.
       SSC &e_ssc = sscm[e];
 
-      // Make sure that the edge has these subcarriers taken.
+      // Make sure that the edge has these slices taken.
       assert(excludes(e_ssc, p_ssc));
 
-      // Put back the p_ssc subcarriers to e_ssc.
+      // Put back the p_ssc slices to e_ssc.
       include(e_ssc, p_ssc);
     }
 }

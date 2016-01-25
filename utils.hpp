@@ -95,16 +95,16 @@ SSSC
 intersection(const SSSC &sssc, const SSC &ssc);
 
 /**
- * Exclude those subcarriers that won't be able to support a signal
- * with nsc subcarriers.
+ * Exclude those slices that won't be able to support a signal
+ * with nsc slices.
  */
 
 SSC
 exclude(const SSC &ssc, int nsc);
 
 /**
- * Exclude those subcarriers from SSSC that won't be able to support a
- * signal with nsc subcarriers.
+ * Exclude those slices from SSSC that won't be able to support a
+ * signal with nsc slices.
  */
 
 SSSC
@@ -405,9 +405,9 @@ calculate_utilization(const G &g)
   typename G::edge_iterator ei, ee;
   for (tie(ei, ee) = edges(g); ei != ee; ++ei)
     {
-      // Total available subcarriers.
+      // Total available slices.
       int tsc = boost::get(boost::edge_nosc, g, *ei);
-      // Currenlty available subcarriers.
+      // Currenlty available slices.
       int asc = boost::get(boost::edge_ssc, g, *ei).size();
       // The link load.
       double load = double(tsc - asc) / tsc;

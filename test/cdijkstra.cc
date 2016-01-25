@@ -18,7 +18,7 @@ public:
 };
 
 /*
- * Make sure that we can't find a path if there are no subcarriers.
+ * Make sure that we can't find a path if there are no slices.
  * The graph is a simple case of two nodes and a single link.
  */
 BOOST_AUTO_TEST_CASE(cdijkstra_test_1)
@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_1)
   vertex src = *(boost::vertices(g).first);
   vertex dst = *(boost::vertices(g).first + 1);
   boost::add_edge(src, dst, g);
-  set_subcarriers(g, 2);
+  set_slices(g, 2);
 
   routing::set_rt("cdijkstra");
   routing::set_st("first");
@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_1)
 }
 
 /*
- * Make sure that we can find a path if there are subcarriers.  The
+ * Make sure that we can find a path if there are slices.  The
  * graph is a simple case of two nodes and a single link.
  */
 BOOST_AUTO_TEST_CASE(cdijkstra_test_2)
@@ -47,9 +47,9 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_2)
   vertex src = *(boost::vertices(g).first);
   vertex dst = *(boost::vertices(g).first + 1);
   edge e = boost::add_edge(src, dst, g).first;
-  set_subcarriers(g, 3);
+  set_slices(g, 3);
 
-  // There are three subcarriers available.
+  // There are three slices available.
   BOOST_CHECK(boost::get(boost::edge_ssc, g, e).size() == 3);
 
   routing::set_rt("cdijkstra");
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_2)
   demand d = demand(npair(src, dst), 3);
   sscpath result = routing::route(g, d);
 
-  // The result has three subcarriers.
+  // The result has three slices.
   BOOST_CHECK(result.second.size() == 3);
 
   // The path has one edge.
@@ -65,11 +65,11 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_2)
   // That one edge is e.
   BOOST_CHECK(result.first.front() == e);
   
-  // The subcarriers have been taken.
+  // The slices have been taken.
   BOOST_CHECK(boost::get(boost::edge_ssc, g, e).empty());
-  // Release the subcarriers taken by the path.
+  // Release the slices taken by the path.
   routing::tear_down(g, result);
-  // The three subcarriers available again.
+  // The three slices available again.
   BOOST_CHECK(boost::get(boost::edge_ssc, g, e).size() == 3);
 }
 
@@ -111,12 +111,12 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_3)
   BOOST_CHECK(result.first.size() == 2);
   BOOST_CHECK(result.first.front() == e2);
   BOOST_CHECK(result.first.back() == e3);
-  // There are two subcarriers in the solution: 2 and 3.
+  // There are two slices in the solution: 2 and 3.
   BOOST_CHECK(result.second.size() == 2);
   BOOST_CHECK(result.second.count(2) == 1);
   BOOST_CHECK(result.second.count(3) == 1);
 
-  // The number of subcarriers after the path is set up.
+  // The number of slices after the path is set up.
   BOOST_CHECK(boost::get(boost::edge_ssc, g, e1).size() == 2);
   BOOST_CHECK(boost::get(boost::edge_ssc, g, e2).size() == 0);
   BOOST_CHECK(boost::get(boost::edge_ssc, g, e3).size() == 0);
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_3)
   // Tear down the path.
   routing::tear_down(g, result);
 
-  // The number of subcarriers after the path is taken down.
+  // The number of slices after the path is taken down.
   BOOST_CHECK(boost::get(boost::edge_ssc, g, e1).size() == 2);
   BOOST_CHECK(boost::get(boost::edge_ssc, g, e2).size() == 2);
   BOOST_CHECK(boost::get(boost::edge_ssc, g, e3).size() == 2);
@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_3)
 /*
  * Make sure we don't remember at node mid the results for edge e1
  * that led to that node with a worse cost than edge e2 and with the
- * same subcarriers.
+ * same slices.
  */
 BOOST_AUTO_TEST_CASE(cdijkstra_test_4)
 {
@@ -174,8 +174,8 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_4)
 
 /*
  * Make sure we remember at node mid the results for both edge e1 and
- * e2.  e2 offers the shortest path with subcarrier 0, and e1 offers
- * the two subcarriers: 0 and 1 albeit at a higher cost.
+ * e2.  e2 offers the shortest path with slice 0, and e1 offers
+ * the two slices: 0 and 1 albeit at a higher cost.
  */
 BOOST_AUTO_TEST_CASE(cdijkstra_test_5)
 {

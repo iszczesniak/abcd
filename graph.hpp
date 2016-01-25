@@ -11,23 +11,23 @@
 
 #include <boost/graph/adjacency_list.hpp>
 
-// The set of subcarriers.  It's used to describe available
-// subcarriers, which are all avaiable along a single path.  Look at
+// The set of slices.  It's used to describe available
+// slices, which are all avaiable along a single path.  Look at
 // SSSC below.
 typedef std::set<int> SSC;
 
-// The set of SSC.  It's used to describe the subcarriers that are
+// The set of SSC.  It's used to describe the slices that are
 // available but along different paths.  Each SSC corresponds to a
 // different path.
 typedef std::set<SSC> SSSC;
 
 namespace boost {
-  // Describes the set of available subcarriers on an edge.
+  // Describes the set of available slices on an edge.
   enum edge_ssc_t {edge_ssc};
 
   BOOST_INSTALL_PROPERTY(edge, ssc);
 
-  // Describes the number of subcarriers on an edge.
+  // Describes the number of slices on an edge.
   enum edge_nosc_t {edge_nosc};
 
   BOOST_INSTALL_PROPERTY(edge, nosc);
@@ -35,7 +35,7 @@ namespace boost {
 
 /**
  * The type of the graph we use.  The edge_ssc_t property describes
- * the subcarriers available, i.e. not already taken.
+ * the slices available, i.e. not already taken.
  */
 typedef
 boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS,
@@ -83,7 +83,7 @@ typedef std::pair<path, SSC> sscpath;
 // Node pair.
 typedef std::pair<vertex, vertex> npair;
 
-// The demand type: npair and the number of subcarriers (nsc).
+// The demand type: npair and the number of slices (nsc).
 typedef std::pair<npair, int> demand;
 
 #endif /* GRAPH_HPP */

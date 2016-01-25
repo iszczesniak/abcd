@@ -45,7 +45,7 @@ protected:
 
   /**
    * Find the shortest path in graph g for demand d.  We start the
-   * search at node src with the set of subcarriers ssc.
+   * search at node src with the set of slices ssc.
    */
   V2C2S
   search(const graph &g, const demand &d, const SSC &ssc);
