@@ -95,10 +95,7 @@ cdijkstra::relax(pqueue &q, C2S &c2s, const CEV &cev, const SSC &ssc)
     {
       // OK, this is the best result so far, so let's use it.
       q.insert(cev);
-      c2s[cev].insert(ssc);
-
-      if (c2s[cev].size() > 1)
-        cout << "size = " << c2s[cev].size() << endl;
+      c2s.insert(make_pair(cev, ssc));
 
       // There might be worse results from previous relaxations, and
       // so we need to remove them, because they are useless.
@@ -174,16 +171,8 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
           // C2S for node v.
           const C2S &c2s = r[v];
 
-          // The CEV that we process in this loop has to be in the
-          // C2S.
-          C2S::const_iterator j = c2s.find(cev);
-          assert(j != c2s.end());
-
-          // This SSSC is now available at node v for further search.
-          // There might be other slices available in the c2s,
-          // but we care only about the one that we got with edge e at
-          // cost c.
-          const SSSC &v_sssc = j->second;
+          // There has to be at least one "cev" in the C2S.
+          assert(c2s.find(cev) != c2s.end());
 
           // Itereate over the out edges of the vertex.
           graph::out_edge_iterator ei, eei;
@@ -196,32 +185,38 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
               int ec = boost::get(boost::edge_weight, g, e);
               // Candidate cost.
               int c_c = c + ec;
-
+              
               // Consider that path when there is no maximal length
               // given or when the new lenght is not greater than the
               // limit.
               if (!m_ml || c_c <= m_ml.get())
                 {
+                  // Candidate number of hops.
+                  int c_h = h + 1;
+                  // Candidate COST.
+                  COST c_cost = COST(c_c, c_h);
+                  // The target vertex of the edge.
+                  vertex t = boost::target(e, g);
+                  // Candidate CEV.
+                  CEV c_cev = CEV(c_cost, e, t);
+
                   // The slices available on the edge.
                   const SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
-                  // Candidate SSC: the ssc available at node v that
-                  // can be carried by edge e, and that has at least
-                  // nsc contiguous slices.
-                  SSSC c_sssc = exclude(intersection(v_sssc, e_ssc), nsc);
 
-                  if (!c_sssc.empty())
+                  // Iterate over partial results with the given cev.
+                  for(const auto &e: c2s.equal_range(cev))
                     {
-                      // Candidate number of hops.
-                      int c_h = h + 1;
-                      // Candidate COST.
-                      COST c_cost = COST(c_c, c_h);
-                      // The target vertex of the edge.
-                      vertex t = boost::target(e, g);
-                      // Candidate CEV.
-                      CEV c_cev = CEV(c_cost, e, t);
+                      // The SSC available at node v from this cev.
+                      const SSC &v_ssc = e.second;
 
-                      // Deal with the new solution.
-                      relax(q, r[t], c_cev, c_sssc);
+                      // Candidate SSC: the ssc available at node v
+                      // that can be carried by edge e, and that has
+                      // at least nsc contiguous slices.
+                      SSC c_ssc = exclude(intersection(v_ssc, e_ssc), nsc);
+
+                      if (!c_ssc.empty())
+                        // Deal with the new solution.
+                        relax(q, r[t], c_cev, c_ssc);
                     }
                 }
             }
