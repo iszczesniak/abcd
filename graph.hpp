@@ -11,15 +11,9 @@
 
 #include <boost/graph/adjacency_list.hpp>
 
-// The set of slices.  It's used to describe available
-// slices, which are all avaiable along a single path.  Look at
-// SSSC below.
+// The set of slices.  It's used to describe available slices, which
+// are all avaiable along a single path.
 typedef std::set<int> SSC;
-
-// The set of SSC.  It's used to describe the slices that are
-// available but along different paths.  Each SSC corresponds to a
-// different path.
-typedef std::set<SSC> SSSC;
 
 namespace boost {
   // Describes the set of available slices on an edge.
@@ -63,9 +57,11 @@ typedef std::pair<int, int> COST;
 // the reverse edge of v.
 typedef std::tuple<COST, edge, vertex> CEV;
 
-// The mapping from CEV to SSSC.  This mapping tells what SSSC is
-// available at a node provided a given CEV was used.
-typedef std::map<CEV, SSSC> C2S;
+// The mapping from CEV to SSC.  This mapping tells what SSC is
+// available at a node provided a given CEV was used.  This is a
+// multimap, because a node can be reached along the same edge and
+// with the same cost, but with a different SSC.
+typedef std::multimap<CEV, SSC> C2S;
 
 // A map of vertexes to C2S.  It's used to store the complete
 // information for a given vertex.

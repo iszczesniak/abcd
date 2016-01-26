@@ -34,7 +34,7 @@ cdijkstra::has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
   for (auto const &e: c2s)
     {
       // Stop searching when we reach a result with the cost higher
-      // than cost.
+      // than "cost".
       if (get<0>(e.first) > cost)
         break;
 
@@ -67,21 +67,18 @@ cdijkstra::purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc)
       // We consider only worse results.
       if (get<0>(cev) > cost)
         {
-          SSSC &sssc = i2->second;
+          // The SSC of a worse result.
+          SSC &wr_ssc = i2->second;
 
-          // Remove those SSCs that are included in ssc.
-          for (SSSC::iterator j = sssc.begin(); j != sssc.end();)
+          // If wr_ssc is included in ssc, discard the CEV from both q
+          // and c2s.
+          if (includes(ssc, wr_ssc))
             {
-              SSSC::iterator j2 = j++;
-              if (includes(ssc, *j2))
-                sssc.erase(j2);
-            }
-
-          // Discard the CEV for which SSSC is empty, from both q and c2s.
-          if (sssc.empty())
-            {
-              q.erase(cev);
               c2s.erase(i2);
+              // Remove the corresponding element from the queue, only
+              // if there is no another cev in c2s.
+              if (c2s.find(cev) == c2s.end())
+                q.erase(cev);
             }
         }
     }
@@ -100,19 +97,13 @@ cdijkstra::relax(pqueue &q, C2S &c2s, const CEV &cev, const SSC &ssc)
       q.insert(cev);
       c2s[cev].insert(ssc);
 
+      if (c2s[cev].size() > 1)
+        cout << "size = " << c2s[cev].size() << endl;
+
       // There might be worse results from previous relaxations, and
       // so we need to remove them, because they are useless.
       purge_worse(q, c2s, cost, ssc);
     }
-}
-
-void
-cdijkstra::relax(pqueue &q, C2S &c2s, const CEV &cev, const SSSC &sssc)
-{
-  // We process every SSC separately, because each SSC corresponds to
-  // an independent solution.
-  for(auto const &ssc: sssc)
-    relax(q, c2s, cev, ssc);
 }
 
 V2C2S
