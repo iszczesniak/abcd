@@ -187,9 +187,9 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
               // Candidate cost.
               int c_c = c + ec;
 
-              // Consider that path when there is no maximal length
-              // given or when the new lenght is not greater than the
-              // limit.
+              // Constriction: consider that path when there is no
+              // maximal length given or when the new lenght is not
+              // greater than the limit.
               if (!m_ml || c_c <= m_ml.get())
                 {
                   // Candidate number of hops.
