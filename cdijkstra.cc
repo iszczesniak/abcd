@@ -9,6 +9,8 @@
 #include <map>
 #include <utility>
 
+#include <boost/range.hpp>
+
 using namespace std;
 
 sscpath
@@ -62,7 +64,10 @@ cdijkstra::purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc)
       // loop it already can be invalid because of the erasure.
       auto i2 = i++;
 
-      const CEV &cev = i2->first;
+      // We're creating a copy of the cev, becasue we may delete the
+      // entry pointed by i2, but still need the value of cev to check
+      // whether other entries with the same cev exist.
+      const CEV cev = i2->first;
 
       // We consider only worse results.
       if (get<0>(cev) > cost)
@@ -70,13 +75,13 @@ cdijkstra::purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc)
           // The SSC of a worse result.
           SSC &wr_ssc = i2->second;
 
-          // If wr_ssc is included in ssc, discard the CEV from both q
-          // and c2s.
+          // If wr_ssc is included in ssc, discard the *i2 entry from
+          // c2v, and possibly remove the cev from q.
           if (includes(ssc, wr_ssc))
             {
               c2s.erase(i2);
               // Remove the corresponding element from the queue, only
-              // if there is no another cev in c2s.
+              // if there is no other cev in c2s.
               if (c2s.find(cev) == c2s.end())
                 q.erase(cev);
             }
@@ -145,10 +150,10 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
     {
       // We put here the information that allows us to process the
       // source node in the loop below.  We say that we reach source
-      // node src with cost (0, 0) on the slices passed in the
-      // ssc argument along the null edge.  The null edge signals the
+      // node src with cost (0, 0) on the slices passed in the ssc
+      // argument along the null edge.  The null edge signals the
       // beginning of the path.
-      r[src][CEV(COST(0, 0), ne, src)].insert(src_ssc_nsc);
+      r[src].insert(make_pair(CEV(COST(0, 0), ne, src), src_ssc_nsc));
 
       // The priority queue.
       pqueue q;
@@ -175,17 +180,13 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
           assert(c2s.find(cev) != c2s.end());
 
           // Itereate over the out edges of the vertex.
-          graph::out_edge_iterator ei, eei;
-          for(boost::tie(ei, eei) = boost::out_edges(v, g); ei != eei; ++ei)
+          for(const auto &e: make_iterator_range(out_edges(v, g)))
             {
-              // The edge that we examine in this iteration.
-              const edge &e = *ei;
-
               // The cost of the edge.
               int ec = boost::get(boost::edge_weight, g, e);
               // Candidate cost.
               int c_c = c + ec;
-              
+
               // Consider that path when there is no maximal length
               // given or when the new lenght is not greater than the
               // limit.
@@ -204,10 +205,10 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
                   const SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
 
                   // Iterate over partial results with the given cev.
-                  for(const auto &e: c2s.equal_range(cev))
+                  for(const auto &pr: make_iterator_range(c2s.equal_range(cev)))
                     {
                       // The SSC available at node v from this cev.
-                      const SSC &v_ssc = e.second;
+                      const SSC &v_ssc = pr.second;
 
                       // Candidate SSC: the ssc available at node v
                       // that can be carried by edge e, and that has
