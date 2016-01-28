@@ -162,12 +162,15 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
 
       while(!q.empty())
         {
-          const CEV &cev = *(q.begin());
+          // Get the queue element.
+          const CEV cev = *(q.begin());
+          q.erase(q.begin());
+
+          // Get the element details.
           const COST &cost = get<0>(cev);
           int c = cost.first;
           int h = cost.second;
           vertex v = get<2>(cev);
-          q.erase(q.begin());
 
           // Stop searching when we reach the destination node.
           if (v == dst)
