@@ -266,6 +266,11 @@ std::ostream &operator << (std::ostream &os, const sscpath &p);
 std::ostream &operator << (std::ostream &os, const CEV &cev);
 
 /**
+ * This is the << operator for a COST.
+ */
+std::ostream &operator << (std::ostream &os, const COST &cost);
+
+/**
  * This is the << operator for a vector.
  */
 template <typename T>
