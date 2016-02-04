@@ -48,11 +48,8 @@ graph;
 typedef graph::edge_descriptor edge;
 typedef graph::vertex_descriptor vertex;
 
-// The cost of reaching a vertex.  The first argument is the cost of a
-// path, say the length, and the other is the number of hops to reach
-// the vertex from the source.  We need the number of hops to choose
-// the path with the least number of hops, otherwise we risk looping.
-typedef std::pair<int, int> COST;
+// The cost of reaching a vertex.
+typedef int COST;
 
 // The cost, edge and vertex tuple.  Tuple (c, e, v) stores cost c of
 // reaching target vertex v along edge e.  You could get the target

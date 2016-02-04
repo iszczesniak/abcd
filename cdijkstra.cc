@@ -153,12 +153,12 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
       // node src with cost (0, 0) on the slices passed in the ssc
       // argument along the null edge.  The null edge signals the
       // beginning of the path.
-      r[src].insert(make_pair(CEV(COST(0, 0), ne, src), src_ssc_nsc));
+      r[src].insert(make_pair(CEV(COST(0), ne, src), src_ssc_nsc));
 
       // The priority queue.
       pqueue q;
       // We reach vertex src with null cost along the null edge.
-      q.insert(CEV(COST(0, 0), ne, src));
+      q.insert(CEV(COST(0), ne, src));
 
       while(!q.empty())
         {
@@ -167,9 +167,7 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
           q.erase(q.begin());
 
           // Get the element details.
-          const COST &cost = get<0>(cev);
-          int c = cost.first;
-          int h = cost.second;
+          COST c = get<0>(cev);
           vertex v = get<2>(cev);
 
           // Stop searching when we reach the destination node.
@@ -195,14 +193,10 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
               // greater than the limit.
               if (!m_ml || c_c <= m_ml.get())
                 {
-                  // Candidate number of hops.
-                  int c_h = h + 1;
-                  // Candidate COST.
-                  COST c_cost = COST(c_c, c_h);
                   // The target vertex of the edge.
                   vertex t = boost::target(e, g);
                   // Candidate CEV.
-                  CEV c_cev = CEV(c_cost, e, t);
+                  CEV c_cev = CEV(c_c, e, t);
 
                   // The slices available on the edge.
                   const SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
@@ -284,8 +278,7 @@ cdijkstra::trace(const graph &g, const V2C2S &r, const demand &d)
               const SSC &essc = boost::get(boost::edge_ssc, g, e);
               assert(includes(essc, ssc));
               p.first.push_front(e);
-              c.first -= boost::get(boost::edge_weight, g, e);
-              --c.second;
+              c -= boost::get(boost::edge_weight, g, e);
               assert(crt == boost::target(e, g));
 
               crt = boost::source(e, g);
@@ -293,8 +286,7 @@ cdijkstra::trace(const graph &g, const V2C2S &r, const demand &d)
 
           // The cost at the source node, that we should have reached
           // by now, should be 0.
-          assert(c.first == 0);
-          assert(c.second == 0);
+          assert(c == 0);
         }
     }
 
