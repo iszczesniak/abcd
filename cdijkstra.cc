@@ -64,14 +64,14 @@ cdijkstra::purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc)
       // loop it already can be invalid because of the erasure.
       auto i2 = i++;
 
-      // We're creating a copy of the cev, becasue we may delete the
-      // entry pointed by i2, but still need the value of cev to check
-      // whether other entries with the same cev exist.
-      const CEV cev = i2->first;
-
       // We consider only worse results.
-      if (get<0>(cev) > cost)
+      if (get<0>(i2->first) > cost)
         {
+          // We're creating a copy of the cev, becasue we may delete
+          // the entry pointed by i2, but still need the value of cev
+          // to check whether other entries with the same cev exist.
+          const CEV cev = i2->first;
+
           // The SSC of a worse result.
           SSC &wr_ssc = i2->second;
 
