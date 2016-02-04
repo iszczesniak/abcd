@@ -66,12 +66,12 @@ private:
   has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc);
 
   /**
-   * Purge from c2s those results that are worse than the new result
-   * (given as arguments cost and ssc), i.e., of a larger cost and
-   * with a SSC that is included in "ssc".
+   * Purge from c2s those results that are worse or equal to the new
+   * result (given as arguments cost and ssc), i.e., of a higher or
+   * equal cost and with an SSC that is included in "ssc".
    */
   void
-  purge_worse(pqueue &p, C2S &c2s, const COST &cost, const SSC &ssc);
+  purge_worse_or_equal(pqueue &p, C2S &c2s, const COST &cost, const SSC &ssc);
 
   void
   relax(pqueue &q, C2S &c2s, const CEV &cev, const SSC &ssc);

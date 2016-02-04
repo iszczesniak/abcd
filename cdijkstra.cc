@@ -54,7 +54,8 @@ cdijkstra::has_better_or_equal(const C2S &c2s, const COST &cost, const SSC &ssc)
 // about using upper_bound to locate the first element to consider,
 // but it actually might turn out less effective.
 void
-cdijkstra::purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc)
+cdijkstra::purge_worse_or_equal(pqueue &q, C2S &c2s, const COST &cost,
+                                const SSC &ssc)
 {
   auto i = c2s.begin();
 
@@ -64,20 +65,21 @@ cdijkstra::purge_worse(pqueue &q, C2S &c2s, const COST &cost, const SSC &ssc)
       // loop it already can be invalid because of the erasure.
       auto i2 = i++;
 
-      // We consider only worse results.
-      if (get<0>(i2->first) > cost)
+      // We consider only those results that are of equal or higher
+      // cost.
+      if (get<0>(i2->first) >= cost)
         {
           // We're creating a copy of the cev, becasue we may delete
           // the entry pointed by i2, but still need the value of cev
           // to check whether other entries with the same cev exist.
           const CEV cev = i2->first;
 
-          // The SSC of a worse result.
-          SSC &wr_ssc = i2->second;
+          // The SSC of a considered result.
+          SSC &cr_ssc = i2->second;
 
-          // If wr_ssc is included in ssc, discard the *i2 entry from
+          // If cr_ssc is included in ssc, discard the *i2 entry from
           // c2v, and possibly remove the cev from q.
-          if (includes(ssc, wr_ssc))
+          if (includes(ssc, cr_ssc))
             {
               c2s.erase(i2);
               // Remove the corresponding element from the queue, only
@@ -98,14 +100,14 @@ cdijkstra::relax(pqueue &q, C2S &c2s, const CEV &cev, const SSC &ssc)
   // in c2s there is already a better or equal result.
   if (!has_better_or_equal(c2s, cost, ssc))
     {
+      // There might be results from previous relaxations, worse then
+      // the new result, and so we need to remove them.
+      purge_worse_or_equal(q, c2s, cost, ssc);
+
       // OK, this is the result of the lowest cost so far, or it has
       // an SSC, which is not included in other results.
       q.insert(cev);
       c2s.insert(make_pair(cev, ssc));
-
-      // There might be worse results from previous relaxations, and
-      // so we need to remove them, because they are useless.
-      purge_worse(q, c2s, cost, ssc);
     }
 }
 
