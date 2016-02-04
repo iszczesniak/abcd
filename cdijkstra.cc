@@ -101,7 +101,14 @@ cdijkstra::relax(pqueue &q, C2S &c2s, const CEV &cev, const SSC &ssc)
   if (!has_better_or_equal(c2s, cost, ssc))
     {
       // There might be results from previous relaxations, worse then
-      // the new result, and so we need to remove them.
+      // the new result, and so we need to remove them.  Purging equal
+      // results may seem wierd, because there are no equal results,
+      // otherwise the condition of the if-statement would fail.  The
+      // thing is that purging worse and equal results is faster than
+      // purging only worse results, since we don't need to make sure
+      // that the ssc is larger than the SSC of a known label.  We
+      // have to purge the known labels before we add the new one,
+      // because otherwise it would be removed too.
       purge_worse_or_equal(q, c2s, cost, ssc);
 
       // OK, this is the result of the lowest cost so far, or it has
