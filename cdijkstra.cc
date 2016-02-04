@@ -98,7 +98,8 @@ cdijkstra::relax(pqueue &q, C2S &c2s, const CEV &cev, const SSC &ssc)
   // in c2s there is already a better or equal result.
   if (!has_better_or_equal(c2s, cost, ssc))
     {
-      // OK, this is the best result so far, so let's use it.
+      // OK, this is the result of the lowest cost so far, or it has
+      // an SSC, which is not included in other results.
       q.insert(cev);
       c2s.insert(make_pair(cev, ssc));
 
