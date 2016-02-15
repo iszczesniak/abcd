@@ -26,9 +26,9 @@ class traffic: public module
 
   // The mean client arrival time.
   double mcat;
-  // The holding time distribution.
+  // The client arrival time distribution.
   boost::exponential_distribution<> catd;
-  // The holding time generator.
+  // The client arrival time generator.
   boost::variate_generator<boost::mt19937 &,
                            boost::exponential_distribution<> > catg;
 
