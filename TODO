@@ -1,6 +1,0 @@
-Przenieś funkcję calc_new_links to utils.hpp i dodaj testy
-jednostkowe.
-
-Calculate length in connection::reconfigure.
-
-Introduce classes for PATH, CSSPATH i CSSPATHWS.
