@@ -12,13 +12,10 @@
 #include <boost/graph/adjacency_list.hpp>
 
 // The set of slices.  It's used to describe available
-// slices, which are all avaiable along a single path.  Look at
-// SSSC below.
+// slices, which are all avaiable along a single path.
 typedef std::set<int> SSC;
 
-// The set of SSC.  It's used to describe the slices that are
-// available but along different paths.  Each SSC corresponds to a
-// different path.
+// The set of SSC.
 typedef std::set<SSC> SSSC;
 
 namespace boost {

@@ -19,6 +19,7 @@ LDFLAGS := $(LDFLAGS) -L $(BOOSTPATH)/lib
 LDFLAGS := $(LDFLAGS) -l boost_test_exec_monitor
 LDFLAGS := $(LDFLAGS) -l boost_unit_test_framework
 LDFLAGS := $(LDFLAGS) -l boost_program_options
+LDFLAGS := $(LDFLAGS) -l boost_system
 
 .PHONY: clean depend run
 

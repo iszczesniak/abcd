@@ -75,9 +75,6 @@ private:
 
   void
   relax(pqueue &q, C2S &c2s, const CEV &cev, const SSC &ssc);
-
-  void
-  relax(pqueue &q, C2S &c2s, const CEV &cev, const SSSC &sssc);
 };
 
 #endif /* CDIJKSTRA_HPP */

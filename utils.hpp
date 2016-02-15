@@ -65,18 +65,6 @@ bool
 includes(const SSC &a, const SSC &b);
 
 /**
- * Check whether b is somewhere in a.
- */
-bool
-includes(const SSSC &a, const SSC &b);
-
-/**
- * Check whether b is a subset of a.
- */
-bool
-includes(const SSSC &a, const SSSC &b);
-
-/**
  * Check whether b is not a subset of a.
  */
 bool
@@ -89,26 +77,12 @@ SSC
 intersection(const SSC &s1, const SSC &s2);
 
 /**
- * SSSC and SSC intersection.
- */
-SSSC
-intersection(const SSSC &sssc, const SSC &ssc);
-
-/**
  * Exclude those slices that won't be able to support a signal
  * with nsc slices.
  */
 
 SSC
 exclude(const SSC &ssc, int nsc);
-
-/**
- * Exclude those slices from SSSC that won't be able to support a
- * signal with nsc slices.
- */
-
-SSSC
-exclude(const SSSC &sssc, int nsc);
 
 /**
  * Exclude e from ssc.

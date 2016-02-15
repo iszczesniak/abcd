@@ -1,12 +1,3 @@
-Does the code really work better after making the cost just an
-integer? Instead of (cost, hops)?
-
-Remove all code for SSSC.
-
-Introduce operator "<" for SSC.
-
-Introduce operator "<" for (cost, SSC)
-
 Przenieś funkcję calc_new_links to utils.hpp i dodaj testy
 jednostkowe.
 

@@ -165,11 +165,11 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_4)
   // We found the path.
   BOOST_CHECK(!result[dst].empty());
   // The cost of the path is 3.
-  BOOST_CHECK(result[dst].begin()->first.first.first == 3);
+  BOOST_CHECK(get<0>(result[dst].begin()->first) == 3);
   // We reach node mid by edge e2.
-  BOOST_CHECK(result[mid].begin()->first.second == e2);
+  BOOST_CHECK(get<1>(result[mid].begin()->first) == e2);
   // We don't remember the results for edge e1.
-  BOOST_CHECK(result[mid].begin()->second.size() == 1);
+  BOOST_CHECK(result[mid].size() == 1);
 }
 
 /*
@@ -208,16 +208,16 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_5)
   // We found the path.
   BOOST_CHECK(!result[dst].empty());
   // The cost of the path is 3.
-  BOOST_CHECK(result[dst].begin()->first.first.first == 3);
+  BOOST_CHECK(get<0>(result[dst].begin()->first) == 3);
 
   // We remember at node mid the results for edges e1 and e2.
   BOOST_CHECK(result[mid].size() == 2);
   // We reach node mid by edge e2 with cost 1.
-  BOOST_CHECK(result[mid].begin()->first.first.first == 1);
-  BOOST_CHECK(result[mid].begin()->first.second == e2);
+  BOOST_CHECK(get<0>(result[mid].begin()->first) == 1);
+  BOOST_CHECK(get<1>(result[mid].begin()->first) == e2);
   // The second way of reaching node mid is by edge e1 with cost 2.
-  BOOST_CHECK((++result[mid].begin())->first.first.first == 2);
-  BOOST_CHECK((++result[mid].begin())->first.second == e1);
+  BOOST_CHECK(get<0>((++result[mid].begin())->first) == 2);
+  BOOST_CHECK(get<1>((++result[mid].begin())->first) == e1);
 }
 
 /*
@@ -250,8 +250,8 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_6)
   V2C2S result = cdt.search(g, d);
 
   BOOST_CHECK(result[dst].size() == 1);
-  BOOST_CHECK(result[dst].begin()->first.first.first == 1);
-  BOOST_CHECK(result[dst].begin()->first.second == e1);
+  BOOST_CHECK(get<0>(result[dst].begin()->first) == 1);
+  BOOST_CHECK(get<1>(result[dst].begin()->first) == e1);
 }
 
 /*
@@ -283,6 +283,6 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_7)
   V2C2S result = cdt.search(g, d);
 
   BOOST_CHECK(result[dst].size() == 1);
-  BOOST_CHECK(result[dst].begin()->first.first.first == 1);
-  BOOST_CHECK(result[dst].begin()->first.second == e2);
+  BOOST_CHECK(get<0>(result[dst].begin()->first) == 1);
+  BOOST_CHECK(get<1>(result[dst].begin()->first) == e2);
 }

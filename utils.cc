@@ -16,35 +16,6 @@ includes(const SSC &a, const SSC &b)
 }
 
 bool
-includes(const SSSC &a, const SSC &b)
-{
-  for(SSSC::const_iterator i = a.begin(); i != a.end(); ++i)
-    if (includes(*i, b))
-      return true;
-
-  return false;
-}
-
-bool
-includes(const SSSC &a, const SSSC &b)
-{
-  bool status = true;
-
-  for(SSSC::const_iterator ib = b.begin(); status && ib != b.end(); ++ib)
-    {
-      bool found = false;
-
-      for(SSSC::const_iterator ia = a.begin(); !found && ia != a.end(); ++ia)
-        if (includes(*ia, *ib))
-          found = true;
-
-      status &= found;
-    }
-
-  return status;
-}
-
-bool
 excludes(const SSC &a, const SSC &b)
 {
   return intersection(a, b).empty();
@@ -58,21 +29,6 @@ intersection(const SSC &a, const SSC &b)
   set_intersection(a.begin(), a.end(),
                    b.begin(), b.end(),
                    inserter(r, r.begin()));
-
-  return r;
-}
-
-SSSC
-intersection(const SSSC &sssc, const SSC &ssc)
-{
-  SSSC r;
-
-  for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
-    {
-      SSC ssci = intersection(*i, ssc);
-      if (!ssci.empty())
-        r.insert(ssci);
-    }
 
   return r;
 }
@@ -115,21 +71,6 @@ exclude(const SSC &ssc, int nsc)
     }
 
   return result;
-}
-
-SSSC
-exclude(const SSSC &sssc, int nsc)
-{
-  SSSC r;
-
-  for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
-    {
-      SSC c_ssc = exclude(*i, nsc);
-      if (!c_ssc.empty())
-        r.insert(c_ssc);
-    }
-
-  return r;
 }
 
 void

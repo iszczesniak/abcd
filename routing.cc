@@ -181,25 +181,6 @@ routing::tear_down(graph &g, const sscpath &p)
 }
 
 SSC
-routing::select_first(const SSSC &sssc, int nsc)
-{
-  SSC ssc;
-
-  for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
-    {
-      SSC tmp_ssc = select_first(*i, nsc);
-
-      if (ssc.empty())
-        ssc = tmp_ssc;
-      else
-        if (*tmp_ssc.begin() < *ssc.begin())
-          ssc = tmp_ssc;
-    }
-
-  return ssc;
-}
-
-SSC
 routing::select_first(const SSC &ssc, int nsc)
 {
   SSSC sssc = split(ssc);
@@ -214,25 +195,6 @@ routing::select_first(const SSC &ssc, int nsc)
     }
 
   return SSC();
-}
-
-SSC
-routing::select_fittest(const SSSC &sssc, int nsc)
-{
-  SSC ssc;
-
-  for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
-    {
-      SSC tmp_ssc = select_fittest(*i, nsc);
-
-      if (ssc.empty())
-        ssc = tmp_ssc;
-      else
-        if (tmp_ssc.size() < ssc.size())
-          ssc = tmp_ssc;
-    }
-
-  return ssc;
 }
 
 SSC

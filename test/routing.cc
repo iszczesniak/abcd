@@ -18,45 +18,31 @@ public:
 
 BOOST_AUTO_TEST_CASE(select_test1)
 {
-  SSC ssc1, ssc2;
+  SSC ssc;
 
-  ssc1.insert(1);
-  ssc1.insert(2);
-  ssc1.insert(3);
-  ssc1.insert(4);
+  ssc.insert(0);
+  ssc.insert(1);
+  ssc.insert(2);
+  ssc.insert(3);
 
-  ssc1.insert(5);
-  ssc1.insert(6);
-  ssc1.insert(7);
-  ssc1.insert(8);
-
-  ssc2.insert(0);
-  ssc2.insert(1);
-  ssc2.insert(2);
-  ssc2.insert(3);
-
-  ssc2.insert(7);
-  ssc2.insert(8);
-  ssc2.insert(9);
-
-  SSSC sssc;
-  sssc.insert(ssc1);
-  sssc.insert(ssc2);
+  ssc.insert(7);
+  ssc.insert(8);
+  ssc.insert(9);
 
   {
     routing::set_st("first");
-    SSC ssc = routing_test::select_ssc(sssc, 2);
-    BOOST_CHECK(ssc.size() == 2);
-    BOOST_CHECK(*(ssc.begin()) == 0);
-    BOOST_CHECK(*(++ssc.begin()) == 1);
+    SSC found = routing_test::select_ssc(ssc, 2);
+    BOOST_CHECK(found.size() == 2);
+    BOOST_CHECK(*(found.begin()) == 0);
+    BOOST_CHECK(*(++found.begin()) == 1);
   }
 
   {
     routing::set_st("fittest");
-    SSC ssc = routing_test::select_ssc(sssc, 2);
-    BOOST_CHECK(ssc.size() == 2);
-    BOOST_CHECK(*(ssc.begin()) == 7);
-    BOOST_CHECK(*(++ssc.begin()) == 8);
+    SSC found = routing_test::select_ssc(ssc, 2);
+    BOOST_CHECK(found.size() == 2);
+    BOOST_CHECK(*(found.begin()) == 7);
+    BOOST_CHECK(*(++found.begin()) == 8);
   }
 }
 

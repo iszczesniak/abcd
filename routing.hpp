@@ -81,8 +81,8 @@ protected:
   set_up_path(graph &g, const sscpath &p);
 
   /**
-   * Make the template depend on the SCDT (slice data type).  We
-   * make the function templated, because we use it for both SSC and
+   * Make the template depend on the SCDT (slice data type).  We make
+   * the function templated, because we can use it for both SSC and
    * SSSC.
    *
    * From the given SCDT, select the SSC according to the selection
@@ -127,23 +127,10 @@ protected:
   }
 
   // Select a contiguous ssc with the lowest slice numbers from
-  // SSSC.  It returns the whole available fragment, i.e. it can have
-  // more slices than nsc.
-  static SSC
-  select_first(const SSSC &sssc, int nsc);
-
-  // Select a contiguous ssc with the lowest slice numbers from
   // SSC.  It returns the whole available fragment, i.e. it can have
   // more slices than nsc.
   static SSC
   select_first(const SSC &ssc, int nsc);
-
-  // Select the fittest slices, i.e. the smallest slice
-  // fragment that fits the required slices from SSSC.  It
-  // returns the whole available fragment, i.e. it can have more
-  // slices than nsc.
-  static SSC
-  select_fittest(const SSSC &sssc, int nsc);
 
   // Select the fittest slices, i.e. the smallest slice
   // fragment from SSC that fits the required number of slices.
