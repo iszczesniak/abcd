@@ -32,7 +32,6 @@
 #include <boost/utility/value_init.hpp>
 
 #include "custom_dijkstra_call.hpp"
-#include "exclude_filter.hpp"
 
 namespace boost {
 
@@ -47,31 +46,30 @@ namespace boost {
     typedef typename Graph::vertex_descriptor vertex_descriptor;
     typedef typename Graph::edge_descriptor edge_descriptor;
     typedef typename WeightMap::value_type weight_type;
-    typedef exclude_filter<vertex_descriptor> evf_type;
-    typedef exclude_filter<edge_descriptor> eef_type;
+    typedef std::set<edge_descriptor> es_type;
+    typedef std::set<vertex_descriptor> vs_type;
+    typedef filtered_graph<Graph, is_not_in_subset<es_type>,
+                           is_not_in_subset<vs_type>> fg_type;
     typedef std::list<edge_descriptor> path_type;
     typedef std::pair<weight_type, path_type> kr_type;
-
+ 
     // The results.
     std::list<kr_type> A;
     // The tentative results.
     std::multimap<weight_type, path_type> B;
 
     // The set of excluded edges.
-    std::set<edge_descriptor> exe;
+    es_type exe;
     // The set of excluded vertexes.
-    std::set<vertex_descriptor> exv;
+    vs_type exv;
 
-    // The filter which excludes edges.
-    eef_type ef(&exe);
-    // The filter which excludes vertexes.
-    evf_type vf(&exv);
-
-    // The filtered graph type.
-    typedef boost::filtered_graph<Graph, eef_type, evf_type> fg_type;
+    // The edge predicate.
+    is_not_in_subset<es_type> ep(exe);
+    // The vertex predicate.
+    is_not_in_subset<vs_type> vp(exv);
 
     // The filtered graph.
-    fg_type fg(g, ef, vf);
+    fg_type fg(g, ep, vp);
 
     optional<kr_type> okr = custom_dijkstra_call(g, s, t, wm, im);
 
