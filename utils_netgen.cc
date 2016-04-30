@@ -1,9 +1,13 @@
 #include "utils_netgen.hpp"
 
+#include "utils.hpp"
+
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>   
 #include <sstream>
 #include <iomanip>
+
+#include <boost/graph/dijkstra_shortest_paths.hpp>
 
 using namespace std;
 
@@ -122,4 +126,44 @@ generate_gabriel_graph(const sdi_args &args)
     delete *it;
 
   return g;
+}
+
+dbl_acc
+calc_sp_hops(const graph &g)
+{
+  dbl_acc hop_acc;
+
+  auto ns = boost::vertices(g);
+  /*
+  // Calculate stats for shortest paths.
+  for (auto ni = ns.first; ni != ns.second; ++ni)
+    {
+      vector<int> dist(num_vertices(g));
+      vector<vertex> pred(num_vertices(g));
+
+      vertex s = *ni;
+
+      boost::dijkstra_shortest_paths
+        (g, s, boost::predecessor_map(&pred[0]).distance_map(&dist[0]));
+
+      for (auto nj = ns.first; nj != ns.second; ++nj)
+        if (ni != nj)
+          {
+            vertex d = *nj;
+            // Make sure the path was found.
+            assert(pred[d] != d);
+
+            // Record the number of hops.
+            int hops = 0;
+            vertex c = d;
+            while(c != s)
+              {
+                c = pred[c];
+                ++hops;
+              }
+            hop_acc(hops);
+          }
+    }
+  */
+  return hop_acc;
 }

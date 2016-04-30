@@ -10,8 +10,9 @@
 #include <boost/graph/connected_components.hpp>
 
 #include <boost/accumulators/accumulators.hpp>
-#include <boost/accumulators/statistics/stats.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
+#include <boost/accumulators/statistics/stats.hpp>
+#include <boost/accumulators/statistics/variance.hpp>
 
 #include <cassert>
 #include <iostream>
@@ -22,6 +23,12 @@
 #include <vector>
 
 namespace ba = boost::accumulators;
+
+// The accumulator with double values.
+typedef ba::accumulator_set<double, ba::stats<ba::tag::min,
+                                              ba::tag::mean,
+                                              ba::tag::max,
+                                              ba::tag::variance> > dbl_acc;
 
 /**
  * Generate a random number from min to max, including both min and

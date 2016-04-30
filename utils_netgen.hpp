@@ -235,4 +235,7 @@ generate_graph(const sdi_args &args, T &gen)
   return g;
 }
 
+dbl_acc
+calc_sp_hops(const graph &g);
+
 #endif /* UTILS_NETGEN_HPP */
