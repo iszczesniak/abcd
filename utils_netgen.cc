@@ -134,7 +134,7 @@ calc_sp_hops(const graph &g)
   dbl_acc hop_acc;
 
   auto ns = boost::vertices(g);
-  /*
+
   // Calculate stats for shortest paths.
   for (auto ni = ns.first; ni != ns.second; ++ni)
     {
@@ -164,6 +164,6 @@ calc_sp_hops(const graph &g)
             hop_acc(hops);
           }
     }
-  */
+
   return hop_acc;
 }
