@@ -5,15 +5,10 @@
 #include "stats.hpp"
 #include "utils_netgen.hpp"
 
-#include <boost/accumulators/accumulators.hpp>
-#include <boost/accumulators/statistics.hpp>
-#include <boost/accumulators/statistics/variance.hpp>
 #include <boost/random.hpp>
 
 #include <iostream>
 #include <string>
-
-namespace ba = boost::accumulators;
 
 using namespace std;
 
@@ -31,12 +26,6 @@ print_stats(const string &s, const T &t)
 void
 net_stats(const sdi_args &args_orig)
 {
-  // The accumulator with double values.
-  typedef ba::accumulator_set<double, ba::stats<ba::tag::min,
-                                                ba::tag::mean,
-                                                ba::tag::max,
-                                                ba::tag::variance> > dbl_acc;
-
   // Number of nodes.
   dbl_acc nns;
 
