@@ -115,8 +115,10 @@ net_stats(const sdi_args &args_orig)
 }
 
 void
-simulate(const sdi_args &args)
+simulate(const sdi_args &args_para)
 {
+  sdi_args args = args_para;
+
   // Set the routing type.
   routing::set_rt(args.rt);
 
@@ -137,6 +139,9 @@ simulate(const sdi_args &args)
 
   // Make sure there is only one component.
   assert(is_connected(g));
+
+  // Calculate the mean connection arrival time.
+  args.mcat = calc_mcat(args, g);
 
   // This simulation object.
   simulation sim(g, rng);

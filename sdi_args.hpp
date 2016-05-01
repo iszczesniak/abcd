@@ -58,6 +58,9 @@ struct sdi_args
   /// The mean client arrival time.
   double mcat;
 
+  /// The offered load.
+  double ol;
+
   /// The mean holding time.
   double mht;
 

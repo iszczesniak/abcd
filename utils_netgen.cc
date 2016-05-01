@@ -8,6 +8,7 @@
 #include <iomanip>
 
 #include <boost/graph/dijkstra_shortest_paths.hpp>
+#include <boost/range.hpp>
 
 using namespace std;
 
@@ -166,4 +167,21 @@ calc_sp_hops(const graph &g)
     }
 
   return hop_acc;
+}
+
+double
+calc_mcat(const sdi_args &args, const graph &g)
+{
+  // The mean number of hops of a shortest path.
+  double mnh = ba::mean(calc_sp_hops(g));
+
+  // The network capacity, i.e. the number of slices of all links.
+  double cap = 0;
+  for (const auto &e: boost::make_iterator_range(edges (g)))
+    cap += boost::get(boost::edge_nosc, g, e);
+
+  // The mean connection arrival time.
+  double mcat = args.mht * mnh * args.mnsc / (args.ol * cap);
+
+  return mcat;
 }
