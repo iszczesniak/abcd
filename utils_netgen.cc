@@ -2,6 +2,7 @@
 
 #include "utils.hpp"
 
+#include <cmath>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>   
 #include <sstream>
@@ -82,9 +83,11 @@ generate_gabriel_graph(const sdi_args &args)
   // The set of lone vertexes.
   std::set<vertex> lonely = get_vertexes<std::set<vertex> >(g);
 
-  unsigned int w = 1000;
-  unsigned int h = 1000;
   unsigned int number = args.nr_nodes;
+  // Square kilometers required for the given number of nodes.
+  unsigned skm = number * 10000;
+  unsigned int w = std::sqrt(skm);
+  unsigned int h = std::sqrt(skm);
   list<TNode *> P = generate_Nodes(w, h, number);
   
   list<TTriangle *> triangles;
