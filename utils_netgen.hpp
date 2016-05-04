@@ -11,6 +11,7 @@
 #include <iterator>
 #include <set>
 #include <vector>
+#include <utility>
 
 #include <boost/graph/random.hpp>
 #include <boost/graph/iteration_macros.hpp>
@@ -235,10 +236,10 @@ generate_graph(const sdi_args &args, T &gen)
   return g;
 }
 
-// Calculate the mean number of hops the shortest paths between all
-// node pairs.
-dbl_acc
-calc_sp_hops(const graph &g);
+// For the shortest paths between all node pairs, calculate the
+// statistics for hops and lengths.
+std::pair<dbl_acc, dbl_acc>
+calc_sphl(const graph &g);
 
 // Calculate the mean connection arrival time for the given arguments
 // and the given graph.

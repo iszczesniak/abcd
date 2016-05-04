@@ -132,10 +132,11 @@ generate_gabriel_graph(const sdi_args &args)
   return g;
 }
 
-dbl_acc
+std::pair<dbl_acc, dbl_acc>
 calc_sp_hops(const graph &g)
 {
   dbl_acc hop_acc;
+  dbl_acc len_acc;
 
   auto ns = boost::vertices(g);
 
@@ -169,15 +170,12 @@ calc_sp_hops(const graph &g)
           }
     }
 
-  return hop_acc;
+  return make_pair(hop_acc, len_acc);
 }
 
 double
-calc_mcat(const sdi_args &args, const graph &g)
+calc_mcat(const sdi_args &args, const graph &g, double mnh)
 {
-  // The mean number of hops of a shortest path.
-  double mnh = ba::mean(calc_sp_hops(g));
-
   // The network capacity, i.e. the number of slices of all links.
   double cap = 0;
   for (const auto &e: boost::make_iterator_range(edges (g)))

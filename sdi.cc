@@ -140,6 +140,11 @@ simulate(const sdi_args &args_para)
   // Make sure there is only one component.
   assert(is_connected(g));
 
+  // Calculate the shortest path statistics.
+
+  // The mean number of hops of a shortest path.
+  double mnh = ba::mean(sp_stats.first);
+
   // Calculate the mean connection arrival time.
   args.mcat = calc_mcat(args, g);
 
