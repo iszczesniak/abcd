@@ -72,46 +72,16 @@ net_stats(const sdi_args &args_orig)
       for (auto ni = ns.first; ni != ns.second; ++ni)
         nds(boost::out_degree(*ni, g));
 
-      // Calculate stats for shortest paths.
-      for (auto ni = ns.first; ni != ns.second; ++ni)
-        {
-          vector<int> dist(num_vertices(g));
-          vector<vertex> pred(num_vertices(g));
-
-          vertex s = *ni;
-
-          boost::dijkstra_shortest_paths
-            (g, s, boost::predecessor_map(&pred[0]).distance_map(&dist[0]));
-
-          for (auto nj = ns.first; nj != ns.second; ++nj)
-            if (ni != nj)
-              {
-                vertex d = *nj;
-                // Make sure the path was found.
-                assert(pred[d] != d);
-
-                // Record the distance.
-                spls(dist[d]);
-
-                // Record the number of hops.
-                int hops = 0;
-                vertex c = d;
-                while(c != s)
-                  {
-                    c = pred[c];
-                    ++hops;
-                  }
-                sphs(hops);
-              }
-        }
+      // Calculate the shortest path statistics.
+      calc_sp_stats(g, sphs, spls);
     }
 
   print_stats("Number of nodes", nns);
   print_stats("Number of links", nls);
   print_stats("Link length", lls);
   print_stats("Node degree", nds);
-  print_stats("Shortest path length", spls);
   print_stats("Shortest path hops", sphs);
+  print_stats("Shortest path length", spls);
 }
 
 void
@@ -140,13 +110,8 @@ simulate(const sdi_args &args_para)
   // Make sure there is only one component.
   assert(is_connected(g));
 
-  // Calculate the shortest path statistics.
-
-  // The mean number of hops of a shortest path.
-  double mnh = ba::mean(sp_stats.first);
-
   // Calculate the mean connection arrival time.
-  args.mcat = calc_mcat(args, g);
+  args.mcat = calc_mcat(args, g, calc_sp_mean_hops(g));
 
   // This simulation object.
   simulation sim(g, rng);

@@ -132,12 +132,18 @@ generate_gabriel_graph(const sdi_args &args)
   return g;
 }
 
-std::pair<dbl_acc, dbl_acc>
-calc_sp_hops(const graph &g)
+double
+calc_sp_mean_hops(const graph &g)
 {
   dbl_acc hop_acc;
   dbl_acc len_acc;
+  calc_sp_stats(g, hop_acc, len_acc);
+  return ba::mean(hop_acc);
+}
 
+void
+calc_sp_stats(const graph &g, dbl_acc &hop_acc, dbl_acc &len_acc)
+{
   auto ns = boost::vertices(g);
 
   // Calculate stats for shortest paths.
@@ -167,10 +173,11 @@ calc_sp_hops(const graph &g)
                 ++hops;
               }
             hop_acc(hops);
+
+            // Record the path length.
+            len_acc(dist[d]);
           }
     }
-
-  return make_pair(hop_acc, len_acc);
 }
 
 double

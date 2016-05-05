@@ -236,14 +236,19 @@ generate_graph(const sdi_args &args, T &gen)
   return g;
 }
 
+// Calculate the mean number of hops in all shortest paths in the
+// graph.
+double
+calc_sp_mean_hops(const graph &g);
+
 // For the shortest paths between all node pairs, calculate the
 // statistics for hops and lengths.
-std::pair<dbl_acc, dbl_acc>
-calc_sphl(const graph &g);
+void
+calc_sp_stats(const graph &g, dbl_acc &hop_acc, dbl_acc &len_acc);
 
 // Calculate the mean connection arrival time for the given arguments
 // and the given graph.
 double
-calc_mcat(const sdi_args &args, const graph &g);
+calc_mcat(const sdi_args &args, const graph &g, double mnh);
 
 #endif /* UTILS_NETGEN_HPP */
