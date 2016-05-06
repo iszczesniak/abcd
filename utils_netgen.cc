@@ -132,15 +132,6 @@ generate_gabriel_graph(const sdi_args &args)
   return g;
 }
 
-double
-calc_sp_mean_hops(const graph &g)
-{
-  dbl_acc hop_acc;
-  dbl_acc len_acc;
-  calc_sp_stats(g, hop_acc, len_acc);
-  return ba::mean(hop_acc);
-}
-
 void
 calc_sp_stats(const graph &g, dbl_acc &hop_acc, dbl_acc &len_acc)
 {

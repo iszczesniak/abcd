@@ -42,6 +42,9 @@ struct sdi_args
   /// The maximal length of a path we want.
   boost::optional<int> ml;
 
+  /// The maximal length coefficient of a path we want.
+  boost::optional<double> mlc;
+
   /// The K for the k-shortest paths.
   boost::optional<unsigned> K;
 

@@ -236,11 +236,6 @@ generate_graph(const sdi_args &args, T &gen)
   return g;
 }
 
-// Calculate the mean number of hops in all shortest paths in the
-// graph.
-double
-calc_sp_mean_hops(const graph &g);
-
 // For the shortest paths between all node pairs, calculate the
 // statistics for hops and lengths.
 void

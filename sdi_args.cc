@@ -85,6 +85,9 @@ process_sdi_args(int argc, const char *argv[])
         ("ml", po::value<int>(),
          "the maximal length of a path")
 
+        ("mlc", po::value<int>(),
+         "the maximal length cofficient of a path")
+
         (K_S, po::value<int>(),
          "the K for the k-shortest paths")
 

@@ -110,8 +110,16 @@ simulate(const sdi_args &args_para)
   // Make sure there is only one component.
   assert(is_connected(g));
 
+  dbl_acc hop_acc;
+  dbl_acc len_acc;
+  calc_sp_stats(g, hop_acc, len_acc);
+  
   // Calculate the mean connection arrival time.
-  args.mcat = calc_mcat(args, g, calc_sp_mean_hops(g));
+  args.mcat = calc_mcat(args, g, ba::mean(hop_acc));
+
+  // Calculate the maximal length of a path.
+  if (args.mlc)
+    args.ml = args.mlc.get() * ba::max(len_acc);
 
   // This simulation object.
   simulation sim(g, rng);
