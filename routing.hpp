@@ -2,6 +2,7 @@
 #define ROUTING_HPP
 
 #include "graph.hpp"
+#include "simulation.hpp"
 
 #include <memory>
 #include <boost/optional.hpp>
@@ -109,7 +110,7 @@ protected:
         break;
 
       case st_t::random:
-        ssc = select_random(scdt, nsc);
+        ssc = select_random(scdt, nsc, simulation::get().rng());
         break;
 
       default:
