@@ -34,6 +34,7 @@ routing::st_interpret (const string &st)
   map <string, routing::st_t> st_map;
   st_map["first"] = routing::st_t::first;
   st_map["fittest"] = routing::st_t::fittest;
+  st_map["random"] = routing::st_t::random;
   return interpret ("spectrum selection type", st, st_map);
 }
 
@@ -183,46 +184,48 @@ routing::tear_down(graph &g, const sscpath &p)
 SSC
 routing::select_first(const SSC &ssc, int nsc)
 {
-  SSSC sssc = split(ssc);
+  SSSC sssc = split(ssc, nsc);
 
-  for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
-    {
-      const SSC &tmp = *i;
+  if (sssc.empty())
+    return SSC();
 
-      // We take the first SSC that can handle nsc.
-      if (tmp.size() >= nsc)
-        return tmp;
-    }
-
-  return SSC();
+  return *sssc.begin();
 }
 
 SSC
 routing::select_fittest(const SSC &ssc, int nsc)
 {
+  // We use a pointer, because we don't want to copy SSCs.
   const SSC *result = NULL;
 
-  SSSC sssc = split(ssc);
+  SSSC sssc = split(ssc, nsc);
 
-  for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
+  for(const SSC &ssc: sssc)
     {
       const SSC &tmp = *i;
 
-      // We only care about those fragments that can handle nsc.
-      if (tmp.size() >= nsc)
-        {
-          // Take that, because it's the first we got.
-          if (result == NULL)
-            result = &tmp;
-          else
-            // Take tmp, only if it's tighter than the previous find.
-            if (tmp.size() < result->size())
-              result = &tmp;
-        }
+      // Take that, because it's the first we got.
+      if (result == NULL)
+        result = &tmp;
+      else
+        // Take tmp, only if it's tighter than the previous find.
+        if (tmp.size() < result->size())
+          result = &tmp;
     }
 
   if (!result)
     return SSC();
   else
     return *result;
+}
+
+SSC
+routing::select_random(const SSC &ssc, int nsc)
+{
+  SSSC sssc = split(ssc, nsc);
+
+  if (sssc.empty())
+    return SSC();
+  else
+    return get_random_element(sssc, gen);
 }

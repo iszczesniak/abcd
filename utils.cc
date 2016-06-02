@@ -112,7 +112,7 @@ static bool stlos(const set<vertex> &s1, const set<vertex> &s2)
 }
 
 SSSC
-split(const SSC &ssc)
+split(const SSC &ssc, int nsc)
 {
   SSSC sssc;
 
@@ -128,7 +128,9 @@ split(const SSC &ssc)
           ++i;
         } while (i != ssc.end() && sc + 1 == *i);
 
-      sssc.insert(tmp);
+      // Return this SSC only if it has at least nsc slices.
+      if (tmp.size() >= nsc)
+        sssc.insert(tmp);
     }
 
   return sssc;

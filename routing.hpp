@@ -10,9 +10,10 @@ class routing
 {  
 public:
   // The type of specturm selection:
-  // first - the first slices that fit the demand are chosen
-  // smallest - the smallest set of contiguous slices are chosen
-  enum class st_t {none, first, fittest};
+  // first - the first (lowest number of a slice) contiguous fragment
+  // fittest - the fittest (smallest) contiguous fragment
+  // random - any contiguous fragment
+  enum class st_t {none, first, fittest, random};
 
   // The type of routing:
   // cdijkstra - constrained dijkstra
@@ -105,6 +106,10 @@ protected:
 
       case st_t::fittest:
         ssc = select_fittest(scdt, nsc);
+        break;
+
+      case st_t::random:
+        ssc = select_random(scdt, nsc);
         break;
 
       default:

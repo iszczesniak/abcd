@@ -393,8 +393,10 @@ calculate_utilization(const G &g)
   return ba::mean(load_acc);
 }
 
+// Split the input SSC into SSCs placed in an SSSC.  Each resulting
+// SSC has at least nsc contiguous slices.
 SSSC
-split(const SSC &ssc);
+split(const SSC &ssc, int nsc);
 
 int
 calculate_fragments(const SSC &ssc);
