@@ -139,7 +139,8 @@ split(const SSC &ssc, int nsc)
 int
 calculate_fragments(const SSC &ssc)
 {
-  return split(ssc).size();
+  // Split the SSC into fragments of size 1 at least.
+  return split(ssc, 1).size();
 }
 
 /**

@@ -200,18 +200,14 @@ routing::select_fittest(const SSC &ssc, int nsc)
 
   SSSC sssc = split(ssc, nsc);
 
-  for(const SSC &ssc: sssc)
-    {
-      const SSC &tmp = *i;
-
-      // Take that, because it's the first we got.
-      if (result == NULL)
-        result = &tmp;
-      else
-        // Take tmp, only if it's tighter than the previous find.
-        if (tmp.size() < result->size())
-          result = &tmp;
-    }
+  for(const SSC &e: sssc)
+    // Take that, because it's the first we got.
+    if (result == NULL)
+      result = &e;
+    else
+      // Take tmp, only if it's tighter than the previous find.
+      if (e.size() < result->size())
+        result = &e;
 
   if (!result)
     return SSC();
@@ -227,5 +223,5 @@ routing::select_random(const SSC &ssc, int nsc)
   if (sssc.empty())
     return SSC();
   else
-    return get_random_element(sssc, gen);
+    return get_random_element(sssc, simulation::get().rng());
 }

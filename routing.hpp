@@ -110,7 +110,7 @@ protected:
         break;
 
       case st_t::random:
-        ssc = select_random(scdt, nsc, simulation::get().rng());
+        ssc = select_random(scdt, nsc);
         break;
 
       default:
@@ -144,6 +144,12 @@ protected:
   // slices than nsc.
   static SSC
   select_fittest(const SSC &ssc, int nsc);
+
+  // Select the random slices, i.e. the random slice fragment from SSC
+  // that fits the required number of slices.  It returns the whole
+  // available fragment, i.e. it can have more slices than nsc.
+  static SSC
+  select_random(const SSC &ssc, int nsc);
 
   // Interpret the string and return the routing type.
   static rt_t
