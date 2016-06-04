@@ -62,6 +62,7 @@ public:
 
 private:
   bool set_up();
+  bool reconfigure();
   void tear_down();
 };
 

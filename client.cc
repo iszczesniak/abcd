@@ -14,7 +14,10 @@ client::client(double mht, double mnsc, traffic &tra):
   mnsc(mnsc), nscd(mnsc - 1), nscdg(rng, nscd),
   conn(g), st(stats::get()), tra(tra)
 {
-  if (set_up())
+  // We try to setup the connection and reconfigure it.  We schedule
+  // the connection to be torn down only when it was setup and
+  // reconfigured.
+  if (set_up() && reconfigure())
     {
       // Register the client with the traffic.
       tra.insert(this);
@@ -53,6 +56,12 @@ bool client::set_up()
     st.established_conn(conn);
 
   return status;
+}
+
+bool client::reconfigure()
+{
+  assert(conn.is_established());
+  return true;
 }
 
 const connection &
