@@ -53,7 +53,10 @@ struct sdi_args
 
   /// The routing algorithm.
   std::string rt;
-  
+
+  /// The reconfiguration type.
+  std::string re;
+
   /// -----------------------------------------------------------------
   /// The traffic options
   /// -----------------------------------------------------------------

@@ -5,21 +5,16 @@
 
 #include <utility>
 
-// The type of the connection.
+// The type of the connection.  It can establish, reconfigure and tear
+// down a connection, but it doesn't report the statistics.
 class connection
 {
-  // This is the sscpath with status.
-  typedef std::pair<bool, sscpath> sscpathws;
-
-  graph &m_g;
-  demand m_d;
-  sscpathws m_p;
-
-  int m_id;
-
-  static int counter;
-
 public:
+  // The reconfiguration types:
+  // complete - route the connection anew
+  // our - our method of reconfiguration
+  enum class re_t {none, complete, our};
+
   connection(graph &g);
   ~connection();
 
@@ -48,9 +43,33 @@ public:
   // The connection must be established.
   int
   get_nsc() const;
-  
+
+
+  // Set the reconfiguration type.
+  static void
+  set_re(const std::string &re);
+
+  // Get the reconfiguration type.
+  static re_t
+  get_re();
+
   void
   tear_down();
+
+private:
+  // The parameter that tells how to reconfigure connections.
+  static re_t m_re;
+
+  // This is the sscpath with status.
+  typedef std::pair<bool, sscpath> sscpathws;
+
+  graph &m_g;
+  demand m_d;
+  sscpathws m_p;
+
+  int m_id;
+
+  static int counter;
 };
 
 #endif /* CONNECTION_HPP */

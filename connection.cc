@@ -9,6 +9,8 @@ using namespace std;
 
 int connection::counter = 0;
 
+connection::re_t connection::m_re = connection::re_t::none;
+
 connection::connection(graph &g): m_g(g), m_id(counter++)
 {
 }
@@ -85,6 +87,20 @@ connection::establish(const demand &d)
     m_p = make_pair(true, sscpath());
 
   return m_p.first;
+}
+
+// Set the reconfiguration type.
+void
+connection::set_re(const std::string &re)
+{
+  
+}
+
+// Get the reconfiguration type.
+connection::re_t
+connection::get_re()
+{
+  return m_re;
 }
 
 void

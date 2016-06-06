@@ -13,7 +13,9 @@
 
 // Option strings.
 #define NT_S "nt"
+#define ST_S "st"
 #define RT_S "rt"
+#define RE_S "re"
 #define K_S "K"
 #define EDGES_S "edges"
 #define NODES_S "nodes"
@@ -91,11 +93,14 @@ process_sdi_args(int argc, const char *argv[])
         (K_S, po::value<int>(),
          "the K for the k-shortest paths")
 
-        ("st", po::value<string>()->required(),
+        (ST_S, po::value<string>()->required(),
          "the spectrum selection type")
 
         (RT_S, po::value<string>()->required(),
-         "the routing algorithm");
+         "the routing algorithm")
+
+        (RE_S, po::value<string>()->required(),
+         "the reconfiguration type");
 
       // Traffic options.
       po::options_description tra("Traffic options");
@@ -160,8 +165,9 @@ process_sdi_args(int argc, const char *argv[])
       if (vm.count(K_S))
         result.K = vm[K_S].as<int>();
 
-      result.st = vm["st"].as<string>();
-      result.rt = vm["rt"].as<string>();
+      result.st = vm[ST_S].as<string>();
+      result.rt = vm[RT_S].as<string>();
+      result.re = vm[RE_S].as<string>();
 
       // The traffic options.
       result.ol = vm["ol"].as<double>();
