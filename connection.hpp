@@ -29,7 +29,8 @@ public:
   bool
   is_established() const;
 
-  // Establish the connection for the given demand.  True is successfull.
+  // Establish the connection for the given demand.  True is
+  // successfull.
   bool
   establish(const demand &d);
 
