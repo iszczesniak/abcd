@@ -65,6 +65,23 @@ connection::get_nsc() const
   return m_p.second.second.size();
 }
 
+// Set the reconfiguration type.
+void
+connection::set_re(const std::string &re)
+{
+  map <string, connection::re_t> re_map;
+  re_map["complete"] = connection::re_t::complete;
+  re_map["our"] = connection::re_t::our;
+  m_re = interpret ("reconfiguration type", re, re_map);
+}
+
+// Get the reconfiguration type.
+connection::re_t
+connection::get_re()
+{
+  return m_re;
+}
+
 bool
 connection::establish(const demand &d)
 {
@@ -90,21 +107,79 @@ connection::establish(const demand &d)
   return m_p.first;
 }
 
-// Set the reconfiguration type.
-void
-connection::set_re(const std::string &re)
+std::pair<bool, int>
+connection::reconfigure(vertex new_src)
 {
-  map <string, connection::re_t> re_map;
-  re_map["complete"] = connection::re_t::complete;
-  re_map["our"] = connection::re_t::our;
-  m_re = interpret ("reconfiguration type", re, re_map);
+  assert(is_established());
+
+  std::pair<bool, int> result;
+
+  switch(reconf)
+    {
+    case complete:
+      // The complete reconfiguration.
+      result = reconfigure_complete(new_src);
+      break;
+
+    case incremental:
+      // First we do the incremental reconfiguration.
+      result = reconfigure_incremental(new_src);
+      if (!result.first)
+        // And if that fails we do the complete reconfiguration.
+        result = reconfigure_complete(new_src);
+      break;
+
+    case curtailing:
+      // First we do the curtailing reconfiguration.
+      result = reconfigure_curtailing(new_src);
+      if (!result.first)
+        // And if that fails we do the complete reconfiguration.
+        result = reconfigure_complete(new_src);
+      break;
+
+    default:
+      assert(false);
+    }
+
+  // Remember the new source when the reconfiguration succeeded.
+  if (result.first)
+    d.first.first = new_src;
+
+  return result;
 }
 
-// Get the reconfiguration type.
-connection::re_t
-connection::get_re()
+std::pair<bool, int>
+connection::reconfigure_complete(vertex new_src)
 {
-  return m_re;
+  std::pair<bool, int> result;
+
+  // Store the existing sscpath, because we'll need it in case we fail
+  // to establish a new connection.
+  sscpathws tmp = p;
+
+  // First we need to tear down the existing path.  We might need its
+  // subcarriers to establish a new connection.
+  dijkstra::tear_down_path(g, p.second);
+
+  // That's the new demand.
+  vertex dst = d.first.second;
+  demand nd(npair(new_src, dst), d.second);
+
+  // When searching for the new path, we allow all available
+  // subcarriers.
+  V2C2S r = dijkstra::search(g, nd);
+  p.second = dijkstra::trace(g, r, nd);
+  result.first = !p.second.first.empty();
+
+  if (result.first)
+    result.second = calc_new_links(p.second, tmp.second);
+  else
+    // If no new path has been found, revert to the old path.
+    p = tmp;
+
+  dijkstra::set_up_path(g, p.second);
+
+  return result;
 }
 
 void

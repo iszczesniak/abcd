@@ -29,6 +29,10 @@ public:
   bool
   establish(const demand &d);
 
+  // Reconfigure the connection.
+  std::pair<bool, int>
+  reconfigure(vertex new_Src);
+
   // Return the length of the established connection.  The connection
   // must be established.
   int
@@ -44,7 +48,6 @@ public:
   int
   get_nsc() const;
 
-
   // Set the reconfiguration type.
   static void
   set_re(const std::string &re);
@@ -57,6 +60,12 @@ public:
   tear_down();
 
 private:
+  std::pair<bool, int>
+  reconfigure_complete(vertex new_Src);
+
+  std::pair<bool, int>
+  reconfigure_incremental(vertex new_Src);
+
   // The parameter that tells how to reconfigure connections.
   static re_t m_re;
 
