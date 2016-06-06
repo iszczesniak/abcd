@@ -1,5 +1,6 @@
 #include "connection.hpp"
 #include "routing.hpp"
+#include "utils.hpp"
 
 #include <algorithm>
 #include <iostream>
@@ -93,7 +94,10 @@ connection::establish(const demand &d)
 void
 connection::set_re(const std::string &re)
 {
-  
+  map <string, connection::re_t> re_map;
+  re_map["complete"] = connection::re_t::complete;
+  re_map["our"] = connection::re_t::our;
+  m_re = interpret ("reconfiguration type", re, re_map);
 }
 
 // Get the reconfiguration type.
