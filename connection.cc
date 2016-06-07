@@ -12,6 +12,37 @@ int connection::counter = 0;
 
 connection::re_t connection::m_re = connection::re_t::none;
 
+int
+calc_new_links(const sscpath &new_path, const sscpath &old_path)
+{
+  int number = 0;
+
+  // Now we need to calculate the number of new links to configure,
+  // which depends on the SSC.  Check whether the SSC of the new path
+  // is the same as the SSC of the old path.
+  if (new_path.second == old_path.second)
+    {
+      // Calculate the number of links to configure, i.e. those links
+      // that are in the new path, but are missing in the old path.
+      // Iterate over the new path, and calculate those links that are
+      // not present in the old path.
+      for(path::const_iterator i = new_path.first.begin();
+          i != new_path.first.end(); ++i)
+        {
+          edge e = *i;
+          path::const_iterator j = std::find(old_path.first.begin(),
+                                             old_path.first.end(), e);
+          if (j == old_path.first.end())
+            ++number;
+        }
+    }
+  else
+    // Since it's a different SSC, we have to configure all links.
+    number = new_path.first.size();
+
+  return number;
+}
+
 connection::connection(graph &g): m_g(g), m_id(counter++)
 {
 }
@@ -114,34 +145,18 @@ connection::reconfigure(vertex new_src)
 
   std::pair<bool, int> result;
 
-  switch(reconf)
+  switch(m_re)
     {
     case complete:
       // The complete reconfiguration.
       result = reconfigure_complete(new_src);
       break;
 
-    case incremental:
-      // First we do the incremental reconfiguration.
-      result = reconfigure_incremental(new_src);
-      if (!result.first)
-        // And if that fails we do the complete reconfiguration.
-        result = reconfigure_complete(new_src);
-      break;
-
-    case curtailing:
-      // First we do the curtailing reconfiguration.
-      result = reconfigure_curtailing(new_src);
-      if (!result.first)
-        // And if that fails we do the complete reconfiguration.
-        result = reconfigure_complete(new_src);
-      break;
-
     default:
       assert(false);
     }
 
-  // Remember the new source when the reconfiguration succeeded.
+  // Remember the new source when the reconfiguration succeeds.
   if (result.first)
     d.first.first = new_src;
 
@@ -159,7 +174,7 @@ connection::reconfigure_complete(vertex new_src)
 
   // First we need to tear down the existing path.  We might need its
   // subcarriers to establish a new connection.
-  dijkstra::tear_down_path(g, p.second);
+  routing::tear_down(g, p.second);
 
   // That's the new demand.
   vertex dst = d.first.second;
@@ -167,7 +182,7 @@ connection::reconfigure_complete(vertex new_src)
 
   // When searching for the new path, we allow all available
   // subcarriers.
-  V2C2S r = dijkstra::search(g, nd);
+  sscpath V2C2S r = routing::route(g, nd);
   p.second = dijkstra::trace(g, r, nd);
   result.first = !p.second.first.empty();
 
@@ -176,8 +191,6 @@ connection::reconfigure_complete(vertex new_src)
   else
     // If no new path has been found, revert to the old path.
     p = tmp;
-
-  dijkstra::set_up_path(g, p.second);
 
   return result;
 }
