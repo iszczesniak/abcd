@@ -21,11 +21,26 @@ boost::optional<unsigned> routing::m_K;
 
 unique_ptr<routing> routing::singleton;
 
-sscpath
+boost::optional<sscpath>
 routing::route(graph &g, const demand &d)
 {
   assert(singleton);
-  return singleton->route_w(g, d);
+  boost::optional<sscpath> result;
+
+  // If the source and destination nodes are different, do the real
+  // routing.
+  if (d.first.first != d.first.second)
+    {
+      sscpath sp = singleton->route_w(g, d);
+      if  (!sp.first.empty())
+        result = sp;
+    }
+  else
+    // We allow to establish a path between the same source and
+    // destination nodes.  In this case the path is empty.
+    result = sscpath();
+
+  return result;
 }
 
 routing::st_t

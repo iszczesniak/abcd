@@ -3,6 +3,8 @@
 
 #include "graph.hpp"
 
+#include <boost/optional.hpp>
+
 #include <utility>
 
 // The type of the connection.  It can establish, reconfigure and tear
@@ -69,12 +71,9 @@ private:
   // The parameter that tells how to reconfigure connections.
   static re_t m_re;
 
-  // This is the sscpath with status.
-  typedef std::pair<bool, sscpath> sscpathws;
-
   graph &m_g;
   demand m_d;
-  sscpathws m_p;
+  boost::optional<sscpath> m_p;
 
   int m_id;
 

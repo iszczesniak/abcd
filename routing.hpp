@@ -19,13 +19,14 @@ public:
   // The type of routing:
   // cdijkstra - constrained dijkstra
   enum class rt_t {none, cdijkstra, edksp, yenksp};
-  
+
   /**
    * Route the demand, i.e., find the path, and allocate resources.
+   * If function fails, no result is returned.
    */
-  static sscpath
+  static boost::optional<sscpath>
   route(graph &g, const demand &d);
-  
+
   /**
    * Tear down the path in the graph.  This process puts back the
    * slices on the edges that are used by the path.

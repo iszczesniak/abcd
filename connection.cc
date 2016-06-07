@@ -6,6 +6,8 @@
 #include <iostream>
 #include <utility>
 
+#include <boost/none.hpp>
+
 using namespace std;
 
 int connection::counter = 0;
@@ -62,7 +64,7 @@ connection::get_demand() const
 bool
 connection::is_established() const
 {
-  return m_p.first;
+  return m_p;
 }
 
 int
@@ -74,7 +76,7 @@ connection::get_length() const
     wm = get(boost::edge_weight_t(), m_g);
 
   int length = 0;
-  const path &p = m_p.second.first;
+  const path &p = m_p.get().first;
   
   for(const edge &e: p)
     length += get(wm, e);
@@ -86,14 +88,14 @@ int
 connection::get_hops() const
 {
   assert(is_established());
-  return m_p.second.first.size();
+  return m_p.get().first.size();
 }
 
 int
 connection::get_nsc() const
 {
   assert(is_established());
-  return m_p.second.second.size();
+  return m_p.get().second.size();
 }
 
 // Set the reconfiguration type.
@@ -122,20 +124,10 @@ connection::establish(const demand &d)
   // Remember the demand.
   m_d = d;
 
-  // If the source and destination nodes are different, do real
-  // routing.
-  if (m_d.first.first != m_d.first.second)
-    {
-      sscpath sp = routing::route(m_g, m_d);
-      m_p.first = !sp.first.empty();
-      m_p.second = sp;
-    }
-  else
-    // We allow to establish a path between the same source and
-    // destination nodes.  In this case the path is empty.
-    m_p = make_pair(true, sscpath());
+  // Route the demand.
+  m_p = routing::route(m_g, m_d);
 
-  return m_p.first;
+  return m_p;
 }
 
 std::pair<bool, int>
@@ -147,7 +139,7 @@ connection::reconfigure(vertex new_src)
 
   switch(m_re)
     {
-    case complete:
+    case re_t::complete:
       // The complete reconfiguration.
       result = reconfigure_complete(new_src);
       break;
@@ -158,7 +150,7 @@ connection::reconfigure(vertex new_src)
 
   // Remember the new source when the reconfiguration succeeds.
   if (result.first)
-    d.first.first = new_src;
+    m_d.first.first = new_src;
 
   return result;
 }
@@ -200,5 +192,5 @@ connection::tear_down()
 {
   assert(is_established());
   routing::tear_down(m_g, m_p.second);
-  m_p = sscpathws();
+  m_p = boost::none;
 }
