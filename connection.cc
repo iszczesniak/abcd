@@ -160,29 +160,19 @@ connection::reconfigure_complete(vertex new_src)
 {
   std::pair<bool, int> result;
 
-  // Store the existing sscpath, because we'll need it in case we fail
-  // to establish a new connection.
-  sscpathws tmp = p;
+  // The old path.
+  sscpath old_p = m_p.get();
 
   // First we need to tear down the existing path.  We might need its
   // subcarriers to establish a new connection.
-  routing::tear_down(g, p.second);
+  tear_down();
 
   // That's the new demand.
-  vertex dst = d.first.second;
-  demand nd(npair(new_src, dst), d.second);
+  demand nd = demand(npair(new_src, m_d.first.second), m_d.second);
 
-  // When searching for the new path, we allow all available
-  // subcarriers.
-  sscpath V2C2S r = routing::route(g, nd);
-  p.second = dijkstra::trace(g, r, nd);
-  result.first = !p.second.first.empty();
-
-  if (result.first)
-    result.second = calc_new_links(p.second, tmp.second);
-  else
-    // If no new path has been found, revert to the old path.
-    p = tmp;
+  // Try to establish the connection.
+  if (establish(nd))
+    result = make_pair(true, calc_new_links(m_p.get(), old_p));
 
   return result;
 }
@@ -191,6 +181,6 @@ void
 connection::tear_down()
 {
   assert(is_established());
-  routing::tear_down(m_g, m_p.second);
+  routing::tear_down(m_g, m_p.get());
   m_p = boost::none;
 }
