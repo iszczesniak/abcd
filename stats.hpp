@@ -42,9 +42,9 @@ class stats: public module
   dbl_acc nscec;
 
   // The probability of reconfiguring a connection in the interval.
-  dbl_acc prc;
+  dbl_acc m_prc;
   // The number of links to reconfigure.
-  dbl_acc noltr;
+  dbl_acc m_noltr;
 
   // The arguments of the run.
   sdi_args args;

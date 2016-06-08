@@ -16,31 +16,38 @@ stats::stats(const sdi_args &args, const traffic &tra):
   singleton = this;
   schedule(0);
 
-  cout << "usertime simtime seed hash "
-    // The network load.
-       << "utilization" << " "
-    // The probability of establishing a connection.
-       << "pec" << " "
-    // The mean length of an established connection.
-       << "lenec" << " "
-    // The mean number of hops of an established connection.
-       << "hopec" << " "
-    // The mean number of slices of an established connection.
-       << "nscec" << " "
-    // The number of currently active connections.
-       << "conns" << " "
-    // The capacity served.
-       << "capser" << " "
-    // The mean number of fragments on links.
-       << "frags" << " "
-    // The average time a shortest path search takes.
-       << "spsat" << " "
-    // The mean connection arrival time.
-       << "mcat" << " "
-    // The offerred load.
-       << "oload"
-    // That's it.  Thank you.
-       << endl;
+  // The user part of the wall clock time.
+  cout << "usertime" << " ";
+  // The time elapsed in the simulation.
+  cout << "simtime" << " ";
+  // The seed of the simulation.
+  cout << "seed" << " ";
+  // The hash of the simulation.
+  cout << "hash" << " ";
+  // The mean connection arrival time.
+  cout << "mcat" << " ";
+  // The offerred load.
+  cout << "oload" << " ";
+  // The network load.
+  cout << "utilization" << " ";
+  // The probability of establishing a connection.
+  cout << "pec" << " ";
+  // The mean length of an established connection.
+  cout << "lenec" << " ";
+  // The mean number of hops of an established connection.
+  cout << "hopec" << " ";
+  // The mean number of slices of an established connection.
+  cout << "nscec" << " ";
+  // The number of currently active connections.
+  cout << "conns" << " ";
+  // The capacity served.
+  cout << "capser" << " ";
+  // The mean number of fragments on links.
+  cout << "frags" << " ";
+  // The average time a shortest path search takes.
+  cout << "spsat";
+  // That's it.  Thank you.
+  cout << endl;
 }
 
 stats &
@@ -124,6 +131,18 @@ stats::established_conn(const connection &conn)
   lenec(length);
   hopec(hops);
   nscec(nsc);
+}
+
+void
+stats::reconfigured(bool status)
+{
+  m_prc(status);
+}
+
+void
+stats::reconfigured_conn(int noltr)
+{
+  m_noltr(noltr);
 }
 
 double
