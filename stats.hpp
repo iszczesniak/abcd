@@ -34,19 +34,20 @@ class stats: public module
 
   // The probability of establishing a connection in the interval.
   dbl_acc pec;
-
   // The length of the established connection.
   dbl_acc lenec;
-
   // The number of hops of the established connection.
   dbl_acc hopec;
-
   // The number of slices of the established connection.
   dbl_acc nscec;
 
+  // The probability of reconfiguring a connection in the interval.
+  dbl_acc prc;
+  // The number of links to reconfigure.
+  dbl_acc noltr;
+
   // The arguments of the run.
   sdi_args args;
-
   // The total timer, i.e., keeps track from the beginning of the run.
   cpu_timer ttimer;
   // The delta timer, i.e., keeps track from the last report time.
@@ -64,13 +65,21 @@ public:
   void
   operator()(double t);
 
-  // Report success if the connection was established successfully.
+  // Report the establishment status.
   void
   established(bool status);
 
   // Report the established connection.
   void
   established_conn(const connection &conn);
+
+  // Report the reconfiguration status.
+  void
+  reconfigured(bool status);
+
+  // Report the reconfigured connection.
+  void
+  reconfigured_conn(const connection &conn);
 
 private:
   // Calculate the average number of fragments on a link.

@@ -58,9 +58,18 @@ bool client::set_up()
   return status;
 }
 
-bool client::reconfigure()
+bool
+client::reconfigure()
 {
   assert(conn.is_established());
+
+  // Choose the next vertex.
+  vertex new_src;
+  
+  // Reconfigure the connection for the new source vertex.
+  std::pair<bool, int> result = conn.reconfigure(new_src);
+
+  
   return true;
 }
 
