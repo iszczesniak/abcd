@@ -79,7 +79,7 @@ public:
 
   // Report the reconfigured connection.
   void
-  reconfigured_conn(const connection &conn);
+  reconfigured_conn(int noltr);
 
 private:
   // Calculate the average number of fragments on a link.

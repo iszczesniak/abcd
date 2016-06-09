@@ -67,10 +67,13 @@ client::reconfigure()
   vertex new_src;
   
   // Reconfigure the connection for the new source vertex.
-  std::pair<bool, int> result = conn.reconfigure(new_src);
+  auto result = conn.reconfigure(new_src);
+  st.reconfigured(result.first);
 
-  
-  return true;
+  if (result.first)
+    st.reconfigured(result.second);
+
+  return result.first;
 }
 
 const connection &
