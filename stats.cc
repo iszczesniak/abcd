@@ -71,7 +71,7 @@ stats::operator()(double st)
        << args.seed << " " << args.hash << " ";
 
   // The network utilization.
-  cout << calculate_utilization(g) << " ";
+  cout << calculate_utilization(m_mdl) << " ";
   // The probability of establishing a connection.
   cout << ba::mean(pec) << " ";
   // The mean length of an established connection.
@@ -152,10 +152,10 @@ stats::calculate_frags()
 
   // Iterate over all edges.
   graph::edge_iterator ei, ee;
-  for (tie(ei, ee) = boost::edges(g); ei != ee; ++ei)
+  for (tie(ei, ee) = boost::edges(m_mdl); ei != ee; ++ei)
     {
       const edge e = *ei;
-      const SSC &ssc = boost::get(boost::edge_ssc, g, e);
+      const SSC &ssc = boost::get(boost::edge_ssc, m_mdl, e);
       int f = calculate_fragments(ssc);
       frags(f);
     }

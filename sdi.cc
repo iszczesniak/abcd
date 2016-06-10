@@ -124,7 +124,7 @@ simulate(const sdi_args &args_para)
     args.ml = args.mlc.get() * ba::max(len_acc);
   
   // The traffic module.
-  traffic t(sim::mdl(), args.mcat, args.mht, args.mnsc);
+  traffic t(args.mcat, args.mht, args.mnsc);
 
   // The stats module.
   stats s(args, t);

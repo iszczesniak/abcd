@@ -13,9 +13,6 @@
 
 class traffic: public module<sim>
 {
-  // The graph.
-  graph &m_g;
-
   // The set of active clients.
   std::set<client *> cs;
 
@@ -30,7 +27,7 @@ class traffic: public module<sim>
   // The client arrival time distribution.
   boost::exponential_distribution<> catd;
   // The client arrival time generator.
-  boost::variate_generator<boost::mt19937 &,
+  boost::variate_generator<sim::rng_type &,
                            boost::exponential_distribution<> > catg;
 
   // The mean holding time.
@@ -43,7 +40,7 @@ class traffic: public module<sim>
   mutable std::map<npair, int> sd;
 
 public:
-  traffic(graph &g, double mcat, double mht, double mnsc);
+  traffic(double mcat, double mht, double mnsc);
 
   ~traffic();
 

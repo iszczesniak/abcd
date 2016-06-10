@@ -10,8 +10,8 @@
 using namespace std;
 
 client::client(double mht, double mnsc, traffic &tra):
-  mht(mht), htd(1 / mht), htg(rng, htd),
-  mnsc(mnsc), nscd(mnsc - 1), nscdg(rng, nscd),
+  mht(mht), htd(1 / mht), htg(m_rng, htd),
+  mnsc(mnsc), nscd(mnsc - 1), nscdg(m_rng, nscd),
   conn(m_mdl), st(stats::get()), tra(tra)
 {
   // We try to setup the connection and reconfigure it.  We schedule

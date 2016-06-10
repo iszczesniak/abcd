@@ -6,9 +6,8 @@
 
 using namespace std;
 
-traffic::traffic(graph &g, double mcat, double mht, double mnsc):
-  m_g(g),
-  mcat(mcat), catd(1 / mcat), catg(rng, catd),
+traffic::traffic(double mcat, double mht, double mnsc):
+  mcat(mcat), catd(1 / mcat), catg(m_rng, catd),
   mht(mht), mnsc(mnsc), idc()
 {
   schedule(0);
@@ -80,15 +79,15 @@ traffic::capacity_served() const
       const npair &p = d.first;
       int nsc = c.get_nsc();
 
-      // Did we computer the shortest path before?
+      // Did we compute the shortest path before?
       auto i = sd.find(d.first);
       // If not, do it now
       if (i == sd.end())
         {
           boost::optional<pair<int, list<edge>>> osp;
-          osp = custom_dijkstra_call(g, p.first, p.second,
-                                     get(boost::edge_weight_t(), g),
-                                     get(boost::vertex_index_t(), g));
+          osp = custom_dijkstra_call(m_mdl, p.first, p.second,
+                                     get(boost::edge_weight_t(), m_mdl),
+                                     get(boost::vertex_index_t(), m_mdl));
           // Make sure the shortest path was found.
           assert(osp);
           // This is the length of the shortest path.
