@@ -6,6 +6,7 @@
 #include "graph.hpp"
 #include "module.hpp"
 #include "sdi_args.hpp"
+#include "sim.hpp"
 #include "traffic.hpp"
 
 #include <vector>
@@ -20,7 +21,7 @@ using boost::timer::cpu_times;
 
 class client;
 
-class stats: public module
+class stats: public module<sim>
 {
   // The singleton of the class.
   static stats *singleton;

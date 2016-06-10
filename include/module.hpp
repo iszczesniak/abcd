@@ -4,22 +4,21 @@
 // This is the abstract class for modules.  Modules are able to
 // process messages.
 template <typename S>
-class module: public S
+struct module: public S
 {
-public:
   // This function processes an event for this module.
-  virtual void operator()(S::time_type t) = 0;
+  virtual void operator()(typename S::time_type t) = 0;
 
   // Schedule an event for this module at the current time.
   void schedule()
   {
-    schedule(now(), this);
+    schedule(S::now());
   }
 
   // Schedule an event for this module at time t.
-  void schedule(S::time_type t)
+  void schedule(typename S::time_type t)
   {
-    schedule(t, this);
+    S::schedule(t, this);
   }
 };
 

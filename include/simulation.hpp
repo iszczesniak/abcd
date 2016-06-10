@@ -6,18 +6,13 @@
 
 #include <queue>
 
-// We need to forward-declare the module class.  We cannot include its
-// header file, because that header file includes this file
-// (simulation.hpp), which will not finally, define the simulation
-// class, and the compilation fails.  At this moment the declaration
-// of the module class is enough, because we only use a pointer to it.
-class module;
-
 template<typename T, typename M, typename R>
 class simulation
 {
+  typedef simulation<T, M, R> self;
+
   // The DES priority queue.
-  std::priority_queue<event<S>> m_q;
+  static std::priority_queue<event<self>> m_q;
   
   // The model we're working on.
   static M m_mdl;
@@ -26,7 +21,7 @@ class simulation
   static R m_rng;
 
   // Keeps track of the simulation time.
-  T m_t;
+  static T m_t;
 
 public:
   typedef T time_type;
@@ -34,30 +29,31 @@ public:
   typedef R rng_type;
 
   // Get the model.
-  M &mdl() const
+  static M &
+  mdl()
   {
     return m_mdl;
   }
 
   // Get the random number generator.
-  R &
-  rng() const
+  static R &
+  rng()
   {
     return m_rng;
   }
 
   // Run the simulation with the given simulation time limit.
   static void
-  run(T)
+  run(T limit)
   {
     // The event loop.
     while(!m_q.empty())
       {
-        const event &e = m_q.top();
+        const event<self> &e = m_q.top();
 
         m_t = e.get_time();
 
-        if (m_t > sim_time)
+        if (m_t > limit)
           break;
 
         e.process();
@@ -67,10 +63,10 @@ public:
 
   // Schedule an event at the given time for the given module.
   static void
-  schedule(T, module<S> *)
+  schedule(T t, module<self> *m)
   {
     assert(t >= m_t);
-    m_q.push(event(t, m));
+    m_q.push(event<self>(t, m));
   }
 
   // Return the current simulaion time.
@@ -80,5 +76,17 @@ public:
     return m_t;
   }
 };
+
+template<typename T, typename M, typename R>
+std::priority_queue<event<simulation<T, M, R>>> simulation<T, M, R>::m_q;
+
+template<typename T, typename M, typename R>
+M simulation<T, M, R>::m_mdl;
+
+template<typename T, typename M, typename R>
+R simulation<T, M, R>::m_rng;
+
+template<typename T, typename M, typename R>
+T simulation<T, M, R>::m_t;
 
 #endif /* SIMULATION_HPP */
