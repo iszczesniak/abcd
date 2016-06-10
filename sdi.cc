@@ -1,7 +1,6 @@
-#include "cdijkstra.hpp"
 #include "graph.hpp"
 #include "sdi_args.hpp"
-#include "simulation.hpp"
+#include "sim.hpp"
 #include "stats.hpp"
 #include "utils_netgen.hpp"
 
@@ -103,15 +102,15 @@ simulate(const sdi_args &args_para)
 
   // Set how the connections should be reconfigured.
   connection::set_re(args.re);
-  
-  // Random number generator.
-  boost::mt19937 rng(args.seed);
+
+  // This simulation object.
+  sim::rng().seed(args.seed);
 
   // Generate the graph.
-  graph g = generate_graph(args, rng);
+  sim::mdl() = generate_graph(args, rng);
 
   // Make sure there is only one component.
-  assert(is_connected(g));
+  assert(is_connected(sim::mdl()));
 
   dbl_acc hop_acc;
   dbl_acc len_acc;
@@ -123,9 +122,6 @@ simulate(const sdi_args &args_para)
   // Calculate the maximal length of a path.
   if (args.mlc)
     args.ml = args.mlc.get() * ba::max(len_acc);
-
-  // This simulation object.
-  simulation sim(g, rng);
   
   // The traffic module.
   traffic t(g, args.mcat, args.mht, args.mnsc);
@@ -134,7 +130,7 @@ simulate(const sdi_args &args_para)
   stats s(args, t);
 
   // Run the simulation.
-  sim.run(args.sim_time);
+  sim::run(args.sim_time);
 }
 
 int

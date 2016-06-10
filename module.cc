@@ -1,20 +1,5 @@
 #include "module.hpp"
 
-module::module() :
-  m_sim(simulation::get()), g(m_sim.g()), rng(m_sim.rng())
-{
-}
-
-module::~module()
-{
-}
-
-double
-module::now()
-{
-  return m_sim.now();
-}
-
 void
 module::schedule()
 {

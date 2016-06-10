@@ -7,6 +7,7 @@ mypoint.o teventqueue.o traffic.o yenksp.o
 
 CXXFLAGS := $(CXXFLAGS) -g
 CXXFLAGS := $(CXXFLAGS) -std=c++11
+CXXFLAGS := $(CXXFLAGS) -I include
 
 # Use the C++ linker
 LINK.o = $(LINK.cc)
@@ -38,6 +39,6 @@ count:
 	wc -l *.hpp *.cc
 
 depend:
-	g++ -std=c++11 -MM *.cc > dependencies
+	g++ $(CXXFLAGS) -MM *.cc > dependencies
 
 include dependencies

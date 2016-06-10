@@ -238,5 +238,5 @@ routing::select_random(const SSC &ssc, int nsc)
   if (sssc.empty())
     return SSC();
   else
-    return get_random_element(sssc, simulation::get().rng());
+    return get_random_element(sssc, rng);
 }

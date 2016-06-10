@@ -5,15 +5,16 @@
 
 class module;
 
+template<typename S>
 class event
 {
-  double t;
-  module *m;
+  S::time_type t;
+  module<S> *m;
 
 public:
   event(double t, module *m);
   void process() const;
-  bool operator<(const event &e) const;
+  bool operator<(const event<S> &e) const;
   double get_time() const;
 };
 
