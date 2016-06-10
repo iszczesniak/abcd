@@ -3,7 +3,7 @@
 
 // This is the abstract class for modules.  Modules are able to
 // process messages.
-template<typename S>
+template <typename S>
 class module: public S
 {
 public:

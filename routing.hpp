@@ -2,13 +2,12 @@
 #define ROUTING_HPP
 
 #include "graph.hpp"
-#include "module.hpp"
-#include "simulation.hpp"
+#include "sim.hpp"
 
 #include <memory>
 #include <boost/optional.hpp>
 
-class routing: public object
+class routing: public sim
 {  
 public:
   // The type of specturm selection:
