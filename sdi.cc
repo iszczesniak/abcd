@@ -107,24 +107,24 @@ simulate(const sdi_args &args_para)
   sim::rng().seed(args.seed);
 
   // Generate the graph.
-  sim::mdl() = generate_graph(args, rng);
+  sim::mdl() = generate_graph(args, sim::rng());
 
   // Make sure there is only one component.
   assert(is_connected(sim::mdl()));
 
   dbl_acc hop_acc;
   dbl_acc len_acc;
-  calc_sp_stats(g, hop_acc, len_acc);
+  calc_sp_stats(sim::mdl(), hop_acc, len_acc);
   
   // Calculate the mean connection arrival time.
-  args.mcat = calc_mcat(args, g, ba::mean(hop_acc));
+  args.mcat = calc_mcat(args, sim::mdl(), ba::mean(hop_acc));
 
   // Calculate the maximal length of a path.
   if (args.mlc)
     args.ml = args.mlc.get() * ba::max(len_acc);
   
   // The traffic module.
-  traffic t(g, args.mcat, args.mht, args.mnsc);
+  traffic t(sim::mdl(), args.mcat, args.mht, args.mnsc);
 
   // The stats module.
   stats s(args, t);

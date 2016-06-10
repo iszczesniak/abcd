@@ -9,8 +9,9 @@
 #include "client.hpp"
 #include "graph.hpp"
 #include "module.hpp"
+#include "sim.hpp"
 
-class traffic: public module
+class traffic: public module<sim>
 {
   // The graph.
   graph &m_g;

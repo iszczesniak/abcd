@@ -3,6 +3,7 @@
 
 #include "connection.hpp"
 #include "module.hpp"
+#include "sim.hpp"
 
 #include <boost/random.hpp>
 #include <boost/accumulators/accumulators.hpp>
@@ -18,7 +19,7 @@ class traffic;
 /**
  * The client class.  This class takes care of reporting the stats.
  */
-class client: public module
+class client: public module<sim>
 {
   // The client ID.
   int id;
@@ -31,7 +32,7 @@ class client: public module
   // The holding time distribution.
   boost::exponential_distribution<> htd;
   // The holding time generator.
-  boost::variate_generator<boost::mt19937 &,
+  boost::variate_generator<sim::rng_type &,
                            boost::exponential_distribution<> > htg;
 
   // The mean number of slices.
@@ -39,7 +40,7 @@ class client: public module
   // The number of slices distribution.
   boost::poisson_distribution<> nscd;
   // The number of slices generator.
-  boost::variate_generator<boost::mt19937 &,
+  boost::variate_generator<sim::rng_type &,
                            boost::poisson_distribution<> > nscdg;
 
   // The connection.

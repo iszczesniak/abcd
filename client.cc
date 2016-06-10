@@ -12,7 +12,7 @@ using namespace std;
 client::client(double mht, double mnsc, traffic &tra):
   mht(mht), htd(1 / mht), htg(rng, htd),
   mnsc(mnsc), nscd(mnsc - 1), nscdg(rng, nscd),
-  conn(g), st(stats::get()), tra(tra)
+  conn(m_mdl), st(stats::get()), tra(tra)
 {
   // We try to setup the connection and reconfigure it.  We schedule
   // the connection to be torn down only when it was setup and
@@ -41,7 +41,7 @@ bool client::set_up()
   // The new demand.
   demand d;
   // The demand end nodes.
-  d.first = random_node_pair(g, rng);
+  d.first = random_node_pair(m_mdl, m_rng);
   // The number of slices the signal requires.  It's Poisson + 1.
   d.second = nscdg() + 1;
 

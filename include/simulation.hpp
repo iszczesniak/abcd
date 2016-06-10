@@ -13,15 +13,16 @@ class simulation
 
   // The DES priority queue.
   static std::priority_queue<event<self>> m_q;
-  
+
+  // Keeps track of the simulation time.
+  static T m_t;
+
+protected:
   // The model we're working on.
   static M m_mdl;
 
   // The random number generator.
   static R m_rng;
-
-  // Keeps track of the simulation time.
-  static T m_t;
 
 public:
   typedef T time_type;
