@@ -12,6 +12,7 @@ using namespace std;
 client::client(double mht, double mnsc, traffic &tra):
   mht(mht), htd(1 / mht), htg(m_rng, htd),
   mnsc(mnsc), nscd(mnsc - 1), nscdg(m_rng, nscd),
+  nohd(mnoh - 1), nohdg(m_rng, nohd),
   conn(m_mdl), st(stats::get()), tra(tra)
 {
   // We try to setup the connection and reconfigure it.  We schedule
@@ -64,7 +65,7 @@ client::reconfigure()
   assert(conn.is_established());
 
   // Choose the next vertex.
-  vertex new_src;
+  vertex new_src = get_new_src();
   
   // Reconfigure the connection for the new source vertex.
   auto result = conn.reconfigure(new_src);
@@ -82,10 +83,19 @@ client::get_connection() const
   return conn;
 }
 
-void client::tear_down()
+void
+client::tear_down()
 {
   assert(conn.is_established());
   conn.tear_down();
   tra.erase(this);
   tra.delete_me_later(this);
+}
+
+vertex
+client::get_new_src()
+{
+  int hops = nohdg() + 1;
+
+  
 }

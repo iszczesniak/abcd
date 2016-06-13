@@ -43,6 +43,18 @@ class client: public module<sim>
   boost::variate_generator<sim::rng_type &,
                            boost::poisson_distribution<> > nscdg;
 
+  // The distance between the old source and the new source is
+  // measured in hops.  The distribution of the number of hops is:
+  // Poisson(0.5) + 1, with the mean of 1.5.
+  //
+  // The mean number of hops.
+  const double mnoh = 1.5;
+  // The number of hops distribution.
+  boost::poisson_distribution<> nohd;
+  // The number of hops generator.
+  boost::variate_generator<sim::rng_type &,
+                           boost::poisson_distribution<> > nohdg;
+
   // The connection.
   connection conn;
 
@@ -65,6 +77,11 @@ private:
   bool set_up();
   bool reconfigure();
   void tear_down();
+
+  // Finds a new source vertex based on the current source vertex.
+  // This new source vertex will be used for connection
+  // reconfiguration.
+  vertex get_new_src();
 };
 
 #endif /* CLIENT_HPP */
