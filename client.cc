@@ -97,5 +97,10 @@ client::get_new_src()
 {
   int hops = nohdg() + 1;
 
-  
+  // Find the vertexes which are "hops" hops away.
+  set<vertex> candidates;
+
+  // Choose one of these vertexes at random.
+  assert(!candidates.empty());
+  return get_random_element(candidates, m_rng);
 }
