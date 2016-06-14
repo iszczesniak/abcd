@@ -1,11 +1,14 @@
 #include "client.hpp"
 
-#include <utility>
-
 #include "simulation.hpp"
 #include "stats.hpp"
 #include "traffic.hpp"
 #include "utils_netgen.hpp"
+
+#include <boost/property_map/property_map.hpp>
+
+#include <map>
+#include <utility>
 
 using namespace std;
 
@@ -95,6 +98,7 @@ client::tear_down()
 // The type of the exception thrown when we're done searching.
 struct cdc_exception {};
 
+/*
 template <class Graph>
 struct cdc_visitor
   {
@@ -107,6 +111,7 @@ struct cdc_visitor
     }
     vertex_descriptor m_t;
 };
+*/
 
 vertex
 client::get_new_src()
@@ -116,9 +121,16 @@ client::get_new_src()
 
   // Find the vertexes which are the given number of hops away.
   set<vertex> candidates;
-  my_vstr(candidates, hops);
-  auto vstr = boost::visitor(boost::make_bfs_visitor(my_vstr));
-  boost::breadth_first_search (G, s, vstr);
+
+  // Hops vector.
+  std::vector<int> hv(num_vertices(m_mdl));
+  auto hm = make_iterator_property_map(hv.begin(),
+                                         get(boost::vertex_index_t(), m_mdl));
+
+  auto rdv = boost::record_distances(hm, boost::on_tree_edge());
+  auto vstr = boost::visitor(boost::make_bfs_visitor(rdv));
+  vertex crn_src = conn.get_demand().first.first;
+  boost::breadth_first_search (m_mdl, crn_src, vstr);
 
   // Choose one of these vertexes at random.
   assert(!candidates.empty());
