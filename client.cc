@@ -92,13 +92,33 @@ client::tear_down()
   tra.delete_me_later(this);
 }
 
+// The type of the exception thrown when we're done searching.
+struct cdc_exception {};
+
+template <class Graph>
+struct cdc_visitor
+  {
+    typedef typename Graph::vertex_descriptor vertex_descriptor;
+    /*    typedef on_examine_vertex event_filter;
+    cdc_visitor(vertex_descriptor t): m_t(t) {}
+    void operator()(vertex_descriptor v, const Graph& g) {
+      if (v == m_t)
+        throw cdc_exception();
+    }
+    vertex_descriptor m_t;
+};
+
 vertex
 client::get_new_src()
 {
+  // The new source should be this number of nodes away.
   int hops = nohdg() + 1;
 
-  // Find the vertexes which are "hops" hops away.
+  // Find the vertexes which are the given number of hops away.
   set<vertex> candidates;
+  my_vstr(candidates, hops);
+  auto vstr = boost::visitor(boost::make_bfs_visitor(my_vstr));
+  boost::breadth_first_search (G, s, vstr);
 
   // Choose one of these vertexes at random.
   assert(!candidates.empty());
