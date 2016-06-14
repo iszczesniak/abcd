@@ -1,17 +1,17 @@
-//=======================================================================
+// =======================================================================
 // Copyright 2015 by Ireneusz Szcześniak
 // Authors: Ireneusz Szcześniak
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
-//=======================================================================
+// =======================================================================
 
-//=======================================================================
+// =======================================================================
 // The custom Dijkstra call, which returns the optional path as a list
 // of edges along with the cost of the path.  The search is stopped
 // when the destination node is reached.
-//=======================================================================
+// =======================================================================
 
 #ifndef BOOST_GRAPH_CUSTOM_DIJKSTRA_CALL
 #define BOOST_GRAPH_CUSTOM_DIJKSTRA_CALL
@@ -26,7 +26,7 @@
 
 namespace boost {
 
-  //========================================================================
+  // ========================================================================
   // Finish the search when a given node is examined, i.e. when the
   // shortest path to that node is found.
   // ========================================================================
@@ -47,9 +47,9 @@ namespace boost {
     vertex_descriptor m_t;
   };
 
-  //========================================================================
+  // =======================================================================
   // The function.
-  //=======================================================================+
+  // =======================================================================
 
   template <typename Graph, typename WeightMap, typename IndexMap>
   optional<std::pair<typename WeightMap::value_type,
