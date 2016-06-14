@@ -22,7 +22,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_1)
                         "--nodes", "10",
                         "--edges", "30",
                         "--slices", "50",
-                        "--mcat", "1",
+                        "--ol", "1",
                         "--mht", "2",
                         "--mnsc", "5",
                         "--st", "first",
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_1)
   BOOST_CHECK(routing::get_st() == routing::st_t::first);
   BOOST_CHECK(routing::get_rt() == routing::rt_t::cdijkstra);
   
-  BOOST_CHECK_CLOSE(args.mcat, 1, 0.0001);
+  BOOST_CHECK_CLOSE(args.ol, 1, 0.0001);
   BOOST_CHECK_CLOSE(args.mht, 2, 0.0001);
   BOOST_CHECK_CLOSE(args.mnsc, 5.0, 0.0001);
 
@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_2)
                         "--nodes", "10",
                         "--edges", "30",
                         "--slices", "50",
-                        "--mcat", "1",
+                        "--ol", "1",
                         "--mht", "2",
                         "--mnsc", "5",
                         "--st", "fittest",
