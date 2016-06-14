@@ -96,22 +96,27 @@ client::tear_down()
 }
 
 // The type of the exception thrown when we're done searching.
-struct cdc_exception {};
+struct gns_exception {};
 
-/*
-template <class Graph>
-struct cdc_visitor
+struct gns_visitor
+{
+  gns_visitor(set<vertex> &vs, vector<int> &hv, int hops):
+    m_vs(vs), m_hv(hv), m_hops(hops) {}
+  void operator()(vertex v, const graph&)
   {
-    typedef typename Graph::vertex_descriptor vertex_descriptor;
-    /*    typedef on_examine_vertex event_filter;
-    cdc_visitor(vertex_descriptor t): m_t(t) {}
-    void operator()(vertex_descriptor v, const Graph& g) {
-      if (v == m_t)
-        throw cdc_exception();
-    }
-    vertex_descriptor m_t;
+    // Here we stop.  We will not find more candidate vertexes.
+    if (m_hv[v] == m_hops + 1)
+      throw gns_exception();
+
+    // These are the candidate vertexes.
+    if (m_hv[v] == m_hops)
+      m_vs.insert(v);
+  }
+
+  set<vertex> &m_vs;
+  vector<int> &m_hv;
+  int m_hops;
 };
-*/
 
 vertex
 client::get_new_src()
@@ -122,15 +127,22 @@ client::get_new_src()
   // Find the vertexes which are the given number of hops away.
   set<vertex> candidates;
 
-  // Hops vector.
+  // We keep track of the number of hops for vertexes (using the
+  // record_distances visitor), we record the candidate vertexes
+  // (which are m_hops away from src), and quit as soon as we can.
   std::vector<int> hv(num_vertices(m_mdl));
   auto hm = make_iterator_property_map(hv.begin(),
-                                         get(boost::vertex_index_t(), m_mdl));
-
+                                       get(boost::vertex_index_t(), m_mdl));
+  auto gnsv = gns_visitor(candidates, hv, hops);
   auto rdv = boost::record_distances(hm, boost::on_tree_edge());
   auto vstr = boost::visitor(boost::make_bfs_visitor(rdv));
-  vertex crn_src = conn.get_demand().first.first;
-  boost::breadth_first_search (m_mdl, crn_src, vstr);
+  vertex src = conn.get_demand().first.first;
+
+  try
+    {
+      boost::breadth_first_search (m_mdl, src, vstr);
+    }
+  catch (gns_exception) {}
 
   // Choose one of these vertexes at random.
   assert(!candidates.empty());
