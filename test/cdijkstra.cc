@@ -6,6 +6,8 @@
 
 #include <iostream>
 
+#include <boost/optional.hpp>
+
 #define BOOST_TEST_MODULE cdijkstra
 #include <boost/test/unit_test.hpp>
 
@@ -32,9 +34,9 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_1)
   routing::set_rt("cdijkstra");
   routing::set_st("first");
   demand d = demand(npair(src, dst), 3);
-  sscpath result = routing::route(g, d);
+  boost::optional<sscpath> result = routing::route(g, d);
   // There are no results for dst.
-  BOOST_CHECK(result.first.empty());
+  BOOST_CHECK(!result);
 }
 
 /*
@@ -55,7 +57,7 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_2)
   routing::set_rt("cdijkstra");
   routing::set_st("first");
   demand d = demand(npair(src, dst), 3);
-  sscpath result = routing::route(g, d);
+  sscpath result = routing::route(g, d).get();
 
   // The result has three slices.
   BOOST_CHECK(result.second.size() == 3);
@@ -105,7 +107,7 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_3)
   routing::set_rt("cdijkstra");
   routing::set_st("first");
   demand d = demand(npair(src, dst), 2);
-  sscpath result = routing::route(g, d);
+  sscpath result = routing::route(g, d).get();
 
   // We found the path - it should be e2, e3.
   BOOST_CHECK(result.first.size() == 2);

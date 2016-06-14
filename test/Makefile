@@ -11,6 +11,7 @@ CXXFLAGS = -g -Wno-deprecated -std=c++11
 #CXXFLAGS = -O3 -Wno-deprecated -std=c++11
 
 CXXFLAGS := $(CXXFLAGS) -I ../
+CXXFLAGS := $(CXXFLAGS) -I ../include
 
 # Boost
 BOOSTPATH = ~/boost
@@ -62,6 +63,6 @@ clean:
 	rm -rf $(TESTS) $(OTHER)
 
 depend:
-	g++ -std=c++11 -MM -I../ *.cc > dependencies
+	g++ -MM $(CXXFLAGS) *.cc > dependencies
 
 include dependencies

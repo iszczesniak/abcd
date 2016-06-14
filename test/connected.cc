@@ -3,7 +3,6 @@
 #include "cdijkstra.hpp"
 #include "graph.hpp"
 #include "sdi_args.hpp"
-#include "simulation.hpp"
 #include "stats.hpp"
 #include "utils_netgen.hpp"
 

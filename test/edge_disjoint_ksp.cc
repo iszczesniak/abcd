@@ -1,7 +1,6 @@
 #define BOOST_TEST_MODULE edge_disjoint_ksp
 
 #include "edge_disjoint_ksp.hpp"
-#include "exclude_filter.hpp"
 
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/filtered_graph.hpp>
@@ -18,7 +17,6 @@ Graph;
 typedef Graph::edge_descriptor Edge;
 typedef Graph::vertex_descriptor Vertex;
 typedef std::list<Edge> Path;
-typedef boost::exclude_filter<Edge> eef_type;
 
 using namespace std;
 
@@ -121,42 +119,4 @@ BOOST_AUTO_TEST_CASE(edge_disjoint_ksp_test)
   BOOST_CHECK(check_path(r, 2, Path{ae}));
   BOOST_CHECK(check_path(r, 5, Path{ab, be}));
   BOOST_CHECK(check_path(r, 9, Path{ac, ce}));
-}
-
-BOOST_AUTO_TEST_CASE(edksp_filter_test)
-{
-  Graph g(3);
-  auto vi = vertices(g).first;
-  Vertex a = *vi++;
-  Vertex b = *vi++;
-  Vertex c = *vi;
-
-  set<Edge> x;
-  eef_type f(&x);
-  typedef boost::filtered_graph<Graph, eef_type> fg_t;
-  fg_t fg(g, f);
-  
-  Edge e1, e2, e3;
-  bool s;
-  tie(e1, s) = add_edge(a, b, g);
-  tie(e2, s) = add_edge(a, b, g);
-  tie(e3, s) = add_edge(b, c, g);
-
-  fg_t::edge_iterator i, ie;
-
-  // Exclude e1 and make sure it's not one of the edges.
-  x.insert(e1);
-  for(tie(i, ie) = boost::edges(fg); i != ie; ++i)
-    BOOST_CHECK(*i != e1);
-
-  // Exclude e2 and make sure it's not one of the edges.
-  x.insert(e2);
-  for(tie(i, ie) = boost::edges(fg); i != ie; ++i)
-    BOOST_CHECK(*i != e2);
-
-  // Exclude e3 and make sure there are no edges left.
-  x.insert(e3);
-  // Now the edge set should be empty.
-  tie(i, ie) = boost::edges(fg);
-  BOOST_CHECK(i == ie);
 }
