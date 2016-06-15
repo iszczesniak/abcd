@@ -7,6 +7,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/random/linear_congruential.hpp>
 
+#include <set>
 #include <tuple>
 #include <vector>
 
@@ -149,4 +150,16 @@ BOOST_AUTO_TEST_CASE(find_path_ssc_test)
   SSC ssc3 = find_path_ssc(g, path{es[0], es[1]});
   BOOST_CHECK(ssc3.size() == 1);
   BOOST_CHECK(ssc3.count(1) == 1);
+}
+
+BOOST_AUTO_TEST_CASE(find_vertexes_test)
+{
+  graph g;
+  vector<vertex> vs;
+  vector<edge> es;
+  sample_graph1(g, vs, es);
+
+  set<vertex> found = find_vertexes(g, vs[0], 1);
+  BOOST_CHECK(found.size() == 1);
+  BOOST_CHECK(found.count(vs[1]) == 1);
 }
