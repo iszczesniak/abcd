@@ -1,11 +1,16 @@
+#define BOOST_TEST_MODULE Utils
+
 #include "utils.hpp"
 
 #include "sample_graphs.hpp"
 
-#define BOOST_TEST_MODULE Utils
-
 #include <boost/test/unit_test.hpp>
 #include <boost/random/linear_congruential.hpp>
+
+#include <tuple>
+#include <vector>
+
+using namespace std;
 
 BOOST_AUTO_TEST_CASE(exclude_test)
 {
@@ -125,20 +130,23 @@ BOOST_AUTO_TEST_CASE(calculate_fragments_test)
 
 BOOST_AUTO_TEST_CASE(find_path_ssc_test)
 {
-  graph g = sample_graph1();
+  graph g;
+  vector<vertex> vs;
+  vector<edge> es;
+  std::tie(g, vs, es) = sample_graph1();
 
   // The ssc of an empty path.
   SSC ssc1 = find_path_ssc(g, path());
   BOOST_CHECK(ssc1.empty());
 
-  // The ssc of e1.
-  SSC ssc2 = find_path_ssc(g, path{e1});
+  // The ssc of es[0].
+  SSC ssc2 = find_path_ssc(g, path{es[0]});
   BOOST_CHECK(ssc2.size() == 2);
   BOOST_CHECK(ssc2.count(0) == 1);
   BOOST_CHECK(ssc2.count(1) == 1);
 
-  // The ssc of {e1, e2}.
-  SSC ssc3 = find_path_ssc(g, path{e1, e2});
+  // The ssc of {es[0], es[1]}.
+  SSC ssc3 = find_path_ssc(g, path{es[0], es[1]});
   BOOST_CHECK(ssc3.size() == 1);
   BOOST_CHECK(ssc3.count(1) == 1);
 }

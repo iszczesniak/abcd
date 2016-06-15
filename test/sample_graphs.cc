@@ -1,6 +1,8 @@
 #include "sample_graphs.hpp"
 
-graph
+using namespace std;
+
+tuple<graph, vector<vertex>, vector<edge> >
 sample_graph1()
 {
   graph g(3);
@@ -19,4 +21,6 @@ sample_graph1()
   boost::get(boost::edge_weight, g, e2) = 2;
   boost::get(boost::edge_ssc, g, e2).insert(1);
   boost::get(boost::edge_ssc, g, e2).insert(2);
+
+  return make_tuple(g, vector<vertex>{src, mid, dst}, vector<edge>{e1, e2});
 }
