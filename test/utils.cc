@@ -149,6 +149,4 @@ BOOST_AUTO_TEST_CASE(find_path_ssc_test)
   SSC ssc3 = find_path_ssc(g, path{es[0], es[1]});
   BOOST_CHECK(ssc3.size() == 1);
   BOOST_CHECK(ssc3.count(1) == 1);
-  
-  cout << "END" << endl;
 }
