@@ -159,7 +159,23 @@ BOOST_AUTO_TEST_CASE(find_vertexes_test)
   vector<edge> es;
   sample_graph1(g, vs, es);
 
-  set<vertex> found = find_vertexes(g, vs[0], 1);
-  BOOST_CHECK(found.size() == 1);
-  BOOST_CHECK(found.count(vs[1]) == 1);
+  set<vertex> found0 = find_vertexes(g, vs[0], 0);
+  BOOST_CHECK(found0.size() == 1);
+  BOOST_CHECK(found0.count(vs[0]) == 1);
+
+  set<vertex> found1 = find_vertexes(g, vs[0], 1);
+  BOOST_CHECK(found1.size() == 1);
+  BOOST_CHECK(found1.count(vs[1]) == 1);
+
+  set<vertex> found2 = find_vertexes(g, vs[0], 2);
+  BOOST_CHECK(found2.size() == 1);
+  BOOST_CHECK(found2.count(vs[2]) == 1);
+
+  set<vertex> found3 = find_vertexes(g, vs[0], 3);
+  BOOST_CHECK(found3.empty());
+
+  set<vertex> found4 = find_vertexes(g, vs[1], 1);
+  BOOST_CHECK(found4.size() == 2);
+  BOOST_CHECK(found4.count(vs[0]) == 1);
+  BOOST_CHECK(found4.count(vs[2]) == 1);
 }
