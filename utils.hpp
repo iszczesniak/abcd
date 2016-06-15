@@ -425,4 +425,58 @@ print_edges(G &g, std::ostream &os)
     }
 }
 
+// The type of the exception thrown when we're done searching.
+struct gns_exception {};
+
+template<typename Graph>
+struct gns_visitor
+{
+  typedef typename Graph::vertex_descriptor vertex_descriptor;
+
+  gns_visitor(std::set<vertex_descriptor> &vs, std::vector<int> &hv, int hops):
+    m_vs(vs), m_hv(hv), m_hops(hops) {}
+  void operator()(vertex_descriptor v, const Graph &)
+  {
+    // Here we stop.  We will not find more candidate vertexes.
+    if (m_hv[v] == m_hops + 1)
+      throw gns_exception();
+
+    // These are the candidate vertexes.
+    if (m_hv[v] == m_hops)
+      m_vs.insert(v);
+  }
+
+  std::set<vertex> &m_vs;
+  std::vector<int> &m_hv;
+  int m_hops;
+};
+
+// Return the set of vertexes that are the number of "hops" away from
+// the src vertex in graph g.
+template<typename Graph>
+std::set<typename Graph::vertex_descriptor>
+find_vertexes(const Graph &g, typename Graph::vertex_descriptor src, int hops)
+{
+  typedef typename Graph::vertex_descriptor vertex_descriptor;
+  std::set<vertex_descriptor> vertexes;
+
+  // We keep track of the number of hops for vertexes (using the
+  // record_distances visitor), we record the candidate vertexes
+  // (which are m_hops away from src), and quit as soon as we can.
+  std::vector<int> hv(num_vertices(g));
+  auto hm = make_iterator_property_map(hv.begin(),
+                                       get(boost::vertex_index_t(), g));
+  auto gnsv = gns_visitor<Graph>(vertexes, hv, hops);
+  auto rdv = boost::record_distances(hm, boost::on_tree_edge());
+  auto vstr = boost::visitor(boost::make_bfs_visitor(rdv));
+
+  try
+    {
+      boost::breadth_first_search (g, src, vstr);
+    }
+  catch (gns_exception) {}
+
+  return vertexes;
+}
+
 #endif /* UTILS_HPP */
