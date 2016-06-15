@@ -2,10 +2,10 @@
 
 using namespace std;
 
-tuple<graph, vector<vertex>, vector<edge> >
-sample_graph1()
+void
+sample_graph1(graph &g, vector<vertex> &vs, vector<edge> &ve)
 {
-  graph g(3);
+  g = graph(3);
   vertex src = *(boost::vertices(g).first);
   vertex mid = *(boost::vertices(g).first + 1);
   vertex dst = *(boost::vertices(g).first + 2);
@@ -22,5 +22,6 @@ sample_graph1()
   boost::get(boost::edge_ssc, g, e2).insert(1);
   boost::get(boost::edge_ssc, g, e2).insert(2);
 
-  return make_tuple(g, vector<vertex>{src, mid, dst}, vector<edge>{e1, e2});
+  vs = vector<vertex>{src, mid, dst};
+  ve = vector<edge>{e1, e2};
 }

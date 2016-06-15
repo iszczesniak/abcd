@@ -14,7 +14,7 @@
 // w - the weight of the edge
 // SSC - the set of slices on the edge
 
-std::tuple<graph, std::vector<vertex>, std::vector<edge> >
-sample_graph1();
+void
+sample_graph1(graph &g, std::vector<vertex> &vs, std::vector<edge> &ve);
 
 #endif /* SAMPLE_GRAPHS */

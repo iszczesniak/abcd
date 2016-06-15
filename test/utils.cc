@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE(find_path_ssc_test)
   graph g;
   vector<vertex> vs;
   vector<edge> es;
-  std::tie(g, vs, es) = sample_graph1();
+  sample_graph1(g, vs, es);
 
   // The ssc of an empty path.
   SSC ssc1 = find_path_ssc(g, path());
@@ -149,4 +149,6 @@ BOOST_AUTO_TEST_CASE(find_path_ssc_test)
   SSC ssc3 = find_path_ssc(g, path{es[0], es[1]});
   BOOST_CHECK(ssc3.size() == 1);
   BOOST_CHECK(ssc3.count(1) == 1);
+  
+  cout << "END" << endl;
 }
