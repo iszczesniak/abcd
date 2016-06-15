@@ -431,6 +431,8 @@ struct gns_exception {};
 template<typename Graph>
 struct gns_visitor
 {
+  typedef boost::on_examine_vertex event_filter;
+
   typedef typename Graph::vertex_descriptor vertex_descriptor;
 
   gns_visitor(std::set<vertex_descriptor> &vs, std::vector<int> &hv, int hops):
@@ -466,16 +468,16 @@ find_vertexes(const Graph &g, typename Graph::vertex_descriptor src, int hops)
   std::vector<int> hv(num_vertices(g));
   auto hm = make_iterator_property_map(hv.begin(),
                                        get(boost::vertex_index_t(), g));
-  auto gnsv = gns_visitor<Graph>(vertexes, hv, hops);
   auto rdv = boost::record_distances(hm, boost::on_tree_edge());
-  auto vstr = boost::visitor(boost::make_bfs_visitor(rdv));
+  auto gnsv = gns_visitor<Graph>(vertexes, hv, hops);
+  auto vstr = boost::make_bfs_visitor(std::make_pair(rdv, gnsv));
 
   try
     {
-      boost::breadth_first_search (g, src, vstr);
+      boost::breadth_first_search (g, src, boost::visitor(vstr));
     }
   catch (gns_exception) {}
-
+  
   return vertexes;
 }
 
