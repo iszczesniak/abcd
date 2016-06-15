@@ -17,10 +17,12 @@ routing.o: routing.cc ../cdijkstra.hpp ../graph.hpp ../routing.hpp \
  ../include/module.hpp ../include/module.hpp ../graph.hpp ../utils.hpp \
  ../utils_netgen.hpp ../mypoint.hpp ../sdi_args.hpp ../cdijkstra.hpp \
  ../connection.hpp ../utils.hpp ../teventqueue.hpp
+sample_graphs.o: sample_graphs.cc sample_graphs.hpp ../graph.hpp
 sdi_args.o: sdi_args.cc ../sdi_args.hpp ../cdijkstra.hpp ../graph.hpp \
  ../routing.hpp ../sim.hpp ../include/simulation.hpp ../include/event.hpp \
  ../include/module.hpp ../include/module.hpp ../connection.hpp \
  ../cdijkstra.hpp ../utils.hpp ../utils_netgen.hpp ../mypoint.hpp \
  ../sdi_args.hpp ../utils.hpp ../teventqueue.hpp
-utils.o: utils.cc ../utils.hpp ../graph.hpp
+utils.o: utils.cc ../utils.hpp ../graph.hpp sample_graphs.hpp \
+ ../graph.hpp
 yen_ksp.o: yen_ksp.cc ../yen_ksp.hpp ../custom_dijkstra_call.hpp

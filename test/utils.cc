@@ -1,5 +1,7 @@
 #include "utils.hpp"
 
+#include "sample_graphs.hpp"
+
 #define BOOST_TEST_MODULE Utils
 
 #include <boost/test/unit_test.hpp>
@@ -123,22 +125,7 @@ BOOST_AUTO_TEST_CASE(calculate_fragments_test)
 
 BOOST_AUTO_TEST_CASE(find_path_ssc_test)
 {
-  graph g(3);
-  vertex src = *(boost::vertices(g).first);
-  vertex mid = *(boost::vertices(g).first + 1);
-  vertex dst = *(boost::vertices(g).first + 2);
-  edge e1 = boost::add_edge(src, mid, g).first;
-  edge e2 = boost::add_edge(mid, dst, g).first;
-
-  // Props of edge e1.
-  boost::get(boost::edge_weight, g, e1) = 1;
-  boost::get(boost::edge_ssc, g, e1).insert(0);
-  boost::get(boost::edge_ssc, g, e1).insert(1);
-
-  // Props of edge e2.
-  boost::get(boost::edge_weight, g, e2) = 2;
-  boost::get(boost::edge_ssc, g, e2).insert(1);
-  boost::get(boost::edge_ssc, g, e2).insert(2);
+  graph g = sample_graph1();
 
   // The ssc of an empty path.
   SSC ssc1 = find_path_ssc(g, path());
