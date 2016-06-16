@@ -99,14 +99,18 @@ client::tear_down()
 vertex
 client::get_new_src()
 {
-  // The new source should be this number of nodes away.
-  int hops = nohdg() + 1;
+  set<vertex> candidates;
+  
+  do
+    {
+      // The new source should be this number of nodes away.
+      int hops = nohdg() + 1;
 
-  // Find the vertexes which are the given number of hops away.
-  vertex src = conn.get_demand().first.first;
-  set<vertex> candidates = find_vertexes(m_mdl, src, hops);
+      // Find the vertexes which are the given number of hops away.
+      vertex src = conn.get_demand().first.first;
+      candidates = find_vertexes(m_mdl, src, hops);
+    }
+  while (candidates.empty());
 
-  // Choose one of these vertexes at random.
-  assert(!candidates.empty());
   return get_random_element(candidates, m_rng);
 }
