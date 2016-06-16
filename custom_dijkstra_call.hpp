@@ -67,7 +67,9 @@ namespace boost {
 
     optional<kr_type> result;
 
-    if (s != t)
+    if (s == t)
+      result = std::make_pair(0, path_type());
+    else
       {
         std::vector<edge_descriptor> pred_vec(num_vertices(g));
         auto pred = make_iterator_property_map(pred_vec.begin(), im);
@@ -107,8 +109,6 @@ namespace boost {
             result = std::make_pair(cost, p);
           }
       }
-    else
-      result = std::make_pair(0, path_type());
 
     return result;
   }
