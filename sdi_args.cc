@@ -16,6 +16,7 @@
 #define ST_S "st"
 #define RT_S "rt"
 #define RE_S "re"
+#define MLC_S "mlc"
 #define K_S "K"
 #define EDGES_S "edges"
 #define NODES_S "nodes"
@@ -84,10 +85,7 @@ process_sdi_args(int argc, const char *argv[])
         ("slices", po::value<int>()->required(),
          "the number of slices")
 
-        ("ml", po::value<int>(),
-         "the maximal length of a path")
-
-        ("mlc", po::value<int>(),
+        (MLC_S, po::value<double>(),
          "the maximal length cofficient of a path")
 
         (K_S, po::value<int>(),
@@ -159,8 +157,8 @@ process_sdi_args(int argc, const char *argv[])
       
       result.nr_sc = vm["slices"].as<int>();
 
-      if (vm.count("ml"))
-        result.ml = vm["ml"].as<int>();
+      if (vm.count(MLC_S))
+        result.ml = vm[MLC_S].as<double>();
 
       if (vm.count(K_S))
         result.K = vm[K_S].as<int>();
