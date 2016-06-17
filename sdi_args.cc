@@ -158,7 +158,7 @@ process_sdi_args(int argc, const char *argv[])
       result.nr_sc = vm["slices"].as<int>();
 
       if (vm.count(MLC_S))
-        result.ml = vm[MLC_S].as<double>();
+        result.mlc = vm[MLC_S].as<double>();
 
       if (vm.count(K_S))
         result.K = vm[K_S].as<int>();
