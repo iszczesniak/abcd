@@ -122,7 +122,7 @@ simulate(const sdi_args &args_para)
   // Calculate the maximal length of a path.
   if (args.mlc)
     args.ml = args.mlc.get() * ba::max(len_acc);
-  
+
   // The traffic module.
   traffic t(args.mcat, args.mht, args.mnsc);
 
