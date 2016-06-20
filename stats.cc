@@ -26,9 +26,9 @@ stats::stats(const sdi_args &args, const traffic &tra):
   cout << "hash" << " ";
   // The mean connection arrival time.
   cout << "mcat" << " ";
-  // The offerred load.
+  // The offered load.
   cout << "oload" << " ";
-  // The network load.
+  // The network utilization.
   cout << "utilization" << " ";
   // The probability of establishing a connection.
   cout << "pec" << " ";
@@ -38,13 +38,17 @@ stats::stats(const sdi_args &args, const traffic &tra):
   cout << "hopec" << " ";
   // The mean number of slices of an established connection.
   cout << "nscec" << " ";
+  // The probability of reconfiguring a connection.
+  cout << "prc" << " ";
+  // The mean number of links to reconfigure.
+  cout << "nolrc" << " ";
   // The number of currently active connections.
   cout << "conns" << " ";
   // The capacity served.
   cout << "capser" << " ";
   // The mean number of fragments on links.
   cout << "frags" << " ";
-  // The average time a shortest path search takes.
+  // The average time a shortest path search (successful or not) takes.
   cout << "spsat";
   // That's it.  Thank you.
   cout << endl;
@@ -67,9 +71,18 @@ stats::operator()(double st)
   // Delta of the user time.
   double dut = dtime.user / 1e+9;
 
-  cout << tut << " " << st << " "
-       << args.seed << " " << args.hash << " ";
-
+  // The user part of the wall clock time.
+  cout << tut << " ";
+  // The time elapsed in the simulation.
+  cout << st << " ";
+  // The seed of the simulation.
+  cout << args.seed << " ";
+  // The hash of the simulation.
+  cout << args.hash << " ";
+  // The mean connection arrival time.
+  cout << args.mcat << " ";
+  // The offered load.
+  cout << args.ol << " ";
   // The network utilization.
   cout << calculate_utilization(m_mdl) << " ";
   // The probability of establishing a connection.
@@ -80,26 +93,28 @@ stats::operator()(double st)
   cout << ba::mean(hopec) << " ";
   // The mean numnber of slices of an established connection.
   cout << ba::mean(nscec) << " ";
-  // The number of active connections.
+  // The mean probability of reconfiguring a connection.
+  cout << ba::mean(m_prc) << " ";
+  // The mean number of links to reconfigure a connection.
+  cout << ba::mean(m_nolrc) << " ";
+  // The number of currently active connections.
   cout << tra.nr_clients() << " ";
   // The capacity served.
   cout << tra.capacity_served() << " ";
   // The mean number of fragments of links.
   cout << calculate_frags() << " ";
-  // The time spend per search, either successfull or nor.
+  // The average time a shortest path search (successful or not) takes.
   cout << dut / ba::count(pec) << " ";
-  // The mean connection arrival time.
-  cout << args.mcat << " ";
-  // The offerred load.
-  cout << 1.0 / args.mcat;
-  // That's it.
+  // That's it.  Thanks!
   cout << endl;
 
   // We reset the accumulators to get new means in the next interval.
   pec = dbl_acc();
+  m_prc = dbl_acc();
   lenec = dbl_acc();
   hopec = dbl_acc();
   nscec = dbl_acc();
+  m_nolrc = dbl_acc();
 
   // Start again to get next delta time.
   dtimer.start();
@@ -140,9 +155,9 @@ stats::reconfigured(bool status)
 }
 
 void
-stats::reconfigured_conn(int noltr)
+stats::reconfigured_conn(int nolrc)
 {
-  m_noltr(noltr);
+  m_nolrc(nolrc);
 }
 
 double

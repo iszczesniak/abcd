@@ -33,7 +33,7 @@ class stats: public module<sim>
   typedef ba::accumulator_set<double, ba::features<ba::tag::count,
                                                    ba::tag::mean>> dbl_acc;
 
-  // The probability of establishing a connection in the interval.
+  // The probability of establishing a connection.
   dbl_acc pec;
   // The length of the established connection.
   dbl_acc lenec;
@@ -42,10 +42,10 @@ class stats: public module<sim>
   // The number of slices of the established connection.
   dbl_acc nscec;
 
-  // The probability of reconfiguring a connection in the interval.
+  // The probability of reconfiguring a connection.
   dbl_acc m_prc;
-  // The number of links to reconfigure.
-  dbl_acc m_noltr;
+  // The number of links to reconfigure a connection.
+  dbl_acc m_nolrc;
 
   // The arguments of the run.
   sdi_args args;
@@ -80,7 +80,7 @@ public:
 
   // Report the reconfigured connection.
   void
-  reconfigured_conn(int noltr);
+  reconfigured_conn(int nolrc);
 
 private:
   // Calculate the average number of fragments on a link.
