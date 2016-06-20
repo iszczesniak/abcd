@@ -64,7 +64,7 @@ connection::get_demand() const
 bool
 connection::is_established() const
 {
-  return m_p;
+  return m_p != boost::none;
 }
 
 int
@@ -127,7 +127,7 @@ connection::establish(const demand &d)
   // Route the demand.
   m_p = routing::route(m_g, m_d);
 
-  return m_p;
+  return is_established();
 }
 
 std::pair<bool, int>
