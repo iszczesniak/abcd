@@ -76,7 +76,7 @@ client::reconfigure()
   st.reconfigured(result.first);
 
   if (result.first)
-    st.reconfigured(result.second);
+    st.reconfigured_conn(result.second);
 
   return result.first;
 }
