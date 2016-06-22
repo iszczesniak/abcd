@@ -44,8 +44,10 @@ class stats: public module<sim>
 
   // The probability of reconfiguring a connection.
   dbl_acc m_prc;
-  // The number of links to reconfigure a connection.
-  dbl_acc m_nolrc;
+  // The number of new links used in reconfiguration.
+  dbl_acc m_newrc;
+  // The number of old links used in reconfiguration.
+  dbl_acc m_oldrc;
 
   // The arguments of the run.
   sdi_args args;
@@ -80,7 +82,7 @@ public:
 
   // Report the reconfigured connection.
   void
-  reconfigured_conn(int nolrc);
+  reconfigured_conn(int newrc, int oldrc);
 
 private:
   // Calculate the average number of fragments on a link.

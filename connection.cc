@@ -14,10 +14,14 @@ int connection::counter = 0;
 
 connection::re_t connection::m_re = connection::re_t::none;
 
-int
-calc_new_links(const sscpath &new_path, const sscpath &old_path)
+// Returns a pair of integers, where the first is the number of links
+// in new_path not found in old_path, and the second is the number of
+// links in new_path also found in old_path.
+std::pair<int, int>
+calc_links(const sscpath &new_path, const sscpath &old_path)
 {
-  int number = 0;
+  int newlinks = 0;
+  int oldlinks = 0;
 
   // Now we need to calculate the number of new links to configure,
   // which depends on the SSC.  Check whether the SSC of the new path
@@ -35,14 +39,19 @@ calc_new_links(const sscpath &new_path, const sscpath &old_path)
           path::const_iterator j = std::find(old_path.first.begin(),
                                              old_path.first.end(), e);
           if (j == old_path.first.end())
-            ++number;
+            ++newlinks;
+          else
+            ++oldlinks;
         }
     }
   else
     // Since it's a different SSC, we have to configure all links.
-    number = new_path.first.size();
+    newlinks = new_path.first.size();
 
-  return number;
+  // Make sure that the newlinks and oldlinks add up.
+  assert(newlinks + oldlinks == new_path.first.size());
+  
+  return std::make_pair(newlinks, oldlinks);
 }
 
 connection::connection(graph &g): m_g(g), m_id(counter++)
@@ -130,12 +139,12 @@ connection::establish(const demand &d)
   return is_established();
 }
 
-std::pair<bool, int>
+boost::optional<std::pair<int, int> >
 connection::reconfigure(vertex new_src)
 {
   assert(is_established());
 
-  std::pair<bool, int> result;
+  boost::optional<std::pair<int, int> > result;
 
   switch(m_re)
     {
@@ -149,16 +158,16 @@ connection::reconfigure(vertex new_src)
     }
 
   // Remember the new source when the reconfiguration succeeds.
-  if (result.first)
+  if (result != boost::none)
     m_d.first.first = new_src;
 
   return result;
 }
 
-std::pair<bool, int>
+boost::optional<std::pair<int, int> >
 connection::reconfigure_complete(vertex new_src)
 {
-  std::pair<bool, int> result;
+  boost::optional<std::pair<int, int> > result;
 
   // The old path.
   sscpath old_p = m_p.get();
@@ -172,7 +181,7 @@ connection::reconfigure_complete(vertex new_src)
 
   // Try to establish the connection.
   if (establish(nd))
-    result = make_pair(true, calc_new_links(m_p.get(), old_p));
+    result = calc_links(m_p.get(), old_p);
 
   return result;
 }

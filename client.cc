@@ -70,15 +70,15 @@ client::reconfigure()
 
   // Choose the next vertex.
   vertex new_src = get_new_src();
-  
+
   // Reconfigure the connection for the new source vertex.
   auto result = conn.reconfigure(new_src);
-  st.reconfigured(result.first);
+  st.reconfigured(result != boost::none);
 
-  if (result.first)
-    st.reconfigured_conn(result.second);
+  if (result != boost::none)
+    st.reconfigured_conn(result.get().first, result.get().second);
 
-  return result.first;
+  return result != boost::none;
 }
 
 const connection &

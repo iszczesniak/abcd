@@ -32,7 +32,7 @@ public:
   establish(const demand &d);
 
   // Reconfigure the connection.
-  std::pair<bool, int>
+  boost::optional<std::pair<int, int> >
   reconfigure(vertex new_Src);
 
   // Return the length of the established connection.  The connection
@@ -62,11 +62,8 @@ public:
   tear_down();
 
 private:
-  std::pair<bool, int>
+  boost::optional<std::pair<int, int> >
   reconfigure_complete(vertex new_Src);
-
-  std::pair<bool, int>
-  reconfigure_incremental(vertex new_Src);
 
   // The parameter that tells how to reconfigure connections.
   static re_t m_re;

@@ -40,8 +40,10 @@ stats::stats(const sdi_args &args, const traffic &tra):
   cout << "nscec" << " ";
   // The probability of reconfiguring a connection.
   cout << "prc" << " ";
-  // The mean number of links to reconfigure.
-  cout << "nolrc" << " ";
+  // The mean number of new links used in reconfiguration.
+  cout << "newrc" << " ";
+  // The mean number of old links used in reconfiguration.
+  cout << "oldrc" << " ";
   // The number of currently active connections.
   cout << "conns" << " ";
   // The capacity served.
@@ -95,8 +97,10 @@ stats::operator()(double st)
   cout << ba::mean(nscec) << " ";
   // The mean probability of reconfiguring a connection.
   cout << ba::mean(m_prc) << " ";
-  // The mean number of links to reconfigure a connection.
-  cout << ba::mean(m_nolrc) << " ";
+  // The mean number of new links used in reconfiguration.
+  cout << ba::mean(m_newrc) << " ";
+  // The mean number of old links used in reconfiguration.
+  cout << ba::mean(m_oldrc) << " ";
   // The number of currently active connections.
   cout << tra.nr_clients() << " ";
   // The capacity served.
@@ -114,7 +118,8 @@ stats::operator()(double st)
   lenec = dbl_acc();
   hopec = dbl_acc();
   nscec = dbl_acc();
-  m_nolrc = dbl_acc();
+  m_newrc = dbl_acc();
+  m_oldrc = dbl_acc();
 
   // Start again to get next delta time.
   dtimer.start();
@@ -155,9 +160,10 @@ stats::reconfigured(bool status)
 }
 
 void
-stats::reconfigured_conn(int nolrc)
+stats::reconfigured_conn(int newrc, int oldrc)
 {
-  m_nolrc(nolrc);
+  m_newrc(newrc);
+  m_oldrc(oldrc);
 }
 
 double
