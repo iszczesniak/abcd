@@ -113,7 +113,7 @@ connection::set_re(const std::string &re)
 {
   map <string, connection::re_t> re_map;
   re_map["complete"] = connection::re_t::complete;
-  re_map["our"] = connection::re_t::our;
+  re_map["proposed"] = connection::re_t::proposed;
   m_re = interpret ("reconfiguration type", re, re_map);
 }
 
@@ -153,6 +153,11 @@ connection::reconfigure(vertex new_src)
       result = reconfigure_complete(new_src);
       break;
 
+    case re_t::proposed:
+      // The proposed reconfiguration.
+      result = reconfigure_proposed(new_src);
+      break;
+
     default:
       assert(false);
     }
@@ -182,6 +187,14 @@ connection::reconfigure_complete(vertex new_src)
   // Try to establish the connection.
   if (establish(nd))
     result = calc_links(m_p.get(), old_p);
+
+  return result;
+}
+
+boost::optional<std::pair<int, int> >
+connection::reconfigure_proposed(vertex new_src)
+{
+  boost::optional<std::pair<int, int> > result;
 
   return result;
 }

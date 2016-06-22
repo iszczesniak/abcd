@@ -15,7 +15,7 @@ public:
   // The reconfiguration types:
   // complete - route the connection anew
   // our - our method of reconfiguration
-  enum class re_t {none, complete, our};
+  enum class re_t {none, complete, proposed};
 
   connection(graph &g);
   ~connection();
@@ -64,6 +64,9 @@ public:
 private:
   boost::optional<std::pair<int, int> >
   reconfigure_complete(vertex new_Src);
+
+  boost::optional<std::pair<int, int> >
+  reconfigure_proposed(vertex new_Src);
 
   // The parameter that tells how to reconfigure connections.
   static re_t m_re;
