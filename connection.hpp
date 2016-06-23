@@ -31,9 +31,9 @@ public:
   bool
   establish(const demand &d);
 
-  // Reconfigure the connection.
+  // Reconfigure the connection for the new source vertex.
   boost::optional<std::pair<int, int> >
-  reconfigure(vertex new_Src);
+  reconfigure(vertex);
 
   // Return the length of the established connection.  The connection
   // must be established.
@@ -52,7 +52,7 @@ public:
 
   // Set the reconfiguration type.
   static void
-  set_re(const std::string &re);
+  set_re(const std::string &);
 
   // Get the reconfiguration type.
   static re_t
@@ -62,11 +62,11 @@ public:
   tear_down();
 
 private:
-  boost::optional<std::pair<int, int> >
-  reconfigure_complete(vertex new_Src);
+  bool
+  reconfigure_complete(const demand &);
 
-  boost::optional<std::pair<int, int> >
-  reconfigure_proposed(vertex new_Src);
+  bool
+  reconfigure_proposed(const demand &);
 
   // The parameter that tells how to reconfigure connections.
   static re_t m_re;

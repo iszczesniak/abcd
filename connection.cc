@@ -146,53 +146,52 @@ connection::reconfigure(vertex new_src)
 
   boost::optional<std::pair<int, int> > result;
 
+  // That's the new demand.
+  demand nd = demand(npair(new_src, m_d.first.second), m_d.second);
+
+  // The old path.
+  sscpath old_p = m_p.get();
+
+  bool status;
+
   switch(m_re)
     {
     case re_t::complete:
       // The complete reconfiguration.
-      result = reconfigure_complete(new_src);
+      status = reconfigure_complete(nd);
       break;
 
     case re_t::proposed:
       // The proposed reconfiguration.
-      result = reconfigure_proposed(new_src);
+      status = reconfigure_proposed(nd);
       break;
 
     default:
       assert(false);
     }
 
-  // Remember the new source when the reconfiguration succeeds.
-  if (result != boost::none)
-    m_d.first.first = new_src;
+  if (status)
+    {
+      result = calc_links(m_p.get(), old_p);
+      m_d = nd;
+    }
 
   return result;
 }
 
-boost::optional<std::pair<int, int> >
-connection::reconfigure_complete(vertex new_src)
+bool
+connection::reconfigure_complete(const demand &nd)
 {
-  boost::optional<std::pair<int, int> > result;
-
-  // The old path.
-  sscpath old_p = m_p.get();
-
   // First we need to tear down the existing path.  We might need its
   // subcarriers to establish a new connection.
   tear_down();
 
-  // That's the new demand.
-  demand nd = demand(npair(new_src, m_d.first.second), m_d.second);
-
   // Try to establish the connection.
-  if (establish(nd))
-    result = calc_links(m_p.get(), old_p);
-
-  return result;
+  return establish(nd);
 }
 
-boost::optional<std::pair<int, int> >
-connection::reconfigure_proposed(vertex new_src)
+bool
+connection::reconfigure_proposed(const demand &nd)
 {
   boost::optional<std::pair<int, int> > result;
 
