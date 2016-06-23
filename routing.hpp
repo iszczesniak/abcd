@@ -77,18 +77,18 @@ public:
   static rt_t
   get_rt();
 
+  /**
+   * Set up the given path.
+   */
+  bool
+  set_up_path(graph &g, const sscpath &p);
+
 protected:
   /**
    * This is the worker function for the route function.
    */
   virtual sscpath
   route_w(graph &g, const demand &d) = 0;
-
-  /**
-   * Set up the given path.
-   */
-  bool
-  set_up_path(graph &g, const sscpath &p);
 
   /**
    * Make the template depend on the SCDT (slice data type).  We make
