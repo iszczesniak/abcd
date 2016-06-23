@@ -28,6 +28,13 @@ public:
   route(graph &g, const demand &d);
 
   /**
+   * Route the demand, i.e., find the path, and allocate resources.
+   * If function fails, no result is returned.
+   */
+  static boost::optional<sscpath>
+  route(graph &g, const demand &d, const SSC &ssc);
+
+  /**
    * Tear down the path in the graph.  This process puts back the
    * slices on the edges that are used by the path.
    */
