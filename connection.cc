@@ -130,11 +130,12 @@ connection::establish(const demand &d)
   // Make sure the connection is not established.
   assert(!is_established());
 
-  // Remember the demand.
-  m_d = d;
-
   // Route the demand.
   m_p = routing::route(m_g, m_d);
+
+  // If successfull, remember the demand.
+  if (m_p)
+    m_d = d;
 
   return is_established();
 }
@@ -182,12 +183,26 @@ connection::reconfigure(vertex new_src)
 bool
 connection::reconfigure_complete(const demand &nd)
 {
+  assert(is_established());
+
+  // Remember the previous path.
+  auto pp = m_p;
+
   // First we need to tear down the existing path.  We might need its
   // subcarriers to establish a new connection.
   tear_down();
 
-  // Try to establish the connection.
-  return establish(nd);
+  bool status = establish(nd);
+
+  // If failed, we have to establish the connection as before.
+  if (!status)
+    {
+      m_p = pp;
+      bool status = routing::set_up_path(m_g, m_p.get());
+      assert(status);
+    }
+
+  return status;
 }
 
 bool
