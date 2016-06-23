@@ -26,12 +26,16 @@ public:
   bool
   is_established() const;
 
-  // Establish the connection for the given demand.  True is
+  // Establish the connection for the given demand.  True if
   // successfull.
   bool
   establish(const demand &d);
 
   // Reconfigure the connection for the new source vertex.
+  //
+  // Prerequisite: the connection must be established
+  //
+  // Postcondition: the connection is reconfigured or unchanged.
   boost::optional<std::pair<int, int> >
   reconfigure(vertex);
 
