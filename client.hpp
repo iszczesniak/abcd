@@ -76,7 +76,7 @@ public:
 private:
   bool set_up();
   bool reconfigure();
-  void tear_down();
+  void destroy();
 
   // Finds a new source vertex based on the current source vertex.
   // This new source vertex will be used for connection

@@ -34,13 +34,9 @@ client::client(double mht, double mnsc, traffic &tra):
           schedule(tdt);
         }
       else
-        {
-          // We managed to establish the connection, but failed to
-          // reconfigure it.  We have to take the connection down, and
-          // delete the client.
-          tear_down();
-          tra.delete_me_later(this);
-        }
+        // We managed to establish the connection, but failed to
+        // reconfigure it.  That's the end of the game.
+        destroy();
     }
   else
     // We didn't manage to establish the connection, and so the client
@@ -50,7 +46,7 @@ client::client(double mht, double mnsc, traffic &tra):
 
 void client::operator()(double t)
 {
-  tear_down();
+  destroy();
 }
 
 bool client::set_up()
@@ -100,7 +96,7 @@ client::get_connection() const
 }
 
 void
-client::tear_down()
+client::destroy()
 {
   assert(conn.is_established());
   conn.tear_down();
