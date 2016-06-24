@@ -208,8 +208,6 @@ connection::reconfigure_complete(const demand &nd)
 bool
 connection::reconfigure_proposed(const demand &nd)
 {
-  boost::optional<std::pair<int, int> > result;
-
   // The new source node of the connection.
   vertex new_src = nd.first.second;
 
@@ -225,7 +223,7 @@ connection::reconfigure_proposed(const demand &nd)
   // source should be taken down, because they might be useful in
   // establishing the briding path.
 
-  return result;
+  return false;
 }
 
 void
