@@ -113,6 +113,7 @@ connection::set_re(const std::string &re)
 {
   map <string, connection::re_t> re_map;
   re_map["complete"] = connection::re_t::complete;
+  re_map["curtailing"] = connection::re_t::curtailing;
   re_map["proposed"] = connection::re_t::proposed;
   m_re = interpret ("reconfiguration type", re, re_map);
 }
@@ -162,6 +163,11 @@ connection::reconfigure(vertex new_src)
       status = reconfigure_complete(nd);
       break;
 
+    case re_t::curtailing:
+      // The curtailing reconfiguration.
+      status = reconfigure_curtailing(nd);
+      break;
+
     case re_t::proposed:
       // The proposed reconfiguration.
       status = reconfigure_proposed(nd);
@@ -206,8 +212,11 @@ connection::reconfigure_complete(const demand &nd)
 }
 
 bool
-connection::reconfigure_proposed(const demand &nd)
+connection::reconfigure_curtailing(const demand &nd)
 {
+  // This is the best bridging path.
+  boost::optional<sscpath> np;
+
   // The new source node of the connection.
   vertex new_src = nd.first.second;
 
@@ -215,6 +224,9 @@ connection::reconfigure_proposed(const demand &nd)
   // start with the old source node.
   vertex int_vtx = m_d.first.first;
 
+  // The destination of the connection.
+  vertex dst = m_d.first.second;
+  
   // In every iteration we try to find a path from new_src to int_vtx.
   // Vertex int_vtx is different in every iteration: we iterate over
   // all nodes of the established path, starting with the old source
@@ -222,7 +234,91 @@ connection::reconfigure_proposed(const demand &nd)
   // links are taken down, i.e. the links from int_vtx to the old
   // source should be taken down, because they might be useful in
   // establishing the briding path.
+  while(true)
+    {
+      // The bridging path.
+      boost::optional<sscpath> bp;
 
+      // This is the new bridging demand.  Here we state only the
+      // number of subcarriers required.
+      demand bd(npair(new_src, int_src), d.second);
+
+      boost::optional<sscpath> bp;
+
+      if (int_src != dst)
+        // We care about the spectrum continuity, because we haven't
+        // reached the destination node yet.
+        bp = routing::route(bd, m_p.get().second);
+      else
+        // We don't care about the spectrum continuity, because we are
+        // at the destination.
+        bp = routing::route(bd);
+
+      // Is this the best result?  First, did we find a result?
+      if (bp != boost::none)
+        {
+          // Is this better than something previously found?
+          if (result == boost::node || bp.get().first.size() < result.second)
+            {
+              result.first = true;
+              // That's the shortest length of the briding path.
+              result.second = bp.second.first.size();
+
+          // Build the new path np from p and bp.
+          np = p;
+          // Take the SSC from bp if p is empty.  This can happen in
+          // the case we examine the destination node as the end point
+          // of the briding connection.
+          if (np.second.first.empty())
+            np.second.second = bp.second.second;
+
+          // We want the SSC in the additional path to be the same as
+          // in the existing path.
+          assert(!np.second.second.empty());
+          np.second.first.insert(np.second.first.begin(),
+                                 bp.second.first.begin(),
+                                 bp.second.first.end());
+
+          assert(new_src == source(np.second.first.front(), g));
+        }
+
+      // This is the condition for breaking the loop which should go
+      // exactly here.  This allows us to consider also the dst node
+      // as the end node for the briding path, and prevents the
+      // execution of the code below.
+      if (p.second.first.empty())
+        break;
+
+      // Take down the leading edge in the path.
+      edge ettd = p.second.first.front();
+      p.second.first.pop_front();
+      // Retrace one node.
+      assert(source(ettd, g) == int_src);
+      int_src = target(ettd, g);
+      // Take down that edge!
+      sscpath sscpathttd;
+      sscpathttd.first.push_back(ettd);
+      sscpathttd.second = p.second.second;
+      dijkstra::tear_down_path(g, sscpathttd);
+    }
+
+  // We should have dismantled the path completely by now.
+  assert(m_p.second.first.empty());
+
+  // Set up the path if we found one.
+  if (np != boost::none)
+    {
+      bool status = routing::set_up_path(np.get());
+      assert(status);
+      m_p = np;
+    }
+
+  return np != boost::none;
+}
+
+bool
+connection::reconfigure_proposed(const demand &nd)
+{
   return false;
 }
 

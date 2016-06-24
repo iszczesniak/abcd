@@ -15,7 +15,7 @@ public:
   // The reconfiguration types:
   // complete - route the connection anew
   // our - our method of reconfiguration
-  enum class re_t {none, complete, proposed};
+  enum class re_t {none, complete, curtailing, proposed};
 
   connection(graph &g);
   ~connection();
@@ -69,6 +69,12 @@ public:
 private:
   bool
   reconfigure_complete(const demand &);
+
+  // In the curtailing reconfiguration we look for the shortest
+  // briding path between the new source and any of the nodes of the
+  // connection being reconfigured.
+  bool
+  reconfigure_curtailing(const demand &);
 
   bool
   reconfigure_proposed(const demand &);
