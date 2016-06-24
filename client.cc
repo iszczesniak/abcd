@@ -19,11 +19,10 @@ client::client(double mht, double mnsc, traffic &tra):
   nohd(mnoh - 1), nohdg(m_rng, nohd),
   conn(m_mdl), st(stats::get()), tra(tra)
 {
-  // We try to setup the connection and reconfigure it.  We schedule
-  // the connection to be torn down only when it was setup and
-  // reconfigured.
+  // Try to setup the connection.
   if (set_up())
     {
+      // Try to reconfigure the connection.
       if (reconfigure())
         {
           // Register the client with the traffic.
@@ -35,9 +34,17 @@ client::client(double mht, double mnsc, traffic &tra):
           schedule(tdt);
         }
       else
-        tear_down();
+        {
+          // We managed to establish the connection, but failed to
+          // reconfigure it.  We have to take the connection down, and
+          // delete the client.
+          tear_down();
+          tra.delete_me_later(this);
+        }
     }
   else
+    // We didn't manage to establish the connection, and so the client
+    // should be deleted.
     tra.delete_me_later(this);
 }
 
