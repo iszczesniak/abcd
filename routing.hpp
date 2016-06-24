@@ -35,6 +35,12 @@ public:
   route(graph &g, const demand &d, const SSC &ssc);
 
   /**
+   * Set up the given path.
+   */
+  static bool
+  set_up_path(graph &g, const sscpath &p);
+
+  /**
    * Tear down the path in the graph.  This process puts back the
    * slices on the edges that are used by the path.
    */
@@ -83,12 +89,6 @@ protected:
    */
   virtual sscpath
   route_w(graph &g, const demand &d) = 0;
-
-  /**
-   * Set up the given path.
-   */
-  bool
-  set_up_path(graph &g, const sscpath &p);
 
   /**
    * Make the template depend on the SCDT (slice data type).  We make
