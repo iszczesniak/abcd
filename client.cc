@@ -22,15 +22,20 @@ client::client(double mht, double mnsc, traffic &tra):
   // We try to setup the connection and reconfigure it.  We schedule
   // the connection to be torn down only when it was setup and
   // reconfigured.
-  if (set_up() && reconfigure())
+  if (set_up())
     {
-      // Register the client with the traffic.
-      tra.insert(this);
-      // Holding time.
-      double ht = htg();
-      // Tear down time.
-      tdt = now() + ht;
-      schedule(tdt);
+      if (reconfigure())
+        {
+          // Register the client with the traffic.
+          tra.insert(this);
+          // Holding time.
+          double ht = htg();
+          // Tear down time.
+          tdt = now() + ht;
+          schedule(tdt);
+        }
+      else
+        tear_down();
     }
   else
     tra.delete_me_later(this);

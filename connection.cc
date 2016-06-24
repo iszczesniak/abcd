@@ -195,6 +195,21 @@ connection::reconfigure_proposed(const demand &nd)
 {
   boost::optional<std::pair<int, int> > result;
 
+  // The new source node of the connection.
+  vertex new_src = nd.first.second;
+
+  // The intermediate vertex, from where the old path is reused.  We
+  // start with the old source node.
+  vertex int_vtx = m_d.first.first;
+
+  // In every iteration we try to find a path from new_src to int_vtx.
+  // Vertex int_vtx is different in every iteration: we iterate over
+  // all nodes of the established path, starting with the old source
+  // and ending with the destination node.  As we trace the path, the
+  // links are taken down, i.e. the links from int_vtx to the old
+  // source should be taken down, because they might be useful in
+  // establishing the briding path.
+
   return result;
 }
 
