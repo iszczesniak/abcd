@@ -133,7 +133,7 @@ connection::establish(const demand &d)
   // Route the demand.
   m_p = routing::route(m_g, m_d);
 
-  // If successfull, remember the demand.
+  // If successful, remember the demand.
   if (m_p)
     m_d = d;
 
@@ -189,7 +189,7 @@ connection::reconfigure_complete(const demand &nd)
   auto pp = m_p;
 
   // First we need to tear down the existing path.  We might need its
-  // subcarriers to establish a new connection.
+  // slices to establish a new connection.
   tear_down();
 
   bool status = establish(nd);

@@ -27,7 +27,8 @@ public:
   is_established() const;
 
   // Establish the connection for the given demand.  True if
-  // successfull.
+  // successful.  If unsuccessful, the state of the object doesn't
+  // change.
   bool
   establish(const demand &d);
 
