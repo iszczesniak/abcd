@@ -131,7 +131,7 @@ connection::establish(const demand &d)
   assert(!is_established());
 
   // Route the demand.
-  m_p = routing::route(m_g, m_d);
+  m_p = routing::route(m_g, d);
 
   // If successful, remember the demand.
   if (m_p)
