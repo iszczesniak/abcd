@@ -212,21 +212,22 @@ connection::reconfigure_complete(const demand &nd)
 }
 
 bool
-connection::reconfigure_curtailing(const demand &nd)
+connection::reconfigure_curtailing_worker(const demand &nd)
 {
-  // This is the best bridging path.
-  boost::optional<sscpath> np;
+  assert(is_established());
+
+  // The number of slices requested.
+  int nsc = d.first;
+
+  // The SSC that we request.
+  const SSC &ssc = m_p.first;
+
+  // This is the best reconfigured path.
+  boost::optional<sscpath> rp;
 
   // The new source node of the connection.
   vertex new_src = nd.first.second;
 
-  // The intermediate vertex, from where the old path is reused.  We
-  // start with the old source node.
-  vertex int_vtx = m_d.first.first;
-
-  // The destination of the connection.
-  vertex dst = m_d.first.second;
-  
   // In every iteration we try to find a path from new_src to int_vtx.
   // Vertex int_vtx is different in every iteration: we iterate over
   // all nodes of the established path, starting with the old source
@@ -234,25 +235,21 @@ connection::reconfigure_curtailing(const demand &nd)
   // links are taken down, i.e. the links from int_vtx to the old
   // source should be taken down, because they might be useful in
   // establishing the briding path.
-  while(true)
+  for (path ptd = m_p.first; !ptd.empty(); ptd.pop_back())
     {
+      // The vertex, from which the old path is reused.
+      vertex int_vtx = ptd.pop_back();
+
       // The bridging path.
       boost::optional<sscpath> bp;
 
       // This is the new bridging demand.  Here we state only the
       // number of subcarriers required.
-      demand bd(npair(new_src, int_src), d.second);
+      demand bd(npair(new_src, int_src), nsc);
 
-      boost::optional<sscpath> bp;
-
-      if (int_src != dst)
-        // We care about the spectrum continuity, because we haven't
-        // reached the destination node yet.
-        bp = routing::route(bd, m_p.get().second);
-      else
-        // We don't care about the spectrum continuity, because we are
-        // at the destination.
-        bp = routing::route(bd);
+      // We care about the spectrum continuity, because we haven't
+      // reached the destination node yet.
+      bp = routing::route(bd, ssc);
 
       // Is this the best result?  First, did we find a result?
       if (bp != boost::none)
@@ -302,9 +299,6 @@ connection::reconfigure_curtailing(const demand &nd)
       dijkstra::tear_down_path(g, sscpathttd);
     }
 
-  // We should have dismantled the path completely by now.
-  assert(m_p.second.first.empty());
-
   // Set up the path if we found one.
   if (np != boost::none)
     {
@@ -314,6 +308,11 @@ connection::reconfigure_curtailing(const demand &nd)
     }
 
   return np != boost::none;
+}
+
+bool
+connection::reconfigure_curtailing(const demand &nd)
+{
 }
 
 bool
