@@ -217,9 +217,9 @@ connection::reconfigure_curtailing_worker(const demand &nd)
   assert(is_established());
 
   // The number of slices requested.
-  int nsc = d.first;
+  int nsc = m_d.second;
   // The SSC that we request.
-  const SSC &ssc = m_p.first;
+  const SSC &ssc = m_p.second;
 
   // This is the best result found.  The pair of integers: the first
   // is the number of hops in the bridging part of the path, while the
@@ -230,28 +230,64 @@ connection::reconfigure_curtailing_worker(const demand &nd)
   vertex new_src = nd.first.second;
 
   // Iterate over the edges of the path, and take them down.
-  for (path p = m_p.first; !p.empty(); p.pop_back())
+  for (path p = m_p.first; !p.empty(); p.pop_front())
     {
       // The last edge.
-      edge e = ptd.back();
+      edge e = p.front();
       // The intermediate vertex to which we bridge.
-      vertex iv = boost::target(e, g);
+      vertex iv = boost::source(e, g);
       // The new bridging demand.
-      demand bd(npair(new_src, int_src), nsc);
+      demand bd(npair(new_src, iv), nsc);
 
       // The bridging path.
-      boost::optional<sscpath> bp = routing::route(bd, ssc);
+      boost::optional<sscpath> bp; // = routing::route(bd, ssc);
 
-      // Is this the best result?  First, did we find a result?
+      // Did we find a result?
       if (bp != boost::none)
         {
-          // Is this better than something previously found?
-          if (result == boost::node || bp.get().first.size() < result.second)
-            {
-              result.first = true;
-              // That's the shortest length of the briding path.
-              result.second = bp.second.first.size();
+          // The cost of the solution found.
+          pair<int, int> cp(bp.get().first.size(), p.size());
 
+          // Is this result better than some previously found?
+          if (rp == boost::none || cp < rp.get().second())
+            {
+              
+              rp = make_pair(np, cp);
+            }
+        }
+    }
+
+  // Set up the reconfigured path if we found one.
+  if (rp != boost::none)
+    {
+      bool status = routing::set_up_path(rp.get().first);
+      assert(status);
+      m_p = rp.get().first;
+    }
+
+  return rp != boost::none;
+}
+
+bool
+connection::reconfigure_curtailing(const demand &nd)
+{
+}
+
+bool
+connection::reconfigure_proposed(const demand &nd)
+{
+  return false;
+}
+
+void
+connection::tear_down()
+{
+  assert(is_established());
+  routing::tear_down(m_g, m_p.get());
+  m_p = boost::none;
+}
+
+/*
           // Build the new path np from p and bp.
           np = p;
           // Take the SSC from bp if p is empty.  This can happen in
@@ -289,33 +325,4 @@ connection::reconfigure_curtailing_worker(const demand &nd)
       sscpathttd.second = p.second.second;
       dijkstra::tear_down_path(g, sscpathttd);
     }
-
-  // Set up the path if we found one.
-  if (np != boost::none)
-    {
-      bool status = routing::set_up_path(np.get());
-      assert(status);
-      m_p = np;
-    }
-
-  return np != boost::none;
-}
-
-bool
-connection::reconfigure_curtailing(const demand &nd)
-{
-}
-
-bool
-connection::reconfigure_proposed(const demand &nd)
-{
-  return false;
-}
-
-void
-connection::tear_down()
-{
-  assert(is_established());
-  routing::tear_down(m_g, m_p.get());
-  m_p = boost::none;
-}
+*/
