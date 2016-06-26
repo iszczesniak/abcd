@@ -219,7 +219,7 @@ connection::reconfigure_curtailing_worker(const demand &nd)
   // The number of slices requested.
   int nsc = m_d.second;
   // The SSC that we request.
-  const SSC &ssc = m_p.second;
+  const SSC &ssc = m_p.get().second;
 
   // This is the best result found.  The pair of integers: the first
   // is the number of hops in the bridging part of the path, while the
@@ -230,7 +230,7 @@ connection::reconfigure_curtailing_worker(const demand &nd)
   vertex new_src = nd.first.second;
 
   // Iterate over the edges of the path, and take them down.
-  for (path p = m_p.first; !p.empty(); p.pop_front())
+  for (path p = m_p.get().first; !p.empty(); p.pop_front())
     {
       // The last edge.
       edge e = p.front();
