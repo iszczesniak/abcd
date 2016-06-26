@@ -77,6 +77,9 @@ private:
   reconfigure_curtailing(const demand &);
 
   bool
+  reconfigure_curtailing_worker(const demand &);
+
+  bool
   reconfigure_proposed(const demand &);
 
   // The parameter that tells how to reconfigure connections.

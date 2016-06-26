@@ -218,38 +218,29 @@ connection::reconfigure_curtailing_worker(const demand &nd)
 
   // The number of slices requested.
   int nsc = d.first;
-
   // The SSC that we request.
   const SSC &ssc = m_p.first;
 
-  // This is the best reconfigured path.
-  boost::optional<sscpath> rp;
+  // This is the best result found.  The pair of integers: the first
+  // is the number of hops in the bridging part of the path, while the
+  // second is the number of hops in the reused part of the path.
+  boost::optional<pair<sscpath, pair<int, int> > > rp;
 
   // The new source node of the connection.
   vertex new_src = nd.first.second;
 
-  // In every iteration we try to find a path from new_src to int_vtx.
-  // Vertex int_vtx is different in every iteration: we iterate over
-  // all nodes of the established path, starting with the old source
-  // and ending with the destination node.  As we trace the path, the
-  // links are taken down, i.e. the links from int_vtx to the old
-  // source should be taken down, because they might be useful in
-  // establishing the briding path.
-  for (path ptd = m_p.first; !ptd.empty(); ptd.pop_back())
+  // Iterate over the edges of the path, and take them down.
+  for (path p = m_p.first; !p.empty(); p.pop_back())
     {
-      // The vertex, from which the old path is reused.
-      vertex int_vtx = ptd.pop_back();
-
-      // The bridging path.
-      boost::optional<sscpath> bp;
-
-      // This is the new bridging demand.  Here we state only the
-      // number of subcarriers required.
+      // The last edge.
+      edge e = ptd.back();
+      // The intermediate vertex to which we bridge.
+      vertex iv = boost::target(e, g);
+      // The new bridging demand.
       demand bd(npair(new_src, int_src), nsc);
 
-      // We care about the spectrum continuity, because we haven't
-      // reached the destination node yet.
-      bp = routing::route(bd, ssc);
+      // The bridging path.
+      boost::optional<sscpath> bp = routing::route(bd, ssc);
 
       // Is this the best result?  First, did we find a result?
       if (bp != boost::none)
