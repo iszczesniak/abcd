@@ -77,10 +77,10 @@ client::reconfigure()
   assert(conn.is_established());
 
   // Choose the next vertex.
-  vertex new_src = get_new_src();
+  vertex new_dst = get_new_dst();
 
   // Reconfigure the connection for the new source vertex.
-  auto result = conn.reconfigure(new_src);
+  auto result = conn.reconfigure(new_dst);
   st.reconfigured(result != boost::none);
 
   if (result != boost::none)
@@ -105,7 +105,7 @@ client::destroy()
 }
 
 vertex
-client::get_new_src()
+client::get_new_dst()
 {
   set<vertex> candidates;
   
@@ -115,8 +115,8 @@ client::get_new_src()
       int hops = nohdg() + 1;
 
       // Find the vertexes which are the given number of hops away.
-      vertex src = conn.get_demand().first.first;
-      candidates = find_vertexes(m_mdl, src, hops);
+      vertex dst = conn.get_demand().first.first;
+      candidates = find_vertexes(m_mdl, dst, hops);
     }
   while (candidates.empty());
 

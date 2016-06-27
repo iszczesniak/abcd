@@ -78,10 +78,10 @@ private:
   bool reconfigure();
   void destroy();
 
-  // Finds a new source vertex based on the current source vertex.
-  // This new source vertex will be used for connection
+  // Finds a new destination vertex based on the current destination
+  // vertex.  This new source vertex will be used for connection
   // reconfiguration.
-  vertex get_new_src();
+  vertex get_new_dst();
 };
 
 #endif /* CLIENT_HPP */
