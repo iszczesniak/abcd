@@ -235,7 +235,7 @@ connection::reconfigure_curtailing_worker(const demand &nd)
       // The last edge.
       edge e = p.front();
       // The intermediate vertex to which we bridge.
-      vertex iv = boost::source(e, g);
+      vertex iv = boost::source(e, m_g);
       // The new bridging demand.
       demand bd(npair(new_src, iv), nsc);
 
@@ -249,9 +249,9 @@ connection::reconfigure_curtailing_worker(const demand &nd)
           pair<int, int> cp(bp.get().first.size(), p.size());
 
           // Is this result better than some previously found?
-          if (rp == boost::none || cp < rp.get().second())
+          if (rp == boost::none || cp < rp.get().second)
             {
-              
+              sscpath np;
               rp = make_pair(np, cp);
             }
         }
@@ -260,7 +260,7 @@ connection::reconfigure_curtailing_worker(const demand &nd)
   // Set up the reconfigured path if we found one.
   if (rp != boost::none)
     {
-      bool status = routing::set_up_path(rp.get().first);
+      bool status = routing::set_up_path(m_g, rp.get().first);
       assert(status);
       m_p = rp.get().first;
     }
