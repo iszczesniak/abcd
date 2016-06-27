@@ -32,7 +32,7 @@ routing::route(graph &g, const demand &d)
   if (d.first.first != d.first.second)
     {
       sscpath sp = singleton->route_w(g, d);
-      if  (!sp.first.empty())
+      if (!sp.first.empty())
         result = sp;
     }
   else
@@ -41,6 +41,11 @@ routing::route(graph &g, const demand &d)
     result = sscpath();
 
   return result;
+}
+
+boost::optional<sscpath>
+routing::route(graph &g, const demand &d, const SSC &ssc)
+{
 }
 
 routing::st_t

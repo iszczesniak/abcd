@@ -241,7 +241,7 @@ connection::reconfigure_curtailing_worker(const demand &nd)
       demand bd(npair(iv, new_dst), nsc);
 
       // The bridging path.
-      boost::optional<sscpath> bp; // = routing::route(bd, ssc);
+      boost::optional<sscpath> bp = routing::route(m_g, bd, ssc);
 
       // Did we find a result?
       if (bp != boost::none)
