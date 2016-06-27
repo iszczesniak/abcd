@@ -32,7 +32,7 @@ public:
   bool
   establish(const demand &d);
 
-  // Reconfigure the connection for the new source vertex.
+  // Reconfigure the connection for the new destination vertex.
   //
   // Prerequisite: the connection must be established
   //
@@ -71,8 +71,8 @@ private:
   reconfigure_complete(const demand &);
 
   // In the curtailing reconfiguration we look for the shortest
-  // briding path between the new source and any of the nodes of the
-  // connection being reconfigured.
+  // briding path between any of the nodes of the connection being
+  // reconfigured, and the new destination node.
   bool
   reconfigure_curtailing(const demand &);
 

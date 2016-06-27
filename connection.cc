@@ -142,14 +142,15 @@ connection::establish(const demand &d)
 }
 
 boost::optional<std::pair<int, int> >
-connection::reconfigure(vertex new_src)
+connection::reconfigure(vertex new_dst)
 {
   assert(is_established());
 
   boost::optional<std::pair<int, int> > result;
 
+  vertex src = m_d.first.first;
   // That's the new demand.
-  demand nd = demand(npair(new_src, m_d.first.second), m_d.second);
+  demand nd = demand(npair(src, new_dst), m_d.second);
 
   // The old path.
   sscpath old_p = m_p.get();
@@ -226,8 +227,8 @@ connection::reconfigure_curtailing_worker(const demand &nd)
   // second is the number of hops in the reused part of the path.
   boost::optional<pair<sscpath, pair<int, int> > > rp;
 
-  // The new source node of the connection.
-  vertex new_src = nd.first.second;
+  // The new destination node of the connection.
+  vertex new_dst = nd.first.second;
 
   // Iterate over the edges of the path, and take them down.
   for (path p = m_p.get().first; !p.empty(); p.pop_front())
@@ -235,9 +236,9 @@ connection::reconfigure_curtailing_worker(const demand &nd)
       // The last edge.
       edge e = p.front();
       // The intermediate vertex to which we bridge.
-      vertex iv = boost::source(e, m_g);
+      vertex iv = boost::target(e, m_g);
       // The new bridging demand.
-      demand bd(npair(new_src, iv), nsc);
+      demand bd(npair(iv, new_dst), nsc);
 
       // The bridging path.
       boost::optional<sscpath> bp; // = routing::route(bd, ssc);
