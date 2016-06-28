@@ -213,7 +213,7 @@ connection::reconfigure_complete(const demand &nd)
 }
 
 bool
-connection::reconfigure_curtailing_worker(const demand &nd)
+connection::reconfigure_curtailing(const demand &nd)
 {
   assert(is_established());
 
@@ -273,11 +273,6 @@ connection::reconfigure_curtailing_worker(const demand &nd)
     }
 
   return rp != boost::none;
-}
-
-bool
-connection::reconfigure_curtailing(const demand &nd)
-{
 }
 
 bool
