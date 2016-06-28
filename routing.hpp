@@ -91,6 +91,12 @@ protected:
   route_w(graph &g, const demand &d) = 0;
 
   /**
+   * This is the worker function for the route function.
+   */
+  virtual sscpath
+  route_w(graph &g, const demand &d, const SSC &ssc) = 0;
+
+  /**
    * Make the template depend on the SCDT (slice data type).  We make
    * the function templated, because we can use it for both SSC and
    * SSSC.
