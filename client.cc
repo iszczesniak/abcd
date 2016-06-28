@@ -115,7 +115,7 @@ client::get_new_dst()
       int hops = nohdg() + 1;
 
       // Find the vertexes which are the given number of hops away.
-      vertex dst = conn.get_demand().first.first;
+      vertex dst = conn.get_demand().first.second;
       candidates = find_vertexes(m_mdl, dst, hops);
     }
   while (candidates.empty());
