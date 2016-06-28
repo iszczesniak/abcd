@@ -14,10 +14,10 @@
 using namespace std;
 
 sscpath
-cdijkstra::route_w(graph &g, const demand &d)
+cdijkstra::route_w(graph &g, const demand &d, const SSC &ssc)
 {
   // We allow to allocate the signal on any of the slices.
-  V2C2S r = search(g, d);
+  V2C2S r = search(g, d, ssc);
   sscpath result = trace(g, r, d);
   if (!result.first.empty())
     {
@@ -119,29 +119,7 @@ cdijkstra::relax(pqueue &q, C2S &c2s, const CEV &cev, const SSC &ssc)
 }
 
 V2C2S
-cdijkstra::search(const graph &g, const demand &d)
-{
-  SSC ssc;
-  vertex src = d.first.first;
-
-  // Itereate over the out edges of the vertex.
-  graph::out_edge_iterator ei, eei;
-  for(boost::tie(ei, eei) = boost::out_edges(src, g); ei != eei; ++ei)
-    {
-      // The edge that we examine in this iteration.
-      const edge &e = *ei;
-      // The slices available on the edge.
-      const SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
-
-      // Add e_ssc to ssc.
-      include(ssc, e_ssc);
-    }
-
-  return search(g, d, ssc);
-}
-
-V2C2S
-cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
+cdijkstra::search(const graph &g, const demand &d, const SSC &ssc)
 {
   V2C2S r;
 
@@ -154,16 +132,16 @@ cdijkstra::search(const graph &g, const demand &d, const SSC &src_ssc)
 
   // We have to filter ssc to exclude slices that can't support
   // the signal with p slices.
-  SSC src_ssc_nsc = exclude(src_ssc, nsc);
+  SSC ssc_nsc = exclude(ssc, nsc);
 
-  if (!src_ssc_nsc.empty())
+  if (!ssc_nsc.empty())
     {
       // We put here the information that allows us to process the
       // source node in the loop below.  We say that we reach source
       // node src with cost (0, 0) on the slices passed in the ssc
       // argument along the null edge.  The null edge signals the
       // beginning of the path.
-      r[src].insert(make_pair(CEV(COST(0), ne, src), src_ssc_nsc));
+      r[src].insert(make_pair(CEV(COST(0), ne, src), ssc_nsc));
 
       // The priority queue.
       pqueue q;
