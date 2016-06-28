@@ -237,6 +237,16 @@ get_random_element(const C &c, T &gen)
 }
 
 /**
+ * This is the << operator for a pair.
+ */
+template <typename A, typename B>
+std::ostream &operator << (std::ostream &os, const std::pair<A, B> &p)
+{
+  os << "(" << p.first << ", " << p.second << ")";
+  return os;
+}
+
+/**
  * This is the << operator for a sscpath.
  */
 std::ostream &operator << (std::ostream &os, const sscpath &p);
