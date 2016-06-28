@@ -88,12 +88,6 @@ protected:
    * This is the worker function for the route function.
    */
   virtual sscpath
-  route_w(graph &g, const demand &d) = 0;
-
-  /**
-   * This is the worker function for the route function.
-   */
-  virtual sscpath
   route_w(graph &g, const demand &d, const SSC &ssc) = 0;
 
   /**

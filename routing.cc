@@ -24,6 +24,28 @@ unique_ptr<routing> routing::singleton;
 boost::optional<sscpath>
 routing::route(graph &g, const demand &d)
 {
+  // Find the largest SSC that we could use.
+  SSC ssc;
+  vertex src = d.first.first;  
+  // Itereate over the out edges of the vertex.
+  graph::out_edge_iterator ei, eei;
+  for(boost::tie(ei, eei) = boost::out_edges(src, g); ei != eei; ++ei)
+    {
+      // The edge that we examine in this iteration.
+      const edge &e = *ei;
+      // The slices available on the edge.
+      const SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
+
+      // Add e_ssc to ssc.
+      include(ssc, e_ssc);
+    }
+
+  return route(g, d, ssc);
+}
+
+boost::optional<sscpath>
+routing::route(graph &g, const demand &d, const SSC &ssc)
+{
   assert(singleton);
   boost::optional<sscpath> result;
 
@@ -31,7 +53,7 @@ routing::route(graph &g, const demand &d)
   // routing.
   if (d.first.first != d.first.second)
     {
-      sscpath sp = singleton->route_w(g, d);
+      sscpath sp = singleton->route_w(g, d, ssc);
       if (!sp.first.empty())
         result = sp;
     }
@@ -41,11 +63,6 @@ routing::route(graph &g, const demand &d)
     result = sscpath();
 
   return result;
-}
-
-boost::optional<sscpath>
-routing::route(graph &g, const demand &d, const SSC &ssc)
-{
 }
 
 routing::st_t
