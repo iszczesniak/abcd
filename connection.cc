@@ -217,6 +217,9 @@ connection::reconfigure_curtailing(const demand &nd)
 {
   assert(is_established());
 
+  cout << "*************************************************" << endl;
+  cout << "Rerouting:" << m_d.first << endl;
+  
   // The number of slices requested.
   int nsc = m_d.second;
   // The SSC that we request.
@@ -262,6 +265,7 @@ connection::reconfigure_curtailing(const demand &nd)
 
       // Tear down the edge.
       routing::tear_down(m_g, sscpath(path{e}, ssc));
+      cout << "Torn down:" << sscpath(path{e}, ssc) << endl;
     }
 
   // Set up the reconfigured path if we found one.
