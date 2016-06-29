@@ -217,10 +217,6 @@ connection::reconfigure_curtailing(const demand &nd)
 {
   assert(is_established());
 
-  cout << "*************************************************" << endl;
-  cout << "Rerouting:" << m_d << " to " << nd << endl;
-  cout << "Path:" << m_p.get() << endl;
-  
   // The number of slices requested.
   int nsc = m_d.second;
   // The SSC that we request.
@@ -263,22 +259,21 @@ connection::reconfigure_curtailing(const demand &nd)
               rp = make_pair(sscpath(cp, ssc), cc);
             }
 
+          // Tear down the briding path.
           routing::tear_down(m_g, bp.get());
         }
 
       // Tear down the edge.
       routing::tear_down(m_g, sscpath(path{e}, ssc));
-      cout << "Torn down:" << sscpath(path{e}, ssc) << endl;
     }
 
-  // Set up the reconfigured path if we found one.
+  // Remember the reconfigured path if we found one.
   if (rp != boost::none)
-    {
-      cout << "Path found: " << rp.get() << endl;
-      bool status = routing::set_up_path(m_g, rp.get().first);
-      assert(status);
-      m_p = rp.get().first;
-    }
+    m_p = rp.get().first;
+
+  // Set up the path: either the reconfigured or original one.
+  bool status = routing::set_up_path(m_g, m_p.get());
+  assert(status);
 
   return rp != boost::none;
 }

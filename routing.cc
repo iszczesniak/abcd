@@ -154,8 +154,6 @@ routing::get_st()
 bool
 routing::set_up_path(graph &g, const sscpath &p)
 {
-  cout << "-------------------------------------------------------" << endl;
-        
   // The SSC map.
   boost::property_map<graph, boost::edge_ssc_t>::type
     sm = get(boost::edge_ssc_t(), g);
@@ -169,10 +167,8 @@ routing::set_up_path(graph &g, const sscpath &p)
   // Make sure the edges have the required SSC.
   for(const auto &e: l)
     {
-      cout << e << " " << sm[e] << " " << p_ssc << endl;
       if (includes(sm[e], p_ssc))
         {
-          cout << e << " " << sm[e] << " " << p_ssc << endl;
           exclude(sm[e], p_ssc);
           le.push_back(e);
         }
@@ -191,8 +187,6 @@ routing::set_up_path(graph &g, const sscpath &p)
             // Put back the p_ssc slices to e_ssc.
             include(e_ssc, p_ssc);
           }
-
-        cout << p << endl;
 
         return false;
       }
