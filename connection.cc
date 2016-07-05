@@ -300,7 +300,14 @@ connection::reconfigure_curtailing(const demand &nd)
 connection::rr_t
 connection::reconfigure_proposed(const demand &nd)
 {
-  return false;
+  // First, use the curtailing reconfiguration.
+  auto cr = reconfigure_curtailing(nd);
+
+  if (cr != boost::none)
+    // Second, use the complete reconfiguration.
+    reconfigure_complete(nd);
+
+  return cr;
 }
 
 void
