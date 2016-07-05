@@ -141,7 +141,7 @@ connection::establish(const demand &d)
   return is_established();
 }
 
-rr_t
+connection::rr_t
 connection::reconfigure(vertex new_dst)
 {
   assert(is_established());
@@ -179,13 +179,11 @@ connection::reconfigure(vertex new_dst)
   return result;
 }
 
-rr_t
+connection::rr_t
 connection::reconfigure_complete(const demand &nd)
 {
   assert(is_established());
-
   rr_t result;
-
   // Remember the previous path.
   auto pp = m_p;
 
@@ -196,7 +194,7 @@ connection::reconfigure_complete(const demand &nd)
   bool status = establish(nd);
 
   if (status)
-    result = calc_links(m_p, pp);
+    result = calc_links(m_p.get(), pp.get());
   else
     {
       // If failed, we have to establish the connection as before.
@@ -208,10 +206,13 @@ connection::reconfigure_complete(const demand &nd)
   return result;
 }
 
-rr_t
+connection::rr_t
 connection::reconfigure_curtailing(const demand &nd)
 {
   assert(is_established());
+  rr_t result;
+  // Remember the previous path.
+  auto pp = m_p;
 
   // The number of slices requested.
   int nsc = m_d.second;
@@ -284,16 +285,19 @@ connection::reconfigure_curtailing(const demand &nd)
 
   // Remember the reconfigured path if we found one.
   if (rp != boost::none)
-    m_p = rp.get().first;
+    {
+      m_p = rp.get().first;
+      result = calc_links(m_p.get(), pp.get());
+    }
 
   // Set up the path: either the reconfigured or original one.
   bool status = routing::set_up_path(m_g, m_p.get());
   assert(status);
 
-  return rp != boost::none;
+  return result;
 }
 
-rr_t
+connection::rr_t
 connection::reconfigure_proposed(const demand &nd)
 {
   return false;
