@@ -17,6 +17,9 @@ public:
   // our - our method of reconfiguration
   enum class re_t {none, complete, curtailing, proposed};
 
+  // The reconfiguration result.  First - new.  Second - reused.
+  typedef boost::optional<std::pair<int, int> > rr_t;
+    
   connection(graph &g);
   ~connection();
 
@@ -37,7 +40,7 @@ public:
   // Prerequisite: the connection must be established
   //
   // Postcondition: the connection is reconfigured or unchanged.
-  boost::optional<std::pair<int, int> >
+  rr_t
   reconfigure(vertex);
 
   // Return the length of the established connection.  The connection
@@ -67,16 +70,16 @@ public:
   tear_down();
 
 private:
-  bool
+  rr_t
   reconfigure_complete(const demand &);
 
   // In the curtailing reconfiguration we look for the shortest
   // briding path between any of the nodes of the connection being
   // reconfigured, and the new destination node.
-  bool
+  rr_t
   reconfigure_curtailing(const demand &);
 
-  bool
+  rr_t
   reconfigure_proposed(const demand &);
 
   // The parameter that tells how to reconfigure connections.

@@ -141,7 +141,7 @@ connection::establish(const demand &d)
   return is_established();
 }
 
-boost::optional<std::pair<int, int> >
+rr_t
 connection::reconfigure(vertex new_dst)
 {
   assert(is_established());
@@ -152,45 +152,39 @@ connection::reconfigure(vertex new_dst)
   // That's the new demand.
   demand nd = demand(npair(src, new_dst), m_d.second);
 
-  // The old path.
-  sscpath old_p = m_p.get();
-
-  bool status;
-
   switch(m_re)
     {
     case re_t::complete:
       // The complete reconfiguration.
-      status = reconfigure_complete(nd);
+      result = reconfigure_complete(nd);
       break;
 
     case re_t::curtailing:
       // The curtailing reconfiguration.
-      status = reconfigure_curtailing(nd);
+      result = reconfigure_curtailing(nd);
       break;
 
     case re_t::proposed:
       // The proposed reconfiguration.
-      status = reconfigure_proposed(nd);
+      result = reconfigure_proposed(nd);
       break;
 
     default:
       assert(false);
     }
 
-  if (status)
-    {
-      result = calc_links(m_p.get(), old_p);
-      m_d = nd;
-    }
+  if (result != boost::none)
+    m_d = nd;
 
   return result;
 }
 
-bool
+rr_t
 connection::reconfigure_complete(const demand &nd)
 {
   assert(is_established());
+
+  rr_t result;
 
   // Remember the previous path.
   auto pp = m_p;
@@ -201,18 +195,20 @@ connection::reconfigure_complete(const demand &nd)
 
   bool status = establish(nd);
 
-  // If failed, we have to establish the connection as before.
-  if (!status)
+  if (status)
+    result = calc_links(m_p, pp);
+  else
     {
+      // If failed, we have to establish the connection as before.
       m_p = pp;
       bool status = routing::set_up_path(m_g, m_p.get());
       assert(status);
     }
 
-  return status;
+  return result;
 }
 
-bool
+rr_t
 connection::reconfigure_curtailing(const demand &nd)
 {
   assert(is_established());
@@ -278,7 +274,7 @@ connection::reconfigure_curtailing(const demand &nd)
   return rp != boost::none;
 }
 
-bool
+rr_t
 connection::reconfigure_proposed(const demand &nd)
 {
   return false;
