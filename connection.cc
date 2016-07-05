@@ -263,6 +263,25 @@ connection::reconfigure_curtailing(const demand &nd)
       routing::tear_down(m_g, sscpath(path{e}, ssc));
     }
 
+  // Now we try to establish a path anew.  It actually might be better
+  // than the result we already have.  Right now the original path is
+  // down, and no reconfigured path is established.  We can't leave a
+  // reconfigured path established, and have to take it down.
+  {
+    // The complete-reconfiguration demand.
+    demand cd(npair(m_d.first.first, new_dst), nsc);
+    // The complete path.
+    boost::optional<sscpath> cp = routing::route(m_g, cd);
+    if (cp != boost::none)
+      {
+        // Calculate the cost.
+        pair<int, int> cc = calc_links(cp.get(), m_p.get());
+        if (rp == boost::none || cc < rp.get().second)
+          rp = make_pair(cp.get(), cc);
+        routing::tear_down(m_g, cp.get());
+      }
+  }
+
   // Remember the reconfigured path if we found one.
   if (rp != boost::none)
     m_p = rp.get().first;
