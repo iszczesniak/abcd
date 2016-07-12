@@ -44,11 +44,11 @@ stats::stats(const sdi_args &args, const traffic &tra):
   // The probability of reconfiguring a connection.
   cout << "prc" << " ";
   // The mean length of a reconfigured connection.
-  cout << "lenec" << " ";
+  cout << "lenrc" << " ";
   // The mean number of links of a reconfigured connection.
-  cout << "nolec" << " ";
+  cout << "nolrc" << " ";
   // The mean number of slices of a reconfigured connection.
-  cout << "nscec" << " ";
+  cout << "nscrc" << " ";
   // The mean number of new links used in reconfiguration.
   cout << "newrc" << " ";
   // The mean number of old links used in reconfiguration.
