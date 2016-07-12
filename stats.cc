@@ -34,8 +34,8 @@ stats::stats(const sdi_args &args, const traffic &tra):
   cout << "pec" << " ";
   // The mean length of an established connection.
   cout << "lenec" << " ";
-  // The mean number of hops of an established connection.
-  cout << "hopec" << " ";
+  // The mean number of links of an established connection.
+  cout << "nolec" << " ";
   // The mean number of slices of an established connection.
   cout << "nscec" << " ";
   // The probability of reconfiguring a connection.
@@ -91,8 +91,8 @@ stats::operator()(double st)
   cout << ba::mean(pec) << " ";
   // The mean length of an established connection.
   cout << ba::mean(lenec) << " ";
-  // The mean number of hops of an established connection.
-  cout << ba::mean(hopec) << " ";
+  // The mean number of links of an established connection.
+  cout << ba::mean(nolec) << " ";
   // The mean numnber of slices of an established connection.
   cout << ba::mean(nscec) << " ";
   // The mean probability of reconfiguring a connection.
@@ -116,7 +116,7 @@ stats::operator()(double st)
   pec = dbl_acc();
   m_prc = dbl_acc();
   lenec = dbl_acc();
-  hopec = dbl_acc();
+  nolec = dbl_acc();
   nscec = dbl_acc();
   m_newrc = dbl_acc();
   m_oldrc = dbl_acc();
@@ -144,12 +144,12 @@ stats::established(bool status)
 void
 stats::established_conn(const connection &conn)
 {
-  int length = conn.get_length();
-  int hops = conn.get_hops();
+  int len = conn.get_len();
+  int nol = conn.get_nol();
   int nsc = conn.get_nsc();
 
-  lenec(length);
-  hopec(hops);
+  lenec(len);
+  nolec(nol);
   nscec(nsc);
 }
 

@@ -43,18 +43,18 @@ public:
   rr_t
   reconfigure(vertex);
 
-  // Return the length of the established connection.  The connection
+  // Return the length of the connection.  The connection must be
+  // established.
+  int
+  get_len() const;
+
+  // Return the number of links of the connection.  The connection
   // must be established.
   int
-  get_length() const;
+  get_nol() const;
 
-  // Return the number of hops of the established connection.  The
+  // Return the number of subscribers of the connection.  The
   // connection must be established.
-  int
-  get_hops() const;
-
-  // Return the number of subscribers of the established connection.
-  // The connection must be established.
   int
   get_nsc() const;
 

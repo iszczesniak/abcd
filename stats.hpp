@@ -37,8 +37,8 @@ class stats: public module<sim>
   dbl_acc pec;
   // The length of the established connection.
   dbl_acc lenec;
-  // The number of hops of the established connection.
-  dbl_acc hopec;
+  // The number of links of the established connection.
+  dbl_acc nolec;
   // The number of slices of the established connection.
   dbl_acc nscec;
 

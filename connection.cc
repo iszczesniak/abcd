@@ -77,7 +77,7 @@ connection::is_established() const
 }
 
 int
-connection::get_length() const
+connection::get_len() const
 {
   assert(is_established());
 
@@ -94,7 +94,7 @@ connection::get_length() const
 }
 
 int
-connection::get_hops() const
+connection::get_nol() const
 {
   assert(is_established());
   return m_p.get().first.size();
