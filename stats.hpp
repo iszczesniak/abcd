@@ -34,16 +34,23 @@ class stats: public module<sim>
                                                    ba::tag::mean>> dbl_acc;
 
   // The probability of establishing a connection.
-  dbl_acc pec;
+  dbl_acc m_pec;
   // The length of the established connection.
-  dbl_acc lenec;
+  dbl_acc m_lenec;
   // The number of links of the established connection.
-  dbl_acc nolec;
+  dbl_acc m_nolec;
   // The number of slices of the established connection.
-  dbl_acc nscec;
+  dbl_acc m_nscec;
 
   // The probability of reconfiguring a connection.
   dbl_acc m_prc;
+  // The length of the reconfigured connection.
+  dbl_acc m_lenrc;
+  // The number of links of the reconfigured connection.
+  dbl_acc m_nolrc;
+  // The number of slices of the reconfigured connection.
+  dbl_acc m_nscrc;
+  
   // The number of new links used in reconfiguration.
   dbl_acc m_newrc;
   // The number of old links used in reconfiguration.
@@ -82,7 +89,7 @@ public:
 
   // Report the reconfigured connection.
   void
-  reconfigured_conn(int newrc, int oldrc);
+  reconfigured_conn(const connection &conn, int newrc, int oldrc);
 
 private:
   // Calculate the average number of fragments on a link.

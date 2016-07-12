@@ -84,7 +84,7 @@ client::reconfigure()
   st.reconfigured(result != boost::none);
 
   if (result != boost::none)
-    st.reconfigured_conn(result.get().first, result.get().second);
+    st.reconfigured_conn(conn, result.get().first, result.get().second);
 
   return result != boost::none;
 }

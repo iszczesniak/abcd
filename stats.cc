@@ -24,12 +24,14 @@ stats::stats(const sdi_args &args, const traffic &tra):
   cout << "seed" << " ";
   // The hash of the simulation.
   cout << "hash" << " ";
+
   // The mean connection arrival time.
   cout << "mcat" << " ";
   // The offered load.
   cout << "oload" << " ";
   // The network utilization.
   cout << "utilization" << " ";
+
   // The probability of establishing a connection.
   cout << "pec" << " ";
   // The mean length of an established connection.
@@ -38,12 +40,20 @@ stats::stats(const sdi_args &args, const traffic &tra):
   cout << "nolec" << " ";
   // The mean number of slices of an established connection.
   cout << "nscec" << " ";
+
   // The probability of reconfiguring a connection.
   cout << "prc" << " ";
+  // The mean length of a reconfigured connection.
+  cout << "lenec" << " ";
+  // The mean number of links of a reconfigured connection.
+  cout << "nolec" << " ";
+  // The mean number of slices of a reconfigured connection.
+  cout << "nscec" << " ";
   // The mean number of new links used in reconfiguration.
   cout << "newrc" << " ";
   // The mean number of old links used in reconfiguration.
   cout << "oldrc" << " ";
+
   // The number of currently active connections.
   cout << "conns" << " ";
   // The capacity served.
@@ -81,26 +91,36 @@ stats::operator()(double st)
   cout << args.seed << " ";
   // The hash of the simulation.
   cout << args.hash << " ";
+
   // The mean connection arrival time.
   cout << args.mcat << " ";
   // The offered load.
   cout << args.ol << " ";
   // The network utilization.
   cout << calculate_utilization(m_mdl) << " ";
+
   // The probability of establishing a connection.
-  cout << ba::mean(pec) << " ";
+  cout << ba::mean(m_pec) << " ";
   // The mean length of an established connection.
-  cout << ba::mean(lenec) << " ";
+  cout << ba::mean(m_lenec) << " ";
   // The mean number of links of an established connection.
-  cout << ba::mean(nolec) << " ";
-  // The mean numnber of slices of an established connection.
-  cout << ba::mean(nscec) << " ";
+  cout << ba::mean(m_nolec) << " ";
+  // The mean number of slices of an established connection.
+  cout << ba::mean(m_nscec) << " ";
+
   // The mean probability of reconfiguring a connection.
   cout << ba::mean(m_prc) << " ";
+  // The mean length of a reconfigured connection.
+  cout << ba::mean(m_lenrc) << " ";
+  // The mean number of links of a reconfigured connection.
+  cout << ba::mean(m_nolrc) << " ";
+  // The mean number of slices of a reconfigured connection.
+  cout << ba::mean(m_nscrc) << " ";
   // The mean number of new links used in reconfiguration.
   cout << ba::mean(m_newrc) << " ";
   // The mean number of old links used in reconfiguration.
   cout << ba::mean(m_oldrc) << " ";
+
   // The number of currently active connections.
   cout << tra.nr_clients() << " ";
   // The capacity served.
@@ -108,16 +128,19 @@ stats::operator()(double st)
   // The mean number of fragments of links.
   cout << calculate_frags() << " ";
   // The average time a shortest path search (successful or not) takes.
-  cout << dut / ba::count(pec) << " ";
+  cout << dut / ba::count(m_pec) << " ";
   // That's it.  Thanks!
   cout << endl;
 
   // We reset the accumulators to get new means in the next interval.
-  pec = dbl_acc();
+  m_pec = dbl_acc();
+  m_lenec = dbl_acc();
+  m_nolec = dbl_acc();
+  m_nscec = dbl_acc();
   m_prc = dbl_acc();
-  lenec = dbl_acc();
-  nolec = dbl_acc();
-  nscec = dbl_acc();
+  m_lenrc = dbl_acc();
+  m_nolrc = dbl_acc();
+  m_nscrc = dbl_acc();
   m_newrc = dbl_acc();
   m_oldrc = dbl_acc();
 
@@ -138,7 +161,7 @@ stats::schedule(double t)
 void
 stats::established(bool status)
 {
-  pec(status);
+  m_pec(status);
 }
 
 void
@@ -148,9 +171,9 @@ stats::established_conn(const connection &conn)
   int nol = conn.get_nol();
   int nsc = conn.get_nsc();
 
-  lenec(len);
-  nolec(nol);
-  nscec(nsc);
+  m_lenec(len);
+  m_nolec(nol);
+  m_nscec(nsc);
 }
 
 void
@@ -160,8 +183,15 @@ stats::reconfigured(bool status)
 }
 
 void
-stats::reconfigured_conn(int newrc, int oldrc)
+stats::reconfigured_conn(const connection &conn, int newrc, int oldrc)
 {
+  int len = conn.get_len();
+  int nol = conn.get_nol();
+  int nsc = conn.get_nsc();
+
+  m_lenrc(len);
+  m_nolrc(nol);
+  m_nscrc(nsc);
   m_newrc(newrc);
   m_oldrc(oldrc);
 }
