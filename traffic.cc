@@ -75,31 +75,9 @@ traffic::capacity_served() const
   for(const client *cli: cs)
     {
       const connection &c = cli->get_connection();
-      const demand &d = c.get_demand();
-      const npair &p = d.first;
       int nsc = c.get_nsc();
-
-      // Did we compute the shortest path before?
-      auto i = sd.find(d.first);
-      // If not, do it now
-      if (i == sd.end())
-        {
-          boost::optional<pair<int, list<edge>>> osp;
-          osp = custom_dijkstra_call(m_mdl, p.first, p.second,
-                                     get(boost::edge_weight_t(), m_mdl),
-                                     get(boost::vertex_index_t(), m_mdl));
-          // Make sure the shortest path was found.
-          assert(osp);
-          // This is the length of the shortest path.
-          int len = osp.get().first;
-          bool s;
-          // Insert the results into the cache.
-          tie(i, s) = sd.insert(make_pair(p, len));
-          // Make sure there was no problem inserting the result.
-          assert(s);
-        }
-
-      capacity += i->second * nsc;
+      int len = c.get_len();
+      capacity += len * nsc;
     }
 
   return capacity;
