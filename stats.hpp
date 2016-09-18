@@ -6,6 +6,7 @@
 #include "graph.hpp"
 #include "module.hpp"
 #include "sdi_args.hpp"
+#include "sim.hpp"
 #include "traffic.hpp"
 
 #include <vector>
@@ -20,7 +21,7 @@ using boost::timer::cpu_times;
 
 class client;
 
-class stats: public module
+class stats: public module<sim>
 {
   // The singleton of the class.
   static stats *singleton;
@@ -32,21 +33,17 @@ class stats: public module
   typedef ba::accumulator_set<double, ba::features<ba::tag::count,
                                                    ba::tag::mean>> dbl_acc;
 
-  // The probability of establishing a connection in the interval.
-  dbl_acc pec;
-
+  // The probability of establishing a connection.
+  dbl_acc m_pec;
   // The length of the established connection.
-  dbl_acc lenec;
-
-  // The number of hops of the established connection.
-  dbl_acc hopec;
-
+  dbl_acc m_lenec;
+  // The number of links of the established connection.
+  dbl_acc m_nolec;
   // The number of slices of the established connection.
-  dbl_acc nscec;
+  dbl_acc m_nscec;
 
   // The arguments of the run.
   sdi_args args;
-
   // The total timer, i.e., keeps track from the beginning of the run.
   cpu_timer ttimer;
   // The delta timer, i.e., keeps track from the last report time.
@@ -64,7 +61,7 @@ public:
   void
   operator()(double t);
 
-  // Report success if the connection was established successfully.
+  // Report the establishment status.
   void
   established(bool status);
 

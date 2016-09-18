@@ -10,8 +10,9 @@
 #include <boost/graph/connected_components.hpp>
 
 #include <boost/accumulators/accumulators.hpp>
-#include <boost/accumulators/statistics/stats.hpp>
+#include <boost/accumulators/statistics.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
+#include <boost/accumulators/statistics/variance.hpp>
 
 #include <cassert>
 #include <iostream>
@@ -22,6 +23,12 @@
 #include <vector>
 
 namespace ba = boost::accumulators;
+
+// The accumulator with double values.
+typedef ba::accumulator_set<double, ba::stats<ba::tag::min,
+                                              ba::tag::mean,
+                                              ba::tag::max,
+                                              ba::tag::variance> > dbl_acc;
 
 /**
  * Generate a random number from min to max, including both min and
@@ -230,6 +237,16 @@ get_random_element(const C &c, T &gen)
 }
 
 /**
+ * This is the << operator for a pair.
+ */
+template <typename A, typename B>
+std::ostream &operator << (std::ostream &os, const std::pair<A, B> &p)
+{
+  os << "(" << p.first << ", " << p.second << ")";
+  return os;
+}
+
+/**
  * This is the << operator for a sscpath.
  */
 std::ostream &operator << (std::ostream &os, const sscpath &p);
@@ -386,8 +403,10 @@ calculate_utilization(const G &g)
   return ba::mean(load_acc);
 }
 
+// Split the input SSC into SSCs placed in an SSSC.  Each resulting
+// SSC has at least nsc contiguous slices.
 SSSC
-split(const SSC &ssc);
+split(const SSC &ssc, int nsc);
 
 int
 calculate_fragments(const SSC &ssc);
@@ -414,6 +433,62 @@ print_edges(G &g, std::ostream &os)
       os << "Subcarriers " << sm[e] << std::endl;
       os << std::endl;
     }
+}
+
+// The type of the exception thrown when we're done searching.
+struct gns_exception {};
+
+template<typename Graph>
+struct gns_visitor
+{
+  typedef boost::on_examine_vertex event_filter;
+
+  typedef typename Graph::vertex_descriptor vertex_descriptor;
+
+  gns_visitor(std::set<vertex_descriptor> &vs, std::vector<int> &hv, int hops):
+    m_vs(vs), m_hv(hv), m_hops(hops) {}
+  void operator()(vertex_descriptor v, const Graph &)
+  {
+    // Here we stop.  We will not find more candidate vertexes.
+    if (m_hv[v] == m_hops + 1)
+      throw gns_exception();
+
+    // These are the candidate vertexes.
+    if (m_hv[v] == m_hops)
+      m_vs.insert(v);
+  }
+
+  std::set<vertex> &m_vs;
+  std::vector<int> &m_hv;
+  int m_hops;
+};
+
+// Return the set of vertexes that are the number of "hops" away from
+// the src vertex in graph g.
+template<typename Graph>
+std::set<typename Graph::vertex_descriptor>
+find_vertexes(const Graph &g, typename Graph::vertex_descriptor src, int hops)
+{
+  typedef typename Graph::vertex_descriptor vertex_descriptor;
+  std::set<vertex_descriptor> vertexes;
+
+  // We keep track of the number of hops for vertexes (using the
+  // record_distances visitor), we record the candidate vertexes
+  // (which are m_hops away from src), and quit as soon as we can.
+  std::vector<int> hv(num_vertices(g));
+  auto hm = make_iterator_property_map(hv.begin(),
+                                       get(boost::vertex_index_t(), g));
+  auto rdv = boost::record_distances(hm, boost::on_tree_edge());
+  auto gnsv = gns_visitor<Graph>(vertexes, hv, hops);
+  auto vstr = boost::make_bfs_visitor(std::make_pair(rdv, gnsv));
+
+  try
+    {
+      boost::breadth_first_search (g, src, boost::visitor(vstr));
+    }
+  catch (gns_exception) {}
+  
+  return vertexes;
 }
 
 #endif /* UTILS_HPP */

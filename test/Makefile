@@ -1,16 +1,17 @@
 TESTS = cdijkstra graph edge_disjoint_ksp routing sdi_args utils	\
-yen_ksp
+yen_ksp various
 
 OTHER = connected
 
-OBJS = ../cdijkstra.o ../edksp.o ../mypoint.o ../routing.o	\
-../sdi_args.o ../teventqueue.o ../utils.o ../utils_netgen.o	\
-../yenksp.o
+OBJS = sample_graphs.o ../cdijkstra.o ../edksp.o ../mypoint.o	\
+ ../routing.o ../sdi_args.o ../teventqueue.o ../utils.o		\
+ ../utils_netgen.o ../yenksp.o
 
 CXXFLAGS = -g -Wno-deprecated -std=c++11
 #CXXFLAGS = -O3 -Wno-deprecated -std=c++11
 
 CXXFLAGS := $(CXXFLAGS) -I ../
+CXXFLAGS := $(CXXFLAGS) -I ../include
 
 # Boost
 BOOSTPATH = ~/boost
@@ -49,6 +50,9 @@ utils: utils.o $(OBJS)
 yen_ksp: yen_ksp.o $(OBJS)
 	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
+various: various.o $(OBJS)
+	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
+
 # run the tests
 run:
 	@for i in $(TESTS); do echo "Running" $$i; ./$$i; done
@@ -62,6 +66,6 @@ clean:
 	rm -rf $(TESTS) $(OTHER)
 
 depend:
-	g++ -std=c++11 -MM -I../ *.cc > dependencies
+	g++ -MM $(CXXFLAGS) *.cc > dependencies
 
 include dependencies

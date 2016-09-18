@@ -3,22 +3,14 @@
 
 #include "graph.hpp"
 
+#include <boost/optional.hpp>
+
 #include <utility>
 
-// The type of the connection.
+// The type of the connection.  It can establish, reconfigure and tear
+// down a connection, but it doesn't report the statistics.
 class connection
 {
-  // This is the sscpath with status.
-  typedef std::pair<bool, sscpath> sscpathws;
-
-  graph &m_g;
-  demand m_d;
-  sscpathws m_p;
-
-  int m_id;
-
-  static int counter;
-
 public:
   connection(graph &g);
   ~connection();
@@ -29,27 +21,38 @@ public:
   bool
   is_established() const;
 
-  // Establish the connection for the given demand.  True is successfull.
+  // Establish the connection for the given demand.  True if
+  // successful.  If unsuccessful, the state of the object doesn't
+  // change.
   bool
   establish(const demand &d);
 
-  // Return the length of the established connection.  The connection
+  // Return the length of the connection.  The connection must be
+  // established.
+  int
+  get_len() const;
+
+  // Return the number of links of the connection.  The connection
   // must be established.
   int
-  get_length() const;
+  get_nol() const;
 
-  // Return the number of hops of the established connection.  The
+  // Return the number of subscribers of the connection.  The
   // connection must be established.
   int
-  get_hops() const;
-
-  // Return the number of subscribers of the established connection.
-  // The connection must be established.
-  int
   get_nsc() const;
-  
+
   void
   tear_down();
+
+private:
+  graph &m_g;
+  demand m_d;
+  boost::optional<sscpath> m_p;
+
+  int m_id;
+
+  static int counter;
 };
 
 #endif /* CONNECTION_HPP */

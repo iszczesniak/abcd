@@ -1,19 +1,13 @@
-#include "cdijkstra.hpp"
 #include "graph.hpp"
 #include "sdi_args.hpp"
-#include "simulation.hpp"
+#include "sim.hpp"
 #include "stats.hpp"
 #include "utils_netgen.hpp"
 
-#include <boost/accumulators/accumulators.hpp>
-#include <boost/accumulators/statistics.hpp>
-#include <boost/accumulators/statistics/variance.hpp>
 #include <boost/random.hpp>
 
 #include <iostream>
 #include <string>
-
-namespace ba = boost::accumulators;
 
 using namespace std;
 
@@ -31,12 +25,6 @@ print_stats(const string &s, const T &t)
 void
 net_stats(const sdi_args &args_orig)
 {
-  // The accumulator with double values.
-  typedef ba::accumulator_set<double, ba::stats<ba::tag::min,
-                                                ba::tag::mean,
-                                                ba::tag::max,
-                                                ba::tag::variance> > dbl_acc;
-
   // Number of nodes.
   dbl_acc nns;
 
@@ -83,51 +71,23 @@ net_stats(const sdi_args &args_orig)
       for (auto ni = ns.first; ni != ns.second; ++ni)
         nds(boost::out_degree(*ni, g));
 
-      // Calculate stats for shortest paths.
-      for (auto ni = ns.first; ni != ns.second; ++ni)
-        {
-          vector<int> dist(num_vertices(g));
-          vector<vertex> pred(num_vertices(g));
-
-          vertex s = *ni;
-
-          boost::dijkstra_shortest_paths
-            (g, s, boost::predecessor_map(&pred[0]).distance_map(&dist[0]));
-
-          for (auto nj = ns.first; nj != ns.second; ++nj)
-            if (ni != nj)
-              {
-                vertex d = *nj;
-                // Make sure the path was found.
-                assert(pred[d] != d);
-
-                // Record the distance.
-                spls(dist[d]);
-
-                // Record the number of hops.
-                int hops = 0;
-                vertex c = d;
-                while(c != s)
-                  {
-                    c = pred[c];
-                    ++hops;
-                  }
-                sphs(hops);
-              }
-        }
+      // Calculate the shortest path statistics.
+      calc_sp_stats(g, sphs, spls);
     }
 
   print_stats("Number of nodes", nns);
   print_stats("Number of links", nls);
   print_stats("Link length", lls);
   print_stats("Node degree", nds);
-  print_stats("Shortest path length", spls);
   print_stats("Shortest path hops", sphs);
+  print_stats("Shortest path length", spls);
 }
 
 void
-simulate(const sdi_args &args)
+simulate(const sdi_args &args_para)
 {
+  sdi_args args = args_para;
+
   // Set the routing type.
   routing::set_rt(args.rt);
 
@@ -140,26 +100,34 @@ simulate(const sdi_args &args)
   // Set the spectrum selection type.
   routing::set_st(args.st);
 
-  // Random number generator.
-  boost::mt19937 rng(args.seed);
+  // This simulation object.
+  sim::rng().seed(args.seed);
 
   // Generate the graph.
-  graph g = generate_graph(args, rng);
+  sim::mdl() = generate_graph(args, sim::rng());
 
   // Make sure there is only one component.
-  assert(is_connected(g));
+  assert(is_connected(sim::mdl()));
 
-  // This simulation object.
-  simulation sim(g, rng);
+  dbl_acc hop_acc;
+  dbl_acc len_acc;
+  calc_sp_stats(sim::mdl(), hop_acc, len_acc);
   
+  // Calculate the mean connection arrival time.
+  args.mcat = calc_mcat(args, sim::mdl(), ba::mean(hop_acc));
+
+  // Calculate the maximal length of a path.
+  if (args.mlc)
+    args.ml = args.mlc.get() * ba::max(len_acc);
+
   // The traffic module.
-  traffic t(g, args.mcat, args.mht, args.mnsc);
+  traffic t(args.mcat, args.mht, args.mnsc);
 
   // The stats module.
   stats s(args, t);
 
   // Run the simulation.
-  sim.run(args.sim_time);
+  sim::run(args.sim_time);
 }
 
 int

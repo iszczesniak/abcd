@@ -2,28 +2,44 @@
 #define ROUTING_HPP
 
 #include "graph.hpp"
+#include "sim.hpp"
 
 #include <memory>
 #include <boost/optional.hpp>
 
-class routing
+class routing: public sim
 {  
 public:
   // The type of specturm selection:
-  // first - the first slices that fit the demand are chosen
-  // smallest - the smallest set of contiguous slices are chosen
-  enum class st_t {none, first, fittest};
+  // first - the first (lowest number of a slice) contiguous fragment
+  // fittest - the fittest (smallest) contiguous fragment
+  // random - any contiguous fragment
+  enum class st_t {none, first, fittest, random};
 
   // The type of routing:
   // cdijkstra - constrained dijkstra
   enum class rt_t {none, cdijkstra, edksp, yenksp};
-  
+
   /**
    * Route the demand, i.e., find the path, and allocate resources.
+   * If function fails, no result is returned.
    */
-  static sscpath
+  static boost::optional<sscpath>
   route(graph &g, const demand &d);
-  
+
+  /**
+   * Route the demand, i.e., find the path, and allocate resources.
+   * If function fails, no result is returned.
+   */
+  static boost::optional<sscpath>
+  route(graph &g, const demand &d, const SSC &ssc);
+
+  /**
+   * Set up the given path.
+   */
+  static bool
+  set_up_path(graph &g, const sscpath &p);
+
   /**
    * Tear down the path in the graph.  This process puts back the
    * slices on the edges that are used by the path.
@@ -72,13 +88,7 @@ protected:
    * This is the worker function for the route function.
    */
   virtual sscpath
-  route_w(graph &g, const demand &d) = 0;
-
-  /**
-   * Set up the given path.
-   */
-  bool
-  set_up_path(graph &g, const sscpath &p);
+  route_w(graph &g, const demand &d, const SSC &ssc) = 0;
 
   /**
    * Make the template depend on the SCDT (slice data type).  We make
@@ -105,6 +115,10 @@ protected:
 
       case st_t::fittest:
         ssc = select_fittest(scdt, nsc);
+        break;
+
+      case st_t::random:
+        ssc = select_random(scdt, nsc);
         break;
 
       default:
@@ -138,6 +152,12 @@ protected:
   // slices than nsc.
   static SSC
   select_fittest(const SSC &ssc, int nsc);
+
+  // Select the random slices, i.e. the random slice fragment from SSC
+  // that fits the required number of slices.  It returns the whole
+  // available fragment, i.e. it can have more slices than nsc.
+  static SSC
+  select_random(const SSC &ssc, int nsc);
 
   // Interpret the string and return the routing type.
   static rt_t

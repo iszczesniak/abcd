@@ -16,31 +16,41 @@ stats::stats(const sdi_args &args, const traffic &tra):
   singleton = this;
   schedule(0);
 
-  cout << "usertime simtime seed hash "
-    // The network load.
-       << "utilization" << " "
-    // The probability of establishing a connection.
-       << "pec" << " "
-    // The mean length of an established connection.
-       << "lenec" << " "
-    // The mean number of hops of an established connection.
-       << "hopec" << " "
-    // The mean number of slices of an established connection.
-       << "nscec" << " "
-    // The number of currently active connections.
-       << "conns" << " "
-    // The capacity served.
-       << "capser" << " "
-    // The mean number of fragments on links.
-       << "frags" << " "
-    // The average time a shortest path search takes.
-       << "spsat" << " "
-    // The mean connection arrival time.
-       << "mcat" << " "
-    // The offerred load.
-       << "oload"
-    // That's it.  Thank you.
-       << endl;
+  // The user part of the wall clock time.
+  cout << "usertime" << " ";
+  // The time elapsed in the simulation.
+  cout << "simtime" << " ";
+  // The seed of the simulation.
+  cout << "seed" << " ";
+  // The hash of the simulation.
+  cout << "hash" << " ";
+
+  // The mean connection arrival time.
+  cout << "mcat" << " ";
+  // The offered load.
+  cout << "oload" << " ";
+  // The network utilization.
+  cout << "utilization" << " ";
+
+  // The probability of establishing a connection.
+  cout << "pec" << " ";
+  // The mean length of an established connection.
+  cout << "lenec" << " ";
+  // The mean number of links of an established connection.
+  cout << "nolec" << " ";
+  // The mean number of slices of an established connection.
+  cout << "nscec" << " ";
+
+  // The number of currently active connections.
+  cout << "conns" << " ";
+  // The capacity served.
+  cout << "capser" << " ";
+  // The mean number of fragments on links.
+  cout << "frags" << " ";
+  // The average time a shortest path search (successful or not) takes.
+  cout << "spsat";
+  // That's it.  Thank you.
+  cout << endl;
 }
 
 stats &
@@ -60,39 +70,47 @@ stats::operator()(double st)
   // Delta of the user time.
   double dut = dtime.user / 1e+9;
 
-  cout << tut << " " << st << " "
-       << args.seed << " " << args.hash << " ";
+  // The user part of the wall clock time.
+  cout << tut << " ";
+  // The time elapsed in the simulation.
+  cout << st << " ";
+  // The seed of the simulation.
+  cout << args.seed << " ";
+  // The hash of the simulation.
+  cout << args.hash << " ";
 
+  // The mean connection arrival time.
+  cout << args.mcat << " ";
+  // The offered load.
+  cout << args.ol << " ";
   // The network utilization.
-  cout << calculate_utilization(g) << " ";
+  cout << calculate_utilization(m_mdl) << " ";
+
   // The probability of establishing a connection.
-  cout << ba::mean(pec) << " ";
+  cout << ba::mean(m_pec) << " ";
   // The mean length of an established connection.
-  cout << ba::mean(lenec) << " ";
-  // The mean number of hops of an established connection.
-  cout << ba::mean(hopec) << " ";
-  // The mean numnber of slices of an established connection.
-  cout << ba::mean(nscec) << " ";
-  // The number of active connections.
+  cout << ba::mean(m_lenec) << " ";
+  // The mean number of links of an established connection.
+  cout << ba::mean(m_nolec) << " ";
+  // The mean number of slices of an established connection.
+  cout << ba::mean(m_nscec) << " ";
+
+  // The number of currently active connections.
   cout << tra.nr_clients() << " ";
   // The capacity served.
   cout << tra.capacity_served() << " ";
   // The mean number of fragments of links.
   cout << calculate_frags() << " ";
-  // The time spend per search, either successfull or nor.
-  cout << dut / ba::count(pec) << " ";
-  // The mean connection arrival time.
-  cout << args.mcat << " ";
-  // The offerred load.
-  cout << 1.0 / args.mcat;
-  // That's it.
+  // The average time a shortest path search (successful or not) takes.
+  cout << dut / ba::count(m_pec) << " ";
+  // That's it.  Thanks!
   cout << endl;
 
   // We reset the accumulators to get new means in the next interval.
-  pec = dbl_acc();
-  lenec = dbl_acc();
-  hopec = dbl_acc();
-  nscec = dbl_acc();
+  m_pec = dbl_acc();
+  m_lenec = dbl_acc();
+  m_nolec = dbl_acc();
+  m_nscec = dbl_acc();
 
   // Start again to get next delta time.
   dtimer.start();
@@ -111,19 +129,19 @@ stats::schedule(double t)
 void
 stats::established(bool status)
 {
-  pec(status);
+  m_pec(status);
 }
 
 void
 stats::established_conn(const connection &conn)
 {
-  int length = conn.get_length();
-  int hops = conn.get_hops();
+  int len = conn.get_len();
+  int nol = conn.get_nol();
   int nsc = conn.get_nsc();
 
-  lenec(length);
-  hopec(hops);
-  nscec(nsc);
+  m_lenec(len);
+  m_nolec(nol);
+  m_nscec(nsc);
 }
 
 double
@@ -133,10 +151,10 @@ stats::calculate_frags()
 
   // Iterate over all edges.
   graph::edge_iterator ei, ee;
-  for (tie(ei, ee) = boost::edges(g); ei != ee; ++ei)
+  for (tie(ei, ee) = boost::edges(m_mdl); ei != ee; ++ei)
     {
       const edge e = *ei;
-      const SSC &ssc = boost::get(boost::edge_ssc, g, e);
+      const SSC &ssc = boost::get(boost::edge_ssc, m_mdl, e);
       int f = calculate_fragments(ssc);
       frags(f);
     }

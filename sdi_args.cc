@@ -13,7 +13,9 @@
 
 // Option strings.
 #define NT_S "nt"
+#define ST_S "st"
 #define RT_S "rt"
+#define MLC_S "mlc"
 #define K_S "K"
 #define EDGES_S "edges"
 #define NODES_S "nodes"
@@ -82,13 +84,13 @@ process_sdi_args(int argc, const char *argv[])
         ("slices", po::value<int>()->required(),
          "the number of slices")
 
-        ("ml", po::value<int>(),
-         "the maximal length of a path")
+        (MLC_S, po::value<double>(),
+         "the maximal length cofficient of a path")
 
         (K_S, po::value<int>(),
          "the K for the k-shortest paths")
 
-        ("st", po::value<string>()->required(),
+        (ST_S, po::value<string>()->required(),
          "the spectrum selection type")
 
         (RT_S, po::value<string>()->required(),
@@ -97,8 +99,8 @@ process_sdi_args(int argc, const char *argv[])
       // Traffic options.
       po::options_description tra("Traffic options");
       tra.add_options()
-        ("mcat", po::value<double>()->required(),
-         "the mean client-arrival time")
+        ("ol", po::value<double>()->required(),
+         "the offered load")
 
         ("mht", po::value<double>()->required(),
          "the mean holding time")
@@ -151,17 +153,17 @@ process_sdi_args(int argc, const char *argv[])
       
       result.nr_sc = vm["slices"].as<int>();
 
-      if (vm.count("ml"))
-        result.ml = vm["ml"].as<int>();
+      if (vm.count(MLC_S))
+        result.mlc = vm[MLC_S].as<double>();
 
       if (vm.count(K_S))
         result.K = vm[K_S].as<int>();
 
-      result.st = vm["st"].as<string>();
-      result.rt = vm["rt"].as<string>();
+      result.st = vm[ST_S].as<string>();
+      result.rt = vm[RT_S].as<string>();
 
-        // The traffic options.
-      result.mcat = vm["mcat"].as<double>();
+      // The traffic options.
+      result.ol = vm["ol"].as<double>();
       result.mht = vm["mht"].as<double>();
       result.mnsc = vm["mnsc"].as<double>();
 

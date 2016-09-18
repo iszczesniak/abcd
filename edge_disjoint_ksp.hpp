@@ -27,7 +27,6 @@
 #include <boost/optional.hpp>
 
 #include "custom_dijkstra_call.hpp"
-#include "exclude_filter.hpp"
 
 namespace boost {
 
@@ -47,21 +46,20 @@ namespace boost {
     typedef typename Graph::vertex_descriptor vertex_descriptor;
     typedef typename Graph::edge_descriptor edge_descriptor;
     typedef typename WeightMap::value_type weight_type;
+    typedef std::set<edge_descriptor> es_type;
     typedef std::list<edge_descriptor> path_type;
     typedef std::pair<weight_type, path_type> kr_type;
-    typedef exclude_filter<edge_descriptor> eef_type;
+    typedef filtered_graph<Graph, is_not_in_subset<es_type>> fg_type;
 
     // The result.
     std::list<std::pair<weight_type, path_type>> result;
 
     // The set of excluded edges.
-    std::set<edge_descriptor> excluded;
-    // The filter for excluding edges.
-    eef_type f(&excluded);
-    // The filtered graph type.
-    typedef filtered_graph<Graph, eef_type> fg_type;
+    es_type excluded;
+    // The edge predicate.
+    is_not_in_subset<es_type> ep(excluded);
     // The filtered graph.
-    fg_type fg(g, f);
+    fg_type fg(g, ep);
 
     // In each iteration, we try to find a shortest path.
     do

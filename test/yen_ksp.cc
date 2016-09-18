@@ -16,7 +16,6 @@ Graph;
 typedef Graph::edge_descriptor Edge;
 typedef Graph::vertex_descriptor Vertex;
 typedef std::list<Edge> Path;
-typedef boost::exclude_filter<Edge> eef_type;
 
 using namespace std;
 

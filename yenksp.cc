@@ -7,7 +7,7 @@
 using namespace std;
 
 sscpath
-yenksp::route_w(graph &g, const demand &d)
+yenksp::route_w(graph &g, const demand &d, const SSC &ssc)
 {
   sscpath result;
 
@@ -21,14 +21,16 @@ yenksp::route_w(graph &g, const demand &d)
     // when the path lenght is not greater than the limit.
     if (!m_ml || p.first <= m_ml.get())
       {
-        // Find all the SSC along the path.
-        SSC ssc = find_path_ssc(g, p.second);
-        // Select the right SSC.
-        ssc = select_ssc(ssc, d.second);
-        if (!ssc.empty())
+        // This is the path SSC.
+        SSC pssc = find_path_ssc(g, p.second);
+        // This is the candidate SSC.
+        SSC cssc = intersection(pssc, ssc);
+        // This is the selected SSC.
+        SSC sssc = select_ssc(cssc, d.second);
+        if (!sssc.empty())
           {
             // Candidate sscpath.
-            sscpath cp(p.second, ssc);
+            sscpath cp(p.second, sssc);
             if (set_up_path(g, cp))
               // The routing was successful, so return here.
               return cp;

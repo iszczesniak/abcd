@@ -1,9 +1,12 @@
 #include "connection.hpp"
 #include "routing.hpp"
+#include "utils.hpp"
 
 #include <algorithm>
 #include <iostream>
 #include <utility>
+
+#include <boost/none.hpp>
 
 using namespace std;
 
@@ -28,11 +31,11 @@ connection::get_demand() const
 bool
 connection::is_established() const
 {
-  return m_p.first;
+  return m_p != boost::none;
 }
 
 int
-connection::get_length() const
+connection::get_len() const
 {
   assert(is_established());
 
@@ -40,7 +43,7 @@ connection::get_length() const
     wm = get(boost::edge_weight_t(), m_g);
 
   int length = 0;
-  const path &p = m_p.second.first;
+  const path &p = m_p.get().first;
   
   for(const edge &e: p)
     length += get(wm, e);
@@ -49,17 +52,17 @@ connection::get_length() const
 }
 
 int
-connection::get_hops() const
+connection::get_nol() const
 {
   assert(is_established());
-  return m_p.second.first.size();
+  return m_p.get().first.size();
 }
 
 int
 connection::get_nsc() const
 {
   assert(is_established());
-  return m_p.second.second.size();
+  return m_p.get().second.size();
 }
 
 bool
@@ -68,29 +71,20 @@ connection::establish(const demand &d)
   // Make sure the connection is not established.
   assert(!is_established());
 
-  // Remember the demand.
-  m_d = d;
+  // Route the demand.
+  m_p = routing::route(m_g, d);
 
-  // If the source and destination nodes are different, do real
-  // routing.
-  if (m_d.first.first != m_d.first.second)
-    {
-      sscpath sp = routing::route(m_g, m_d);
-      m_p.first = !sp.first.empty();
-      m_p.second = sp;
-    }
-  else
-    // We allow to establish a path between the same source and
-    // destination nodes.  In this case the path is empty.
-    m_p = make_pair(true, sscpath());
+  // If successful, remember the demand.
+  if (m_p)
+    m_d = d;
 
-  return m_p.first;
+  return is_established();
 }
 
 void
 connection::tear_down()
 {
   assert(is_established());
-  routing::tear_down(m_g, m_p.second);
-  m_p = sscpathws();
+  routing::tear_down(m_g, m_p.get());
+  m_p = boost::none;
 }

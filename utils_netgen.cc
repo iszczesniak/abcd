@@ -1,9 +1,15 @@
 #include "utils_netgen.hpp"
 
+#include "utils.hpp"
+
+#include <cmath>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>   
 #include <sstream>
 #include <iomanip>
+
+#include <boost/graph/dijkstra_shortest_paths.hpp>
+#include <boost/range.hpp>
 
 using namespace std;
 
@@ -77,9 +83,11 @@ generate_gabriel_graph(const sdi_args &args)
   // The set of lone vertexes.
   std::set<vertex> lonely = get_vertexes<std::set<vertex> >(g);
 
-  unsigned int w = 1000;
-  unsigned int h = 1000;
   unsigned int number = args.nr_nodes;
+  // Square kilometers required for the given number of nodes.
+  unsigned skm = number * 10000;
+  unsigned int w = std::sqrt(skm);
+  unsigned int h = std::sqrt(skm);
   list<TNode *> P = generate_Nodes(w, h, number);
   
   list<TTriangle *> triangles;
@@ -122,4 +130,57 @@ generate_gabriel_graph(const sdi_args &args)
     delete *it;
 
   return g;
+}
+
+void
+calc_sp_stats(const graph &g, dbl_acc &hop_acc, dbl_acc &len_acc)
+{
+  auto ns = boost::vertices(g);
+
+  // Calculate stats for shortest paths.
+  for (auto ni = ns.first; ni != ns.second; ++ni)
+    {
+      vector<int> dist(num_vertices(g));
+      vector<vertex> pred(num_vertices(g));
+
+      vertex s = *ni;
+
+      boost::dijkstra_shortest_paths
+        (g, s, boost::predecessor_map(&pred[0]).distance_map(&dist[0]));
+
+      for (auto nj = ns.first; nj != ns.second; ++nj)
+        if (ni != nj)
+          {
+            vertex d = *nj;
+            // Make sure the path was found.
+            assert(pred[d] != d);
+
+            // Record the number of hops.
+            int hops = 0;
+            vertex c = d;
+            while(c != s)
+              {
+                c = pred[c];
+                ++hops;
+              }
+            hop_acc(hops);
+
+            // Record the path length.
+            len_acc(dist[d]);
+          }
+    }
+}
+
+double
+calc_mcat(const sdi_args &args, const graph &g, double mnh)
+{
+  // The network capacity, i.e. the number of slices of all links.
+  double cap = 0;
+  for (const auto &e: boost::make_iterator_range(edges (g)))
+    cap += boost::get(boost::edge_nosc, g, e);
+
+  // The mean connection arrival time.
+  double mcat = args.mht * mnh * args.mnsc / (args.ol * cap);
+
+  return mcat;
 }

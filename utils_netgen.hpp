@@ -11,6 +11,7 @@
 #include <iterator>
 #include <set>
 #include <vector>
+#include <utility>
 
 #include <boost/graph/random.hpp>
 #include <boost/graph/iteration_macros.hpp>
@@ -234,5 +235,15 @@ generate_graph(const sdi_args &args, T &gen)
 
   return g;
 }
+
+// For the shortest paths between all node pairs, calculate the
+// statistics for hops and lengths.
+void
+calc_sp_stats(const graph &g, dbl_acc &hop_acc, dbl_acc &len_acc);
+
+// Calculate the mean connection arrival time for the given arguments
+// and the given graph.
+double
+calc_mcat(const sdi_args &args, const graph &g, double mnh);
 
 #endif /* UTILS_NETGEN_HPP */

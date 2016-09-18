@@ -42,6 +42,9 @@ struct sdi_args
   /// The maximal length of a path we want.
   boost::optional<int> ml;
 
+  /// The maximal length coefficient of a path we want.
+  boost::optional<double> mlc;
+
   /// The K for the k-shortest paths.
   boost::optional<unsigned> K;
 
@@ -50,13 +53,15 @@ struct sdi_args
 
   /// The routing algorithm.
   std::string rt;
-  
   /// -----------------------------------------------------------------
   /// The traffic options
   /// -----------------------------------------------------------------
 
   /// The mean client arrival time.
   double mcat;
+
+  /// The offered load.
+  double ol;
 
   /// The mean holding time.
   double mht;

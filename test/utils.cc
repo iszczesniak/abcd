@@ -1,9 +1,17 @@
+#define BOOST_TEST_MODULE Utils
+
 #include "utils.hpp"
 
-#define BOOST_TEST_MODULE Utils
+#include "sample_graphs.hpp"
 
 #include <boost/test/unit_test.hpp>
 #include <boost/random/linear_congruential.hpp>
+
+#include <set>
+#include <tuple>
+#include <vector>
+
+using namespace std;
 
 BOOST_AUTO_TEST_CASE(exclude_test)
 {
@@ -105,7 +113,7 @@ BOOST_AUTO_TEST_CASE(calculate_fragments_test)
   ssc.insert(6);
   BOOST_CHECK(calculate_fragments(ssc) == 3);
 
-  SSSC sssc = split(ssc);
+  SSSC sssc = split(ssc, 1);
   BOOST_CHECK(sssc.size() == 3);
   SSSC::iterator i = sssc.begin();
   BOOST_CHECK(i->size() == 2);
@@ -123,35 +131,51 @@ BOOST_AUTO_TEST_CASE(calculate_fragments_test)
 
 BOOST_AUTO_TEST_CASE(find_path_ssc_test)
 {
-  graph g(3);
-  vertex src = *(boost::vertices(g).first);
-  vertex mid = *(boost::vertices(g).first + 1);
-  vertex dst = *(boost::vertices(g).first + 2);
-  edge e1 = boost::add_edge(src, mid, g).first;
-  edge e2 = boost::add_edge(mid, dst, g).first;
-
-  // Props of edge e1.
-  boost::get(boost::edge_weight, g, e1) = 1;
-  boost::get(boost::edge_ssc, g, e1).insert(0);
-  boost::get(boost::edge_ssc, g, e1).insert(1);
-
-  // Props of edge e2.
-  boost::get(boost::edge_weight, g, e2) = 2;
-  boost::get(boost::edge_ssc, g, e2).insert(1);
-  boost::get(boost::edge_ssc, g, e2).insert(2);
+  graph g;
+  vector<vertex> vs;
+  vector<edge> es;
+  sample_graph1(g, vs, es);
 
   // The ssc of an empty path.
   SSC ssc1 = find_path_ssc(g, path());
   BOOST_CHECK(ssc1.empty());
 
-  // The ssc of e1.
-  SSC ssc2 = find_path_ssc(g, path{e1});
+  // The ssc of es[0].
+  SSC ssc2 = find_path_ssc(g, path{es[0]});
   BOOST_CHECK(ssc2.size() == 2);
   BOOST_CHECK(ssc2.count(0) == 1);
   BOOST_CHECK(ssc2.count(1) == 1);
 
-  // The ssc of {e1, e2}.
-  SSC ssc3 = find_path_ssc(g, path{e1, e2});
+  // The ssc of {es[0], es[1]}.
+  SSC ssc3 = find_path_ssc(g, path{es[0], es[1]});
   BOOST_CHECK(ssc3.size() == 1);
   BOOST_CHECK(ssc3.count(1) == 1);
+}
+
+BOOST_AUTO_TEST_CASE(find_vertexes_test)
+{
+  graph g;
+  vector<vertex> vs;
+  vector<edge> es;
+  sample_graph1(g, vs, es);
+
+  set<vertex> found0 = find_vertexes(g, vs[0], 0);
+  BOOST_CHECK(found0.size() == 1);
+  BOOST_CHECK(found0.count(vs[0]) == 1);
+
+  set<vertex> found1 = find_vertexes(g, vs[0], 1);
+  BOOST_CHECK(found1.size() == 1);
+  BOOST_CHECK(found1.count(vs[1]) == 1);
+
+  set<vertex> found2 = find_vertexes(g, vs[0], 2);
+  BOOST_CHECK(found2.size() == 1);
+  BOOST_CHECK(found2.count(vs[2]) == 1);
+
+  set<vertex> found3 = find_vertexes(g, vs[0], 3);
+  BOOST_CHECK(found3.empty());
+
+  set<vertex> found4 = find_vertexes(g, vs[1], 1);
+  BOOST_CHECK(found4.size() == 2);
+  BOOST_CHECK(found4.count(vs[0]) == 1);
+  BOOST_CHECK(found4.count(vs[2]) == 1);
 }

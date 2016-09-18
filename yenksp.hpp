@@ -12,7 +12,7 @@ class yenksp: public routing
 
 protected:
   sscpath
-  route_w(graph &g, const demand &d);
+  route_w(graph &g, const demand &d, const SSC &ssc);
 };
 
 #endif /* YENKSP_HPP */

@@ -33,15 +33,7 @@ class cdijkstra: public routing
 
 protected:
   sscpath
-  route_w(graph &g, const demand &d);
-
-  /**
-   * Find the shortest path in graph g for demand d.  We start the
-   * search at node src.  In this version of the function we try to
-   * find a path without any constraints on the ssc.
-   */
-  V2C2S
-  search(const graph &g, const demand &d);
+  route_w(graph &g, const demand &d, const SSC &ssc);
 
   /**
    * Find the shortest path in graph g for demand d.  We start the

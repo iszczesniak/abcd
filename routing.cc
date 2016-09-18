@@ -21,11 +21,48 @@ boost::optional<unsigned> routing::m_K;
 
 unique_ptr<routing> routing::singleton;
 
-sscpath
+boost::optional<sscpath>
 routing::route(graph &g, const demand &d)
 {
+  // Find the largest SSC that we could use.
+  SSC ssc;
+  vertex src = d.first.first;  
+  // Itereate over the out edges of the vertex.
+  graph::out_edge_iterator ei, eei;
+  for(boost::tie(ei, eei) = boost::out_edges(src, g); ei != eei; ++ei)
+    {
+      // The edge that we examine in this iteration.
+      const edge &e = *ei;
+      // The slices available on the edge.
+      const SSC &e_ssc = boost::get(boost::edge_ssc, g, e);
+
+      // Add e_ssc to ssc.
+      include(ssc, e_ssc);
+    }
+
+  return route(g, d, ssc);
+}
+
+boost::optional<sscpath>
+routing::route(graph &g, const demand &d, const SSC &ssc)
+{
   assert(singleton);
-  return singleton->route_w(g, d);
+  boost::optional<sscpath> result;
+
+  // If the source and destination nodes are different, do the real
+  // routing.
+  if (d.first.first != d.first.second)
+    {
+      sscpath sp = singleton->route_w(g, d, ssc);
+      if (!sp.first.empty())
+        result = sp;
+    }
+  else
+    // We allow to establish a path between the same source and
+    // destination nodes.  In this case the path is empty.
+    result = sscpath();
+
+  return result;
 }
 
 routing::st_t
@@ -34,6 +71,7 @@ routing::st_interpret (const string &st)
   map <string, routing::st_t> st_map;
   st_map["first"] = routing::st_t::first;
   st_map["fittest"] = routing::st_t::fittest;
+  st_map["random"] = routing::st_t::random;
   return interpret ("spectrum selection type", st, st_map);
 }
 
@@ -128,13 +166,14 @@ routing::set_up_path(graph &g, const sscpath &p)
   
   // Make sure the edges have the required SSC.
   for(const auto &e: l)
-    if (includes(sm[e], p_ssc))
-      {
-        exclude(sm[e], p_ssc);
-        le.push_back(e);
-      }
-    else
-      {
+    {
+      if (includes(sm[e], p_ssc))
+        {
+          exclude(sm[e], p_ssc);
+          le.push_back(e);
+        }
+      else
+        {
         // We failed to allocate the SSC along the whole path, and so
         // we free up those SSCs already allocated.
         for(const auto &e: le)
@@ -151,7 +190,8 @@ routing::set_up_path(graph &g, const sscpath &p)
 
         return false;
       }
-
+    }
+  
   return true;
 }
 
@@ -183,46 +223,44 @@ routing::tear_down(graph &g, const sscpath &p)
 SSC
 routing::select_first(const SSC &ssc, int nsc)
 {
-  SSSC sssc = split(ssc);
+  SSSC sssc = split(ssc, nsc);
 
-  for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
-    {
-      const SSC &tmp = *i;
+  if (sssc.empty())
+    return SSC();
 
-      // We take the first SSC that can handle nsc.
-      if (tmp.size() >= nsc)
-        return tmp;
-    }
-
-  return SSC();
+  return *sssc.begin();
 }
 
 SSC
 routing::select_fittest(const SSC &ssc, int nsc)
 {
+  // We use a pointer, because we don't want to copy SSCs.
   const SSC *result = NULL;
 
-  SSSC sssc = split(ssc);
+  SSSC sssc = split(ssc, nsc);
 
-  for(SSSC::const_iterator i = sssc.begin(); i != sssc.end(); ++i)
-    {
-      const SSC &tmp = *i;
-
-      // We only care about those fragments that can handle nsc.
-      if (tmp.size() >= nsc)
-        {
-          // Take that, because it's the first we got.
-          if (result == NULL)
-            result = &tmp;
-          else
-            // Take tmp, only if it's tighter than the previous find.
-            if (tmp.size() < result->size())
-              result = &tmp;
-        }
-    }
+  for(const SSC &e: sssc)
+    // Take that, because it's the first we got.
+    if (result == NULL)
+      result = &e;
+    else
+      // Take tmp, only if it's tighter than the previous find.
+      if (e.size() < result->size())
+        result = &e;
 
   if (!result)
     return SSC();
   else
     return *result;
+}
+
+SSC
+routing::select_random(const SSC &ssc, int nsc)
+{
+  SSSC sssc = split(ssc, nsc);
+
+  if (sssc.empty())
+    return SSC();
+  else
+    return get_random_element(sssc, m_rng);
 }

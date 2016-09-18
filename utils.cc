@@ -106,13 +106,14 @@ find_path_ssc(const graph &g, const path &p)
 }
 
 // The function for sorting the list of sets.
-static bool stlos(const set<vertex> &s1, const set<vertex> &s2)
+static bool
+stlos(const set<vertex> &s1, const set<vertex> &s2)
 {
   return s1.size() > s2.size();
 }
 
 SSSC
-split(const SSC &ssc)
+split(const SSC &ssc, int nsc)
 {
   SSSC sssc;
 
@@ -128,7 +129,9 @@ split(const SSC &ssc)
           ++i;
         } while (i != ssc.end() && sc + 1 == *i);
 
-      sssc.insert(tmp);
+      // Return this SSC only if it has at least nsc slices.
+      if (tmp.size() >= nsc)
+        sssc.insert(tmp);
     }
 
   return sssc;
@@ -137,13 +140,15 @@ split(const SSC &ssc)
 int
 calculate_fragments(const SSC &ssc)
 {
-  return split(ssc).size();
+  // Split the SSC into fragments of size 1 at least.
+  return split(ssc, 1).size();
 }
 
 /**
  * This is the << operator for a sscpath.
  */
-std::ostream &operator << (std::ostream &os, const sscpath &p)
+std::ostream &
+operator << (std::ostream &os, const sscpath &p)
 {
   os << "sscpath(" << p.first << ", " << p.second << ")";
 }
@@ -151,7 +156,8 @@ std::ostream &operator << (std::ostream &os, const sscpath &p)
 /**
  * This is the << operator for a CEV.
  */
-std::ostream &operator << (std::ostream &os, const CEV &cev)
+std::ostream &
+operator << (std::ostream &os, const CEV &cev)
 {
   os << "CEV("
      << get<0>(cev) << ", "
