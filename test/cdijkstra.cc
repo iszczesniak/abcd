@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_4)
   cdijkstra_test cdt;
   routing::set_st("first");
   demand d = demand(npair(src, dst), 1);
-  V2C2S result = cdt.search(g, d);
+  V2C2S result = cdt.search(g, d, {0});
 
   // We found the path.
   BOOST_CHECK(!result[dst].empty());
@@ -205,7 +205,7 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_5)
   cdijkstra_test cdt;
   routing::set_st("first");
   demand d = demand(npair(src, dst), 1);
-  V2C2S result = cdt.search(g, d);
+  V2C2S result = cdt.search(g, d, {0, 1});
 
   // We found the path.
   BOOST_CHECK(!result[dst].empty());
@@ -249,7 +249,7 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_6)
   cdijkstra_test cdt;
   routing::set_st("first");
   demand d = demand(npair(src, dst), 1);
-  V2C2S result = cdt.search(g, d);
+  V2C2S result = cdt.search(g, d, {0});
 
   BOOST_CHECK(result[dst].size() == 1);
   BOOST_CHECK(get<0>(result[dst].begin()->first) == 1);
@@ -282,7 +282,7 @@ BOOST_AUTO_TEST_CASE(cdijkstra_test_7)
   cdijkstra_test cdt;
   routing::set_st("first");
   demand d = demand(npair(src, dst), 1);
-  V2C2S result = cdt.search(g, d);
+  V2C2S result = cdt.search(g, d, {0});
 
   BOOST_CHECK(result[dst].size() == 1);
   BOOST_CHECK(get<0>(result[dst].begin()->first) == 1);
