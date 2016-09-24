@@ -2,7 +2,7 @@
 
 #include "cdijkstra.hpp"
 #include "graph.hpp"
-#include "sdi_args.hpp"
+#include "cli_args.hpp"
 #include "stats.hpp"
 #include "utils_netgen.hpp"
 
@@ -12,7 +12,7 @@ using namespace std;
 
 main(int argc, const char* argv[])
 {
-  sdi_args args;
+  cli_args args;
   args.nt = "random";
   args.nr_sc = 0;
   

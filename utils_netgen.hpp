@@ -3,7 +3,7 @@
 
 #include "graph.hpp"
 #include "mypoint.hpp"
-#include "sdi_args.hpp"
+#include "cli_args.hpp"
 #include "utils.hpp"
 #include "teventqueue.hpp"
 
@@ -158,7 +158,7 @@ add_random_edge(graph &g, std::set<vertex> &lonely,
  */
 template<typename T>
 graph
-generate_random_graph(const sdi_args &args, T &gen)
+generate_random_graph(const cli_args &args, T &gen)
 {
   assert(args.nr_nodes >= 2);
   assert(args.nr_edges.get() >= 0);
@@ -204,11 +204,11 @@ generate_random_graph(const sdi_args &args, T &gen)
  */
 
 graph
-generate_gabriel_graph(const sdi_args &args);
+generate_gabriel_graph(const cli_args &args);
 
 template<typename T>
 graph
-generate_graph(const sdi_args &args, T &gen)
+generate_graph(const cli_args &args, T &gen)
 {
   graph g;
 
@@ -244,6 +244,6 @@ calc_sp_stats(const graph &g, dbl_acc &hop_acc, dbl_acc &len_acc);
 // Calculate the mean connection arrival time for the given arguments
 // and the given graph.
 double
-calc_mcat(const sdi_args &args, const graph &g, double mnh);
+calc_mcat(const cli_args &args, const graph &g, double mnh);
 
 #endif /* UTILS_NETGEN_HPP */

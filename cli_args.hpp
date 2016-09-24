@@ -1,5 +1,5 @@
-#ifndef SDI_ARGS_HPP
-#define SDI_ARGS_HPP
+#ifndef CLI_ARGS_HPP
+#define CLI_ARGS_HPP
 
 #include "cdijkstra.hpp"
 #include "connection.hpp"
@@ -14,7 +14,7 @@ using namespace std;
  * These are the program arguments.  In this single class we store all
  * information passed at the command line.
  */
-struct sdi_args
+struct cli_args
 {
   /// -----------------------------------------------------------------
   /// The general options
@@ -87,7 +87,7 @@ struct sdi_args
 /**
  * This function parses the command-line arguments.
  */
-sdi_args
-process_sdi_args(int argc, const char* argv[]);
+cli_args
+process_cli_args(int argc, const char* argv[]);
 
-#endif /* SDI_ARGS_HPP */
+#endif /* CLI_ARGS_HPP */

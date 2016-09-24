@@ -1,4 +1,4 @@
-#include "sdi_args.hpp"
+#include "cli_args.hpp"
 
 #include "cdijkstra.hpp"
 #include "utils.hpp"
@@ -15,7 +15,7 @@
  * Test that the arguments are interpreted right with the default seed
  * value of 1.
  */
-BOOST_AUTO_TEST_CASE(sdi_args_test_1)
+BOOST_AUTO_TEST_CASE(cli_args_test_1)
 {
   const char *argv[] = {"",
                         "--nt", "random",
@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_1)
 
   int argc = sizeof(argv) / sizeof(char *);
 
-  sdi_args args = process_sdi_args(argc, argv);
+  cli_args args = process_cli_args(argc, argv);
 
   routing::set_rt(args.rt);
   routing::set_ml(args.ml);
@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_1)
  * - st is fittest
  * - ml is 1000
  */
-BOOST_AUTO_TEST_CASE(sdi_args_test_2)
+BOOST_AUTO_TEST_CASE(cli_args_test_2)
 {
   const char *argv[] = {"",
                         "--nt", "random",
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(sdi_args_test_2)
 
   int argc = sizeof(argv) / sizeof(char *);
 
-  sdi_args args = process_sdi_args(argc, argv);
+  cli_args args = process_cli_args(argc, argv);
   routing::set_st(args.st);
   routing::set_ml(args.ml);
 

@@ -5,7 +5,7 @@
 #include "connection.hpp"
 #include "graph.hpp"
 #include "module.hpp"
-#include "sdi_args.hpp"
+#include "cli_args.hpp"
 #include "sim.hpp"
 #include "traffic.hpp"
 
@@ -43,14 +43,14 @@ class stats: public module<sim>
   dbl_acc m_nscec;
 
   // The arguments of the run.
-  sdi_args args;
+  cli_args args;
   // The total timer, i.e., keeps track from the beginning of the run.
   cpu_timer ttimer;
   // The delta timer, i.e., keeps track from the last report time.
   cpu_timer dtimer;
   
 public:
-  stats(const sdi_args &, const traffic &);
+  stats(const cli_args &, const traffic &);
 
   static stats &
   get();

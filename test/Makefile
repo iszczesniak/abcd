@@ -1,10 +1,10 @@
-TESTS = cdijkstra graph edge_disjoint_ksp routing sdi_args utils	\
+TESTS = cdijkstra graph edge_disjoint_ksp routing cli_args utils	\
 yen_ksp various
 
 OTHER = connected
 
 OBJS = sample_graphs.o ../cdijkstra.o ../edksp.o ../mypoint.o	\
- ../routing.o ../sdi_args.o ../teventqueue.o ../utils.o		\
+ ../routing.o ../cli_args.o ../teventqueue.o ../utils.o		\
  ../utils_netgen.o ../yenksp.o
 
 CXXFLAGS = -g -Wno-deprecated -std=c++11
@@ -41,7 +41,7 @@ edge_disjoint_ksp: edge_disjoint_ksp.o $(OBJS)
 routing: routing.o $(OBJS)
 	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
-sdi_args: sdi_args.o $(OBJS)
+cli_args: cli_args.o $(OBJS)
 	g++ $(CXXFLAGS) $^ $(LDFLAGS) -o $@
 
 utils: utils.o $(OBJS)

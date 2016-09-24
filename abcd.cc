@@ -1,5 +1,5 @@
 #include "graph.hpp"
-#include "sdi_args.hpp"
+#include "cli_args.hpp"
 #include "sim.hpp"
 #include "stats.hpp"
 #include "utils_netgen.hpp"
@@ -23,7 +23,7 @@ print_stats(const string &s, const T &t)
 }
 
 void
-net_stats(const sdi_args &args_orig)
+net_stats(const cli_args &args_orig)
 {
   // Number of nodes.
   dbl_acc nns;
@@ -45,7 +45,7 @@ net_stats(const sdi_args &args_orig)
   
   for (int i = 0; i < 100; ++i)
     {
-      sdi_args args = args_orig;
+      cli_args args = args_orig;
       
       args.seed += i;
       
@@ -84,9 +84,9 @@ net_stats(const sdi_args &args_orig)
 }
 
 void
-simulate(const sdi_args &args_para)
+simulate(const cli_args &args_para)
 {
-  sdi_args args = args_para;
+  cli_args args = args_para;
 
   // Set the routing type.
   routing::set_rt(args.rt);
@@ -133,7 +133,7 @@ simulate(const sdi_args &args_para)
 int
 main(int argc, const char* argv[])
 {
-  sdi_args args = process_sdi_args(argc, argv);
+  cli_args args = process_cli_args(argc, argv);
 
   if (args.net_stats)
     net_stats(args);

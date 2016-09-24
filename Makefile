@@ -1,7 +1,7 @@
-TARGETS = sdi
+TARGETS = abcd
 TARGET_OBJS = $(addsuffix .o, $(TARGETS))
 
-OBJS = client.o cdijkstra.o connection.o edksp.o routing.o sdi_args.o	\
+OBJS = cli_args.o client.o cdijkstra.o connection.o edksp.o routing.o	\
 stats.o utils.o utils_netgen.o mypoint.o teventqueue.o traffic.o	\
 yenksp.o
 
@@ -23,7 +23,7 @@ LDFLAGS := $(LDFLAGS) -l boost_system
 
 all: $(TARGETS)
 
-sdi: $(OBJS)
+abcd: $(OBJS)
 
 try: graph.o try.o
 

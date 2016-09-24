@@ -9,7 +9,7 @@ using namespace std;
 // The singleton of the class.  The compiler initializes it to null.
 stats *stats::singleton;
 
-stats::stats(const sdi_args &args, const traffic &tra):
+stats::stats(const cli_args &args, const traffic &tra):
   args(args), tra(tra)
 {
   assert(!singleton);

@@ -1,4 +1,4 @@
-#include "sdi_args.hpp"
+#include "cli_args.hpp"
 
 #include "connection.hpp"
 #include "routing.hpp"
@@ -55,10 +55,10 @@ void requires (const po::variables_map& vm,
                          + "' requires option '" + req + "'.");
 }
 
-sdi_args
-process_sdi_args(int argc, const char *argv[])
+cli_args
+process_cli_args(int argc, const char *argv[])
 {
-  sdi_args result;
+  cli_args result;
 
   try
     {

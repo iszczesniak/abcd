@@ -70,7 +70,7 @@ move_if_needed(vertex v, const graph &g, std::set<vertex> &connected,
 }
 
 graph
-generate_gabriel_graph(const sdi_args &args)
+generate_gabriel_graph(const cli_args &args)
 {
   assert(args.nr_nodes >= 2);
   srand (args.seed);
@@ -172,7 +172,7 @@ calc_sp_stats(const graph &g, dbl_acc &hop_acc, dbl_acc &len_acc)
 }
 
 double
-calc_mcat(const sdi_args &args, const graph &g, double mnh)
+calc_mcat(const cli_args &args, const graph &g, double mnh)
 {
   // The network capacity, i.e. the number of slices of all links.
   double cap = 0;
