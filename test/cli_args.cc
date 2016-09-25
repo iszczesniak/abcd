@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE(cli_args_test_1)
                         "--mnsc", "5",
                         "--st", "first",
                         "--rt", "cdijkstra",
-                        "--ml", "100",
+                        "--mlc", "2",
                         "--hash", "blablabla"};
 
   int argc = sizeof(argv) / sizeof(char *);
@@ -35,7 +35,6 @@ BOOST_AUTO_TEST_CASE(cli_args_test_1)
   cli_args args = process_cli_args(argc, argv);
 
   routing::set_rt(args.rt);
-  routing::set_ml(args.ml);
   routing::set_st(args.st);
 
   BOOST_CHECK(args.hash == "blablabla");
@@ -43,7 +42,7 @@ BOOST_AUTO_TEST_CASE(cli_args_test_1)
   BOOST_CHECK(args.nr_nodes == 10);
   BOOST_CHECK(args.nr_edges == 30);
   BOOST_CHECK(args.nr_sc == 50);
-  BOOST_CHECK(routing::get_ml() == 100);
+  BOOST_CHECK(args.mlc.get() == 2);
   BOOST_CHECK(routing::get_st() == routing::st_t::first);
   BOOST_CHECK(routing::get_rt() == routing::rt_t::cdijkstra);
   
@@ -72,7 +71,6 @@ BOOST_AUTO_TEST_CASE(cli_args_test_2)
                         "--mnsc", "5",
                         "--st", "fittest",
                         "--hash", "blablabla",
-                        "--ml", "1000",
                         "--rt", "cdijkstra",
                         "--seed", "2"};
 
@@ -80,9 +78,7 @@ BOOST_AUTO_TEST_CASE(cli_args_test_2)
 
   cli_args args = process_cli_args(argc, argv);
   routing::set_st(args.st);
-  routing::set_ml(args.ml);
 
   BOOST_CHECK(args.seed == 2);
   BOOST_CHECK(routing::get_st() == routing::st_t::fittest);
-  BOOST_CHECK(routing::get_ml() == 1000);
 }
