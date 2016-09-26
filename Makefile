@@ -1,4 +1,4 @@
-TARGETS = abcd
+TARGETS = abcd info
 TARGET_OBJS = $(addsuffix .o, $(TARGETS))
 
 OBJS = cli_args.o client.o cdijkstra.o connection.o edksp.o routing.o	\
@@ -24,6 +24,8 @@ LDFLAGS := $(LDFLAGS) -l boost_system
 all: $(TARGETS)
 
 abcd: $(OBJS)
+
+info: $(OBJS)
 
 try: graph.o try.o
 

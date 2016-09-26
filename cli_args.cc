@@ -65,9 +65,7 @@ process_cli_args(int argc, const char *argv[])
       // General options.
       po::options_description gen("General options");
       gen.add_options()
-        ("help,h", "produce help message")
-
-        ("net_stats", "produce network stats");
+        ("help,h", "produce help message");
 
       // Network options.
       po::options_description net("Network options");
@@ -139,10 +137,6 @@ process_cli_args(int argc, const char *argv[])
       // If there is something wrong with parameters, we will get
       // notified automatically and the program will exit.
       po::notify(vm);
-
-      // The general options.
-      if (vm.count("net_stats"))
-        result.net_stats = true;
 
       // The network options.
       result.nt = vm[NT_S].as<string>();
