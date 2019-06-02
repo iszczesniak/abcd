@@ -1,7 +1,7 @@
 # abcd
 
-The implementation of the adapted and constrained Dijkstra for elastic
-optical networks.
+This software implements the adapted and constrained Dijkstra for
+elastic optical networks.
 
 The code in the repository is under development. You can checkout the
 "1.0" tag to get the version used to produce results for this article:
