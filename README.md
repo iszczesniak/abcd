@@ -7,6 +7,10 @@ I. Szcześniak, and B. Woźna-Szcześniak, "Adapted and constrained
 Dijkstra for elastic optical networks", 20th International Conference
 on Optical Network Design and Modeling (ONDM), pp. 200-205, May 2016.
 
+<http://irkos.org/publications/ondm2016.pdf>
+
+<http://irkos.org/publications/ondm2016-presentation.pdf>
+
 You can checkout the "1.0" tag to get the version used to produce
 results for that article.
 
